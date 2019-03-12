@@ -1,0 +1,9 @@
+* !text !filter !merge !diff
+*.xls !text !filter !merge !diff
+*.png !text !filter !merge !diff
+*.npy !text !filter !merge !diff
+*.npz !text !filter !merge !diff
+*.pkl !text !filter !merge !diff
+*.pickle !text !filter !merge !diff
+*.vrptw !text !filter !merge !diff
+*.gz !text !filter !merge !diff
