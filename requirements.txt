@@ -1,0 +1,8 @@
+numpy
+scipy
+ortools
+matplotlib
+numpy
+jupyterlab
+jupyter
+tsplib95

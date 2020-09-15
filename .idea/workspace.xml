@@ -1,43 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test_tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/data/eilB101.vrp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/py_christofides/christofides.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/py_christofides/graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/address_to_coords/adressParse.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/address_to_coords/coordinates.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/subgradient_optimization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/candidate_edges/candidates.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/candidate_edges/edge_set.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/pyomo_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/transitions_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/heap.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/linked_list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/tour/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/tour/array_tour.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/tour/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/two_level_tree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_structures/unionfind.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/examples/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/drafts/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/drafts/pragmatic_example.json5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/formats/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/geopoint.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/transforms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ideas.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/agents/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/agents/agent_type.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/constraints/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/constraints/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/distance_matrix.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/edge.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/graph.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/vertex.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/graph/visit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/point.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/mtsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/tsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/solutions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/solutions/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/solutions/tsp_solution.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/ejection_chains/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/ejection_chains/vrptw_rules.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/tsp/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/tsp/crossover.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operators/tsp/mutations.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/clarke_wright.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/greedy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/insert_i1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/external/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/external/concorde.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/external/converter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/external/test_rust.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/solvers/transformational.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/cvrptw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/iterative_tsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/or_tools_adapters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/pyomo_tsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/tsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/tsp_brutforce.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/tsp_coin_or.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/atsp_to_tsp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/ideas.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/scaler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/algorithms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/printing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendors/LKH" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendors/concorde" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendors/fastcache-1.1.0-cp38-cp38-win_amd64.whl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendors/linkern" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendors/ujson-2.0.3-cp38-cp38-win_amd64.whl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visualization/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visualization/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/garbage_graph.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/garbage_graph.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo/bellman-ford.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/py_christofides/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo/dijkstra.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo/tcp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo/tcp/python.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo/tree.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetics/genetic_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/genetics/genetic_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/monte-carlo-cvrp" beforeDir="false" afterPath="$PROJECT_DIR$/libs/monte-carlo-cvrp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/monte-carlo-cvrp/project/data_input.py" beforeDir="false" afterPath="$PROJECT_DIR$/libs/monte-carlo-cvrp/project/data_input.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/scanalytics" beforeDir="false" afterPath="$PROJECT_DIR$/libs/scanalytics" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/scanalytics/scanalytics.py" beforeDir="false" afterPath="$PROJECT_DIR$/libs/scanalytics/scanalytics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repos/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repos/som_tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/cristofides.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/cristofides.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/assets/fi10639.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/assets/it16862.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/assets/qa194.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/assets/uy734.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/diagrams/uruguay.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/report/img/finnish_som.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/report/img/italy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/report/img/uruguay.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/src/distance.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/som_tsp/src/distance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/src/io_helper.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/som_tsp/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/src/neuron.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/som_tsp/src/neuron.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp/src/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/vendors/som_tsp/src/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/Untitled-checkpoint.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oname.res" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Untitled.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/approx/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/approx/cwsa.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base_classes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/applications.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/cache/fill_models__206a78ad59465c51b70d6f2a79fe754a.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/cache/parse_data__267e0e3e503b8372d604b36fdb3d382c.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/vehicles.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/~$applications.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/~$vehicles.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loaders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/genetics/genetic_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/genetics/my_genetics.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ideas.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/monte-carlo-cvrp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/scanalytics" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/name.res" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/explore_matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/removable_solver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/standard_optimizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/presice/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/get_matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presice/pyconcorde" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/presice/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_tsp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.ipnb" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/osrm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/cristofides.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/brd14051.tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/eilB101.vrp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/fi10639.tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/it16862.tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/qa194.tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/data/uy734.tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/loaders/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/loaders/io_helper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/one_tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/christofides.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/construction_heuristics/christofides.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendors/som_tsp" beforeDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,84 +161,6 @@
     <SUITE FILE_PATH="coverage/garbage_graph$data.coverage" NAME="data Coverage Results" MODIFIED="1550946443744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/garbage_graph$tree.coverage" NAME="tree Coverage Results" MODIFIED="1551218182636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algo" />
   </component>
-  <component name="FavoritesManager">
-    <favorites_list name="garbage_graph" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/graph/graph.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_tsp.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/data/eilB101.vrp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendors/py_christofides/christofides.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
-              <folding>
-                <element signature="e#5452#5555#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/genetics/genetic_utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2025">
-              <caret line="144" selection-start-line="144" selection-end-line="144" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$USER_HOME$/Downloads/stas/data/jsons/match_stats/match_stats_ESPORTSTMNT01_220533_f3205cdb4df4d82c.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="705">
-              <caret line="2107" column="46" selection-start-line="2107" selection-start-column="37" selection-end-line="2107" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendors/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -135,155 +169,55 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>point</find>
-      <find>car_type</find>
-      <find>TASKS</find>
-      <find>zone</find>
-      <find>V</find>
-      <find>str</find>
-      <find>RedB</find>
-      <find>abst</find>
-      <find>randint</find>
-      <find>asdf</find>
-      <find>route</find>
-    </findStrings>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/ideas.txt" />
-        <option value="$PROJECT_DIR$/Untitled.ipynb" />
-        <option value="$PROJECT_DIR$/algo/dejkstra.py" />
-        <option value="$PROJECT_DIR$/algo/bellman-ford.py" />
-        <option value="$PROJECT_DIR$/algo/фгеук_ыщке.ipynb" />
-        <option value="$PROJECT_DIR$/algo/external_sort.py" />
-        <option value="$PROJECT_DIR$/algo/dijkstra.py" />
-        <option value="$PROJECT_DIR$/libs/monte-carlo-cvrp/project/data_input.py" />
-        <option value="$PROJECT_DIR$/data.py" />
-        <option value="$PROJECT_DIR$/optimizers.py" />
-        <option value="$PROJECT_DIR$/genetics.py" />
-        <option value="$PROJECT_DIR$/genetics/my_py.py" />
-        <option value="$PROJECT_DIR$/genetics/pair_assignment_problem.py" />
-        <option value="$PROJECT_DIR$/removable_solver.py" />
-        <option value="$PROJECT_DIR$/standard_optimizer.py" />
-        <option value="$PROJECT_DIR$/test.xml" />
-        <option value="$PROJECT_DIR$/data_generators.py" />
-        <option value="$PROJECT_DIR$/mapmodel.py" />
-        <option value="$PROJECT_DIR$/map.py" />
-        <option value="$PROJECT_DIR$/genetics/utils.py" />
-        <option value="$PROJECT_DIR$/utils.py" />
-        <option value="$PROJECT_DIR$/optimizers/standard_optimizer.py" />
-        <option value="$PROJECT_DIR$/data_loaders.py" />
-        <option value="$PROJECT_DIR$/base_classes.py" />
-        <option value="$PROJECT_DIR$/libs/scanalytics/scanalytics.py" />
-        <option value="$PROJECT_DIR$/approx/cwsa.py" />
-        <option value="$PROJECT_DIR$/precise.py" />
-        <option value="$PROJECT_DIR$/presice/test.py" />
-        <option value="$PROJECT_DIR$/genetics/my_genetics.py" />
-        <option value="$PROJECT_DIR$/optimizers/removable_solver.py" />
-        <option value="$PROJECT_DIR$/algo/tree.py" />
-        <option value="$PROJECT_DIR$/algo/tcp/python.py" />
-        <option value="$PROJECT_DIR$/repos/som-tsp/src/io_helper.py" />
-        <option value="$PROJECT_DIR$/repos/som-tsp/src/plot.py" />
-        <option value="$PROJECT_DIR$/repos/som-tsp/src/neuron.py" />
-        <option value="$PROJECT_DIR$/repos/som-tsp/src/distance.py" />
-        <option value="$PROJECT_DIR$/repos/som-tsp/src/main.py" />
-        <option value="$PROJECT_DIR$/repos/som_tsp/src/main.py" />
-        <option value="$PROJECT_DIR$/tests/data/test.tsp.py" />
-        <option value="$PROJECT_DIR$/map_model.py" />
-        <option value="$PROJECT_DIR$/tests/loaders.py" />
-        <option value="$PROJECT_DIR$/tests/__init__.py" />
-        <option value="$PROJECT_DIR$/vendors/pyChristofides/christofides.py" />
-        <option value="$PROJECT_DIR$/vendors/pyChristofides/graph.py" />
-        <option value="$PROJECT_DIR$/tsp.py" />
-        <option value="$PROJECT_DIR$/vendors/py_christofides/graph.py" />
-        <option value="$PROJECT_DIR$/tests/cristofides.py" />
-        <option value="$PROJECT_DIR$/graph/graph.py" />
-        <option value="$PROJECT_DIR$/test_tsp.py" />
-        <option value="$PROJECT_DIR$/genetics/genetic_utils.py" />
-        <option value="$USER_HOME$/Downloads/stas/data/jsons/match_stats/match_stats_ESPORTSTMNT01_220533_f3205cdb4df4d82c.json" />
-      </list>
-    </option>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="877" />
-  </component>
+  <component name="JupyterTrust" id="52f63875-8f8c-4e53-84fd-8580fa96f445" />
+  <component name="ProjectId" id="1hC0uzAnmMMQpmR4Vz4NkBH0x9b" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="garbage_graph" type="b2602c69:ProjectViewProjectNode" />
-              <item name="garbage_graph" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="garbage_graph" type="b2602c69:ProjectViewProjectNode" />
-              <item name="garbage_graph" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="garbage_graph" type="b2602c69:ProjectViewProjectNode" />
-              <item name="garbage_graph" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="garbage_graph" type="b2602c69:ProjectViewProjectNode" />
-              <item name="garbage_graph" type="462c0819:PsiDirectoryNode" />
-              <item name="vendors" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/solvers/external" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/tests/data" />
-      <recent name="$PROJECT_DIR$/vendors" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/tests/loaders" />
-      <recent name="$PROJECT_DIR$/tests/data" />
-      <recent name="$PROJECT_DIR$/optimizers" />
-      <recent name="$PROJECT_DIR$/algo" />
-      <recent name="$PROJECT_DIR$/../removable_solver" />
+      <recent name="$PROJECT_DIR$/models/solutions" />
+      <recent name="$PROJECT_DIR$/models/graph" />
+      <recent name="$PROJECT_DIR$/temp" />
+      <recent name="$PROJECT_DIR$/transformers" />
+      <recent name="$PROJECT_DIR$/models/problems" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/solvers/external" />
+      <recent name="$PROJECT_DIR$/vendors" />
+      <recent name="$PROJECT_DIR$/temp" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Python.test_tsp">
+  <component name="RunManager" selected="Python.explore_matrix">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -306,7 +240,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="cristofides" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="explore_matrix" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -314,12 +248,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/address_to_coords" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/cristofides.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/address_to_coords/explore_matrix.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -328,7 +262,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="get_matrix" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -336,12 +270,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/repos/som_tsp/src" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/address_to_coords" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/repos/som_tsp/src/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/address_to_coords/get_matrix.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -350,7 +284,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="my_genetics" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="iterative_tsp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -358,12 +292,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/temp" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/genetics/my_genetics.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/temp/iterative_tsp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -417,22 +351,23 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.my_genetics" />
+      <item itemvalue="Python.get_matrix" />
+      <item itemvalue="Python.iterative_tsp" />
       <item itemvalue="Python.plot" />
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.cristofides" />
       <item itemvalue="Python.test_tsp" />
+      <item itemvalue="Python.explore_matrix" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.explore_matrix" />
         <item itemvalue="Python.test_tsp" />
-        <item itemvalue="Python.cristofides" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.plot" />
-        <item itemvalue="Python.my_genetics" />
+        <item itemvalue="Python.iterative_tsp" />
+        <item itemvalue="Python.get_matrix" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -456,66 +391,99 @@
       <workItem from="1552317070842" duration="4243000" />
       <workItem from="1552422157547" duration="9970000" />
       <workItem from="1552814111559" duration="246000" />
+      <workItem from="1599499993656" duration="527000" />
+      <workItem from="1599500759393" duration="4904000" />
+      <workItem from="1599688843861" duration="3750000" />
+      <workItem from="1599717359713" duration="283000" />
+      <workItem from="1599720559287" duration="1386000" />
+      <workItem from="1599747620726" duration="579000" />
+      <workItem from="1599858913363" duration="11793000" />
+      <workItem from="1599931672070" duration="20727000" />
+      <workItem from="1599964894110" duration="10082000" />
+      <workItem from="1599976474720" duration="16877000" />
+      <workItem from="1600047180818" duration="32083000" />
+      <workItem from="1600118192037" duration="1744000" />
     </task>
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="147316000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4987715" visible="true" weight="0.14449213" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" sideWeight="0.5012285" side_tool="true" weight="0.13090129" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32866243" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49928468" weight="0.45732483" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007153" side_tool="true" weight="0.48152867" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.28917196" />
-      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49928468" weight="0.45561498" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" sideWeight="0.85551333" weight="0.31616595" />
-      <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="310" height="677" id="Documentation" order="5" sideWeight="0.1444867" side_tool="true" visible="true" weight="0.20457797" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4987715" visible="true" weight="0.16738197" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" sideWeight="0.5012285" side_tool="true" weight="0.13090129" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32866243" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49928468" weight="0.45732483" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007153" side_tool="true" weight="0.48152867" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.28917196" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="12" sideWeight="0.49928468" visible="true" weight="0.4866242" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" sideWeight="0.85551333" weight="0.31616595" />
-      <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="310" height="677" id="Documentation" order="5" sideWeight="0.1444867" side_tool="true" visible="true" weight="0.20529328" />
-    </layout-to-restore>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="378" y="-900" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599961104428">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="378" y="-900" key="#com.intellij.fileTypes.FileTypeChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599961104428" />
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser" timestamp="1599994015557">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="995" y="-1091" key="#com.intellij.ide.util.MemberChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599973463460" />
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994015557" />
+    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1600102888168">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600102888168" />
+    <state x="578" y="290" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1599864219477">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="578" y="290" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599864219477" />
+    <state width="808" height="466" key="DebuggerActiveHint" timestamp="1599938807274">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state width="808" height="466" key="DebuggerActiveHint/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938807274" />
+    <state width="1638" height="399" key="GridCell.Tab.0.bottom" timestamp="1599964818864">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="1638" height="399" key="GridCell.Tab.0.bottom/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818864" />
+    <state width="1638" height="399" key="GridCell.Tab.0.bottom/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911245" />
+    <state width="1638" height="399" key="GridCell.Tab.0.center" timestamp="1599964818863">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="1638" height="399" key="GridCell.Tab.0.center/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818863" />
+    <state width="1638" height="399" key="GridCell.Tab.0.center/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911244" />
+    <state width="1638" height="399" key="GridCell.Tab.0.left" timestamp="1599964818861">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="1638" height="399" key="GridCell.Tab.0.left/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818861" />
+    <state width="1638" height="399" key="GridCell.Tab.0.left/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911243" />
+    <state width="1638" height="399" key="GridCell.Tab.0.right" timestamp="1599964818863">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="1638" height="399" key="GridCell.Tab.0.right/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818863" />
+    <state width="1638" height="399" key="GridCell.Tab.0.right/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911244" />
+    <state x="590" y="-827" key="RollbackChangesDialog" timestamp="1599964480789">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="590" y="-827" key="RollbackChangesDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964480789" />
+    <state x="341" y="175" key="SettingsEditor" timestamp="1599978845859">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="341" y="175" key="SettingsEditor/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599978845859" />
+    <state x="100" y="123" width="1480" height="827" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1599502528395">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="100" y="123" width="1480" height="827" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599502528395" />
+    <state x="229" y="-1125" width="1359" height="1008" key="dock-window-1" timestamp="1600111549402">
+      <screen x="0" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="229" y="-1125" width="1359" height="1008" key="dock-window-1/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600111549402" />
+    <state x="541" y="291" width="598" height="490" key="find.popup" timestamp="1600064974147">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="541" y="291" width="598" height="490" key="find.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600064974147" />
+    <state x="667" y="342" key="refactoring.ChangeSignatureDialog" timestamp="1599994446557">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="667" y="342" key="refactoring.ChangeSignatureDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994446557" />
+    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup" timestamp="1600116357128">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599974294220" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600110241807" />
+    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600116357128" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/VRP$get_matrix.coverage" NAME="get_matrix Coverage Results" MODIFIED="1599938758336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/address_to_coords" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -525,321 +493,5 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="42" column="4" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libs/scanalytics/scanalytics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="79" selection-start-line="6" selection-end-line="79" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/precise.py" />
-    <entry file="file://$PROJECT_DIR$/presice/pyconcorde/concorde/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/presice/pyconcorde/concorde/tsp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="40" column="36" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algo/pair_assignment_problem.py" />
-    <entry file="file://$PROJECT_DIR$/libs/monte-carlo-cvrp/project/solvers/clarke_wright.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libs/monte-carlo-cvrp/run.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/removable_solver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="60" column="26" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_loaders.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="74" column="31" selection-start-line="74" selection-start-column="23" selection-end-line="74" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libs/monte-carlo-cvrp/project/solvers/binary_mcscws.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/standard_optimizer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/presice/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="20" selection-start-line="2" selection-end-line="5" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algo/tree.py" />
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/3/itertools.pyi">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/repos/som-tsp/diagrams/uruguay.gif" />
-    <entry file="file://$PROJECT_DIR$/tests/data/test.tsp.py" />
-    <entry file="file://$PROJECT_DIR$/tests/data/fi10639.tsp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/src/plot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/base_classes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="95" column="8" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libs/monte-carlo-cvrp/project/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1381">
-          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/approx/cwsa.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="727">
-          <caret line="75" column="4" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/report/report.org">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2220">
-          <caret line="148" column="35" selection-start-line="148" selection-start-column="35" selection-end-line="148" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/map_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-            <element signature="e#871#1098#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/genetics/my_genetics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="84" column="43" selection-start-line="84" selection-start-column="43" selection-end-line="84" selection-end-column="43" />
-          <folding>
-            <element signature="e#223#237#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/repos/som_tsp/report/img/finnish_som.png" />
-    <entry file="file://$PROJECT_DIR$/repos/som_tsp/report/img/italy.png" />
-    <entry file="file://$PROJECT_DIR$/repos/som_tsp/report/img/uruguay.png" />
-    <entry file="file://$PROJECT_DIR$/repos/som_tsp/requirements.txt" />
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/README.org">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="46" column="35" selection-start-line="46" selection-start-column="35" selection-end-line="46" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/loaders.py" />
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/src/distance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_bundle/pydev_import_hook.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/garbage_graph-PNu_HIg8/lib/python3.7/site-packages/pyChristofides/christofides.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="177" column="10" selection-start-line="177" selection-start-column="10" selection-end-line="177" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/pyChristofides/test/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/tests/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algo/dijkstra.py" />
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/src/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/py_christofides/graph.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#31#270#0" expanded="true" />
-            <element signature="e#290#414#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/loaders/io_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/som_tsp/src/neuron.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="12" column="13" lean-forward="true" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding>
-            <element signature="e#53#216#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algo/tcp/python.py" />
-    <entry file="file://$USER_HOME$/.virtualenvs/garbage_graph-PNu_HIg8/lib/python3.7/site-packages/xlrd/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="110" selection-start-line="110" selection-end-line="110" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/cristofides.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" lean-forward="true" selection-end-line="11" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/graph/graph.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_tsp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/data/eilB101.vrp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/py_christofides/christofides.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
-          <folding>
-            <element signature="e#5452#5555#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/genetics/genetic_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2025">
-          <caret line="144" selection-start-line="144" selection-end-line="144" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendors/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/stas/data/jsons/match_stats/match_stats_ESPORTSTMNT01_220533_f3205cdb4df4d82c.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="2107" column="46" selection-start-line="2107" selection-start-column="37" selection-end-line="2107" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
