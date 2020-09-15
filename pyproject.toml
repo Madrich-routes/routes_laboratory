@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "vrp"
+version = "0.1.0"
+description = ""
+authors = ["Dmiriy Yampolkiy <yampolskiydv@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+auromat = "^1.0.8"
+timezonefinder = {extras = ["numba"], version = "^4.4.1"}
+utm = "^0.6.0"
+geopy = "^2.0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
