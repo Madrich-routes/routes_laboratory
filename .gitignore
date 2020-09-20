@@ -185,3 +185,5 @@ cython_debug/
 .idea/codeStyles/
 .idea/sonarlint/
 address_to_coords/res_matrix.pkl
+
+*big_data
