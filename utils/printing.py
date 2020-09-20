@@ -1,8 +1,11 @@
 """
 Утилиты для печати
 """
-
+import math
+import numbers
 from math import isclose, isfinite, floor, log10
+from typing import Any
+
 
 def round_to_n(x: float, n=3) -> float:
     """
@@ -21,3 +24,7 @@ def round_to_n(x: float, n=3) -> float:
         res = int(res)
 
     return res
+
+
+def is_number(a: Any) -> bool:
+    return isinstance(a, numbers.Number) and math.isfinite(a)
