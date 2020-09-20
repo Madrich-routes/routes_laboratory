@@ -3,7 +3,8 @@ import pickle
 
 import pandas as pd
 
-from address_to_coords.osrm import Point, get_osrm_matrix
+from geo.martices.osrm import get_osrm_matrix
+from models.point import Point
 
 df = pd.read_csv('./coordinates.csv', sep=';')
 df.columns = ['address', 'lat', 'lon']
