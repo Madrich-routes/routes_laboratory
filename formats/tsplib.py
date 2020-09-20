@@ -25,7 +25,7 @@ def dumps_matrix(matrix: np.ndarray):
     return res
 
 
-def dumps_time_windows(time_windows: Tuple[Tuple[int, int], ...]):
+def dumps_time_windows(time_windows: List[Tuple[int, int]]):
     """
     Сохраняем временные окна проблемы
     """
