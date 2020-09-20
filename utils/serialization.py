@@ -32,4 +32,4 @@ def read_pickle(filename, compression=None) -> Any:
     """
     open_func = get_open_func(compression)
     with open_func(filename, 'rb') as f:
-        return pickle.load(f, fix_imports=True)
+        return pickle.load(f)
