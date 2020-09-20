@@ -1,7 +1,7 @@
 import gzip
 import pickle
 
-from solving.genetic_runner import run_genetic_solver
+from customer_cases.krugoreys.solving.genetic_runner import run_genetic_solver
 
 print('Матрица')
 with gzip.open('../big_data/matrix.pkl.gz', 'rb') as f:

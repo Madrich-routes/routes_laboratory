@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/crugoreys/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/run_solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/run_solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/solve_with_lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/solve_with_lkh.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/serialization.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/serialization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,19 +64,19 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/models/solutions" />
-      <recent name="$PROJECT_DIR$/models/graph" />
-      <recent name="$PROJECT_DIR$/temp" />
-      <recent name="$PROJECT_DIR$/transformers" />
-      <recent name="$PROJECT_DIR$/models/problems" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/solvers/external" />
       <recent name="$PROJECT_DIR$/vendors" />
       <recent name="$PROJECT_DIR$/temp" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/customer_cases/krugoreys" />
+      <recent name="$PROJECT_DIR$/models/solutions" />
+      <recent name="$PROJECT_DIR$/models/graph" />
+      <recent name="$PROJECT_DIR$/temp" />
+      <recent name="$PROJECT_DIR$/transformers" />
     </key>
   </component>
   <component name="RunManager" selected="Python.solve_with_lkh">
@@ -265,7 +269,7 @@
       <workItem from="1600310063132" duration="405000" />
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
-      <workItem from="1600420265588" duration="15687000" />
+      <workItem from="1600420265588" duration="16237000" />
     </task>
     <servers />
   </component>
