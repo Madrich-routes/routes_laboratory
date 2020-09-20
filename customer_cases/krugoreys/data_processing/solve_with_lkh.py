@@ -1,8 +1,6 @@
 from pathlib import Path
 
-from celery.worker.consumer import Tasks
-
-from customer_cases.krugoreys.solving.models import DistanceMatrix, Vehicle
+from customer_cases.krugoreys.solving.models import DistanceMatrix, Vehicle, Task
 from models.problems.cvrptw import CVRPTWProblem
 from solvers.external.lkh import LKHSolver
 import numpy as np
@@ -22,7 +20,7 @@ Point = Tuple[float, float]
 def solve(
         matrix: DistanceMatrix,
         vehicles: List[Vehicle],
-        tasks: List[Tasks],
+        tasks: List[Task],
 ):
     solver = TransformationalSolver(
         transformers=[
@@ -41,7 +39,7 @@ def solve(
         max_len=1000,
         max_hops=1000,
         demands=[1] * len(tasks),
-        time_windows=[(int(t.start_time), int(t.end_time)) for t in tasks],
+        time_windows=[(int(t.tw_start), int(t.tw_end)) for t in tasks],
     )
 
     return solver.solve(problem)
