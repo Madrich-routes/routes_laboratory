@@ -5,20 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/eapteka_result.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Заказы_13.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Курьеры_13.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Склады.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/apeka_addresses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/solving/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/solving/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo/dist_matr.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo/martices/osrm.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/martices/osrm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/transforms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/agents/job.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/agents/job.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/problems/cvrptw.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/solvers/external/lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/printing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/printing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,11 +61,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/customer_cases/eapteka" />
       <recent name="$PROJECT_DIR$/customer_cases/eapteka/data" />
       <recent name="$PROJECT_DIR$/customer_cases/krugoreys/big_data" />
       <recent name="$PROJECT_DIR$/customer_cases" />
       <recent name="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
-      <recent name="$PROJECT_DIR$/geo/martices" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/solvers/external" />
@@ -114,6 +102,9 @@
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -155,6 +146,9 @@
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -272,7 +266,7 @@
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
       <workItem from="1600420265588" duration="20060000" />
-      <workItem from="1600568712978" duration="11177000" />
+      <workItem from="1600568712978" duration="11724000" />
     </task>
     <servers />
   </component>
@@ -337,6 +331,10 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="341" y="175" key="SettingsEditor/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599978845859" />
+    <state x="440" y="276" key="Vcs.Push.Dialog.v2" timestamp="1600603036221">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="440" y="276" key="Vcs.Push.Dialog.v2/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600603036220" />
     <state x="100" y="123" width="1480" height="827" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1599502528395">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
