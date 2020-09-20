@@ -27,12 +27,13 @@ def dumps_matrix(matrix: np.ndarray):
 
 def dumps_time_windows(time_windows: List[Tuple[int, int]]):
     """
-    Сохраняем временные окна проблемы
+    Сохраняем временные окна проблемы.
+    Индексация вершин начинается с 1.
     """
     return '\n'.join(
         ['TIME_WINDOW_SECTION'] +
         [
-            ' '.join([str(i), str(w[0]), str(w[1])])
+            ' '.join([str(i + 1), str(w[0]), str(w[1])])
             for i, w in enumerate(time_windows)
         ]
     )
@@ -40,12 +41,13 @@ def dumps_time_windows(time_windows: List[Tuple[int, int]]):
 
 def dump_demands(demands: List[int]):
     """
-    Сохраняем спрос в каждой вершине
+    Сохраняем спрос в каждой вершине.
+    Индексация вершин начинается с 1
     """
     return '\n'.join(
         ['DEMAND_SECTION'] +
         [
-            ' '.join([str(i), str(d)])
+            ' '.join([str(i + 1), str(d)])
             for i, d in enumerate(demands)
         ]
     )
