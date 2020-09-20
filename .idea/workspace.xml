@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/agents/agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/agents/job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/dist_matr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/geocoding/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/geo/martices/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/build_result_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/build_result_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/address_to_coords/explore_matrix.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/address_to_coords/osrm.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/martices/osrm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/get_matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/get_matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/run_solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/run_rust_solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/solve_with_lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,11 +75,11 @@
       <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
+      <recent name="$PROJECT_DIR$/geo/martices" />
       <recent name="$PROJECT_DIR$/customer_cases/krugoreys" />
       <recent name="$PROJECT_DIR$/models/solutions" />
       <recent name="$PROJECT_DIR$/models/graph" />
-      <recent name="$PROJECT_DIR$/temp" />
-      <recent name="$PROJECT_DIR$/transformers" />
     </key>
   </component>
   <component name="RunManager" selected="Python.solve_with_lkh">
@@ -268,7 +272,7 @@
       <workItem from="1600310063132" duration="405000" />
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
-      <workItem from="1600420265588" duration="17366000" />
+      <workItem from="1600420265588" duration="17825000" />
     </task>
     <servers />
   </component>
