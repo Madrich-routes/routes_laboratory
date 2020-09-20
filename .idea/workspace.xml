@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/solutions/tsp_solution.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transformers/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformers/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/serialization.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/serialization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,6 +168,9 @@
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/crugoreys" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -210,8 +212,8 @@
       <item itemvalue="Python.get_matrix" />
       <item itemvalue="Python.iterative_tsp" />
       <item itemvalue="Python.plot" />
-      <item itemvalue="Python.test_tsp" />
       <item itemvalue="Python.solve_with_lkh" />
+      <item itemvalue="Python.test_tsp" />
     </list>
     <recent_temporary>
       <list>
@@ -263,7 +265,7 @@
       <workItem from="1600310063132" duration="405000" />
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
-      <workItem from="1600420265588" duration="15468000" />
+      <workItem from="1600420265588" duration="15649000" />
     </task>
     <servers />
   </component>
@@ -332,10 +334,10 @@
       <screen x="0" y="-1417" width="2560" height="1417" />
     </state>
     <state x="229" y="-1125" width="1359" height="1008" key="dock-window-1/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600111549402" />
-    <state x="541" y="291" width="598" height="490" key="find.popup" timestamp="1600563792163">
+    <state x="541" y="291" width="598" height="490" key="find.popup" timestamp="1600563983235">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
-    <state x="541" y="291" width="598" height="490" key="find.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600563792163" />
+    <state x="541" y="291" width="598" height="490" key="find.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600563983235" />
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog" timestamp="1599994446557">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
