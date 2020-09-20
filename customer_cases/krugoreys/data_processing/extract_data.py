@@ -1,17 +1,18 @@
 import gzip
-import math
 import pickle
 from datetime import timedelta
 
-import mpu
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import numpy as np
 
 from customer_cases.krugoreys.solving.models import Vehicle, DistanceMatrix, Task
+from geo.martices.osrm import fix_matrix
+from utils.serialization import read_pickle
 
 
 def load_data():
+    print('Читаем excel...')
     df = pd.read_excel("../data/pretty_result.xlsx")  # noqa
     df.columns = ['id', "start_time", "end_time", "addr1", "addr2", "coord1", "coord2",
                   's_id', 'e_id', "line_dist", "osrm_dist", "car"]
@@ -41,11 +42,6 @@ def fix_data_errors(df: pd.DataFrame):
     df.end_time = pd.to_datetime(df.end_time)
 
 
-df = load_data()
-fix_data_errors(df)
-small_matrix = pickle.load(gzip.open("../data/res_matrix.pkl.gz", "rb"))
-
-
 def build_tasks():
     print('Создаем таски')
     tasks = []
@@ -61,22 +57,16 @@ def build_tasks():
 
 
 def build_matrix():
-    print('Создаем матрицу')
-    res_matrix = np.zeros((len(df), len(df)), dtype=np.int32)
-    for r1 in tqdm(df.itertuples()):
-        for r2 in df.itertuples():
-            dist = small_matrix[r1.e_id][r2.s_id]
+    print('Создаем матрицу...')
 
-            if dist is None or not math.isfinite(dist):
-                s_lat, s_lon = [float(c) for c in r1.coord2.split()]
-                e_lat, e_lon = [float(c) for c in r2.coord1.split()]
-                dist = mpu.haversine_distance((s_lat, s_lon), (e_lat, e_lon)) * 1000 * 1.23
+    e_idx = df.e_id.values
+    s_idx = df.s_id.values
+    res_matrix = small_matrix[e_idx][:, s_idx].astype(np.int32)
 
-            res_matrix[r1.id, r2.id] = int(dist)
+    d_matr = DistanceMatrix(res_matrix, speed=18.87)
 
-    d_matr = DistanceMatrix(res_matrix, res_matrix / 18.87)
-
-    with gzip.open('matrix.pkl.gz', 'wb') as f:
+    print('Записываем матрицу на диск...')
+    with gzip.open('matrix.pkl.gz', 'wb', compresslevel=6) as f:
         pickle.dump(d_matr, file=f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -109,6 +99,12 @@ def build_cars():
 
 
 if __name__ == "__main__":
+    df = load_data()
+    fix_data_errors(df)
+    small_matrix = read_pickle("../data/res_matrix.pkl.gz", compression="gzip")
+    coords = pd.read_csv("../data/coordinates.csv", sep=';')[["0", "1"]].values
+    small_matrix = fix_matrix(matrix=small_matrix, coords=coords, coeff=1.23)
+
     build_tasks()
-    # build_cars()
-    # build_matrix()
+    build_cars()
+    build_matrix()

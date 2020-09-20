@@ -24,10 +24,23 @@ class Vehicle:
     end_place: int  # конечная точка прибытия
 
 
-@dataclass
 class DistanceMatrix:
-    dist_matrix: np.ndarray
-    time_matrix: np.ndarray
+    def __init__(
+            self,
+            dist_matrix: np.ndarray,
+            time_matrix: np.ndarray = None,
+            speed: float = None,
+    ):
+        self.dist_matrix = dist_matrix
+        self._time_matrix = time_matrix
+        self.speed = speed
+
+    @property
+    def time_matrix(self):
+        if self._time_matrix is not None:
+            return self._time_matrix
+        else:
+            return (self.dist_matrix / self.speed).astype('int')
 
 
 @dataclass
