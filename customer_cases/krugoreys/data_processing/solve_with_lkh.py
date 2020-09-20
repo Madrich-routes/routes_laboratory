@@ -1,17 +1,11 @@
 from pathlib import Path
+from typing import Tuple, List
 
 from customer_cases.krugoreys.solving.models import DistanceMatrix, Vehicle, Task
 from models.problems.cvrptw import CVRPTWProblem
 from solvers.external.lkh import LKHSolver
-import numpy as np
-
 from solvers.transformational import TransformationalSolver
 from transformers.clipper import DistanceClipper
-
-from dataclasses import dataclass
-from typing import Tuple, List, Dict, Optional
-import numpy as np
-
 from utils.serialization import read_pickle, save_pickle
 
 Point = Tuple[float, float]
