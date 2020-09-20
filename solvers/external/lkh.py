@@ -40,8 +40,7 @@ class LKHSolver(BaseTransformationalSolver):
         )
         self.problem: LKHSolvable = None
 
-        # TODO: к этим парням нужно приделать pid и хеши,
-        #  чтобы никто ни с кем не пересекся когда много потоков и тд
+        # TODO: к этим парням нужно приделать uuid,
         self.tsp_path: str = tsp_path
         self.par_path: str = par_path
         self.res_path: str = res_path
@@ -50,6 +49,7 @@ class LKHSolver(BaseTransformationalSolver):
         self.trace_level: int = trace_level
 
     def basic_solve(self, p: BaseRoutingProblem):
+        print("Начинаем формулировать файлы...")
         self.problem = p
         self.dump_problem()
         return self.run_solver()
