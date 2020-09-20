@@ -9,7 +9,7 @@ import numpy as np
 from termcolor import cprint
 
 from models.problems.base import BaseRoutingProblem
-from models.solutions.solution import VRPSolution
+from models.solutions.base import VRPSolution
 
 
 class BaseTransformer:

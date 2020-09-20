@@ -5,23 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/customer_cases/crugoreys/solve_with_lkh.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/tsptw.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/clipper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/delays.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/serialization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/crugoreys/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/pyomo_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/transitions_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/formats/tsplib.py" beforeDir="false" afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ideas.md" beforeDir="false" afterPath="$PROJECT_DIR$/ideas.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/problems/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/problems/cvrptw.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/solutions/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/solutions/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operators/tsp/crossover.py" beforeDir="false" afterPath="$PROJECT_DIR$/operators/tsp/crossover.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/solvers/external/lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transformers/ideas.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformers/ideas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/solutions/tsp_solution.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformers/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformers/base.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +76,7 @@
       <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.explore_matrix">
+  <component name="RunManager" selected="Python.solve_with_lkh">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -105,28 +91,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="explore_matrix" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="garbage_graph" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/address_to_coords" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/address_to_coords/explore_matrix.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -201,6 +165,25 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="solve_with_lkh" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="garbage_graph" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/crugoreys" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/customer_cases/crugoreys/solve_with_lkh.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="test_tsp" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -224,19 +207,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.explore_matrix" />
       <item itemvalue="Python.get_matrix" />
       <item itemvalue="Python.iterative_tsp" />
       <item itemvalue="Python.plot" />
       <item itemvalue="Python.test_tsp" />
+      <item itemvalue="Python.solve_with_lkh" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.solve_with_lkh" />
         <item itemvalue="Python.test_tsp" />
         <item itemvalue="Python.plot" />
         <item itemvalue="Python.iterative_tsp" />
         <item itemvalue="Python.get_matrix" />
-        <item itemvalue="Python.explore_matrix" />
       </list>
     </recent_temporary>
   </component>
@@ -280,7 +263,7 @@
       <workItem from="1600310063132" duration="405000" />
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
-      <workItem from="1600420265588" duration="15086000" />
+      <workItem from="1600420265588" duration="15468000" />
     </task>
     <servers />
   </component>
@@ -349,10 +332,10 @@
       <screen x="0" y="-1417" width="2560" height="1417" />
     </state>
     <state x="229" y="-1125" width="1359" height="1008" key="dock-window-1/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600111549402" />
-    <state x="541" y="291" width="598" height="490" key="find.popup" timestamp="1600064974147">
+    <state x="541" y="291" width="598" height="490" key="find.popup" timestamp="1600563792163">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
-    <state x="541" y="291" width="598" height="490" key="find.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600064974147" />
+    <state x="541" y="291" width="598" height="490" key="find.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600563792163" />
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog" timestamp="1599994446557">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
