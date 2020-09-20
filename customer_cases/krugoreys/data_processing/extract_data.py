@@ -52,8 +52,8 @@ def build_tasks():
     for r in tqdm(df.itertuples()):
         tasks += [Task(
             id=int(r.id) - 1,
-            tw_start=str((r.start_time - timedelta(days=3)).strftime('%Y-%m-%dT%H:%M:%SZ')),
-            tw_end=str((r.end_time + timedelta(days=3)).strftime('%Y-%m-%dT%H:%M:%SZ')),
+            tw_start=(r.start_time - timedelta(days=3)).timestamp(),
+            tw_end=(r.end_time + timedelta(days=3)).timestamp(),
             delay=int((r.end_time - r.start_time).seconds),
         )]
     with gzip.open('tasks.pkl.gz', 'wb') as f:
@@ -110,5 +110,5 @@ def build_cars():
 
 if __name__ == "__main__":
     build_tasks()
-    build_cars()
-    build_matrix()
+    # build_cars()
+    # build_matrix()
