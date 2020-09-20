@@ -10,8 +10,8 @@ os.environ["LKH"] = "/usr/local/bin/LKH"
 os.environ["CONCORDE"] = "/usr/local/bin/concorde"
 os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
 
-CONCORDE_PATH = os.environ["LKH"]
-LKH3_PATH = os.environ["CONCORDE"]
+CONCORDE_PATH = os.environ["CONCORDE"]
+LKH3_PATH = os.environ["LKH"]
 VRP_CLI_PATH = os.environ["VRP_CLI"]
 
 HERE_API_KEY = "MOH6CaTy-5eQQmLRStCMT2wNujETT1ld7n8OZwOSGHo"
