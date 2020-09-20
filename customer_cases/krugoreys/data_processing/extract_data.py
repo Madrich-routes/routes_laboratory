@@ -8,7 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 import numpy as np
 
-from solving.models import Task, Vehicle, DistanceMatrix
+from customer_cases.krugoreys.solving.models import Vehicle, DistanceMatrix, Task
 
 
 def load_data():
