@@ -2,10 +2,10 @@ from collections import Set
 from functools import lru_cache
 from typing import Tuple
 
-from data_structures.tour.base import Tour
 import numba as nb
 import numpy as np
 
+from data_structures.tour.base import Tour
 from utils.algorithms import make_pair
 
 Edge = Tuple[int, int]
@@ -116,6 +116,13 @@ def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     for idx in range(len(tour) - 1):
         length += matrix[tour[idx]][tour[idx + 1]]
     return length
+
+
+def get_inf(matrix: np.ndarray):
+    """
+    Длина ребра, такая, чтобы точно не попасть в тур
+    """
+    return get_length(np.arange(start=0, end=len(matrix)), matrix)
 
 
 def get_set(tour: np.ndarray) -> Set[Tuple[int, int]]:
