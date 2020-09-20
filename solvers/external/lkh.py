@@ -8,7 +8,7 @@ import tsplib95
 
 import settings
 from formats.tsplib import dumps_matrix
-from models.problems.base import BaseRoutingProblem
+from models.problems.base import BaseRoutingProblem, LKHSolvable
 from solvers.transformational import BaseTransformationalSolver
 from transformers.scaler import MatrixScaler
 
@@ -16,7 +16,6 @@ from transformers.scaler import MatrixScaler
 class LKHSolver(BaseTransformationalSolver):
     def __init__(
             self,
-            problem: BaseRoutingProblem,
             tsp_path: str = settings.PROBLEM_FILE,
             par_path: str = settings.LKH_PAR_FILE,
             res_path: str = settings.VRP_RES_FILE,
@@ -24,7 +23,7 @@ class LKHSolver(BaseTransformationalSolver):
             trace_level: int = 1,
             runs: int = 10,
             max_trials: int = 2392,  # дефолтные значения нужно перепроверить
-            max_swaps: int = 2392
+            max_swaps: int = 2392,
     ):
         """
         Trace level может быть от 1 до 3
@@ -35,7 +34,7 @@ class LKHSolver(BaseTransformationalSolver):
         RUNS = 2
         """
         super().__init__()  # TODO: параметры!
-        self.problem: BaseRoutingProblem = problem
+        self.problem: LKHSolvable = None
 
         # TODO: к этим парням нужно приделать pid и хеши,
         #  чтобы никто ни с кем не пересекся когда много потоков и тд
@@ -45,11 +44,10 @@ class LKHSolver(BaseTransformationalSolver):
 
         self.solver_path: str = solver_path
         self.trace_level: int = trace_level
-        self.transformers = [
-            MatrixScaler(max_value=262144)
-        ]
+        self.transformers = [MatrixScaler(max_value=262144)]
 
     def basic_solve(self, p: BaseRoutingProblem):
+        self.problem = p
         self.dump_problem()
         return self.run_solver()
 
@@ -83,20 +81,23 @@ class LKHSolver(BaseTransformationalSolver):
         """
         Часть файла параметров, которая относится к конфигурации солвера
         """
-        par = ''
-        par += f'PROBLEM_FILE = {self.tsp_path}\n'
-        par += f'TOUR_FILE = {self.res_path}\n'
-        par += f'TRACE_LEVEL = {self.trace_level}\n'
+        par = ""
+        par += f"PROBLEM_FILE = {self.tsp_path}\n"
+        par += f"TOUR_FILE = {self.res_path}\n"
+        par += f"TRACE_LEVEL = {self.trace_level}\n"
 
         return par
 
     def dumps_params(self) -> str:
         """
-        Общий файл параметров с учетом параметров проболемы
+        Итоговая строка параметров с учетом параметров проболемы.
         """
         return self.solver_par() + self.problem.lkh_par()
 
     def dumps_problem(self) -> str:
+        """
+        Получаем строку с tsplib описание проблемы
+        """
         return self.problem.lkh_problem()
 
     def dump_problem(self) -> None:
@@ -105,4 +106,3 @@ class LKHSolver(BaseTransformationalSolver):
 
         with open(self.tsp_path, "w") as dest:
             dest.write(self.dumps_problem())
-
