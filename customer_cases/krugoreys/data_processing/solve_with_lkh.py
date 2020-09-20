@@ -50,7 +50,7 @@ def solve(
 def main():
     data_dir = Path('/media/dimitrius/avg_data/Krugoreys/big_data')
 
-    matrix = read_pickle(data_dir / 'matrix.pkl.gz', compression='gzip')
+    matrix = read_pickle('../big_data/matrix.pkl.gz', compression='gzip')
     tasks = read_pickle(data_dir / 'tasks.pkl.gz', compression='gzip')
     vehicles = read_pickle(data_dir / 'vehicles.pkl.gz', compression='gzip')
 
