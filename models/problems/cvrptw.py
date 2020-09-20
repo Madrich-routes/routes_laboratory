@@ -49,7 +49,7 @@ class CVRPTWProblem(BaseRoutingProblem):
         return '\n'.join([
             r'SPECIAL',
             f'VEHICLES = {self.vehicles}',
-            f'DISTANCE = {self.max_len}',
+            # f'DISTANCE = {self.max_len}',
             f'CAPACITY = {self.vehicles_capacity}',
             f'MTSP_MAX_SIZE = {self.max_hops}',
             f'DEPOT = {self.depot}',
