@@ -52,7 +52,7 @@ class CVRPTWProblem(BaseRoutingProblem):
             # f'DISTANCE = {self.max_len}',
             # f'CAPACITY = {self.vehicles_capacity}',
             f'MTSP_MAX_SIZE = {self.max_hops}',
-            f'DEPOT = {self.depot}',
+            # f'DEPOT = {self.depot}',
             r'INITIAL_TOUR_ALGORITHM = WALK',
         ])
 
