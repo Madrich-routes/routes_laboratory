@@ -1,9 +1,16 @@
 from dataclasses import dataclass
 from typing import Dict, List
 
+from models.rich_vrp.agent_type import AgentType
+
 
 @dataclass
 class Agent:
+    """
+    Агент, который может перемещаться и выполнять задачи
+    """
+    type: AgentType  # тип этого конкретного агента.
+
     costs: Dict[str, float]  # на сколько дорого обходится использования средства (fixed, time, distance)
     value: List[int]  # вместимость (можно inf, ну или очень много)
     start_time: str  # время начала работы
