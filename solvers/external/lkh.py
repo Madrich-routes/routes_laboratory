@@ -9,6 +9,7 @@ import tsplib95
 import settings
 from formats.tsplib import dumps_matrix
 from models.problems.base import BaseRoutingProblem, LKHSolvable
+from solvers.external.interface import exec_and_log
 from solvers.transformational import BaseTransformationalSolver
 from transformers.scaler import MatrixScaler
 
@@ -71,7 +72,8 @@ class LKHSolver(BaseTransformationalSolver):
 
     def run_solver(self):
         print('Вызываем солвер...')
-        output = subprocess.check_output([self.solver_path, self.par_path], shell=False)
+        output = exec_and_log([self.solver_path, self.par_path])
+        # output = subprocess.check_output([self.solver_path, self.par_path], shell=False)
         return self.parse_solution(), output
 
     def parse_solution(self):
