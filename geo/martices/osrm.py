@@ -12,7 +12,9 @@ import requests
 import ujson
 from polyline import encode as polyline_encode
 
+from geo.transforms import geo_distance
 from models.point import Point
+from utils.printing import is_number
 
 
 def _encode_src_dst(src, dst):
@@ -63,3 +65,21 @@ def get_osrm_matrix(points: Tuple[Point]) -> np.ndarray:
     # assert np.abs(durations).sum() != 0, "OSRM вернул 0 матрицу. Проверьте порядок координат."
 
     return durations
+
+
+def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarray:
+    """
+    Чиним отсустсвующие значения в матрице расстояния.
+
+    :param matrix: Вычисленная матрица расстояний
+    :param coords: Координаты
+    :param coeff:
+    """
+    n = len(matrix)
+
+    for i in range(n):
+        for j in range(n):
+            if not is_number(matrix[i, j]):
+                matrix[i, j] = coeff * geo_distance(coords[i], coords[i])
+
+    return matrix.astype('int32')
