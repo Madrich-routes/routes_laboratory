@@ -73,7 +73,7 @@ def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarr
 
     :param matrix: Вычисленная матрица расстояний
     :param coords: Координаты
-    :param coeff:
+    :param coeff: Коэффициент отличия расстояний по прямой и не по прямой
     """
     n = len(matrix)
 
