@@ -2,31 +2,75 @@
 В этом модуле описаны различные функции преобразования координат.
 Тут не используются классы, только обычные numpy массивы и так далее.
 """
-import math
+from datetime import datetime
 from typing import Tuple, Set
 
-from auromat.coordinates.transform import spherical_to_cartesian
-from scipy.spatial import Delaunay
+import geopy
 import numpy as np
+import timezonefinder as tf
+from auromat.coordinates.transform import spherical_to_cartesian
+from geopy.distance import geodesic
+from pytz import timezone, utc
+from scipy.spatial import Delaunay
 from scipy.spatial.qhull import ConvexHull
 from sklearn.decomposition import PCA
-from geopy.distance import geodesic
-import geopy
-from datetime import datetime
-from pytz import timezone, utc
-import timezonefinder as tf
+from sklearn.neighbors._dist_metrics import DistanceMetric
 
-EARTH_R = 6373.0
+EARTH_R = 6373
 
 
-# TODO: нормальную матрицу расстояний -> 2мерные координаты
+# TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
-def geo_distance(lat_a, lon_a, lat_b, lon_b):
+def haversine_distance(a: np.ndarray, b: np.ndarray):
+    """
+    Считаем расстояния между всеми точками из a и всеим точками из b
+    :param a:
+    :param b:
+    :return:
+    """
+    EARTH_R = 6373
+    lat_a, lat_b = a[:, 0], b[:, 0]
+    lon_a, lon_b = a[:, 1], b[:, 1]
+
+    dlon = np.radians(lon_b) - np.radians(lon_a)
+    dlat = np.radians(lat_b) - np.radians(lat_a)
+
+    a = np.sin(dlat / 2) ** 2 + np.cos(lat_a) * np.cos(lat_b) * np.sin(dlon / 2) ** 2
+    c = 2 * np.atan2(np.sqrt(a), np.sqrt(1 - a))
+
+    return EARTH_R * c
+
+
+def sklearn_haversine(a, b):
+    """
+    Вычисляем с использованием sklearn
+    :param a:
+    :param b:
+    :return:
+    """
+    dist = DistanceMetric.get_metric('haversine')
+    lat_a, lat_b = a[:, 0], b[:, 0]
+    lon_a, lon_b = a[:, 1], b[:, 1]
+
+    X = [[np.radians(lat_a), np.radians(lon_b)], [np.radians(lat_a), np.radians(lon_b)]]
+    return EARTH_R * dist.pairwise(X)
+
+
+def great_circle_distance(lat_a, lon_a, lat_b, lon_b):
+    """
+    Расстояние по большой окружности
+    """
+    return geopy.distance.great_circle((lat_a, lon_a), (lat_b, lon_b)).m
+
+
+def geo_distance(a, b):
     """
     Превращаем широту и долготу в трехмерные координаты.
-    Используем geopy — похоже, что это самое эффективное и точное, что есть
+    Используем geopy — похоже, что это самое эффективное и точное, что есть.
+    Порядок - lat, lon
     """
-    return geopy.distance.distance((lat_a, lon_a), (lat_b, lon_b)).m
+
+    return geopy.distance.distance(a, b).m
 
 
 def geo_to_3d(lat, lon) -> Tuple[float, float, float]:
