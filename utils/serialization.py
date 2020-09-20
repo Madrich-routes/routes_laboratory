@@ -18,7 +18,7 @@ def save_pickle(filename, obj: object, compression=None):
     """
     Сохранить объект в pickle
     """
-    open_func = get_open_func(compression)
+    open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'wb') as f:
         pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -30,6 +30,6 @@ def read_pickle(filename, compression=None) -> Any:
     :param filename: Путь к файлу, из которого будем загружать
     :return: объект
     """
-    open_func = get_open_func(compression)
+    open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'rb') as f:
         return pickle.load(f)
