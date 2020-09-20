@@ -5,150 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/address_to_coords/adressParse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/address_to_coords/coordinates.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/subgradient_optimization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate_edges/candidates.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate_edges/edge_set.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/pyomo_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/customer_cases/krugoreys/transitions_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/heap.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/linked_list.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/tour/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/tour/array_tour.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/tour/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/two_level_tree.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_structures/unionfind.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/examples/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/drafts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/drafts/pragmatic_example.json5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/formats/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/geo/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/geo/geopoint.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/geo/transforms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ideas.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/agents/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/agents/agent_type.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/constraints/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/constraints/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/distance_matrix.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/edge.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/graph.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/vertex.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/graph/visit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/point.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/mtsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/problems/tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/solutions/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/solutions/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/solutions/tsp_solution.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/ejection_chains/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/ejection_chains/vrptw_rules.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/tsp/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/tsp/crossover.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operators/tsp/mutations.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/clarke_wright.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/greedy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/construction_heuristics/insert_i1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/external/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/external/concorde.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/external/converter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/external/test_rust.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/solvers/transformational.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/cvrptw.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/iterative_tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/or_tools_adapters.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/pyomo_tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/tsp_brutforce.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/tsp_coin_or.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/atsp_to_tsp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/ideas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/scaler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/algorithms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/printing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/LKH" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/concorde" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/fastcache-1.1.0-cp38-cp38-win_amd64.whl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/linkern" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendors/ujson-2.0.3-cp38-cp38-win_amd64.whl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/visualization/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/visualization/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/garbage_graph.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/garbage_graph.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/crugoreys/solve_with_lkh.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/problems/tsptw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/clipper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/delays.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/serialization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/Untitled-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oname.res" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Untitled.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/approx/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/approx/cwsa.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_classes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/applications.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/cache/fill_models__206a78ad59465c51b70d6f2a79fe754a.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/cache/parse_data__267e0e3e503b8372d604b36fdb3d382c.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/vehicles.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/~$applications.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/~$vehicles.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loaders.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetics/genetic_utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetics/my_genetics.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/graph.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ideas.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/monte-carlo-cvrp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/scanalytics" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/map_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/name.res" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/explore_matrix.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/removable_solver.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/standard_optimizer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/presice/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/get_matrix.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/presice/pyconcorde" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/presice/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_tsp.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.ipnb" beforeDir="false" afterPath="$PROJECT_DIR$/address_to_coords/osrm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/cristofides.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/brd14051.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/eilB101.vrp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/fi10639.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/it16862.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/qa194.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data/uy734.tsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/loaders/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/loaders/io_helper.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate_edges/alpha_measure/one_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/christofides.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/construction_heuristics/christofides.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/py_christofides/graph.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendors/som_tsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/crugoreys/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/pyomo_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/transitions_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/formats/tsplib.py" beforeDir="false" afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ideas.md" beforeDir="false" afterPath="$PROJECT_DIR$/ideas.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/problems/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/problems/cvrptw.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/solutions/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/solutions/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operators/tsp/crossover.py" beforeDir="false" afterPath="$PROJECT_DIR$/operators/tsp/crossover.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solvers/external/lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformers/ideas.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformers/ideas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -351,19 +224,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.explore_matrix" />
       <item itemvalue="Python.get_matrix" />
       <item itemvalue="Python.iterative_tsp" />
       <item itemvalue="Python.plot" />
       <item itemvalue="Python.test_tsp" />
-      <item itemvalue="Python.explore_matrix" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.explore_matrix" />
         <item itemvalue="Python.test_tsp" />
         <item itemvalue="Python.plot" />
         <item itemvalue="Python.iterative_tsp" />
         <item itemvalue="Python.get_matrix" />
+        <item itemvalue="Python.explore_matrix" />
       </list>
     </recent_temporary>
   </component>
@@ -403,6 +276,11 @@
       <workItem from="1599976474720" duration="16877000" />
       <workItem from="1600047180818" duration="32083000" />
       <workItem from="1600118192037" duration="1744000" />
+      <workItem from="1600245519316" duration="2311000" />
+      <workItem from="1600310063132" duration="405000" />
+      <workItem from="1600314233942" duration="2256000" />
+      <workItem from="1600325008500" duration="1878000" />
+      <workItem from="1600420265588" duration="15086000" />
     </task>
     <servers />
   </component>
@@ -414,11 +292,11 @@
       <screen x="0" y="-1417" width="2560" height="1417" />
     </state>
     <state x="378" y="-900" key="#com.intellij.fileTypes.FileTypeChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599961104428" />
-    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser" timestamp="1599994015557">
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser" timestamp="1600558723375">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="995" y="-1091" key="#com.intellij.ide.util.MemberChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599973463460" />
-    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994015557" />
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600558723375" />
     <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1600102888168">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
@@ -427,6 +305,10 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="578" y="290" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599864219477" />
+    <state x="417" y="66" key="CommitChangelistDialog2" timestamp="1600562681059">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="417" y="66" key="CommitChangelistDialog2/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600562681059" />
     <state width="808" height="466" key="DebuggerActiveHint" timestamp="1599938807274">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
@@ -475,11 +357,11 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994446557" />
-    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup" timestamp="1600116357128">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1600558787009">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
-    <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599974294220" />
-    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600110241807" />
+    <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1600325013472" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600558787009" />
     <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600116357128" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
