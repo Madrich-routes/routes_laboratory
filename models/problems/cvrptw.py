@@ -34,7 +34,7 @@ class CVRPTWProblem(BaseRoutingProblem):
             max_hops: int,
             demands: List[int],
             time_windows: List[Tuple[int, int]],
-            depot: int = 0,
+            depot: int = 1,
     ):
         super().__init__(matrix)
         self.vehicles = vehicles
