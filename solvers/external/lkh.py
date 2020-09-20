@@ -70,6 +70,7 @@ class LKHSolver(BaseTransformationalSolver):
         return res
 
     def run_solver(self):
+        print('Вызываем солвер...')
         output = subprocess.check_output([self.solver_path, self.par_path], shell=False)
         return self.parse_solution(), output
 
@@ -84,12 +85,11 @@ class LKHSolver(BaseTransformationalSolver):
         """
         Часть файла параметров, которая относится к конфигурации солвера
         """
-        par = ""
-        par += f"PROBLEM_FILE = {self.tsp_path}\n"
-        par += f"TOUR_FILE = {self.res_path}\n"
-        par += f"TRACE_LEVEL = {self.trace_level}\n"
-
-        return par
+        return '\n'.join([
+            f"PROBLEM_FILE = {self.tsp_path}",
+            f"TOUR_FILE = {self.res_path}",
+            f"TRACE_LEVEL = {self.trace_level}",
+        ])
 
     def dumps_params(self) -> str:
         """
