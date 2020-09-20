@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/eapteka_result.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Заказы_13.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Курьеры_13.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customer_cases/eapteka/data/Склады.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/formats/tsplib.py" beforeDir="false" afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/solving/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/solving/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geo/dist_matr.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geo/martices/osrm.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/martices/osrm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geo/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/transforms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/agents/job.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/agents/job.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/problems/cvrptw.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/problems/cvrptw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solvers/external/lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/printing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/printing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,11 +73,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/customer_cases/eapteka/data" />
+      <recent name="$PROJECT_DIR$/customer_cases/krugoreys/big_data" />
       <recent name="$PROJECT_DIR$/customer_cases" />
       <recent name="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <recent name="$PROJECT_DIR$/geo/martices" />
-      <recent name="$PROJECT_DIR$/customer_cases/krugoreys" />
-      <recent name="$PROJECT_DIR$/models/solutions" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/solvers/external" />
@@ -76,7 +87,7 @@
       <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.solve_with_lkh">
+  <component name="RunManager" selected="Python.solve_with_lkh (1)">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -99,42 +110,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="get_matrix" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="extract_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/address_to_coords" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/address_to_coords/get_matrix.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="iterative_tsp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="garbage_graph" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/temp" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/temp/iterative_tsp.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -157,6 +143,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/repos/som-tsp/src/plot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="solve_with_lkh (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="garbage_graph" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -210,19 +215,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.get_matrix" />
-      <item itemvalue="Python.iterative_tsp" />
       <item itemvalue="Python.plot" />
       <item itemvalue="Python.solve_with_lkh" />
       <item itemvalue="Python.test_tsp" />
+      <item itemvalue="Python.extract_data" />
+      <item itemvalue="Python.solve_with_lkh (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.solve_with_lkh (1)" />
+        <item itemvalue="Python.extract_data" />
         <item itemvalue="Python.solve_with_lkh" />
         <item itemvalue="Python.test_tsp" />
         <item itemvalue="Python.plot" />
-        <item itemvalue="Python.iterative_tsp" />
-        <item itemvalue="Python.get_matrix" />
       </list>
     </recent_temporary>
   </component>
@@ -267,7 +272,7 @@
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
       <workItem from="1600420265588" duration="20060000" />
-      <workItem from="1600568712978" duration="2233000" />
+      <workItem from="1600568712978" duration="11177000" />
     </task>
     <servers />
   </component>
@@ -348,11 +353,11 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994446557" />
-    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1600571259260">
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1600578219164">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1600325013472" />
-    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600571259260" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600578219164" />
     <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600116357128" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
