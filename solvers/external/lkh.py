@@ -33,7 +33,11 @@ class LKHSolver(BaseTransformationalSolver):
         KICKS = 0
         RUNS = 2
         """
-        super().__init__()  # TODO: параметры!
+        super().__init__(
+            transformers=[
+                # MatrixScaler(max_value=262144)
+            ]
+        )
         self.problem: LKHSolvable = None
 
         # TODO: к этим парням нужно приделать pid и хеши,
@@ -44,7 +48,6 @@ class LKHSolver(BaseTransformationalSolver):
 
         self.solver_path: str = solver_path
         self.trace_level: int = trace_level
-        self.transformers = [MatrixScaler(max_value=262144)]
 
     def basic_solve(self, p: BaseRoutingProblem):
         self.problem = p
