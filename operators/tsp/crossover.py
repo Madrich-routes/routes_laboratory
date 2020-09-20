@@ -31,6 +31,7 @@ def edge_recombination_crossover(p1: List[int], p2: List[int]):
     Считается лучшим кросовером, но долго считается
     Источники: http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/EdgeRecombinationCrossoverOperator.aspx
     TODO: Мб можно сделать его рандомизированную версию, которая существенно быстрее
+    TODO: Можно сделать версию, которая будет считать ребра ориентированными
     """
     assert len(p1) == len(p2)
 
@@ -197,7 +198,14 @@ def pmx(p1: List[int], p2: List[int]):
 
 
 def hgrex(p1: List[int], p2: List[int], matrix: np.ndarray):
+    """
+    Говорят, эта эвристика неплоха и вообще лучше всех.
+    Comparison of eight evolutionary crossover operators for the
+    vehicle routing problem
+    Krunoslav Puljic´
+    1,∗and Robert Manger1
     # TODO: говорят, что она неплоха.
+    """
 
     n1 = get_neighbours(p1)
     n2 = get_neighbours(p2)
@@ -206,4 +214,3 @@ def hgrex(p1: List[int], p2: List[int], matrix: np.ndarray):
 
     for i in range(len(p1)):
         ...
-
