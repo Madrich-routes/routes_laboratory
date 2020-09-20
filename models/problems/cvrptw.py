@@ -61,7 +61,7 @@ class CVRPTWProblem(BaseRoutingProblem):
 
     def lkh_problem(self):
         res = '\n'
-        res += f'NAME: CVRPTW-{self.uuid}',
+        res += f'NAME: CVRPTW-{str(self.uuid)}',
         res += r'TYPE: CVRPTW',
         res += f'DIMENSION: {len(self.matrix)}'
         res += f'VEHICLES: {self.vehicles}'
