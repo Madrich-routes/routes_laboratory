@@ -16,20 +16,15 @@ from transformers.base import BaseTransformer
 
 class CompositeTransformer(BaseTransformer):
     """
-    Трансформер которй позыоляет объединить несколлько трансформеров.
+    Трансформер, которй позыоляет объединить несколько трансформеров.
     Удобно, но иногда не очень удобно дебагать потом.
     """
 
-    def __init__(self, *args):
+    def __init__(self, transformers):
         super().__init__()
-        assert len(args) != 0
 
         self.debug = True
-
-        if len(args) == 1:
-            self.transformers = list(args[0])
-        else:
-            self.transformers = args
+        self.transformers = transformers
 
     def transform(self, p: BaseRoutingProblem):
         for t in self.transformers:
@@ -43,13 +38,17 @@ class CompositeTransformer(BaseTransformer):
         for t in reversed(self.transformers):
             if self.debug:
                 print(f'Restore {type(t)}')
+
             t.restore(p)
 
 
 class BaseTransformationalSolver(CompositeTransformer, BaseSolver, ABC):
     """
-    Применяет все трансформы до и откатывает после решения.
-    Должен реализовать функцию basic_solve в которой будет сам алгоритм решения.
+    1. Применяет все переданные трансформы и сводит задачу к простой форме.
+    2. Решает задачу basic_solve
+    3. Восстанавливает решение оригинальной задачи из упрощенной задачи
+
+    Наследник должен реализовать функцию basic_solve
     """
 
     def solve(self, p: BaseRoutingProblem) -> BaseRoutingProblem:
@@ -69,7 +68,7 @@ class BaseTransformationalSolver(CompositeTransformer, BaseSolver, ABC):
 class TransformationalSolver(BaseTransformationalSolver):
     """
     1. Применяет все переданные трансформы и сводит задачу к простой форме.
-    2. Решает задачу
+    2. Решает задачу переданным солвером
     3. Восстанавливает решение оригинальной задачи из упрощенной задачи
     """
 
