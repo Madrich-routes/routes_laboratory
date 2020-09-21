@@ -21,7 +21,7 @@ class LKHSolver(BaseTransformationalSolver):
             par_path: str = settings.LKH_PAR_FILE,
             res_path: str = settings.VRP_RES_FILE,
             solver_path: str = settings.LKH3_PATH,
-            trace_level: int = 1,
+            trace_level: int = 3,
             runs: int = 10,
             max_trials: int = 2392,  # дефолтные значения нужно перепроверить
             max_swaps: int = 2392,
@@ -97,7 +97,7 @@ class LKHSolver(BaseTransformationalSolver):
         """
         Итоговая строка параметров с учетом параметров проболемы.
         """
-        return self.solver_par() + self.problem.lkh_par()
+        return self.solver_par() + '\n' + self.problem.lkh_par()
 
     def dumps_problem(self) -> str:
         """
