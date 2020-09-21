@@ -1,21 +1,30 @@
+from collections import defaultdict
+
 import numpy as np
 
+# TODO: возможно, все же, этих дистанс-матриц нужно очень много
 
 class DistanceMatrix:
     def __init__(
             self,
-            matrix: np.ndarray
+            dist: np.ndarray,
+            speed: float,
+
     ) -> None:
-        self.matrix = matrix
+        self.dist = dist
+        self.mapping = list(range(len(dist)))  # маппинг индекса на индекс в матрице
+        self.speed = speed
 
-    def __len__(self) -> int:
-        return len(self.matrix)
+    @property
+    def n(self) -> int:
+        return len(self.dist)
 
-    def dist(self):
-        return self.matrix
+    @property
+    def time_matrix(self):
+        return self.dist / self.speed
 
-    def time(
-            self,
-            speed: int,
-    ):
-        return self.matrix / speed
+    # def dist(self, i: int, j: int):
+    #     return self.dist
+
+    # def time(self, i: int, j: int):
+    #     return self.dist
