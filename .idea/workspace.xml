@@ -5,20 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/rich_vrp/problem.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/sat/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/sat/google_or_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/sat/python_constraint_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/transformers/fake_depot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/rich_vrp/depot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/validator/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/validator/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/validator/job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transformers/price_multiplier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/logs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer_cases/eapteka/apeka_addresses.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/eapteka/apeka_addresses.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_structures/tour/array_tour.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_structures/tour/array_tour.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo/martices/osrm.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo/martices/osrm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/agents/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/agents/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/agents/agent_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/agent_type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/agents/job.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/job.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/eapteka/data/~$eapteka_result.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/adressParse.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/geocoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/build_result_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/pretty_formatting.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/address_to_coords/osrm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/extract_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/solving/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/formats/tsplib.py" beforeDir="false" afterPath="$PROJECT_DIR$/formats/tsplib.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/graph/distance_matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/graph/distance_matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/rich_vrp/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/rich_vrp/job.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/rich_vrp/job.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solvers/construction_heuristics/clarke_wright.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/construction_heuristics/clarke_wright.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transformers/fake_depot.py" beforeDir="false" afterPath="$PROJECT_DIR$/transformers/fake_depot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,13 +74,13 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/solvers/external" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="Ignore Files Support" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/models/rich_vrp" />
       <recent name="$PROJECT_DIR$/customer_cases/eapteka" />
+      <recent name="$PROJECT_DIR$/models/rich_vrp" />
       <recent name="$PROJECT_DIR$/customer_cases/eapteka/data" />
       <recent name="$PROJECT_DIR$/customer_cases/krugoreys/big_data" />
       <recent name="$PROJECT_DIR$/customer_cases" />
@@ -87,7 +93,7 @@
       <recent name="$PROJECT_DIR$/solvers/construction_heuristics" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.google_or_test">
+  <component name="RunManager" selected="Python.solve_with_lkh (1)">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -114,9 +120,6 @@
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -155,9 +158,6 @@
       <module name="garbage_graph" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -226,9 +226,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.google_or_test" />
         <item itemvalue="Python.solve_with_lkh (1)" />
         <item itemvalue="Python.extract_data" />
+        <item itemvalue="Python.google_or_test" />
         <item itemvalue="Python.solve_with_lkh" />
         <item itemvalue="Python.test_tsp" />
       </list>
@@ -275,7 +275,7 @@
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
       <workItem from="1600420265588" duration="20060000" />
-      <workItem from="1600568712978" duration="19383000" />
+      <workItem from="1600568712978" duration="31828000" />
     </task>
     <servers />
   </component>
@@ -312,38 +312,39 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="268" y="23" key="FileDocumentManager.FileCacheConflict/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600571886098" />
-    <state width="1398" height="330" key="GridCell.Tab.0.bottom" timestamp="1600605638846">
+    <state width="1398" height="330" key="GridCell.Tab.0.bottom" timestamp="1600615882724">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1638" height="399" key="GridCell.Tab.0.bottom/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818864" />
     <state width="1638" height="399" key="GridCell.Tab.0.bottom/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911245" />
-    <state width="1398" height="330" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1600605638846" />
-    <state width="1398" height="330" key="GridCell.Tab.0.center" timestamp="1600605638845">
+    <state width="1398" height="330" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1600615882724" />
+    <state width="1398" height="330" key="GridCell.Tab.0.center" timestamp="1600615882723">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1638" height="399" key="GridCell.Tab.0.center/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818863" />
     <state width="1638" height="399" key="GridCell.Tab.0.center/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911244" />
-    <state width="1398" height="330" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1600605638845" />
-    <state width="1398" height="330" key="GridCell.Tab.0.left" timestamp="1600605638844">
+    <state width="1398" height="330" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1600615882723" />
+    <state width="1398" height="330" key="GridCell.Tab.0.left" timestamp="1600615882723">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1638" height="399" key="GridCell.Tab.0.left/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818861" />
     <state width="1638" height="399" key="GridCell.Tab.0.left/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911243" />
-    <state width="1398" height="330" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1600605638844" />
-    <state width="1398" height="330" key="GridCell.Tab.0.right" timestamp="1600605638845">
+    <state width="1398" height="330" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1600615882723" />
+    <state width="1398" height="330" key="GridCell.Tab.0.right" timestamp="1600615882724">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1638" height="399" key="GridCell.Tab.0.right/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964818863" />
     <state width="1638" height="399" key="GridCell.Tab.0.right/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599938911244" />
-    <state width="1398" height="330" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1600605638845" />
+    <state width="1398" height="330" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1600615882724" />
     <state x="590" y="-827" key="RollbackChangesDialog" timestamp="1599964480789">
       <screen x="0" y="-1417" width="2560" height="1417" />
     </state>
     <state x="590" y="-827" key="RollbackChangesDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599964480789" />
-    <state x="341" y="175" key="SettingsEditor" timestamp="1599978845859">
-      <screen x="0" y="23" width="1680" height="1027" />
+    <state x="292" y="153" key="SettingsEditor" timestamp="1600615022374">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="341" y="175" key="SettingsEditor/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599978845859" />
+    <state x="292" y="153" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1600615022374" />
     <state x="440" y="276" key="Vcs.Push.Dialog.v2" timestamp="1600603036221">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
@@ -365,15 +366,16 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994446557" />
-    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup" timestamp="1600613369072">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1600628045022">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1600325013472" />
-    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600578219164" />
-    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600613369072" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600628045022" />
+    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600618472631" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/VRP$google_or_test.coverage" NAME="google_or_test Coverage Results" MODIFIED="1600605630708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/temp/sat" />
+    <SUITE FILE_PATH="coverage/VRP$solve_with_lkh__1_.coverage" NAME="solve_with_lkh (1) Coverage Results" MODIFIED="1600615878438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
     <SUITE FILE_PATH="coverage/VRP$get_matrix.coverage" NAME="get_matrix Coverage Results" MODIFIED="1599938758336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/address_to_coords" />
   </component>
   <component name="debuggerHistoryManager">
