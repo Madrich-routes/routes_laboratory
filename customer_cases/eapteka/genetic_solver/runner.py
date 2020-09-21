@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import numpy as np
+import ujson
 from madrich.api_module import osrm_module, fake_module
 from madrich.utils import to_array
 
@@ -30,7 +31,7 @@ def runner(tasks: List[Task], depot: Depot, couriers: List[Courier],
         m.append('-m')
         m.append(matrix[1])
     print('Solving...')
-    command = f'vrp-cli solve pragmatic {problem_file} {" ".join(m)} -o {solution_file}'
+    command = f'vrp-cli solve pragmatic {problem_file} --log {" ".join(m)} -o {solution_file}'
     os.system(command)
     solution = convert_json(solution_file)
     os.remove(problem_file)
@@ -43,7 +44,7 @@ def runner(tasks: List[Task], depot: Depot, couriers: List[Courier],
 def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], couriers: List[Courier],
                  mapping: Dict[Tuple[float, float], int]):
     # Сортируем, чтобы первыми были ранние склады
-    couriers, depots = __sort(couriers, depots)
+    # couriers, depots = __sort(couriers, depots)
 
     profiles = ['pedestrian', 'driver']
     global_revers = {v: k for k, v in mapping.items()}
@@ -51,6 +52,7 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
 
     for i, (depot_id, depot) in enumerate(depots.items()):
         print('Problem:', depot_id, 'id:', i)
+        print('couriers:', len(couriers))
 
         if len(couriers) == 0:
             solution = {"unassigned": [{
@@ -82,6 +84,11 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
         # Запуск
         solution = runner(tasks[depot_id], depot, tmp_couriers, profiles, distance, travel_time)
         solutions.append({'solution': solution, 'indexes': __get_index(internal_mapping)})
+
+        if not os.path.exists('./data'):
+            os.mkdir('./data')
+        with open('data/answer.json', 'w') as f:
+            ujson.dump(solutions, f)
 
         # Удаляем использованных курьеров
         for tour in solution['tours']:
