@@ -87,7 +87,7 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     depots_xl = pd.read_excel(storages_file)
     depots = {}
     for i, row in depots_xl.iterrows():
-        depot_loc, index = add_point(index, float(row['Долгота']), float(row['Широта']), )
+        depot_loc, index = add_point(index, float(row['Широта']), float(row['Долгота']))
         depot = Depot(row['Наименование'], depot_loc, 0., 0., make_windows(date, row['График работы'])[0])
         depots[row['Наименование']] = depot
 
@@ -113,7 +113,7 @@ def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     answer = multi_runner(orders, depots, couriers, mapping)
     if not os.path.exists('./data'):
         os.mkdir('./data')
-    with open('./data/answer.json', 'w') as f:
+    with open('data/answer.json', 'w') as f:
         ujson.dump(answer, f)
 
     print('Ended')
