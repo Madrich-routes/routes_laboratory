@@ -1,6 +1,11 @@
 import gzip
 import pickle
+from sys import getsizeof
 from typing import Any
+
+import numpy as np
+
+from utils.logs import logger
 
 
 def get_open_func(compression_alg="gzip"):
@@ -33,3 +38,27 @@ def read_pickle(filename, compression=None) -> Any:
     open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'rb') as f:
         return pickle.load(f)
+
+
+def save_np(finename: str, a):
+    logger.debug(f'Сохраняем матрицу {finename} ...')
+    np.savez_compressed(finename, a)
+    logger.debug(f'Сохранение закончено')
+
+
+def load_np(finename: str):
+    logger.debug(f'Загружаем матрицу {finename} ...')
+    res = np.load(finename, allow_pickle=True)['arr_0']
+    logger.debug(f'{finename} загрузили. {getsizeof(res)} байт')
+    return res
+
+
+def save(filename: str, obj: Any):
+    if isinstance(obj, np.ndarray):
+        save_np(filename, obj)
+    else:
+        save_pickle(filename, obj)
+
+
+def load(filename: str) -> Any:
+        return pickle.load(filename)
