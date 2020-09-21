@@ -39,6 +39,9 @@ def runner(tasks: List[Task], depot: Depot, couriers: List[Courier],
 
 def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], couriers: List[Courier],
                  mapping: Dict[Tuple[float, float], int]):
+
+    couriers, depots = __sort(couriers, depots)
+
     profiles = ['pedestrian', 'driver']
     global_revers = {v: k for k, v in mapping.items()}
     solutions = []
@@ -82,6 +85,12 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
         print('Done:   ', depot_id, 'id:', i, '\n')
 
     return solutions
+
+
+def __sort(couriers, depots):
+    couriers = sorted(couriers, key=lambda x: int(x.time_windows[0][0][11:13]))
+    depots = {k: v for k, v in sorted(depots.items(), key=lambda x: x[1].time_window[0][11:13])}
+    return couriers, depots
 
 
 def __reindexing(depot, depot_id, global_revers, tasks, couriers) -> dict:
