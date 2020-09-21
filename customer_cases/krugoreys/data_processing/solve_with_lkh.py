@@ -47,7 +47,7 @@ def solve(
         max_len=1000,
         max_hops=1000,
         demands=[0] + [1] * len(tasks),
-        time_windows=[(int(t.tw_start), int(t.tw_end)) for t in tasks],
+        time_windows=[(0, tasks[0].tw_start * 2)] + [(int(t.tw_start), int(t.tw_end)) for t in tasks],
     )
 
     return solver.solve(problem)
