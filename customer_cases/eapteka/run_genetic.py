@@ -34,11 +34,9 @@ def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
     return [(f'{date}T{start}:00Z', f'{date}T{end}:00Z')]
 
 
-courier_typing = {'Водитель': 'driver', 'Курьер': 'pedestrian'}
-
-
 def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, storages_file: str
                ) -> Tuple[Dict[str, List[Task]], Dict[str, Depot], List[Courier], Dict[Tuple[float, float], int]]:
+    courier_typing = {'Водитель': 'driver', 'Курьер': 'pedestrian'}
     mapping, index = {}, 0
 
     def add_point(idx: int, lat: float, lon: float) -> Tuple[int, int]:
@@ -56,6 +54,7 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
     for i, row in orders_all_xl.iterrows():
         try:
+            __check_point(float(row['Широта']), float(row['Долгота']))
             point_index, index = add_point(index, float(row['Широта']), float(row['Долгота']))
             time_windows = make_windows_orders(date, row['ИнтервалДоставки'])
             value = [
@@ -72,9 +71,9 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     courier_xl = pd.read_excel(couriers_file)
     for i, row in courier_xl.iterrows():
         priority = int(row['Приоритет'] if not math.isnan(row['Приоритет']) else 2)
-        cost = int(row['Стоимость 1 заказа']) if priority == 1 else 1000
+        cost = int(row['Стоимость 1 заказа']) if priority == 1 else 1000 + int(row['Стоимость 1 заказа'])
         courier = Courier(type_id=f'courier_{i}', profile=courier_typing[row['Должность']],
-                          name=f'{row["Сотрудник"]}_id_{i}', value=[int(1e7), int(1e7)],
+                          name=f'{row["Сотрудник"]}_id_{i}', value=[int(1e8), int(1e8)],
                           costs={"time": 0., "distance": 0., "fixed": cost},
                           time_windows=make_windows(date, row['Интервал работы']),
                           priority=priority, start=-1, end=-1)
@@ -94,6 +93,11 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     return orders, depots, couriers, mapping
 
 
+def __check_point(lat, lon):
+    assert 54.288066 < lat < 57.172201, lat
+    assert 34.619289 < lon < 39.724750, lon
+
+
 def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, storages_file: str):
     print('Started')
     print('Converting...')
@@ -102,6 +106,7 @@ def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     print('Done, Starting solver...', '\n')
     answer = multi_runner(orders, depots, couriers, mapping)
     print('Ended')
+    print(answer)
     return answer
 
 
