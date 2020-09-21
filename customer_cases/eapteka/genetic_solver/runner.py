@@ -5,11 +5,12 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import numpy as np
-from madrich.api_module import fake_module
+from madrich.api_module import osrm_module, fake_module
 from madrich.utils import to_array
 
 from customer_cases.eapteka.genetic_solver.converter import generate_json, convert_json
 from customer_cases.eapteka.genetic_solver.models import Task, Depot, Courier
+from customer_cases.eapteka.genetic_solver.settings import OSRM_PEDESTRIAN, OSRM_DRIVER, DEBUG
 
 array = np.ndarray
 
@@ -63,11 +64,14 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
 
         # Загрузка матриц и запуск
         points = to_array([point for point in internal_mapping])
-        # TODO: real module
-        p_distance, p_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
-        d_distance, d_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
-        p_travel_time //= 1000
-        d_travel_time //= 1000
+        if DEBUG:
+            p_distance, p_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
+            d_distance, d_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
+            p_travel_time //= 500
+            d_travel_time //= 500
+        else:
+            p_distance, p_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_PEDESTRIAN)
+            d_distance, d_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_DRIVER)
 
         distance = {'pedestrian': p_distance, 'driver': d_distance}
         travel_time = {'pedestrian': p_travel_time, 'driver': d_travel_time}
@@ -77,7 +81,7 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
 
         # Запуск
         solution = runner(tasks[depot_id], depot, tmp_couriers, profiles, distance, travel_time)
-        solutions.append({'solution': solution, 'indexes': {v: k for k, v in internal_mapping.items()}})
+        solutions.append({'solution': solution, 'indexes': __get_index(internal_mapping)})
 
         # Удаляем использованных курьеров
         for tour in solution['tours']:
@@ -112,6 +116,13 @@ def __cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
         tmp_couriers.append(tmp_courier)
 
     return tmp_couriers
+
+
+def __get_index(internal_mapping):
+    mapping = {}
+    for point, index in internal_mapping.items():
+        mapping[index] = {'lat': point[0], 'lon': point[1]}
+    return mapping
 
 
 def __sort(couriers: List[Courier], depots: Dict[str, Depot]):
