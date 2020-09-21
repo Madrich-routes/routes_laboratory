@@ -15,7 +15,7 @@ class ClarkeWright:
         """
         Пары точек отсортированные по возрастанию расстояния
         """
-        m, ml = self.problem.matrix, len(self.problem.matrix)
+        m, ml = self.problem.dist, len(self.problem.dist)
         return sorted(combinations(range(ml), r=2), key=lambda x: m[x])
 
     def solve(self):
