@@ -5,7 +5,7 @@ import numpy as np
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from models.graph.distance_matrix import DistanceMatrix
-from temp.tsp import List
+from typing import List
 
 
 class RichVRPProblem:
