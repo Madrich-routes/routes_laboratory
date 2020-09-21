@@ -1,5 +1,6 @@
 import os
 import pickle
+import numpy as np
 
 import pandas as pd
 
@@ -18,5 +19,4 @@ os.environ["OSRM_PORT"] = '5000'
 
 matrix = get_osrm_matrix(points)
 
-with open('res_matrix.pkl', 'wb') as f:
-    pickle.dump(matrix, f)
+np.savez_compressed('../big_data/small_matrix.npz', matrix)
