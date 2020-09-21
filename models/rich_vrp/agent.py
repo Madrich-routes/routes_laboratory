@@ -9,7 +9,6 @@ class Agent:
     """
     Агент, который может перемещаться и выполнять задачи
     """
-    type: AgentType  # тип этого конкретного агента.
 
     costs: Dict[str, float]  # на сколько дорого обходится использования средства (fixed, time, distance)
     value: List[int]  # вместимость (можно inf, ну или очень много)
@@ -18,3 +17,5 @@ class Agent:
 
     start_place: int  # стартовая точка
     end_place: int  # конечная точка прибытия
+
+    type: AgentType = None  # тип этого конкретного агента.
