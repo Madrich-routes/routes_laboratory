@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="355ea235-0eb9-482b-bb1a-ac0ac6d71c5a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/solvers/external/docs/lkh_example.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer_cases/krugoreys/data_processing/solve_with_lkh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solvers/external/lkh.py" beforeDir="false" afterPath="$PROJECT_DIR$/solvers/external/lkh.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,7 +291,7 @@
       <workItem from="1600314233942" duration="2256000" />
       <workItem from="1600325008500" duration="1878000" />
       <workItem from="1600420265588" duration="20060000" />
-      <workItem from="1600568712978" duration="46997000" />
+      <workItem from="1600568712978" duration="57361000" />
     </task>
     <servers />
   </component>
@@ -301,10 +303,11 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="304" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600634652982" />
-    <state x="378" y="-900" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599961104428">
-      <screen x="0" y="-1417" width="2560" height="1417" />
+    <state x="248" y="398" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1600681481814">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="378" y="-900" key="#com.intellij.fileTypes.FileTypeChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1599961104428" />
+    <state x="248" y="398" key="#com.intellij.fileTypes.FileTypeChooser/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600681481814" />
     <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser" timestamp="1600558723375">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
@@ -392,12 +395,12 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="667" y="342" key="refactoring.ChangeSignatureDialog/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1599994446557" />
-    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1600648648374">
-      <screen x="0" y="23" width="1680" height="1027" />
+    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup" timestamp="1600693945351">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="770" y="-1104" width="1021" height="933" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.-1417.2560.1417" timestamp="1600325013472" />
     <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.-1417.2560.1417/-1080.-1173.1080.1897/0.23.1680.1027@0.23.1680.1027" timestamp="1600648648374" />
-    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600646238963" />
+    <state x="433" y="217" width="670" height="578" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1600693945351" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/VRP$solve_with_lkh.coverage" NAME="solve_with_lkh Coverage Results" MODIFIED="1600638605937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/customer_cases/krugoreys/data_processing" />
