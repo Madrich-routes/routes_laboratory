@@ -43,9 +43,9 @@ def main():
     data_dir = Path('../big_data')
 
     print('Загружаем данные')
-    matrix = read_pickle(data_dir / 'matrix.pkl.gz', compression='gzip')
     tasks = read_pickle(data_dir / 'tasks.pkl.gz', compression='gzip')
     vehicles = read_pickle(data_dir / 'vehicles.pkl.gz', compression='gzip')
+    matrix = read_pickle(data_dir / 'matrix.pkl.gz', compression='gzip')
 
     print('Решаем')
     res = solve(matrix=matrix, tasks=tasks, vehicles=vehicles)
