@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Tuple
+from typing import Tuple, Set
 
 import numba as nb
 import numpy as np
@@ -124,7 +124,7 @@ def get_inf(matrix: np.ndarray):
     return get_length(np.arange(start=0, end=len(matrix)), matrix)
 
 
-def get_set(tour: np.ndarray) -> Set[Tuple[int, int]]:
+def get_set(tour: np.ndarray):
     """ Генерация набора ребер тура
     tour: список вершин
     return: set из ребер
