@@ -1,8 +1,10 @@
 import math
+import os
 from collections import defaultdict
 from typing import Tuple, Dict, List
 
 import pandas as pd
+import ujson
 
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
 from customer_cases.eapteka.genetic_solver.runner import multi_runner
@@ -109,8 +111,12 @@ def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, sto
 
     print('Done, Starting solver...', '\n')
     answer = multi_runner(orders, depots, couriers, mapping)
+    if not os.path.exists('./data'):
+        os.mkdir('./data')
+    with open('./data/answer.json', 'w') as f:
+        ujson.dump(answer, f)
+
     print('Ended')
-    print(answer)
     return answer
 
 
