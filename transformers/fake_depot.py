@@ -24,7 +24,8 @@ def add_fake_depot(
     res = np.zeros((n + 1, n + 1))
     res[1:, 1:] = matrix
 
-    inf = get_inf(matrix)  # настолько большое ребро, что точно не попадет в тур
+    inf = matrix.sum()
+    # inf = get_inf(matrix)  # настолько большое ребро, что точно не попадет в тур
     res[0, :], res[:, 0] = inf, inf  # депо не связано с точками кроме начала и конца
     res[start_ids, 0], res[0, end_ids] = 0, 0  # бесплатный проезд из начала в депо и наоборот
 
