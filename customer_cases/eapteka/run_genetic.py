@@ -23,11 +23,15 @@ def make_windows_orders(date: str, interval: str) -> List[Tuple[str, str]]:
 
 
 def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
-    return [(f'{date}T09:00:00Z', f'{date}T21:00:00Z')]
-    # if interval == 'круглосуточно':
-    #     return [(f'{date}T00:00:00Z', f'{date}T23:59:59Z')]
-    # start, end = interval.split('-')
-    # return [(f'{date}T{start}:00:00Z', f'{date}T{end}:00:00Z')]
+    if interval == 'круглосуточно':
+        return [(f'{date}T00:00:00Z', f'{date}T23:59:59Z')]
+    start, end = interval.split('-')
+    start = f'0{int(start)}:00' if int(start) < 10 else f'{start}:00'
+    if int(end) < 10:
+        end = f'0{int(end)}:00'
+    else:
+        end = f'{end}:00' if int(end) != 24 else f'23:59'
+    return [(f'{date}T{start}:00Z', f'{date}T{end}:00Z')]
 
 
 courier_typing = {'Водитель': 'driver', 'Курьер': 'pedestrian'}
@@ -67,11 +71,13 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     couriers = []
     courier_xl = pd.read_excel(couriers_file)
     for i, row in courier_xl.iterrows():
+        priority = int(row['Приоритет'] if not math.isnan(row['Приоритет']) else 2)
+        cost = int(row['Стоимость 1 заказа']) if priority == 1 else 1000
         courier = Courier(type_id=f'courier_{i}', profile=courier_typing[row['Должность']],
-                          name=f'{row["Сотрудник"]}_id_{i}', value=[int(1e7), int(1e7)], start=-1, end=-1,
-                          costs={"time": 0., "distance": 0., "fixed": int(row['Стоимость 1 заказа'])},
+                          name=f'{row["Сотрудник"]}_id_{i}', value=[int(1e7), int(1e7)],
+                          costs={"time": 0., "distance": 0., "fixed": cost},
                           time_windows=make_windows(date, row['Интервал работы']),
-                          priority=int(row['Приоритет'] if not math.isnan(row['Приоритет']) else 2))
+                          priority=priority, start=-1, end=-1)
         couriers.append(courier)
 
     depots_xl = pd.read_excel(storages_file)
