@@ -46,7 +46,7 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
             idx += 1
         return mapping[point], idx
 
-    orders = defaultdict(list)
+    orders, errors = defaultdict(list), 0
     orders_lx = pd.read_excel(orders_file)
     orders_coords_xl = pd.read_excel(clear_orders_file)
     orders_all_xl = pd.concat([orders_lx, orders_coords_xl.reindex(orders_lx.index)], axis=1)
@@ -64,8 +64,11 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
             priority = 2 if math.isnan(row['Приоритет']) else int(row['Приоритет'])
             orders[row['Склад']].append(Task(point_index, time_windows, 0., value, priority))
         except Exception as exc:
-            print(exc)
-            print(i, row['Долгота'], row['Широта'])
+            errors += 1
+            if not math.isnan(row['Приоритет']):
+                print(exc)
+                print(i, row['Долгота'], row['Широта'])
+    print('Errors ignored:', errors)
 
     couriers = []
     courier_xl = pd.read_excel(couriers_file)
@@ -86,16 +89,17 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
         depot = Depot(row['Наименование'], depot_loc, 0., 0., make_windows(date, row['График работы'])[0])
         depots[row['Наименование']] = depot
 
-    print('Couriers', len(couriers))
-    print('Orders', sum([len(tasks) for _, tasks in orders.items()]), 'to', len(orders))
-    print('Depots', len(depots))
+    print('Couriers:', len(couriers))
+    print('Orders:', sum([len(tasks) for _, tasks in orders.items()]), 'to', len(orders))
+    print('Depots:', len(depots))
+    print('Orders to depot:', [len(tasks) for _, tasks in orders.items()])
 
     return orders, depots, couriers, mapping
 
 
 def __check_point(lat, lon):
-    assert 54.288066 < lat < 57.172201, lat
-    assert 34.619289 < lon < 39.724750, lon
+    assert 54.288066 < lat < 57.172201, f'bad point {lat}'
+    assert 34.619289 < lon < 39.724750, f'bad point {lon}'
 
 
 def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, storages_file: str):
