@@ -1,3 +1,3 @@
-DEBUG = True
-OSRM_PEDESTRIAN = 'http://dimitrius.keenetic.link:5001'
-OSRM_DRIVER = 'http://dimitrius.keenetic.link:5000'
+DEBUG = False
+OSRM_PEDESTRIAN = 'http://osrm-foot.dimitrius.keenetic.link'
+OSRM_DRIVER = 'http://osrm-car.dimitrius.keenetic.link'
