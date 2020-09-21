@@ -80,7 +80,7 @@ def build_matrix():
     d_matr = DistanceMatrix(res_matrix, speed=18.87)
 
     logger.info(f'Матрица {d_matr.n}')
-    save_pickle('../big_data/matrix_big.pkl.gz', d_matr)
+    save_pickle('../big_data/matrix_big.pkl.gz', d_matr, compression='gzip')
 
 
 def build_cars():
