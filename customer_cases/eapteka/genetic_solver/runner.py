@@ -1,5 +1,7 @@
 import os
 import uuid
+from copy import deepcopy
+from datetime import datetime
 from typing import List, Dict, Tuple
 
 import numpy as np
@@ -39,7 +41,7 @@ def runner(tasks: List[Task], depot: Depot, couriers: List[Courier],
 
 def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], couriers: List[Courier],
                  mapping: Dict[Tuple[float, float], int]):
-
+    # Сортируем, чтобы первыми были ранние склады
     couriers, depots = __sort(couriers, depots)
 
     profiles = ['pedestrian', 'driver']
@@ -70,8 +72,11 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
         distance = {'pedestrian': p_distance, 'driver': d_distance}
         travel_time = {'pedestrian': p_travel_time, 'driver': d_travel_time}
 
+        # Окна под склад сужаем у курьеров
+        tmp_couriers = __cut_windows(couriers, depot)
+
         # Запуск
-        solution = runner(tasks[depot_id], depot, couriers, profiles, distance, travel_time)
+        solution = runner(tasks[depot_id], depot, tmp_couriers, profiles, distance, travel_time)
         solutions.append({'solution': solution, 'indexes': {v: k for k, v in internal_mapping.items()}})
 
         # Удаляем использованных курьеров
@@ -87,13 +92,35 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
     return solutions
 
 
-def __sort(couriers, depots):
+def __cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
+    start_depot, end_depot = depot.time_window
+    start_dt = datetime.strptime(start_depot, '%Y-%m-%dT%H:%M:%SZ')
+    end_dt = datetime.strptime(end_depot, '%Y-%m-%dT%H:%M:%SZ')
+
+    tmp_couriers = []
+    for courier in couriers:
+        tmp_courier = deepcopy(courier)
+
+        for i in range(len(tmp_courier.time_windows)):
+            start, end = tmp_courier.time_windows[i]
+            start_t = datetime.strptime(start, '%Y-%m-%dT%H:%M:%SZ')
+            end_t = datetime.strptime(end, '%Y-%m-%dT%H:%M:%SZ')
+
+            tmp_courier.time_windows[i] = (start if start_dt <= start_t else start_depot,
+                                           end if end_dt >= end_t else end_depot)
+
+        tmp_couriers.append(tmp_courier)
+
+    return tmp_couriers
+
+
+def __sort(couriers: List[Courier], depots: Dict[str, Depot]):
     couriers = sorted(couriers, key=lambda x: int(x.time_windows[0][0][11:13]))
     depots = {k: v for k, v in sorted(depots.items(), key=lambda x: x[1].time_window[0][11:13])}
     return couriers, depots
 
 
-def __reindexing(depot, depot_id, global_revers, tasks, couriers) -> dict:
+def __reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: dict, couriers: list) -> dict:
     internal_mapping, index = {}, 0
 
     def add_point(idx: int, lat: float, lon: float) -> Tuple[int, int]:
