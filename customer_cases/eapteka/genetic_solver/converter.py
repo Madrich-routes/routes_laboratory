@@ -1,4 +1,4 @@
-import json
+import ujson
 import os
 from typing import Tuple, List, Dict
 
@@ -12,7 +12,7 @@ array = np.ndarray
 
 def convert_json(file: str):
     with open(file, 'r') as f:
-        solution = json.load(f)
+        solution = ujson.load(f)
     return solution
 
 
@@ -27,8 +27,8 @@ def __generate_matrix(name: str, profiles: List[str], distance_matrix: Dict[str,
     files: List[Tuple[str, str]] = []
     size = len(distance_matrix[profiles[0]])
 
-    if not os.path.exists('./data'):
-        os.mkdir('data')
+    if not os.path.exists('./tmp'):
+        os.mkdir('./tmp')
 
     for profile in profiles:
 
@@ -40,9 +40,9 @@ def __generate_matrix(name: str, profiles: List[str], distance_matrix: Dict[str,
 
         routing = {'profile': profile, 'travelTimes': travel_times, 'distances': distances}
 
-        file = f'./data/{name}.{profile}.routing_matrix.json'
+        file = f'./tmp/{name}.{profile}.routing_matrix.json'
         with open(file, 'w') as f:
-            json.dump(routing, f)
+            ujson.dump(routing, f)
         files.append((profile, file))
 
     return files
@@ -81,10 +81,10 @@ def __generate_problem(name: str, profiles: List[str], tasks: List[Task], depot:
     profiles = [{'name': profile, 'type': f'{profile}_profile'} for profile in profiles]
     problem = {'plan': {'jobs': jobs}, 'fleet': {'vehicles': executors, 'profiles': profiles}}
 
-    if not os.path.exists('./data'):
-        os.mkdir('data')
+    if not os.path.exists('./tmp'):
+        os.mkdir('tmp')
 
-    file = f'./data/{name}.json'
+    file = f'./tmp/{name}.json'
     with open(file, 'w') as f:
-        json.dump(problem, f)
+        ujson.dump(problem, f)
     return file
