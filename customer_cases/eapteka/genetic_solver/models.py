@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict, Union, Optional
 
 Point = Tuple[float, float]
 Location = Union[int, Point]
@@ -20,6 +20,7 @@ class Depot:
     location: int  # id in matrix
     reload: float
     load: float
+    time_window: Optional[Tuple[str, str]] = None
 
 
 @dataclass
