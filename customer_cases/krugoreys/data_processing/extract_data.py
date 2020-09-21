@@ -6,8 +6,10 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from customer_cases.krugoreys.solving.models import Vehicle, DistanceMatrix, Task
 from geo.martices.osrm import fix_matrix
+from models.graph.distance_matrix import DistanceMatrix
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.job import Job
 from utils.serialization import read_pickle
 
 
@@ -44,14 +46,24 @@ def fix_data_errors(df: pd.DataFrame):
 
 def build_tasks():
     print('Создаем таски')
+    gap = timedelta(days=6).seconds
+
     tasks = []
     for r in tqdm(df.itertuples()):
-        tasks += [Task(
-            id=int(r.id) - 1,
-            tw_start=(r.start_time - timedelta(days=3)).timestamp(),
-            tw_end=(r.end_time + timedelta(days=3)).timestamp(),
-            delay=int((r.end_time - r.start_time).seconds),
-        )]
+        tw_start = int((r.start_time - timedelta(days=3)).timestamp())
+        tw_end = int((r.end_time + timedelta(days=3)).timestamp())
+
+        if tw_start > tw_end:
+            tw_end = tw_start + gap
+
+        if tw_start < tw_end:
+            tasks += [Job(
+                id=int(r.id) - 1,
+                tw_start=tw_start,
+                tw_end=tw_end,
+                delay=int((r.end_time - r.start_time).seconds),
+            )]
+
     with gzip.open('tasks.pkl.gz', 'wb') as f:
         pickle.dump(tasks, file=f, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -79,7 +91,7 @@ def build_cars():
             trips = df[df['car'] == vid]
             first, last = trips.iloc[0], trips.iloc[-1]
 
-            res = Vehicle(
+            res = Agent(
                 start_place=int(first.e_id),
                 end_place=int(last.s_id),
                 start_time=str(first.end_time.strftime('%Y-%m-%dT%H:%M:%SZ')),
@@ -95,7 +107,11 @@ def build_cars():
         except KeyError as e:
             print(e)
     with gzip.open('vehicles.pkl.gz', 'wb') as f:
-        pickle.dump(vehicles, file=f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(
+            vehicles,
+            file=f,
+            protocol=pickle.HIGHEST_PROTOCOL
+        )
 
 
 if __name__ == "__main__":

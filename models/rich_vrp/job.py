@@ -11,10 +11,7 @@ class Job:
     id: int  # индекс в матрице
     tw_start: datetime  # временные окна
     tw_end: datetime  # временные окна
+
     delay: timedelta  # время обслуживания на точке
-    demand: int
-
-    # priority:
-
-    # def tw_number(self):
-    #     ...
+    demand: int = 0  # количество груза в точке
+    price: int = 1  # награда, получаемая за выполнение этой работы

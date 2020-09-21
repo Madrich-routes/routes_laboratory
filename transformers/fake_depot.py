@@ -33,11 +33,7 @@ def add_fake_depot(
 
 class DistanceClipper(BaseTransformer):
     """
-    Оставляем в матрице только ребра от a_min до a_max.
-    Меньшие ребра клипаются, а большие заменяются на бесконечность
-
-    save_matrix определет хотим ли мы сохранить матрицу, чтобы потом восстановить
-    # TODO: сохранять только изменяемые куски
+    Добавляем фейковое депо с нулевыми стоимостями до начала и от конца
     """
 
     def __init__(
@@ -58,8 +54,9 @@ class DistanceClipper(BaseTransformer):
             self.matrix = problem.matrix
 
         problem.matrix = add_fake_depot(
-            problem.matrix,
-            []
+            problem.matrix.dist,
+            np.array(a.start_place for a in problem.agents),
+            np.array(a.end_place for a in problem.agents),
         )
 
         return problem
