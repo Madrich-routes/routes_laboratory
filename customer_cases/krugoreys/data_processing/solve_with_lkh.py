@@ -36,12 +36,12 @@ def solve(
 
     matrix = add_fake_depot(
         matrix.time_matrix,
-        start_ids=np.array(v.start_place for v in vehicles),
-        end_ids=np.array(v.end_place for v in vehicles),
+        start_ids=np.array([int(v.start_place) for v in vehicles]),
+        end_ids=np.array([int(v.end_place) for v in vehicles]),
     )
 
     problem = CVRPTWProblem(
-        matrix=matrix.time_matrix,
+        matrix=matrix,
         vehicles=len(vehicles),
         vehicles_capacity=10 ** 5,
         max_len=1000,
@@ -59,7 +59,7 @@ def main():
     logger.info('Загружаем данные...')
     tasks = read_pickle(data_dir / 'tasks.pkl.gz', compression='gzip')
     vehicles = read_pickle(data_dir / 'vehicles.pkl.gz', compression='gzip')
-    matrix = load_pickle(data_dir / 'matrix_big.pkl.gz')
+    matrix = read_pickle(data_dir / 'matrix_big.pkl.gz', compression='gzip')
 
     print('Решаем')
     res = solve(matrix=matrix, tasks=tasks, vehicles=vehicles)
