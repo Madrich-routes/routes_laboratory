@@ -121,7 +121,7 @@ def __cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
 def __get_index(internal_mapping):
     mapping = {}
     for point, index in internal_mapping.items():
-        mapping[index] = {'lat': point[0], 'lon': point[1]}
+        mapping[str(index)] = {'lat': point[0], 'lon': point[1]}
     return mapping
 
 
