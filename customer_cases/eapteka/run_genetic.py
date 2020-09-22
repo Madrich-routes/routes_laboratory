@@ -20,7 +20,8 @@ def make_windows_orders(date: str, interval: str) -> List[Tuple[str, str]]:
                 start = f'{date}T{tokens[i + 1]}:00Z'
         if token == 'по' and i != size - 1:
             if tokens[i + 1]:
-                end = f'{date}T{tokens[i + 1]}:00Z'
+                end_t = f'{tokens[i + 1]}' if 9 < int(tokens[i + 1][:2]) < 24 else f'23:59'
+                end = f'{date}T{end_t}:00Z'
     return [(start, end)]
 
 
@@ -100,8 +101,8 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
 
 
 def __check_point(lat, lon):
-    assert 54.288066 < lat < 57.172201, f'bad point {lat}'
-    assert 34.619289 < lon < 39.724750, f'bad point {lon}'
+    assert 54.966833 < lat < 56.393109, f'bad point {lat}'
+    assert 36.1686653 < lon < 38.9163203, f'bad point {lon}'
 
 
 def run_solver(couriers_file: str, clear_orders_file: str, orders_file: str, storages_file: str):
