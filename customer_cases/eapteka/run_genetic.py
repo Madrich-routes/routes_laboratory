@@ -5,6 +5,7 @@ from typing import Tuple, Dict, List
 
 import pandas as pd
 import ujson
+from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
 from customer_cases.eapteka.genetic_solver.runner import multi_runner
@@ -76,10 +77,11 @@ def parse_data(couriers_file: str, clear_orders_file: str, orders_file: str, sto
     couriers = []
     courier_xl = pd.read_excel(couriers_file)
     for i, row in courier_xl.iterrows():
+        name = translit(f'{row["Сотрудник"]}', 'ru', reversed=True)
         priority = int(row['Приоритет'] if not math.isnan(row['Приоритет']) else 2)
         cost = int(row['Стоимость 1 заказа']) if priority == 1 else 1000 + int(row['Стоимость 1 заказа'])
         courier = Courier(type_id=f'courier_{i}', profile=courier_typing[row['Должность']],
-                          name=f'{row["Сотрудник"]}_id_{i}', value=[int(1e8), int(1e8)],
+                          name=f'{name}_id_{i}', value=[int(1e8), int(1e8)],
                           costs={"time": 0., "distance": 0., "fixed": cost},
                           time_windows=make_windows(date, row['Интервал работы']),
                           priority=priority, start=-1, end=-1)
