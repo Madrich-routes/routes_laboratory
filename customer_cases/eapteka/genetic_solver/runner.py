@@ -54,46 +54,50 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
     solutions = []
 
     for i, (depot_id, depot) in enumerate(depots.items()):
-        if i != 4:
+        try:
+            print('Problem:', depot_id, 'id:', i)
+            print('Couriers:', len(couriers))
+            print('Tasks:', len(tasks[depot_id]))
+
+            if len(couriers) == 0:
+                solution = {"unassigned": [{
+                    "jobId": "all", "reasons": [{"code": 0, "description": "cannot find car for jobs"}]}]
+                }
+                solutions.append(solution)
+                continue
+
+            # Переиндексация
+            internal_mapping = __reindexing(depot, depot_id, global_revers, tasks, couriers)
+
+            # Загрузка матриц и запуск
+            points = to_array([point for point in internal_mapping])
+            if DEBUG:
+                p_distance, p_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
+                d_distance, d_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
+                p_travel_time //= 500
+                d_travel_time //= 500
+            else:
+                pts = to_array([(point[1], point[0]) for point in internal_mapping])
+                p_distance, _ = osrm_module.get_matrix(pts, ['distance', 'duration'], host=OSRM_PEDESTRIAN)
+                p_travel_time = p_distance / 1.5
+                d_distance, _ = osrm_module.get_matrix(pts, ['distance', 'duration'], host=OSRM_DRIVER)
+                d_travel_time = d_distance / 18
+
+            if len(points) < 100:
+                p_distance, p_travel_time, d_distance, d_travel_time = __get_matrix(depot, points)
+
+            distance = {'pedestrian': p_distance, 'driver': d_distance}
+            travel_time = {'pedestrian': p_travel_time, 'driver': d_travel_time}
+
+            # Окна под склад сужаем у курьеров
+            tmp_couriers = __cut_windows(couriers, depot)
+
+            # Запуск
+            solution = runner(tasks[depot_id], depot, tmp_couriers, profiles, distance, travel_time)
+            solutions.append({'solution': solution, 'indexes': __get_index(internal_mapping)})
+        except Exception as exc:
+            print(exc, '\n')
             continue
-
-        print('Problem:', depot_id, 'id:', i)
-        print('Couriers:', len(couriers))
-        print('Tasks:', len(tasks[depot_id]))
-
-        if len(couriers) == 0:
-            solution = {"unassigned": [{
-                "jobId": "all", "reasons": [{"code": 0, "description": "cannot find car for jobs"}]}]
-            }
-            solutions.append(solution)
-            continue
-
-        # Переиндексация
-        internal_mapping = __reindexing(depot, depot_id, global_revers, tasks, couriers)
-
-        # Загрузка матриц и запуск
-        points = to_array([point for point in internal_mapping])
-        if DEBUG:
-            p_distance, p_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
-            d_distance, d_travel_time = fake_module.get_matrix(points, ['distance', 'duration'])
-            p_travel_time //= 500
-            d_travel_time //= 500
-        else:
-            p_distance, p_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_PEDESTRIAN)
-            d_distance, d_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_DRIVER)
-
-        if len(points) < 100:
-            p_distance, p_travel_time, d_distance, d_travel_time = __get_matrix(depot, points)
-
-        distance = {'pedestrian': p_distance, 'driver': d_distance}
-        travel_time = {'pedestrian': p_travel_time, 'driver': d_travel_time}
-
-        # Окна под склад сужаем у курьеров
-        tmp_couriers = __cut_windows(couriers, depot)
-
-        # Запуск
-        solution = runner(tasks[depot_id], depot, tmp_couriers, profiles, distance, travel_time)
-        solutions.append({'solution': solution, 'indexes': __get_index(internal_mapping)})
 
         if not os.path.exists('./data'):
             os.mkdir('./data')
