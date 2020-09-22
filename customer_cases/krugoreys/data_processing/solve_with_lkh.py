@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Tuple, List
 
-from statsmodels.iolib import load_pickle
+import numpy as np
 
 from models.graph.distance_matrix import DistanceMatrix
 from models.problems.cvrptw import CVRPTWProblem
@@ -12,9 +12,7 @@ from solvers.transformational import TransformationalSolver
 from transformers.clipper import DistanceClipper
 from transformers.fake_depot import add_fake_depot
 from utils.logs import logger
-from utils.serialization import read_pickle, save_pickle, load_np
-
-import numpy as np
+from utils.serialization import read_pickle, save_pickle
 
 Point = Tuple[float, float]
 
@@ -50,10 +48,13 @@ def solve(
         max_len=1000,
         max_hops=1000,
         demands=[0] + [1] * len(tasks),
-        time_windows=[(start_time, end_time)] * (len(tasks) + 1) #+ [(int(t.tw_start), int(t.tw_end)) for t in tasks],
+        time_windows=[(start_time, end_time)] * (len(tasks) + 1)  # + [(int(t.tw_start), int(t.tw_end)) for t in tasks],
     )
 
     return solver.solve(problem)
+
+
+# /tmp/solutions/solution_lkh-4892400.sol
 
 def main():
     data_dir = Path('../big_data')
