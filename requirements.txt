@@ -1,3 +1,4 @@
+herepy
 pandas
 xlrd
 ujson
@@ -6,6 +7,7 @@ scipy
 ortools
 matplotlib
 numpy
+numba
 jupyterlab
 jupyter
 tsplib95
