@@ -3,6 +3,7 @@
 """
 
 import os
+from dataclasses import dataclass
 from itertools import chain
 from typing import Tuple
 from urllib.parse import quote
@@ -13,8 +14,16 @@ import ujson
 from polyline import encode as polyline_encode
 
 from geo.transforms import geo_distance
-from models.point import Point
 from utils.printing import is_number
+
+
+@dataclass
+class Point:
+    lat: float
+    lon: float
+
+    def coords(self) -> Tuple[float, float]:
+        return self.lon, self.lat
 
 
 def _encode_src_dst(src, dst):
@@ -54,6 +63,9 @@ def table(host, src, dst=None, profile="driving"):
 
 
 def get_osrm_matrix(points: Tuple[Point]) -> np.ndarray:
+    """
+    Получаем расстояния.
+    """
     print("Не нашли в кеше. Обновляем матрицу расстояний...")
     osrm_host = f'http://{os.environ.get("OSRM_HOST")}:{os.environ.get("OSRM_PORT")}'
 

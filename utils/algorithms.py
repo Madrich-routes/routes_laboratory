@@ -4,7 +4,7 @@ import numba as nb
 import numpy as np
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def make_pair(i: int, j: int) -> Tuple[int, int]:
     """
     Правильная пара для упрощения хранения ребер
@@ -14,7 +14,7 @@ def make_pair(i: int, j: int) -> Tuple[int, int]:
     return (i, j) if i > j else (j, i)
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def rotate(tour: np.ndarray, num: int) -> np.ndarray:
     """
     Сдвиг массива влево на n элементов
@@ -35,7 +35,7 @@ def rotate(tour: np.ndarray, num: int) -> np.ndarray:
     return temp
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     """
     Взятие длины по матрице смежности и туру в виде последовательных вершин
@@ -49,7 +49,7 @@ def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     return length
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def between(size: int, first: int, second: int, third: int) -> bool:
     """
     Проверка находится ли third между first и second
@@ -66,7 +66,7 @@ def between(size: int, first: int, second: int, third: int) -> bool:
     return False
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def around(tour: np.ndarray, it: int) -> tuple:
     """
     Возвращает predecessor and successor вершины t
@@ -78,7 +78,7 @@ def around(tour: np.ndarray, it: int) -> tuple:
     return ((it + 1) % s, tour[(it + 1) % s]), ((it - 1) % s, tour[(it - 1) % s])
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def swap(tour: np.ndarray, x: int, y: int) -> np.ndarray:
     """ Переворот куска тура: [x, y], включительно!
     tour: список городов
