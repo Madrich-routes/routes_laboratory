@@ -1,6 +1,7 @@
 import gzip
 import pickle
 from datetime import timedelta
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -14,9 +15,9 @@ from utils.logs import logger
 from utils.serialization import load_np, save_pickle
 
 
-def load_data():
+def load_data(data_dir):
     logger.info('Читаем excel...')
-    df = pd.read_excel("../data/pretty_result.xlsx")  # noqa
+    df = pd.read_excel(data_dir / "pretty_result.xlsx")  # noqa
     df.columns = ['id', "start_time", "end_time", "addr1", "addr2", "coord1", "coord2",
                   's_id', 'e_id', "line_dist", "osrm_dist", "car"]
     return df
@@ -93,6 +94,7 @@ def build_cars():
             first, last = trips.iloc[0], trips.iloc[-1]
 
             res = Agent(
+                name=vid,
                 start_place=int(first.e_id),
                 end_place=int(last.s_id),
                 start_time=str(first.end_time.strftime('%Y-%m-%dT%H:%M:%SZ')),
@@ -118,7 +120,10 @@ def build_cars():
 
 
 if __name__ == "__main__":
-    df = load_data()
+    data_dir = Path('../data/')
+    big_data_dir = Path('../big_data/')
+
+    df = load_data(data_dir)
     fix_data_errors(df)
     small_matrix = load_np("../big_data/small_matrix.npz")
     coords = pd.read_csv("../data/coordinates.csv", sep=';')[["0", "1"]].values

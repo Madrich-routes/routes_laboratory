@@ -1,5 +1,6 @@
 import gzip
 import pickle
+import sys
 from sys import getsizeof
 from typing import Any
 
@@ -23,6 +24,7 @@ def save_pickle(filename, obj: object, compression=None):
     """
     Сохранить объект в pickle
     """
+    logger.debug(f'Сохраняем {filename} ({sys.getsizeof(obj)}) ...')
     open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'wb') as f:
         pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -35,9 +37,13 @@ def read_pickle(filename, compression=None) -> Any:
     :param filename: Путь к файлу, из которого будем загружать
     :return: объект
     """
+    logger.debug(f'Считываем {filename} ...')
     open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'rb') as f:
-        return pickle.load(f)
+        obj = pickle.load(f)
+
+    logger.debug(f'Считали {filename} ({sys.getsizeof(obj)}) ...')
+    return obj
 
 
 def save_np(finename: str, a):
