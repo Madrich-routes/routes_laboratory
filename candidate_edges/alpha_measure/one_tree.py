@@ -21,7 +21,7 @@ def one_tree(adjacency_matrix: np.ndarray) -> Tuple[float, np.ndarray, np.ndarra
     return temp + f_min + s_min, np.append(src, [0, 0]), np.append(dst, [f_node, s_node])
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def __search(adjacency_matrix: np.ndarray) -> tuple:
     f_node, s_node, f_min, s_min = -1, -1, np.inf, np.inf
     for index, price in enumerate(adjacency_matrix[0]):
