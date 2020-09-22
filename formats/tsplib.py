@@ -52,3 +52,9 @@ def dump_demands(demands: List[int]):
             for i, d in enumerate(demands)
         ]
     )
+
+
+def parse_solution():
+    # tsplib95.load_solution(data_dir / 'sintef_sol.lkh')
+    # TODO:
+    ...
