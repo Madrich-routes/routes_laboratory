@@ -1,17 +1,20 @@
+import math
 import os
 import uuid
 from copy import deepcopy
 from datetime import datetime
 from typing import List, Dict, Tuple
 
+import numba as nb
 import numpy as np
 import ujson
-from madrich.api_module import osrm_module, fake_module
+from herepy import RouteMode
+from madrich.api_module import osrm_module, fake_module, here_module
 from madrich.utils import to_array
 
 from customer_cases.eapteka.genetic_solver.converter import generate_json, convert_json
 from customer_cases.eapteka.genetic_solver.models import Task, Depot, Courier
-from customer_cases.eapteka.genetic_solver.settings import OSRM_PEDESTRIAN, OSRM_DRIVER, DEBUG
+from customer_cases.eapteka.genetic_solver.settings import OSRM_PEDESTRIAN, OSRM_DRIVER, DEBUG, HERE_KEY
 
 array = np.ndarray
 
@@ -44,15 +47,19 @@ def runner(tasks: List[Task], depot: Depot, couriers: List[Courier],
 def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], couriers: List[Courier],
                  mapping: Dict[Tuple[float, float], int]):
     # Сортируем, чтобы первыми были ранние склады
-    # couriers, depots = __sort(couriers, depots)
+    couriers, depots = __sort(couriers, depots)
 
     profiles = ['pedestrian', 'driver']
     global_revers = {v: k for k, v in mapping.items()}
     solutions = []
 
     for i, (depot_id, depot) in enumerate(depots.items()):
+        if i != 4:
+            continue
+
         print('Problem:', depot_id, 'id:', i)
-        print('couriers:', len(couriers))
+        print('Couriers:', len(couriers))
+        print('Tasks:', len(tasks[depot_id]))
 
         if len(couriers) == 0:
             solution = {"unassigned": [{
@@ -74,6 +81,9 @@ def multi_runner(tasks: Dict[str, List[Task]], depots: Dict[str, Depot], courier
         else:
             p_distance, p_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_PEDESTRIAN)
             d_distance, d_travel_time = osrm_module.get_matrix(points, ['distance', 'duration'], host=OSRM_DRIVER)
+
+        if len(points) < 100:
+            p_distance, p_travel_time, d_distance, d_travel_time = __get_matrix(depot, points)
 
         distance = {'pedestrian': p_distance, 'driver': d_distance}
         travel_time = {'pedestrian': p_travel_time, 'driver': d_travel_time}
@@ -166,3 +176,54 @@ def __reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: dict, 
         courier.end = courier_end_loc
 
     return internal_mapping
+
+
+def __get_matrices(points):
+    matrix = __get_sinus(points)
+    p_distance = matrix * 600 * 1.2
+    d_distance = matrix * 600 * 1.5
+    p_travel_time = p_distance / 2
+    d_travel_time = d_distance / 3
+    return p_distance, p_travel_time, d_distance, d_travel_time
+
+
+@nb.njit
+def __get_sinus(points):
+    size = points.shape[0]
+    matrix = np.zeros(shape=(size, size))
+    for idx in range(0, size):
+        for idy in range(idx + 1, size):
+            lat1, lon1 = points[idx]
+            lat2, lon2 = points[idy]
+            d_lat = (lat2 - lat1) * math.pi / 180.0
+            d_lon = (lon2 - lon1) * math.pi / 180.0
+
+            # convert to radians
+            lat1 = lat1 * math.pi / 180.0
+            lat2 = lat2 * math.pi / 180.0
+
+            # apply formulae
+            a = (math.sin(d_lat / 2) ** 2 + (math.sin(d_lon / 2) ** 2) * math.cos(lat1) * math.cos(lat2))
+            rad = 6371
+            c = 2 * math.asin(math.sqrt(a))
+
+            matrix[idx][idy] = matrix[idy][idx] = rad * c
+
+    return matrix
+
+
+def __get_matrix(depot, points):
+    t = datetime.strptime(depot.time_window[0], '%Y-%m-%dT%H:%M:%SZ').timestamp()
+    p = [RouteMode.fastest, RouteMode.pedestrian, RouteMode.traffic_enabled]
+    d = [RouteMode.fastest, RouteMode.car, RouteMode.traffic_enabled]
+    if len(points) < 100:
+        p_distance, p_travel_time = here_module.get_matrix(points, p, t, HERE_KEY, ['distance', 'travelTime'])
+        d_distance, d_travel_time = here_module.get_matrix(points, d, t, HERE_KEY, ['distance', 'travelTime'])
+    else:
+        # size = int(np.ceil(len(points) / 99))
+        # for i in range(size):
+        #     p_distance, p_travel_time = here_module.get_matrix(points, p, t, HERE_KEY, ['distance', 'travelTime'])
+        #     d_distance, d_travel_time = here_module.get_matrix(points, d, t, HERE_KEY, ['distance', 'travelTime'])
+        assert False
+
+    return p_distance, p_travel_time, d_distance, d_travel_time
