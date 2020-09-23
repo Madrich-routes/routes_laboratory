@@ -109,7 +109,7 @@ class LKHSolver(BaseTransformationalSolver):
             f'MAKESPAN = YES',
 
             'MAX_TRIALS = 1000',
-            'RUNS = 1',
+            'RUNS = 5',
         ])
 
     def dumps_params(self) -> str:
