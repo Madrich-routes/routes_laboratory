@@ -59,6 +59,9 @@ def parse_solution(
         filename,
         points_num: int
 ):
+    """
+    Разобрать решение в формате MTSP
+    """
     tours = tsplib95.load(filename).tours[0]
     res = []
     car_res = []
