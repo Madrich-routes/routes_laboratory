@@ -1,21 +1,18 @@
 from pathlib import Path
-from typing import Tuple, List
+from typing import List
 
 import numpy as np
 
 from models.graph.distance_matrix import DistanceMatrix
-from models.problems.cvrptw import CVRPTWProblem
+from models.problems.mtsp import MTSPProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from solvers.external.lkh import LKHSolver
-from solvers.transformational import TransformationalSolver
-from transformers.clipper import remove_longer
+from transformers.clipper import remove_longer, make_symmetric
 from transformers.fake_depot import add_fake_depot
-from transformers.scaler import MatrixScaler, scale_down
+from transformers.scaler import scale_down
 from utils.logs import logger
 from utils.serialization import read_pickle, save_pickle
-
-Point = Tuple[float, float]
 
 
 def solve(
@@ -23,42 +20,34 @@ def solve(
         vehicles: List[Agent],
         tasks: List[Job],
 ):
-    solver = TransformationalSolver(
-        transformers=[],
-        basic_solver=LKHSolver(
-            max_trials=150,
-            runs=3,
-            special=False
-        )
+    solver = LKHSolver(
+        max_trials=150,
+        runs=3,
+        special=False,
+        initial_tour='MTSP',
     )
 
-    matrix = matrix.distance_matrix
-    remove_longer(matrix, a_max=50 * 1000)  # оставляем только то, что < 50 км
+    matrix = matrix.distance_matrix  # берем за основу матрицу расстояний
+    make_symmetric(matrix)  # делаем ее симетричной
+    remove_longer(matrix, a_max=80 * 1000)  # оставляем только ребра < 80 км
 
+    # задаем точки, где можно начинать и заканчивать
     matrix = add_fake_depot(
         matrix,
-        start_ids=np.array([int(v.start_place) for v in vehicles]),
-        end_ids=np.array(range(len(matrix))),
+        start_ids=np.arrange(len(matrix)),
+        end_ids=np.arrange(len(matrix)),
     )
 
+    # скейлим, чтобы решалось LKH
     matrix = scale_down(matrix, max_value=536870912)
 
-    # start_time = min(t.tw_start for t in tasks)
-    # end_time = max(t.tw_start for t in tasks)
-
-    start_time = 0
-    end_time = 536870912
-
-    print(list(matrix[60]))
-
-    problem = CVRPTWProblem(
+    problem = MTSPProblem(
         matrix=matrix,
         vehicles=len(vehicles),
-        vehicles_capacity=10 ** 5,
-        max_len=1000,
-        max_hops=1000,
-        demands=[0] + [1] * len(tasks),
-        time_windows=[(start_time, end_time)] * (len(tasks) + 1)  # + [(int(t.tw_start), int(t.tw_end)) for t in tasks],
+        depot=1,
+        objective='MINSUM',
+        max_size=1000,
+        min_size=1,
     )
 
     return solver.solve(problem)
