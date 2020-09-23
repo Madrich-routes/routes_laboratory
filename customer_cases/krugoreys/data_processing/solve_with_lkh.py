@@ -11,7 +11,7 @@ from solvers.external.lkh import LKHSolver
 from solvers.transformational import TransformationalSolver
 from transformers.clipper import remove_longer
 from transformers.fake_depot import add_fake_depot
-from transformers.scaler import MatrixScaler
+from transformers.scaler import MatrixScaler, scale_down
 from utils.logs import logger
 from utils.serialization import read_pickle, save_pickle
 
@@ -38,6 +38,7 @@ def solve(
     )
 
     matrix = MatrixScaler(max_value=262144).transform(matrix)
+    matrix = scale_down(matrix, max_value=262144)
 
     start_time = min(t.tw_start for t in tasks)
     end_time = max(t.tw_start for t in tasks)
