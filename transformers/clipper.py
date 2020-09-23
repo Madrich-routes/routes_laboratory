@@ -36,7 +36,7 @@ def remove_longer(
     if inf is None:
         inf = get_inf(a)
 
-    a[a > a_max] = inf
+    a[a > a_max] += inf  # += чтобы даже если inf, то была разница
 
 
 class DistanceClipper(BaseTransformer):
