@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Tuple, Set
+from typing import Tuple
 
 import numba as nb
 import numpy as np
@@ -73,7 +73,7 @@ def generate_hash(tour: np.ndarray, number=333667, module=909090909090909091) ->
     return h
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def rotate(tour: np.ndarray, num: int) -> np.ndarray:
     """ Сдвиг массива влево на n элементов
     tour: список вершин
@@ -93,7 +93,7 @@ def rotate(tour: np.ndarray, num: int) -> np.ndarray:
     return temp
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def rotate_zero(tour: np.ndarray) -> np.ndarray:
     """ Проворачиваем список так, что бы первым был ноль
     tour: список вершин
@@ -104,7 +104,7 @@ def rotate_zero(tour: np.ndarray) -> np.ndarray:
     return rotate(tour, np.where(tour == 0)[0][0])
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     """ Взятие длины по матрице смежности и туру в виде последовательных вершин
     tour: список вершин
@@ -121,7 +121,7 @@ def get_inf(matrix: np.ndarray):
     """
     Длина ребра, такая, чтобы точно не попасть в тур
     """
-    return get_length(np.arange(start=0, end=len(matrix)), matrix)
+    return get_length(np.arange(len(matrix)), matrix)
 
 
 def get_set(tour: np.ndarray):
@@ -135,7 +135,7 @@ def get_set(tour: np.ndarray):
     return edges
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def between(size: int, first: int, second: int, third: int) -> bool:
     """ Проверка находится ли third между first и second
     size: размер тура
