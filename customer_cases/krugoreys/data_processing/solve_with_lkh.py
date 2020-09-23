@@ -34,8 +34,8 @@ def solve(
     # задаем точки, где можно начинать и заканчивать
     matrix = add_fake_depot(
         matrix,
-        start_ids=np.arrange(len(matrix)),
-        end_ids=np.arrange(len(matrix)),
+        start_ids=np.arange(len(matrix)),
+        end_ids=np.arange(len(matrix)),
     )
 
     # скейлим, чтобы решалось LKH
