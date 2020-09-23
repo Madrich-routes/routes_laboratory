@@ -1,17 +1,10 @@
-from dataclasses import dataclass
-
 import numpy as np
-import os
-import subprocess
-
 import tsplib95
 
 import settings
-from formats.tsplib import dumps_matrix
 from models.problems.base import BaseRoutingProblem, LKHSolvable
 from solvers.external.interface import exec_and_log
 from solvers.transformational import BaseTransformationalSolver
-from transformers.scaler import MatrixScaler
 
 
 class LKHSolver(BaseTransformationalSolver):
@@ -21,10 +14,13 @@ class LKHSolver(BaseTransformationalSolver):
             par_path: str = settings.LKH_PAR_FILE,
             res_path: str = settings.VRP_RES_FILE,
             solver_path: str = settings.LKH3_PATH,
-            trace_level: int = 2,
-            runs: int = 10,
-            max_trials: int = 2392,  # дефолтные значения нужно перепроверить
+            trace_level: int = 2,  # 1-3
+
+            runs: int = None,
+            max_trials: int = None,  # дефолтные значения нужно перепроверить
             special: bool = False,
+
+            initial_tour: str = 'WALK',
     ):
         """
         Trace level может быть от 1 до 3
@@ -55,6 +51,7 @@ class LKHSolver(BaseTransformationalSolver):
         self.special = special
         self.runs = runs
         self.max_trials = max_trials
+        self.initial_tour = initial_tour
 
     def basic_solve(self, p: BaseRoutingProblem):
         print("Начинаем формулировать файлы...")
@@ -101,6 +98,7 @@ class LKHSolver(BaseTransformationalSolver):
             f"SINTEF_SOLUTION_FILE = /tmp/lkh.sintef",
             f"CANDIDATE_FILE= /tmp/lkh.cand",
             f"PI_FILE = /tmp/lkh.pi",
+            f"MTSP_SOLUTION_FILE = /tmp/lkh.pi",
 
             f"TRACE_LEVEL = {self.trace_level}",
             f'PRECISION = 1',
@@ -108,7 +106,7 @@ class LKHSolver(BaseTransformationalSolver):
             f'RECOMBINATION = GPX2',
             f'POPULATION_SIZE = 10',
 
-            # f'MOVE_T'
+            f'INITIAL_TOUR_ALGORITHM = {self.initial_tour}',
 
             f'SUBGRADIENT = NO',
             f'CANDIDATE_SET_TYPE = POPMUSIC',

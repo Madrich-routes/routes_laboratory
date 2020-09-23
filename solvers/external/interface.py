@@ -32,7 +32,7 @@ def exec_and_log(cmd: List[str], prompt: str = '>>'):
     """
     lines = []
     for line in exec_and_iter(cmd):
-        print(f"{prompt}: {line}")
+        print(f"{prompt}: {line}", end='')
         lines += line
 
     return lines

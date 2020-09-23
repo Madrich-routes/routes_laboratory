@@ -39,6 +39,14 @@ def remove_longer(
     a[a > a_max] += inf  # += чтобы даже если inf, то была разница
 
 
+def make_symmetric(m: np.ndarray) -> None:
+    """
+    Делает матрицу симметричой методом усреднения
+    """
+    m += m.T
+    m /= 2
+
+
 class DistanceClipper(BaseTransformer):
     """
     Оставляем в матрице только ребра от a_min до a_max.

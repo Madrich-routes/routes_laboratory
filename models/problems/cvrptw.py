@@ -50,7 +50,6 @@ class CVRPTWProblem(BaseRoutingProblem):
         # f'CAPACITY = {self.vehicles_capacity}',
         # f'DEPOT = {self.depot}',
         return '\n'.join([
-            # r'SPECIAL',
             f'VEHICLES = {self.vehicles}',
             f'MTSP_MAX_SIZE = {self.max_hops}',
             r'INITIAL_TOUR_ALGORITHM = WALK',
