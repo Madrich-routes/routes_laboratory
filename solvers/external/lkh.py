@@ -24,7 +24,7 @@ class LKHSolver(BaseTransformationalSolver):
             trace_level: int = 2,
             runs: int = 10,
             max_trials: int = 2392,  # дефолтные значения нужно перепроверить
-            max_swaps: int = 2392,
+            special: bool = False,
     ):
         """
         Trace level может быть от 1 до 3
@@ -50,6 +50,11 @@ class LKHSolver(BaseTransformationalSolver):
 
         self.solver_path: str = solver_path
         self.trace_level: int = trace_level
+
+        # -------------------------------------- ПАРАМЕТРЫ LKH ---------------------------------------------------
+        self.special = special
+        self.runs = runs
+        self.max_trials = max_trials
 
     def basic_solve(self, p: BaseRoutingProblem):
         print("Начинаем формулировать файлы...")
@@ -92,11 +97,18 @@ class LKHSolver(BaseTransformationalSolver):
         return '\n'.join([
             f"PROBLEM_FILE = {self.tsp_path}",
             f"TOUR_FILE = {self.res_path}",
+
+            f"SINTEF_SOLUTION_FILE = /tmp/lkh.sintef",
+            f"CANDIDATE_FILE= /tmp/lkh.cand",
+            f"PI_FILE = /tmp/lkh.pi",
+
             f"TRACE_LEVEL = {self.trace_level}",
             f'PRECISION = 1',
 
             f'RECOMBINATION = GPX2',
             f'POPULATION_SIZE = 10',
+
+            # f'MOVE_T'
 
             f'SUBGRADIENT = NO',
             f'CANDIDATE_SET_TYPE = POPMUSIC',
@@ -106,10 +118,11 @@ class LKHSolver(BaseTransformationalSolver):
             f'POPMUSIC_SOLUTIONS = 30',
             f'POPMUSIC_TRIALS = 1',
 
-            # f'MAKESPAN = YES',
+            f'MAKESPAN = YES',
+            r'# ' * (not self.special) + 'SPECIAL',
 
-            'MAX_TRIALS = 1000',
-            'RUNS = 5',
+            f'MAX_TRIALS = {self.max_trials}',
+            f'RUNS = {self.runs}',
         ])
 
     def dumps_params(self) -> str:
