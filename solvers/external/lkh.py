@@ -33,6 +33,8 @@ class LKHSolver(BaseTransformationalSolver):
         MAX_TRIALS = 1000
         KICKS = 0
         RUNS = 2
+        TODO: PRESISION
+        TODO: jinja
         """
         super().__init__(
             transformers=[
