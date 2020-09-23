@@ -42,11 +42,10 @@ class MTSPProblem(BaseRoutingProblem):
     def lkh_par(self) -> str:
         return '\n'.join([
             f'VEHICLES = {self.vehicles}',
-            f'DEPOT = {self.depot}'
+            f'DEPOT = {self.depot}',
             f'MTSP_OBJECTIVE = {self.objective}',
             f'MTSP_MIN_SIZE = {self.min_size}',
             f'MTSP_MAX_SIZE = {self.max_size}',
-            r'INITIAL_TOUR_ALGORITHM = MTSP',
         ])
 
     def pragmatic(self) -> str:
