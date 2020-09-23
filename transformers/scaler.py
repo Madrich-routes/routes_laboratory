@@ -1,4 +1,11 @@
+import numpy as np
+
 from models.problems.base import BaseRoutingProblem
+
+
+def scale_down(a: np.ndarray, max_value: int):
+    mult = max_value / a.max()
+    return (mult * a).astype("int32")
 
 
 class MatrixScaler:
@@ -10,7 +17,7 @@ class MatrixScaler:
         Приводим матрицу к интам заданного размера,
         чтобы можно было передавать ее в разные конкретные солверы
         """
-        mult = 32767 / problem.matrix.max()
+        mult = self.max_value / problem.matrix.max()
         problem.matrix = (mult * problem.matrix).astype("int32")
 
     def restore(self):
