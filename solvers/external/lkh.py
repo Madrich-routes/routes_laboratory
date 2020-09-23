@@ -21,7 +21,7 @@ class LKHSolver(BaseTransformationalSolver):
             par_path: str = settings.LKH_PAR_FILE,
             res_path: str = settings.VRP_RES_FILE,
             solver_path: str = settings.LKH3_PATH,
-            trace_level: int = 3,
+            trace_level: int = 2,
             runs: int = 10,
             max_trials: int = 2392,  # дефолтные значения нужно перепроверить
             max_swaps: int = 2392,
@@ -33,7 +33,7 @@ class LKHSolver(BaseTransformationalSolver):
         MAX_TRIALS = 1000
         KICKS = 0
         RUNS = 2
-        TODO: PRESISION
+        TODO: PRECISION
         TODO: jinja
         """
         super().__init__(
@@ -93,6 +93,7 @@ class LKHSolver(BaseTransformationalSolver):
             f"PROBLEM_FILE = {self.tsp_path}",
             f"TOUR_FILE = {self.res_path}",
             f"TRACE_LEVEL = {self.trace_level}",
+            f'PRECISION = 1',
         ])
 
     def dumps_params(self) -> str:
