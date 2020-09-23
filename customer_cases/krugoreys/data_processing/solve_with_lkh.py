@@ -37,7 +37,7 @@ def solve(
         end_ids=np.array([int(v.end_place) for v in vehicles]),
     )
 
-    matrix = scale_down(matrix, max_value=262144)
+    matrix = scale_down(matrix, max_value=536870912)
 
     start_time = min(t.tw_start for t in tasks)
     end_time = max(t.tw_start for t in tasks)
