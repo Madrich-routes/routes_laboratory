@@ -54,6 +54,7 @@ class CVRPTWProblem(BaseRoutingProblem):
             f'VEHICLES = {self.vehicles}',
             f'MTSP_MAX_SIZE = {self.max_hops}',
             r'INITIAL_TOUR_ALGORITHM = WALK',
+            r'MTSP_MIN_SIZE = 1',
         ])
 
     def lkh_problem(self):
