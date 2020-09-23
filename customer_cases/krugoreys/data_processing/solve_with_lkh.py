@@ -26,7 +26,9 @@ def solve(
     solver = TransformationalSolver(
         transformers=[],
         basic_solver=LKHSolver(
-
+            max_trials=150,
+            runs=3,
+            special=False
         )
     )
 
