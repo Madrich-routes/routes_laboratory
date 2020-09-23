@@ -94,6 +94,22 @@ class LKHSolver(BaseTransformationalSolver):
             f"TOUR_FILE = {self.res_path}",
             f"TRACE_LEVEL = {self.trace_level}",
             f'PRECISION = 1',
+
+            f'RECOMBINATION = GPX2',
+            f'POPULATION_SIZE = 10',
+
+            f'SUBGRADIENT = NO',
+            f'CANDIDATE_SET_TYPE = POPMUSIC',
+            f'POPMUSIC_INITIAL_TOUR = YES',
+            f'POPMUSIC_MAX_NEIGHBORS = 10',
+            f'POPMUSIC_SAMPLE_SIZE = 20',
+            f'POPMUSIC_SOLUTIONS = 100',
+            f'POPMUSIC_TRIALS = 1',
+
+            f'MAKESPAN = YES',
+
+            'MAX_TRIALS = 1000',
+            'RUNS = 1',
         ])
 
     def dumps_params(self) -> str:
