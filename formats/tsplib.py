@@ -1,6 +1,7 @@
 from typing import Tuple, List
 
 import numpy as np
+import tsplib95
 
 
 def dumps_matrix(matrix: np.ndarray):
@@ -54,7 +55,24 @@ def dump_demands(demands: List[int]):
     )
 
 
-def parse_solution():
-    # tsplib95.load_solution(data_dir / 'sintef_sol.lkh')
-    # TODO:
-    ...
+def parse_solution(
+        filename,
+        points_num: int
+):
+    tours = tsplib95.load(filename).tours[0]
+    res = []
+    car_res = []
+
+    for i in tours:
+        if i <= (points_num + 1):
+            car_res += [i]
+        else:
+            car_res = []
+            res += [car_res]
+
+    return res
+
+
+if __name__ == '__main__':
+    path = '/Users/dimitrius/projects/personal/VRP/customer_cases/krugoreys/data/solution_lkh.1401181.sol'
+    sol = parse_solution(path, points_num=20745)
