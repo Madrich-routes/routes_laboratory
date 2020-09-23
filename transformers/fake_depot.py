@@ -1,7 +1,6 @@
 import numpy as np
 
 from data_structures.tour.array_tour import get_inf
-from models.problems.base import BaseRoutingProblem
 from models.rich_vrp.problem import RichVRPProblem
 from models.solutions.base import VRPSolution
 from transformers.base import BaseTransformer
@@ -24,8 +23,7 @@ def add_fake_depot(
     res = np.zeros((n + 1, n + 1))
     res[1:, 1:] = matrix
 
-    inf = matrix.sum()
-    # inf = get_inf(matrix)  # настолько большое ребро, что точно не попадет в тур
+    inf = get_inf(matrix)  # настолько большое ребро, что точно не попадет в тур
     res[0, :], res[:, 0] = inf, inf  # депо не связано с точками кроме начала и конца
     res[start_ids, 0], res[0, end_ids] = 0, 0  # бесплатный проезд из начала в депо и наоборот
 
