@@ -44,7 +44,7 @@ def solve(
 
     start_time = end_time = 536870912
 
-    print(matrix[60])
+    print(list(matrix[60]))
 
     problem = CVRPTWProblem(
         matrix=matrix,
