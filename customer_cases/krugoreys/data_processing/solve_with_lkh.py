@@ -39,8 +39,10 @@ def solve(
 
     matrix = scale_down(matrix, max_value=536870912)
 
-    start_time = min(t.tw_start for t in tasks)
-    end_time = max(t.tw_start for t in tasks)
+    # start_time = min(t.tw_start for t in tasks)
+    # end_time = max(t.tw_start for t in tasks)
+
+    start_time = end_time = 536870912
 
     print(matrix[60])
 
