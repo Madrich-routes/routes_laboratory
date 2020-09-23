@@ -9,7 +9,7 @@ from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from solvers.external.lkh import LKHSolver
 from solvers.transformational import TransformationalSolver
-from transformers.clipper import DistanceClipper
+from transformers.clipper import remove_longer
 from transformers.fake_depot import add_fake_depot
 from utils.logs import logger
 from utils.serialization import read_pickle, save_pickle
@@ -23,17 +23,15 @@ def solve(
         tasks: List[Job],
 ):
     solver = TransformationalSolver(
-        transformers=[
-            DistanceClipper(
-                a_min=12 * 3600,
-                a_max=24 * 3600,
-            )
-        ],
+        transformers=[],
         basic_solver=LKHSolver()
     )
 
+    matrix = matrix.distance_matrix
+    remove_longer(matrix, a_max=50 * 1000)  # оставляем только то, что < 50 км
+
     matrix = add_fake_depot(
-        matrix.time_matrix,
+        matrix,
         start_ids=np.array([int(v.start_place) for v in vehicles]),
         end_ids=np.array([int(v.end_place) for v in vehicles]),
     )

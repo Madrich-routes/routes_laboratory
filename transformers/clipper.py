@@ -1,5 +1,6 @@
 import numpy as np
 
+from data_structures.tour.array_tour import get_inf
 from models.problems.base import BaseRoutingProblem
 from models.solutions.base import VRPSolution
 from transformers.base import BaseTransformer
@@ -33,7 +34,7 @@ def remove_longer(
     :return:
     """
     if inf is None:
-        inf = a.max()
+        inf = get_inf(a)
 
     a[a > a_max] = inf
 
