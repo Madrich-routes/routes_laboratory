@@ -108,6 +108,8 @@ class LKHSolver(BaseTransformationalSolver):
             f'RECOMBINATION = GPX2',
             f'POPULATION_SIZE = 10',
 
+            # f'MOVE_T'
+
             f'SUBGRADIENT = NO',
             f'CANDIDATE_SET_TYPE = POPMUSIC',
             f'POPMUSIC_INITIAL_TOUR = YES',
