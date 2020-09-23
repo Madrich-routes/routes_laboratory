@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Tuple, Set
+from typing import Tuple
 
 import numba as nb
 import numpy as np
@@ -121,7 +121,7 @@ def get_inf(matrix: np.ndarray):
     """
     Длина ребра, такая, чтобы точно не попасть в тур
     """
-    return get_length(np.arange(start=0, end=len(matrix)), matrix)
+    return get_length(np.arange(len(matrix)), matrix)
 
 
 def get_set(tour: np.ndarray):
