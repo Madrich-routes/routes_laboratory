@@ -1,4 +1,5 @@
 from collections import defaultdict
+from functools import cached_property
 
 import numpy as np
 
@@ -19,8 +20,12 @@ class DistanceMatrix:
     def n(self) -> int:
         return len(self.dist)
 
-    @property
+    @cached_property
     def time_matrix(self):
+        return self.dist / self.speed
+
+    @cached_property
+    def distance_matrix(self):
         return self.dist / self.speed
 
     # def dist(self, i: int, j: int):
