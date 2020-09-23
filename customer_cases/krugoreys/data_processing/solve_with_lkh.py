@@ -11,6 +11,7 @@ from solvers.external.lkh import LKHSolver
 from solvers.transformational import TransformationalSolver
 from transformers.clipper import remove_longer
 from transformers.fake_depot import add_fake_depot
+from transformers.scaler import MatrixScaler
 from utils.logs import logger
 from utils.serialization import read_pickle, save_pickle
 
@@ -35,6 +36,8 @@ def solve(
         start_ids=np.array([int(v.start_place) for v in vehicles]),
         end_ids=np.array([int(v.end_place) for v in vehicles]),
     )
+
+    matrix = MatrixScaler(max_value=262144).transform(matrix)
 
     start_time = min(t.tw_start for t in tasks)
     end_time = max(t.tw_start for t in tasks)
