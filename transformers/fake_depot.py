@@ -24,13 +24,16 @@ def add_fake_depot(
     res[1:, 1:] = matrix
 
     inf = get_inf(matrix)  # настолько большое ребро, что точно не попадет в тур
-    res[0, :], res[:, 0] = inf, inf  # депо не связано с точками кроме начала и конца
-    res[start_ids, 0], res[0, end_ids] = 0, 0  # бесплатный проезд из начала в депо и наоборот
+
+    res[0, :] = inf   # депо не связано с точками кроме начала и конца
+    res[:, 0] = inf
+    res[0, start_ids] = 0  # бесплатный проезд из начала в депо и наоборот
+    res[end_ids, 0] = 0
 
     return res
 
 
-class DistanceClipper(BaseTransformer):
+class FakeDepot(BaseTransformer):
     """
     Добавляем фейковое депо с нулевыми стоимостями до начала и от конца
     """
