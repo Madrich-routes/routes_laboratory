@@ -24,6 +24,10 @@ class DistanceMatrix:
     def time_matrix(self):
         return self.dist / self.speed
 
+    @cached_property
+    def distance_matrix(self):
+        return self.dist / self.speed
+
     # def dist(self, i: int, j: int):
     #     return self.dist
 
