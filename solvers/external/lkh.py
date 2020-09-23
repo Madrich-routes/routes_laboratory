@@ -103,7 +103,7 @@ class LKHSolver(BaseTransformationalSolver):
             f'POPMUSIC_INITIAL_TOUR = YES',
             f'POPMUSIC_MAX_NEIGHBORS = 10',
             f'POPMUSIC_SAMPLE_SIZE = 20',
-            f'POPMUSIC_SOLUTIONS = 100',
+            f'POPMUSIC_SOLUTIONS = 15',
             f'POPMUSIC_TRIALS = 1',
 
             f'MAKESPAN = YES',
