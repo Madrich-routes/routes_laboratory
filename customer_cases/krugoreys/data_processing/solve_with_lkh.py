@@ -25,7 +25,11 @@ def solve(
 ):
     solver = TransformationalSolver(
         transformers=[],
-        basic_solver=LKHSolver()
+        basic_solver=LKHSolver(
+            max_trials=150,
+            runs=3,
+            special=False
+        )
     )
 
     matrix = matrix.distance_matrix
@@ -34,7 +38,7 @@ def solve(
     matrix = add_fake_depot(
         matrix,
         start_ids=np.array([int(v.start_place) for v in vehicles]),
-        end_ids=np.array([int(v.end_place) for v in vehicles]),
+        end_ids=np.array(range(len(matrix))),
     )
 
     matrix = scale_down(matrix, max_value=536870912)
@@ -42,7 +46,8 @@ def solve(
     # start_time = min(t.tw_start for t in tasks)
     # end_time = max(t.tw_start for t in tasks)
 
-    start_time = end_time = 536870912
+    start_time = 0
+    end_time = 536870912
 
     print(list(matrix[60]))
 
