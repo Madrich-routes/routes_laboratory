@@ -121,7 +121,10 @@ def get_inf(matrix: np.ndarray):
     """
     Длина ребра, такая, чтобы точно не попасть в тур
     """
-    return get_length(np.arange(len(matrix)), matrix)
+    # return get_length(np.arange(len(matrix)), matrix)
+    # return matrix.sum()
+
+    return matrix.max() * 30
 
 
 def get_set(tour: np.ndarray):
