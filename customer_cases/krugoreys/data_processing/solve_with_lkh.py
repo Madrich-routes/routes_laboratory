@@ -42,6 +42,8 @@ def solve(
     start_time = min(t.tw_start for t in tasks)
     end_time = max(t.tw_start for t in tasks)
 
+    print(matrix[60])
+
     problem = CVRPTWProblem(
         matrix=matrix,
         vehicles=len(vehicles),
