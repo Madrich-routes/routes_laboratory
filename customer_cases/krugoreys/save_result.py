@@ -1,12 +1,15 @@
+import collections
 from datetime import datetime
 from pathlib import Path
 
+from more_itertools import flatten
 from tqdm import tqdm
 
 from customer_cases.krugoreys.data_processing.extract_data import load_data
 from formats import sintef
 from utils.logs import logger
 from utils.serialization import read_pickle, load_np
+import pandas as pd
 
 
 def build_row(trip: int, time: int, vehicle: int):
@@ -53,12 +56,52 @@ def rename_columns():
     ]
 
 
+def get_original_tour():
+    pretty_df.start_time = pd.to_datetime(pretty_df.start_time)
+    res = []
+    for v in vehicles:
+        res += [pretty_df[pretty_df['car'] == v.name].sort_values(by='start_time', ascending=True).id.values]
+    return res
+
+
+def load_tours_sintef():
+    # Решение
+    logger.info(f'Всего трипов: {len(pretty_df)}')
+    tours = sintef.parse_solution(data_dir / "mtsp_0.sintef")
+    # tours = tsplib.parse_solution(data_dir / "mtsp_0.sol", points_num=len(pretty_df))
+
+    for i in range(len(tours)):
+        # вычитаем 1 потому что депо и индексация с 1
+        tours[i] = [t - 1 for t in tours[i]]
+        # if max(tours[i]) >= len(big_matrix):
+        #     print('FUCK!')
+
+    trips = list(flatten(tours))
+    dup_trips = [item for item, count in collections.Counter(trips).items() if count > 1]
+
+    assert len(dup_trips) == 0, str(dup_trips)
+    print(f'Трипов в туре: {len(trips)}')
+
+    return tours
+
+
 def load_tours():
     # Решение
-    tours = sintef.parse_solution(data_dir / "sintef_sol.lkh")
+    logger.info(f'Всего трипов: {len(pretty_df)}')
+    tours = sintef.parse_solution(data_dir / "cvrptw_first.sintef")
+    # tours = tsplib.parse_solution(data_dir / "mtsp_0.sol", points_num=len(pretty_df))
+
     for i in range(len(tours)):
-        # вычитаем 1 потому что было депо
+        # вычитаем 1 потому что депо и индексация с 1
         tours[i] = [t - 1 for t in tours[i]]
+        # if max(tours[i]) >= len(big_matrix):
+        #     print('FUCK!')
+
+    trips = list(flatten(tours))
+    dup_trips = [item for item, count in collections.Counter(trips).items() if count > 1]
+
+    assert len(dup_trips) == 0, str(dup_trips)
+    print(f'Трипов в туре: {len(trips)}')
 
     return tours
 
@@ -70,16 +113,22 @@ if __name__ == "__main__":
     data_dir = Path("./data/")
     big_data_dir = Path("./big_data/")
 
-    # Решение
-    tours = load_tours()
-    pretty_df = load_data(data_dir)  # обработанный excel
 
     logger.info('Парсим матрицы и данные...')
     tasks = read_pickle(big_data_dir / "tasks.pkl.gz", compression="gzip")
     vehicles = read_pickle(big_data_dir / "vehicles.pkl.gz", compression="gzip")
 
+    # Решение
+    pretty_df = load_data(data_dir)  # обработанный excel
+    tours = load_tours()
+    orig_tours = get_original_tour()
+
+    # tours = orig_tours
+
     # обе матрицы изначально содержат расстояния
     big_matrix = read_pickle(big_data_dir / "matrix_big.pkl.gz", compression='gzip').dist / speed
+    big_matrix_dist = big_matrix * speed
+
     small_matrix = load_np(big_data_dir / "small_matrix.npz") / speed
 
     # Начало отсчета времен
@@ -87,14 +136,24 @@ if __name__ == "__main__":
     durations = [small_matrix[r.s_id][r.e_id] / speed for r in pretty_df.itertuples()]
 
     res_dict = {}
+    total_dist = 0
+    total_errors = 0
     for car, tour in tqdm(enumerate(tours)):
         car_start_time = start_time
         for i in range(len(tour)):
             trip, next_trip = tour[i], tour[(i + 1) % len(tour)]
 
             res_dict[trip] = (car_start_time, car)
-            car_start_time += (big_matrix[trip, next_trip])
+            car_start_time += max(big_matrix[trip, next_trip], 12 * 3600)
             car_start_time += durations[trip]
+
+            total_dist += big_matrix_dist[trip, next_trip]
+            total_errors += big_matrix_dist[trip, next_trip] > 80 * 1000
+
+            print()
+
+    print('Общее расстояние: ', total_dist / 1000, 'км')
+    print('Общее количество ошибок: ', total_errors)
 
     pretty_df['start_time'] = pretty_df.id.map(
         lambda x: datetime.fromtimestamp(res_dict[x][0])
