@@ -21,9 +21,10 @@ EARTH_R = 6373
 
 # TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
+
 def haversine_distance(a: np.ndarray, b: np.ndarray):
     """
-    Считаем расстояния между всеми точками из a и всеим точками из b
+    Считаем расстояния между всеми точками из a и всеми точками из b
     :param a:
     :param b:
     :return:
@@ -108,6 +109,16 @@ def delaunay_graph(points: np.ndarray) -> Set[Tuple[int, int]]:
         res.add((s[1], s[3]))
 
     return res
+
+
+def distance_matrix(src: np.ndarray, dst: np.ndarray, method=geo_distance) -> np.ndarray:
+    """
+    src, dst: Lists of coords (lat, lon)
+    Возвращаем матрицу расстояний по прямой
+    """
+    for a in src:
+        for b in dst:
+            ...
 
 
 class DynamicConvexHull:
