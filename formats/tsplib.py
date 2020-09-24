@@ -55,6 +55,19 @@ def dump_demands(demands: List[int]):
     )
 
 
+def split_into_tours(nodes, size):
+    nodes = np.array(nodes)
+    nodes *= (nodes < size | nodes == 1)
+
+    bounds = np.where(nodes == 0)[0]
+    res = [nodes[bounds[-1]:]]
+
+    for i in range(len(bounds) - 1):
+        res += [nodes[bounds[i]: bounds[i + 1] + 1]]
+
+    return res
+
+
 def parse_solution(
         filename,
         points_num: int
@@ -63,19 +76,9 @@ def parse_solution(
     Разобрать решение в формате MTSP
     """
     tours = tsplib95.load(filename).tours[0]
-    res = []
-    car_res = []
-
-    for i in tours:
-        if i <= (points_num + 1):
-            car_res += [i]
-        else:
-            car_res = []
-            res += [car_res]
-
-    return res
+    return split_into_tours(tours, points_num + 1)
 
 
 if __name__ == '__main__':
-    path = '/Users/dimitrius/projects/personal/VRP/customer_cases/krugoreys/data/solution_lkh.1401181.sol'
+    path = '/Users/dimitrius/projects/personal/VRP/customer_cases/krugoreys/data/mtsp_1.sol'
     sol = parse_solution(path, points_num=20745)
