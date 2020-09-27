@@ -15,7 +15,7 @@ from madrich.utils import to_array
 from customer_cases.eapteka.genetic_solver.converter import generate_json, convert_json
 from customer_cases.eapteka.genetic_solver.models import Task, Depot, Courier
 from customer_cases.eapteka.genetic_solver.settings import OSRM_PEDESTRIAN, OSRM_DRIVER, DEBUG, HERE_KEY
-from geo.martices.osrm import get_osrm_matrix
+from geo.providers.osrm import get_osrm_matrix
 
 array = np.ndarray
 
