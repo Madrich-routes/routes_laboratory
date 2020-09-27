@@ -1,11 +1,18 @@
-from collections import defaultdict
 from functools import cached_property
 
 import numpy as np
 
-# TODO: возможно, все же, этих дистанс-матриц нужно очень много
 
-class DistanceMatrix:
+# TODO: Возможно, все же, этих дистанс-матриц нужно очень много
+# TODO: Для графа все же создать именно матрицу расстояний им методы для работы с ней
+# TODO: Так же мб матрицу можно создать в структурах данных, чтобы описать маппинг
+
+
+class Geometry:
+    """
+
+    """
+
     def __init__(
             self,
             dist: np.ndarray,

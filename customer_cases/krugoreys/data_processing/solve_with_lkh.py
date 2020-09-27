@@ -3,7 +3,7 @@ from typing import List
 
 import numpy as np
 
-from models.graph.distance_matrix import DistanceMatrix
+from models.graph.distance_matrix import Geometry
 from models.problems.mtsp import MTSPProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
@@ -16,7 +16,7 @@ from utils.serialization import read_pickle, save_pickle
 
 
 def solve(
-        matrix: DistanceMatrix,
+        matrix: Geometry,
         vehicles: List[Agent],
         tasks: List[Job],
 ):

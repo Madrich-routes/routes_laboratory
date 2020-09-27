@@ -18,5 +18,5 @@ class Agent:
     start_place: int  # стартовая точка
     end_place: int  # конечная точка прибытия
 
-    type: AgentType = None  # тип этого конкретного агента.
+    type: AgentType = None  # тип этого конкретного агента
     name: str = "",
