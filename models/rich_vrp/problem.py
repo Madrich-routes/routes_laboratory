@@ -4,7 +4,7 @@ import numpy as np
 
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
-from models.graph.distance_matrix import DistanceMatrix
+from models.graph.distance_matrix import Geometry
 from typing import List
 
 
@@ -16,7 +16,7 @@ class RichVRPProblem:
     """
     def __init__(
             self,
-            matrix: DistanceMatrix,
+            matrix: Geometry,
             agents: List[Agent],
             jobs: List[Job],
     ):

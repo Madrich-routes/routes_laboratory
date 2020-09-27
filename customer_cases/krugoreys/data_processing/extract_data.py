@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from geo.martices.osrm import fix_matrix
-from models.graph.distance_matrix import DistanceMatrix
+from geo.providers.osrm import fix_matrix
+from models.graph.distance_matrix import Geometry
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from utils.logs import logger
@@ -78,7 +78,7 @@ def build_matrix():
     e_idx = df.e_id.values
     s_idx = df.s_id.values
     res_matrix = small_matrix[e_idx][:, s_idx].astype(np.int32)
-    d_matr = DistanceMatrix(res_matrix, speed=18.87)
+    d_matr = Geometry(res_matrix, speed=18.87)
 
     logger.info(f'Матрица {d_matr.n}')
     save_pickle('../big_data/matrix_big.pkl.gz', d_matr, compression='gzip')

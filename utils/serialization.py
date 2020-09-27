@@ -5,6 +5,7 @@ from sys import getsizeof
 from typing import Any
 
 import numpy as np
+import ujson
 
 from utils.logs import logger
 
@@ -17,7 +18,7 @@ def get_open_func(compression_alg="gzip"):
     if compression_alg is None:
         return open
     elif compression_alg == 'gzip':
-        return gzip.open
+        return lambda *args, **kw: gzip.open(*args, **kw, compressionlevel=5)
 
 
 def save_pickle(filename, obj: object, compression=None):
@@ -46,17 +47,37 @@ def read_pickle(filename, compression=None) -> Any:
     return obj
 
 
-def save_np(finename: str, a):
-    logger.debug(f'Сохраняем матрицу {finename} ...')
-    np.savez_compressed(finename, a)
+# Методы для работы с numpy встроенным сохранением
+
+def save_np(filename: str, a):
+    logger.debug(f'Сохраняем матрицу {filename} ...')
+    np.savez_compressed(filename, a)
     logger.debug(f'Сохранение закончено')
 
 
-def load_np(finename: str):
-    logger.debug(f'Загружаем матрицу {finename} ...')
-    res = np.load(finename, allow_pickle=True)['arr_0']
-    logger.debug(f'{finename} загрузили. {getsizeof(res)} байт')
+def load_np(filename: str):
+    logger.debug(f'Загружаем матрицу {filename} ...')
+    res = np.load(filename)['arr_0']
+    logger.debug(f'{filename} загрузили. {getsizeof(res)} байт')
     return res
+
+
+# Методы для работы с json
+
+def load_json(filename: str):
+    logger.debug(f'Загружаем json {filename} ...')
+    with open(filename) as f:
+        obj = ujson.load(f)
+    logger.debug(f'{filename} загрузили. {getsizeof(obj)} байт')
+    return obj
+
+
+def dump_json(filename: str, obj: Any):
+    logger.debug(f'Сохраняем json {filename}. {getsizeof(obj)} байт')
+    with open(filename, 'wb') as f:
+        ujson.dump(obj, f)
+    logger.debug(f'{filename} загрузили. {getsizeof(obj)} байт')
+    return obj
 
 
 def save(filename: str, obj: Any):
@@ -67,4 +88,4 @@ def save(filename: str, obj: Any):
 
 
 def load(filename: str) -> Any:
-        return pickle.load(filename)
+    return pickle.load(filename)
