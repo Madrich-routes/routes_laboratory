@@ -4,6 +4,7 @@ from random import randrange, choice
 
 import numexpr as ne
 import numpy as np
+from blist._blist import blist
 from scipy.sparse.csgraph._min_spanning_tree import minimum_spanning_tree
 
 from data_structures.unionfind import UnionFind
@@ -105,6 +106,19 @@ def mst_approx(matrix: np.ndarray):
     # TODO: закончить эту штуку
     """
     minimum_spanning_tree(matrix)
+
+
+def cheapest_insertion(
+        matrix: Array,
+        first: int = None,
+):
+    # TODO:
+    n = len(matrix)
+    tour = blist()
+    current = first if first is not None else randrange(n)
+
+    tour += [current]
+
 
 
 def generate_initial_solution(matrix: Array, points: Array = None, candidates: Array = None):
