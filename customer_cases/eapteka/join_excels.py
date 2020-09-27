@@ -86,4 +86,4 @@ def merge_couriers(in_file, out_file):
 
 
 if __name__ == "__main__":
-    merge_couriers('./data/solver_simple_transport_1_couriers.xlsx', './data/merged_simple_transport_1_couriers.xlsx')
+    merge_couriers('./data/solver_16_couriers.xlsx', './data/solver_16_couriers_merged.xlsx')
