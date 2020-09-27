@@ -1,6 +1,6 @@
 from typing import List
 
-from models.graph.distance_matrix import DistanceMatrix
+from models.graph.distance_matrix import Geometry
 from models.graph.edge import Edge
 from models.graph.vertex import Vertex
 
@@ -12,7 +12,7 @@ class Graph:
     """
     def __init__(
             self,
-            matrix: DistanceMatrix,
+            matrix: Geometry,
             vertices: List[Vertex],
             edges: List[Edge],
     ):
