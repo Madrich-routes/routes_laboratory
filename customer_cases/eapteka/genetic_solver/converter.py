@@ -16,11 +16,10 @@ def convert_json(file: str):
     return solution
 
 
-def generate_json(name: str, profiles: List[str], tasks: List[Task], depot: Depot, couriers: List[Courier],
-                  distance_matrix: Dict[str, array], time_matrix: Dict[str, array]):
-    matrix_file = __generate_matrix(name, profiles, distance_matrix, time_matrix)
+def generate_json(name: str, profiles: List[str], tasks: List[Task], depot: Depot, couriers: List[Courier]):
+    # matrix_file = __generate_matrix(name, profiles, distance_matrix, time_matrix)
     problem_file = __generate_problem(name, profiles, tasks, depot, couriers)
-    return problem_file, matrix_file
+    return problem_file
 
 
 def __generate_matrix(name: str, profiles: List[str], distance_matrix: Dict[str, array], time_matrix: Dict[str, array]):
@@ -79,7 +78,11 @@ def __generate_problem(name: str, profiles: List[str], tasks: List[Task], depot:
         executors.append(executor)
 
     profiles = [{'name': profile, 'type': f'{profile}_profile'} for profile in profiles]
-    problem = {'plan': {'jobs': jobs}, 'fleet': {'vehicles': executors, 'profiles': profiles}}
+    objectives = {"primary": [{"type": "minimize-unassigned"}, {"type": "minimize-tours"}],
+                  "secondary": [{"type": "minimize-cost"},
+                                {"type": "balance-distance", "options": {"tolerance": 0.05, "threshold": 0.075}}]}
+    # objectives = {"primary": [{"type": "minimize-unassigned"}], "secondary": [{"type": "minimize-cost"}]}
+    problem = {'plan': {'jobs': jobs}, 'fleet': {'vehicles': executors, 'profiles': profiles}, 'objectives': objectives}
 
     if not os.path.exists('./tmp'):
         os.mkdir('tmp')
