@@ -11,6 +11,9 @@ Edge = Tuple[int, int]
 
 
 class ArrayTour(Tour):
+    """
+    Просто набор вершин.
+    """
 
     def __hash__(self):
         return generate_hash(self.nodes)
@@ -19,16 +22,17 @@ class ArrayTour(Tour):
         return get_length(self.nodes, self.problem.matrix)
 
     def prev(self, a: int):
-        pass
+        return (a - 1) % self.size
 
     def next(self, a: int):
-        pass
+        return (a + 1) % self.size
 
     def between(self, a: int, b: int, c: int):
         return between(len(self.nodes), a, b, c)
 
     def flip(self, a: int, b: int, c: int, d: int) -> None:
-        pass
+        # TODO:
+        raise NotImplementedError
 
     def edges(self):
         return get_set(self.nodes)
@@ -36,7 +40,8 @@ class ArrayTour(Tour):
 
 @lru_cache
 def generate_degrees(number: int, module: int, size: int) -> np.ndarray:
-    """ Вычисление степеней 0 - size числа number по модулю module
+    """
+    Вычисление степеней 0 - size числа number по модулю module
     number: чьи степени ищем
     module: по какому модулю
     size: сколько степеней
@@ -51,7 +56,9 @@ def generate_degrees(number: int, module: int, size: int) -> np.ndarray:
 
 
 def generate_hash_from(tour: np.ndarray, number: int, module: int) -> int:
-    """ Вычисление хеша для тура по туру и списку степенй
+    """
+    # TODO: у хельсгауна через XOR сделано
+    Вычисление хеша для тура по туру и списку степенй
     tour: список городов
     number: чьи степени ищем
     return: хеш
@@ -117,18 +124,19 @@ def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     return length
 
 
-def get_inf(matrix: np.ndarray):
+def get_inf(matrix: np.ndarray, mult: int = 30):
     """
     Длина ребра, такая, чтобы точно не попасть в тур
     """
     # return get_length(np.arange(len(matrix)), matrix)
     # return matrix.sum()
 
-    return matrix.max() * 30
+    return matrix.max() * mult
 
 
 def get_set(tour: np.ndarray):
-    """ Генерация набора ребер тура
+    """
+     Генерация набора ребер тура
     tour: список вершин
     return: set из ребер
     """
