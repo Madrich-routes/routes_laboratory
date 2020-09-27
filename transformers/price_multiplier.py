@@ -1,6 +1,6 @@
 import numpy as np
 
-from models.graph.distance_matrix import DistanceMatrix
+from models.graph.distance_matrix import Geometry
 
 
 def array_gcd(numbers: np.ndarray) -> None:
@@ -12,5 +12,5 @@ def array_gcd(numbers: np.ndarray) -> None:
     numbers /= res
 
 
-def explode_prices(matrix: DistanceMatrix, prices: np.ndarray) -> np.ndarray:
+def explode_prices(matrix: Geometry, prices: np.ndarray) -> np.ndarray:
     ...
