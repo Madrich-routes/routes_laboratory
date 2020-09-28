@@ -1,10 +1,10 @@
 transliterate
 openpyxl
+requests
 herepy
 pandas
 xlrd
 ujson
-numpy
 scipy
 ortools
 matplotlib
