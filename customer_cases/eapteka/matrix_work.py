@@ -1,10 +1,17 @@
 import pickle
 from copy import deepcopy
+from datetime import datetime
 from itertools import product
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import ujson
+from herepy import RouteMode
+from madrich.api_module import here_module
+from madrich.utils import to_array
+
+Point = Tuple[float, float]
+HERE_KEY = ''
 
 
 def assemble_matrix(subs: List[List[np.array]], small_size: int, full_size: int):
@@ -25,13 +32,13 @@ def save_chunk(x, y, obj):
         pickle.dump(obj, f)
 
 
-def load_matrix():
-    super_cell = [[None] * 7 for _ in range(7)]
+def load_matrix(small_size):
+    super_cell = [[None] * small_size for _ in range(small_size)]
     p_dist, p_time = deepcopy(super_cell), deepcopy(super_cell)
     d_dist, d_time = deepcopy(super_cell), deepcopy(super_cell)
 
-    for x in range(7):
-        for y in range(7):
+    for x in range(small_size):
+        for y in range(small_size):
             with open(f'./tmp/chunk_{x}_{y}.pkl', 'rb') as f:
                 p_distance, p_travel_time, d_distance, d_travel_time = pickle.load(f)
                 p_dist[x][y] = p_distance
@@ -69,3 +76,42 @@ def convert_pedestrian_to_transport(depot_id, pts, driver_matrix, pedestrian_mat
     file = f'./tmp/{depot_id}.transport_simple_2.routing_matrix.json'
     with open(file, 'w') as f:
         ujson.dump(routing, f)
+
+
+def download_matrix(points: List[Point], time_window):
+    p = [RouteMode.fastest, RouteMode.publicTransport, RouteMode.traffic_default]
+
+    t = datetime.strptime(time_window, '%Y-%m-%dT%H:%M:%SZ').timestamp()
+    pts = to_array(points)  # numpy <pair>
+
+    cell_size = 300
+    size = len(pts)
+    small_size = int(np.ceil(size / cell_size))
+
+    super_cell = [[None] * small_size for _ in range(small_size)]
+    p_dist, p_time = deepcopy(super_cell), deepcopy(super_cell)
+
+    for x in range(small_size):
+        for y in range(small_size):
+            print(x, y)
+            x_from = x * cell_size
+            x_to = min((x_from + cell_size), size)
+
+            y_from = y * cell_size
+            y_to = min((y_from + cell_size), size)
+
+            src = pts[x_from: x_to]
+            dst = pts[y_from: y_to]
+
+            p_distance, p_travel_time = here_module.get_matrix_sd(src=src, dst=dst, modes=p,
+                                                                  start_t=t, key=HERE_KEY,
+                                                                  factor=['distance', 'travelTime'])
+
+            save_chunk(x, y, (p_distance, p_travel_time))
+
+            p_dist[x][y] = p_distance
+            p_time[x][y] = p_travel_time
+
+    p_distance = assemble_matrix(p_dist, cell_size, size)
+    p_travel_time = assemble_matrix(p_time, cell_size, size)
+    return p_distance, p_travel_time
