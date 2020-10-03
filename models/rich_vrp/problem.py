@@ -3,8 +3,8 @@ from uuid import uuid4
 import numpy as np
 
 from models.rich_vrp.agent import Agent
+from models.rich_vrp.geometry import BaseGeometry
 from models.rich_vrp.job import Job
-from models.graph.distance_matrix import Geometry
 from typing import List
 
 
@@ -16,12 +16,14 @@ class RichVRPProblem:
     """
     def __init__(
             self,
-            matrix: Geometry,
+            matrix: BaseGeometry,
             agents: List[Agent],
             jobs: List[Job],
+            objectives: List[str],
     ):
         self.uuid = uuid4()  # уникальный id этой конкретной проблемы
         self.matrix = matrix
         self.agents = agents
         self.jobs = jobs
+        self.objectives = objectives
 

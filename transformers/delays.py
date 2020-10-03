@@ -6,7 +6,7 @@
 import numpy as np
 
 from models.problems.base import BaseRoutingProblem, WithDelays
-from models.solutions.base import VRPSolution
+from models.rich_vrp.solution import VRPSolution
 from transformers.base import BaseTransformer
 
 

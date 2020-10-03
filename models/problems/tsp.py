@@ -15,13 +15,9 @@ class TSPProblem(BaseRoutingProblem):
         res += f'DIMENSION: {len(self.matrix)}'
         return res
 
-    def pragmatic(self) -> str:
-        pass
-
     def lkh_problem(self) -> str:
         res = ''
         res += ''
 
     def is_multi_depot(self) -> bool:
         return False
-
