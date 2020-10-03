@@ -47,7 +47,3 @@ class MTSPProblem(BaseRoutingProblem):
             f'MTSP_MIN_SIZE = {self.min_size}',
             f'MTSP_MAX_SIZE = {self.max_size}',
         ])
-
-    def pragmatic(self) -> str:
-        # TODO: добавить формулировку
-        raise NotImplementedError

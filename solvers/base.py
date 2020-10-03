@@ -8,7 +8,7 @@ TODO: слишком большая иерархия базовый классо
 from abc import abstractmethod
 
 from models.problems.base import BaseRoutingProblem
-from models.solutions.base import VRPSolution
+from models.rich_vrp.solution import VRPSolution
 
 
 class BaseSolver:

@@ -2,7 +2,6 @@ import subprocess
 from absl import flags
 from absl import app
 
-import sys 
 import logging
 logging.basicConfig(
     level=logging.INFO,
@@ -76,14 +75,14 @@ keymap = {'ej': {'vrp_file' : '-f', 'num_ejected' : '-j', 'num_trials' : '-t', '
 
 def main(argv):
     cmd = [f'bin/vrp_{FLAGS.algo}']
-# Specify necessary args 
+# Specify necessary args
     for arg in req_args[FLAGS.algo]:
         logging.info(FLAGS[arg].value)
         if FLAGS[arg].value is None:
             print(f'Please, specify --{arg}')
             exit(1)
         cmd+=[keymap[FLAGS.algo][arg], str(FLAGS[arg].value)]
-# Specify extra args if any        
+# Specify extra args if any
     for arg in extra_args[FLAGS.algo]:
         if FLAGS[arg].value is not None:
             cmd+=[keymap[FLAGS.algo][arg], str(FLAGS[arg].value)]
@@ -97,5 +96,5 @@ def main(argv):
         logging.info(f'\nSome error')
 
 if __name__ == "__main__":
-    # FLAGS(sys.argv) 
+    # FLAGS(sys.argv)
     app.run(main)

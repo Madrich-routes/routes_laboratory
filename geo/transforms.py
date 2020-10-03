@@ -16,15 +16,18 @@ from scipy.spatial.qhull import ConvexHull
 from sklearn.decomposition import PCA
 from sklearn.neighbors._dist_metrics import DistanceMetric
 
+from utils.types import Array
+
 EARTH_R = 6373
 
 
 # TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
 
-def haversine_distance(a: np.ndarray, b: np.ndarray):
+def haversine_distance(a: Array, b: Array) -> Array:
     """
-    Считаем расстояния между всеми точками из a и всеми точками из b
+    Считаем расстояния между всеми точками из a и всеми точками из b.
+    Применяемая формула достаточно тупая и неточная.
     :param a:
     :param b:
     :return:
