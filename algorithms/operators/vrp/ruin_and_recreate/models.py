@@ -11,6 +11,7 @@ class Customer:
     tw_end: int
     demand: int
 
+
 @dataclass
 class VRPSolution:
     matrix: Array
