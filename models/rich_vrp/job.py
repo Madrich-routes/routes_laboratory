@@ -33,8 +33,8 @@ class CompositeJob(Job):
     Позволяет склеивать джобы, которые гарантированно нужны вместе.
     """
 
-    def __init__(self, containers: List[Job]):
-        self.containers = containers[:]
+    def __init__(self, jobs: List[Job]):
+        self.jobs = jobs[:]
 
     @cached_property
     def id(self):
