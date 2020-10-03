@@ -120,7 +120,6 @@ def cheapest_insertion(
     tour += [current]
 
 
-
 def generate_initial_solution(matrix: Array, points: Array = None, candidates: Array = None):
     """
     Генерируем случайное случайным методом генерации
