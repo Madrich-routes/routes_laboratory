@@ -19,4 +19,4 @@ class Agent:
     end_place: int  # конечная точка прибытия
 
     type: AgentType = None  # тип этого конкретного агента
-    name: str = "",
+    name: str = ""
