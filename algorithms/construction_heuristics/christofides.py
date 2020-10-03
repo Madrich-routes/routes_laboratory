@@ -189,12 +189,12 @@ def compute(M):
 if __name__ == "__main__":
     print('Testing...')
     start = time.time()
-    distance_matrix = graph.distance_matrix
+    distance_matrix = graph.d
     Approximation = compute(distance_matrix)
     end = time.time() - start
     print('Computation Successful...')
     print('Distance Matrix:\n')
-    print(graph.distance_matrix)
+    print(graph.d)
     print('\n1.5 Approximation of TSP (Christofide\'s algorithm):\n',
           Approximation['Christofides_Solution'])
     print('Travel Cost:', Approximation['Travel_Cost'])

@@ -1,3 +1,0 @@
-class TSPTWProblem:
-    def __init__(self):
-        ...

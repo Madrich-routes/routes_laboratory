@@ -1,11 +1,15 @@
-from typing import List, Set
+from typing import List, Tuple
 
 import numpy as np
 
+from geo.transforms import delaunay_graph
 from utils.types import Array
 
 
-def build_n_closest(matrix: Array, n: int):
+def build_n_closest(matrix: Array, n: int) -> List[Tuple[int, int]]:
+    """
+    Строми ребра-кандидаты из i по принципу "Берем n самых коротких ребер"
+    """
     l = len(matrix)
     res = []
 
@@ -14,6 +18,13 @@ def build_n_closest(matrix: Array, n: int):
             res += [(i, j)]
 
     return res
+
+
+def pure_delaunay(points: Array, n: int):
+    """
+    Берем только те ребра, которые напрямую входят в триангуляцию делоне
+    """
+    return delaunay_graph()
 
 # TODO: можем взять триангуляцию делоне и другие метрические штуки, так как у нас все же метрическая тема
 
