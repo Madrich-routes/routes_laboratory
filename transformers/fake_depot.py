@@ -2,7 +2,7 @@ import numpy as np
 
 from data_structures.tour.array_tour import get_inf
 from models.rich_vrp.problem import RichVRPProblem
-from models.solutions.base import VRPSolution
+from models.rich_vrp.solution import VRPSolution
 from transformers.base import BaseTransformer
 
 
