@@ -13,7 +13,7 @@ class Point(abc.ABC):
     address: str
 
     def __str__(self) -> str:
-        return f'{self.point_type}(id={self.id_})'
+        return f'(id={self.id_})'
 
     def __repr__(self) -> str:
         return str(self)
@@ -26,19 +26,6 @@ class Point(abc.ABC):
 
     def __lt__(self, other):
         return self.id_ < other.id_
-
-    def export(self) -> Dict:
-        return dict(
-            lat=self.lat,
-            lon=self.lon,
-            address=self.address,
-            point_type=self.point_type,
-            id=self.id_
-        )
-
-    @property
-    def point_type(self):
-        raise NotImplementedError
 
     def coords(self) -> Tuple[float, float]:
         return self.lon, self.lat

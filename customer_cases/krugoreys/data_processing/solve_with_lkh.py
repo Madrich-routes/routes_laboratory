@@ -27,7 +27,7 @@ def solve(
         initial_tour='MTSP',
     )
 
-    matrix = matrix.distance_matrix  # берем за основу матрицу расстояний
+    matrix = matrix.d  # берем за основу матрицу расстояний
     make_symmetric(matrix)  # делаем ее симетричной
     remove_longer(matrix, a_max=80 * 1000)  # оставляем только ребра < 80 км
 
