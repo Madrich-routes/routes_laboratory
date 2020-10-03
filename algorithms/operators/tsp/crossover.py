@@ -1,3 +1,6 @@
+"""
+Тут реализованы разные популярные кросоверы для tsp
+"""
 import random
 from collections import defaultdict
 from itertools import chain
