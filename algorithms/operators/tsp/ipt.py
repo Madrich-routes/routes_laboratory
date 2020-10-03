@@ -8,7 +8,7 @@ from typing import List, Dict, Union
 import numpy as np
 
 
-# TODO:
+# TODO: как будто бы нет объединения общих частей
 
 def create_filled_matrix(size: int, max_weight: int = 10):
     """
