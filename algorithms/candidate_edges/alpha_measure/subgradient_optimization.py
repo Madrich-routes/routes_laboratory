@@ -6,7 +6,7 @@ from typing import Tuple
 import numpy as np
 import numba as nb
 
-from candidate_edges.alpha_measure.one_tree import one_tree
+from algorithms.candidate_edges.alpha_measure.one_tree import one_tree
 
 Edge = Tuple[int, int]
 
