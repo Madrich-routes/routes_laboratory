@@ -1,10 +1,14 @@
-# coding: utf-8
+"""
+Реализация алгоритма IPT: Iterated partial transcription
+"""
 
 from random import randint
 from typing import List, Dict, Union
 
 import numpy as np
 
+
+# TODO:
 
 def create_filled_matrix(size: int, max_weight: int = 10):
     """
