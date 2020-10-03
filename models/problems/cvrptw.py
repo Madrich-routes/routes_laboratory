@@ -6,24 +6,6 @@ from formats import tsplib
 from models.problems.base import BaseRoutingProblem
 
 
-# @dataclass
-# class MTSPProblem(BaseRoutingProblem):
-#     vehicles: int
-#     max_len: int
-#
-#     def lkh_par(self) -> str:
-#         par = ''
-#         par += 'SPECIAL\n'
-#         par += f'VEHICLES = {self.vehicles}\n'
-#         par += f'DISTANCE = {self.max_len}\n'
-#         par += f'DEPOT = 1\n'
-#         par += f'INITIAL_TOUR_ALGORITHM = MTSP\n'
-#         par += f'MTSP_OBJECTIVE = MINMAX\n'
-#
-#     def pragmatic(self):
-#         ...
-
-
 class CVRPTWProblem(BaseRoutingProblem):
     def __init__(
             self,
