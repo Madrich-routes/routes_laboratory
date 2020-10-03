@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from models.rich_vrp.base import GeoPoint
+
 
 @dataclass
 class Visit:
@@ -8,5 +10,5 @@ class Visit:
     def __str__(self):
         return f'Visit({self.point}, {self.time / 3600:.2f}ч)'
 
-    point: Point  # TODO: ...
+    point: GeoPoint
     time: int
