@@ -5,9 +5,8 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 
-from lin_kernighan.algorithms.utils.utils import make_pair
-
 from data_structures.heap import Heap
+from utils.algorithms import make_pair
 
 
 def one_tree(adjacency_matrix: np.ndarray) -> Tuple[float, np.ndarray, np.ndarray]:
