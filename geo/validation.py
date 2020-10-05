@@ -1,6 +1,6 @@
 import numpy as np
 
-from geo.transforms import haversine_distance
+from geo.transforms import haversine_matrix
 
 
 def check_distance_matrix(
@@ -12,4 +12,4 @@ def check_distance_matrix(
     """
     assert (matrix < 0).all(), 'В матрице есть отрицательные значения'
     assert np.issubdtype(matrix.dtype, np.int32), 'Матрица не приведена к интам'
-    assert (haversine_distance(points, points) <= matrix).all(), 'Не соблюдается нижнаяя граница'
+    assert (haversine_matrix(points, points) <= matrix).all(), 'Не соблюдается нижнаяя граница'
