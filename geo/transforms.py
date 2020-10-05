@@ -24,7 +24,7 @@ EARTH_R = 6373
 # TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
 
-def haversine_distance(a: Array, b: Array) -> Array:
+def haversine_matrix(a: Array, b: Array) -> Array:
     """
     Считаем расстояния между всеми точками из a и всеми точками из b.
     Применяемая формула достаточно тупая и неточная.
@@ -67,7 +67,7 @@ def great_circle_distance(lat_a, lon_a, lat_b, lon_b):
     return geopy.distance.great_circle((lat_a, lon_a), (lat_b, lon_b)).m
 
 
-def geo_distance(a, b):
+def geo_distance(a: Array, b: Array):
     """
     Превращаем широту и долготу в трехмерные координаты.
     Используем geopy — похоже, что это самое эффективное и точное, что есть.
