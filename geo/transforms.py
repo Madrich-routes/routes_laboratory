@@ -12,8 +12,10 @@ from auromat.coordinates.transform import spherical_to_cartesian
 from geopy.distance import geodesic
 from pytz import timezone, utc
 from scipy.spatial import Delaunay
+from scipy.spatial.distance import pdist
 from scipy.spatial.qhull import ConvexHull
 from sklearn.decomposition import PCA
+from sklearn.metrics import pairwise_distances
 from sklearn.neighbors._dist_metrics import DistanceMetric
 
 from utils.types import Array
@@ -24,25 +26,11 @@ EARTH_R = 6373
 # TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
 
-def haversine_matrix(a: Array, b: Array) -> Array:
+def line_distance_matrix(a: Array) -> Array:
     """
-    Считаем расстояния между всеми точками из a и всеми точками из b.
-    Применяемая формула достаточно тупая и неточная.
-    :param a:
-    :param b:
-    :return:
+    Матрица расстояний по прямой
     """
-    EARTH_R = 6373
-    lat_a, lat_b = a[:, 0], b[:, 0]
-    lon_a, lon_b = a[:, 1], b[:, 1]
-
-    dlon = np.radians(lon_b) - np.radians(lon_a)
-    dlat = np.radians(lat_b) - np.radians(lat_a)
-
-    a = np.sin(dlat / 2) ** 2 + np.cos(lat_a) * np.cos(lat_b) * np.sin(dlon / 2) ** 2
-    c = 2 * np.atan2(np.sqrt(a), np.sqrt(1 - a))
-
-    return EARTH_R * c
+    return pairwise_distances(a, metric=great_circle_distance)
 
 
 def sklearn_haversine(a, b):
@@ -60,11 +48,11 @@ def sklearn_haversine(a, b):
     return EARTH_R * dist.pairwise(X)
 
 
-def great_circle_distance(lat_a, lon_a, lat_b, lon_b):
+def great_circle_distance(a, b):
     """
     Расстояние по большой окружности
     """
-    return geopy.distance.great_circle((lat_a, lon_a), (lat_b, lon_b)).m
+    return geopy.distance.great_circle(a, b).m
 
 
 def geo_distance(a: Array, b: Array):
