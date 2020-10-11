@@ -12,10 +12,10 @@ import numpy as np
 import requests
 import ujson
 from polyline import encode as polyline_encode
-from utils.printing import is_number
 
+import settings
 from geo.transforms import geo_distance
-from utils.data_formats import cache
+from utils.data_formats import cache, is_number
 
 
 @dataclass
@@ -69,11 +69,11 @@ def get_osrm_matrix(points: Tuple[Point]) -> np.ndarray:
     Получаем расстояния.
     """
     print("Не нашли в кеше. Обновляем матрицу расстояний...")
-    osrm_host = f'http://{os.environ.get("OSRM_HOST")}:{os.environ.get("OSRM_PORT")}'
+    osrm_host = f'http://{settings.OSRM_HOST}:{settings.OSRM_PORT}'
 
     durations = table(
         host=osrm_host,
-        src=(c.coords() for c in points),
+        src=points,
     )
 
     # assert np.abs(durations).sum() != 0, "OSRM вернул 0 матрицу. Проверьте порядок координат."
