@@ -21,3 +21,6 @@ LKH_PAR_FILE = f"/tmp/parameters_lkh.{os.getpid()}.par"
 VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
 
 REDIS_HOST = '127.0.0.1'
+
+OSRM_HOST = 'desktop'
+OSRM_PORT = '5000'
