@@ -10,7 +10,7 @@ logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Создаем консольный обработчик логов
-handler = logging.StreamHandler(logging.StreamHandler(sys.stderr))
+handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(formatter)
 
