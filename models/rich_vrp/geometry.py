@@ -9,7 +9,7 @@ from functools import lru_cache
 import numpy as np
 import scipy
 
-from geo.transforms import geo_distance, haversine_matrix
+from geo.transforms import geo_distance, line_distance_matrix
 from utils.types import Array
 
 
@@ -63,7 +63,7 @@ class BaseGeometry(abc.ABC):
         Матрица расстояний между точками
         """
         assert len(kwargs) == 0
-        return haversine_matrix(self.points, self.points)
+        return line_distance_matrix(self.points, self.points)
 
     @lru_cache
     def dist_matrix(self, **kwargs) -> Array:
