@@ -1,0 +1,15 @@
+{
+  "points": 716,
+  "profile": "transport",
+  "reload_depot": 1,
+  "reload_pharma": 1,
+  "time_point": 1,
+  "human": {
+    "weight": 15,
+    "capacity": 40
+  },
+  "car": {
+    "weight": 200,
+    "capacity": 400
+  }
+}
