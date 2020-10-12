@@ -1,3 +1,4 @@
+import logging
 import math
 import os
 from copy import deepcopy
@@ -11,11 +12,10 @@ from customer_cases.eapteka.genetic_solver.parse_data import parse_data, load_ma
 
 array = np.ndarray
 
-TYPE = 'transport_simple'
-profiles = [TYPE, 'driver']
 
-
-def run_pharmacy():
+def run_pharmacy(type_m, time_pharmacy, time_depot, type_weight, type_capacity,
+                 driver_weight, driver_capacity, delay, fg):
+    logging.info('Started')
     orders_loc = pd.read_excel('./data/update_3.xlsx')
     address_mapping = {}
     for i, row in orders_loc.iterrows():
@@ -30,7 +30,9 @@ def run_pharmacy():
             aver += (row['ВесЗаказа'] / row['ОбъемЗаказа'])
     aver = aver / num
 
-    orders, depots, couriers, mapping = parse_data(TYPE, aver, address_mapping)
+    profiles = [type_m, 'driver']
+    orders, depots, couriers, mapping = parse_data(type_m, aver, address_mapping, time_pharmacy, time_depot,
+                                                   type_weight, type_capacity, driver_weight, driver_capacity, delay)
     global_revers = {v: k for k, v in mapping.items()}
 
     points, internal_mappings, files = load_matrix(profiles, depots, global_revers, orders, address_mapping)
@@ -50,9 +52,6 @@ def run_pharmacy():
     get_solution(depots, deepcopy(couriers), orders, internal_mappings, files, profiles,
                  address_mapping, couriers_file, depots_file, couriers_dir)
 
-    solver_info = save_excel('20', couriers_file, depots_file)
-    save_couriers('20', couriers_dir)
+    solver_info = save_excel(fg, couriers_file, depots_file)
+    save_couriers(fg, couriers_dir)
     convert_excel(solver_info)
-
-
-run_pharmacy()
