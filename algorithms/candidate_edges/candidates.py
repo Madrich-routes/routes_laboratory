@@ -1,9 +1,11 @@
-from itertools import product
+from typing import List, Set
 
 import numpy as np
 
+from utils.types import Array
 
-def build_n_closest(matrix: np.ndarray, n: int):
+
+def build_n_closest(matrix: Array, n: int):
     l = len(matrix)
     res = []
 
