@@ -1,0 +1,12 @@
+{
+  "driver": {
+    "fixed": 10,
+    "cost_per_second": 10,
+    "cost_per_meter": 0
+  },
+  "pedestrian": {
+    "fixed": 5,
+    "cost_per_second": 5,
+    "cost_per_meter": 0
+  }
+}
