@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Tuple, List
 
@@ -14,15 +15,15 @@ def runner(tasks: List[Task], depot_id: str, depot: Depot, couriers: List[Courie
         os.mkdir('./tmp')
 
     solution_file = f'./tmp/{name}_solution.json'
-    print('Generating Json...')
+    logging.info('Generating Json...')
     problem_file = generate_problem(name, profiles, tasks, depot, couriers)
     m = []
     for matrix in files[depot_id]:
         m.append('-m')
         m.append(matrix)
 
-    print('Solving...')
-    command = f'vrp-cli solve pragmatic {problem_file} --log {" ".join(m)} -o {solution_file}'
+    logging.info('Solving...')
+    command = f'vrp-cli solve pragmatic {problem_file} {" ".join(m)} -o {solution_file} --log'
     os.system(command)
     solution = convert_json(solution_file)
     os.remove(problem_file)

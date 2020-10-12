@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from typing import Tuple, List, Dict
 
@@ -96,31 +97,28 @@ def get_solution(depots: Dict[str, Depot], couriers: List[Courier], orders: Dict
     couriers_output, depots_output = defaultdict(list), defaultdict(list)
 
     for i, (depot_id, depot) in enumerate(depots.items()):
-        print('\n')
-        print('Problem:', depot_id, 'id:', i)
-        print('Couriers:', len(couriers))
-        print('Orders:', len(orders[depot_id]) - 2)
-
-        if i > 0:
-            continue
+        logging.info('\n')
+        logging.info(f'Problem: {depot_id} id: {i}')
+        logging.info(f'Couriers: {len(couriers)}')
+        logging.info(f'Orders: {len(orders[depot_id]) - 2}')
 
         revers, tmp_couriers = prepare_courier(internal_mappings, depot_id, depot, couriers)
         solution = runner(orders[depot_id], depot_id, depot, tmp_couriers, profiles, files)
         solutions[depot_id] = {'solution': solution, 'indexes': get_index(internal_mappings[depot_id])}
 
-        print('Not Solved', 0 if 'unassigned' not in solution else len(solution['unassigned']))
+        logging.info(f'Not Solved: {0 if "unassigned" not in solution else len(solution["unassigned"])}')
 
         st, names = prepare_statistic(depot_id, solution, address, revers, tours, depots_output, couriers_output)
         sv, tmp_couriers = refactor_couriers(couriers, names)
         couriers += tmp_couriers
         all_points += st
 
-        print('Solved:', st)
-        print('Couriers:', len(names))
-        print('Saved:', sv)
+        logging.info(f'Solved: {st}')
+        logging.info(f'Couriers: {len(names)}')
+        logging.info(f'Saved: {sv}')
 
-    print('\nSolved points:', all_points)
-    print('Writing...')
+    logging.info(f'\nSolved points: {all_points}')
+    logging.info(f'Writing...')
 
     pd.DataFrame.from_dict(couriers_output).to_csv(couriers_path, index=False)
     pd.DataFrame.from_dict(depots_output).to_csv(depots_path, index=False)
@@ -131,4 +129,4 @@ def get_solution(depots: Dict[str, Depot], couriers: List[Courier], orders: Dict
     with open('answer.json', 'w') as f:
         ujson.dump(solutions, f)
 
-    print('\nDone')
+    logging.info('\nDone')
