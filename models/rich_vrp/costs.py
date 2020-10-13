@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class AgentCost:
+class AgentCosts:
     """
     Этот класс описывает изменения целевой функции для разных случаев
     """
