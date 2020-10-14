@@ -1,6 +1,6 @@
 from typing import List
 
-from models.rich_vrp.costs import AgentCost
+from models.rich_vrp.costs import AgentCosts
 
 
 class AgentType:
@@ -13,7 +13,7 @@ class AgentType:
             speed: int,  # скорость перемещения
             distance_matrix_id: int,  # его собственная матрица расстояний
             capacities: List[int],  # вектор ограничений
-            costs: AgentCost,
+            costs: AgentCosts,
             skills: List[int],  # список флагов, что он умеет
     ):
         # Характеристики перемещения
