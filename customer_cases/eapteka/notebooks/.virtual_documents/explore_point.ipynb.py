@@ -46,7 +46,8 @@ data = coords.join(info)
 prior_points = data[~data['Приоритет'].isna()]
 
 
-stocks['Широта']
+stocks['lat'] = stocks['Широта']
+stocks['lng'] = stocks['Долгота']
 
 stocks.head(2)
 data.head(2)
@@ -101,9 +102,6 @@ data['t_to'] = t_to
 data['window_len'] = t_diffs
 
 
-## Строим matplotlib
-
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -122,38 +120,51 @@ map_back = plt.imread('../data/map.png')
 ax.imshow(map_back, zorder=0, extent=box)
 
 
-folium.features.C
+t
 
 
 ## Теперь через follium
 import folium
+import math
 tiles='Stamen Toner'  # черно-белая
 tiles = 'Stamen Terrain'  # растительность
 
 mos_map = folium.Map(location=[55.7539, 37.6208], zoom_start=11, tiles=tiles)
 
 unused = folium.map.FeatureGroup()
-for t in data.itertuples():
+for t in data.loc[:, ('lat', 'lng', 'Приоритет', 't_from', 't_to')].itertuples():
+#     print(t[3])
+    if not math.isfinite(t[3]):
+        color='yellow'
+        fill_color='blue'
+        radius=5
+    else:
+        color='red'
+        fill_color='red'
+        radius=10
+
     a = folium.CircleMarker(
         [t.lat, t.lng],
-        radius=5,
-        color='yellow',
-        fill=True,
-        fill_color='blue',
+        radius=radius,
+        color=color,
+        popup=str(t),
+        fill=False,
+        fill_color=fill_color,
         fill_opacity=0.6,
     ).add_to(unused)
 
 for t in stocks.itertuples():
-    a = folium.CircleMarker(
+    a = folium.Marker(
         [t.lat, t.lng],
-        radius=5,
-        color='yellow',
-        fill=True,
-        fill_color='blue',
-        fill_opacity=0.6,
     ).add_to(unused)
+    
+    
+# folium.
 
 mos_map.add_child(unused)
+
+
+
 
 
 
