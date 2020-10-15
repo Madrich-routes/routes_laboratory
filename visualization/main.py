@@ -30,6 +30,8 @@ for lat, lon in data:
     else:
         line_data[line_name] = { 'color': color, 'points': [[lat,lon]] }
 
+
+
 # Drawing Metro route using line_data
 for line_name in line_data:
     data = line_data[line_name]

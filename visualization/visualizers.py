@@ -3,6 +3,7 @@ from pprint import pprint
 import gmaps
 import matplotlib.pyplot as plt
 import numpy as np
+from folium import folium
 
 
 def plot_yandex(points: np.ndarray):
@@ -43,6 +44,11 @@ def plot_on_gmaps(points: np.ndarray):
     fig.add_layer(markers)
 
     return fig
+
+
+def plot_folium(data):
+    mos_map = folium.Map()
+    folium.PolyLine(data['points'], color=data['color'], weight=5).add_to(mos_map)
 
 # TODO: Tableau, PowerBI, FineReport, ArcGIS Online Platform
 
