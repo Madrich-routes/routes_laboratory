@@ -15,6 +15,7 @@ HERE_KEY = ''
 
 
 def assemble_matrix(subs: List[List[np.array]], small_size: int, full_size: int):
+    """"""
     res = np.zeros((full_size, full_size), dtype=np.int32)
 
     for i, j in product(range(len(subs)), repeat=2):
