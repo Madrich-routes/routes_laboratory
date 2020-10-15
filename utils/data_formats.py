@@ -139,6 +139,9 @@ def format_time_window(
         end: int,
         with_name=False,
 ):
+    """
+    Формат в котором мы печатаем time_window
+    """
     res = ''
     res += 'TW: ' * with_name
     res += f"{format_time(start)}-{format_time(end)}"
@@ -150,6 +153,9 @@ def format_collection(
         collection: Any,
         sep: str = ', '
 ):
+    """
+    Формат в котором мы печатаем наборы
+    """
     data = sep.join(sorted(collection))
     if isinstance(collection, set):
         return f'{{{data}}}'

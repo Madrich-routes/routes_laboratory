@@ -32,7 +32,8 @@ def prepare_courier(internal_mappings: dict, depot_id: str, depot: Depot, courie
 
 def prepare_statistic(depot_id: str, solution: dict, address_mapping: dict, revers_mapping: dict, tours: dict,
                       depots_output: dict, couriers_output: dict):
-    """ Save statistic from solution
+    """
+    Save statistic from solution
     """
     statistic = solution['statistic']
     add_depot(depots_output, depot_id, statistic['distance'], statistic['duration'])
