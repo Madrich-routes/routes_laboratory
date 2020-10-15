@@ -13,8 +13,10 @@ from customer_cases.eapteka.genetic_solver.parse_data import parse_data, load_ma
 array = np.ndarray
 
 
-def run_pharmacy(type_m, time_pharmacy, time_depot, type_weight, type_capacity,
-                 driver_weight, driver_capacity, delay, fg):
+def run_pharmacy(
+        type_m, time_pharmacy, time_depot, type_weight, type_capacity,
+        driver_weight, driver_capacity, delay, fg
+):
     logging.info('Started')
     orders_loc = pd.read_excel('./data/update_3.xlsx')
     address_mapping = {}
