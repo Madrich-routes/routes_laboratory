@@ -7,6 +7,7 @@ from typing import List
 
 def invert(a: List[int]):
     """
+    Тупой оператор, в котором мы просто переворачиваем кусок маршрута
     i включаем, j не включаем.
     """
     n = len(a)
@@ -23,7 +24,3 @@ def invert(a: List[int]):
                 break
             else:
                 a[i], a[size - i] = a[size - i], a[i]
-
-
-def slide(a: List[int]):
-    ...

@@ -1,3 +1,6 @@
+"""
+В этом модуле создается матрица расстояний с учетом общественного транспорта
+"""
 import pandas as pd
 from geopy.distance import distance
 import numpy as np

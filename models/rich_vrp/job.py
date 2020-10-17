@@ -1,27 +1,36 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property, reduce
-from typing import Set, List
+from typing import Set, List, Optional, Tuple
 
 import numpy as np
 
 
 @dataclass
-class Job:
+class Place:
+    id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.  # TODO: а оно нам нужно? uuid?
+
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
+    x: Optional[int] = None
+    y: Optional[int] = None
+
+
+@dataclass
+class Job(Place):
     """
     Класс для описания работы, которую необходимо проделать агенту.
     Это самый общий класс. В него добавляются любые характеристики.
     """
-    id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.  # TODO: а оно нам нужно? uuid?
+    time_windows: List[Tuple[int, int]] = field(default_factory=list)
 
-    tw_start: int  # временные окна  # TODO: что задавать, если окна не заданы?
-    tw_end: int  # временные окна
+    delay: int = 0  # время обслуживания на точке
+    amounts: np.ndarray = None  # количество разгрузки в точке (той же размерности, что capacities)
 
-    delay: int  # время обслуживания на точке
-    amounts: np.ndarray  # количество разгрузки в точке (той же размерности, что capacities)
-
-    required_skills: Set[int]  # какой набор скилов тут будет необходим
+    required_skills: Set[int] = field(default_factory=set)  # какой набор скилов тут будет необходим
 
     price: int = 0  # награда, получаемая за выполнение этой работы
+    priority: int = 0
 
     def __le__(self, other):
         return self.id < other.id
@@ -33,8 +42,8 @@ class CompositeJob(Job):
     Позволяет склеивать джобы, которые гарантированно нужны вместе.
     """
 
-    def __init__(self, containers: List[Job]):
-        self.containers = containers[:]
+    def __init__(self, jobs: List[Job]):
+        self.jobs = jobs[:]
 
     @cached_property
     def id(self):
