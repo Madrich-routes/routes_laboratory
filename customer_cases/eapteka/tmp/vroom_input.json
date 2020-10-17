@@ -1,1 +1,97 @@
-{"vehicles":[{"id":0,"start_index":0,"end":0,"capacity":[50,20],"skills":[2,3],"time_window":[0,10000]}],"jobs":[{"id":0,"location":[0,0],"location_index":0,"service":5,"skills":[2],"priority":0,"time_windows":[[10,20]]},{"id":1,"location":[3,0],"location_index":1,"service":5,"skills":[3],"priority":0,"time_windows":[[30,50]]},{"id":2,"location":[5,0],"location_index":2,"service":5,"skills":[3],"priority":0,"time_windows":[[60,80]]}],"matrix":[[0,3,5],[3,0,2],[5,2,0]]}
+{
+    "vehicles": [
+        {
+            "id": 0,
+            "start_index": 0,
+            "end": 0,
+            "capacity": [
+                50,
+                20
+            ],
+            "skills": [
+                2,
+                3
+            ],
+            "time_window": [
+                0,
+                10000
+            ]
+        }
+    ],
+    "jobs": [
+        {
+            "id": 0,
+            "location": [
+                0,
+                0
+            ],
+            "location_index": 0,
+            "service": 5,
+            "skills": [
+                2
+            ],
+            "priority": 0,
+            "time_windows": [
+                [
+                    10,
+                    20
+                ]
+            ]
+        },
+        {
+            "id": 1,
+            "location": [
+                3,
+                0
+            ],
+            "location_index": 1,
+            "service": 5,
+            "skills": [
+                3
+            ],
+            "priority": 0,
+            "time_windows": [
+                [
+                    30,
+                    50
+                ]
+            ]
+        },
+        {
+            "id": 2,
+            "location": [
+                5,
+                0
+            ],
+            "location_index": 2,
+            "service": 5,
+            "skills": [
+                3
+            ],
+            "priority": 0,
+            "time_windows": [
+                [
+                    60,
+                    80
+                ]
+            ]
+        }
+    ],
+    "matrix": [
+        [
+            0,
+            3,
+            5
+        ],
+        [
+            3,
+            0,
+            2
+        ],
+        [
+            5,
+            2,
+            0
+        ]
+    ]
+}
