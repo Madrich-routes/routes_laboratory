@@ -3,6 +3,7 @@ from pprint import pprint
 import gmaps
 import matplotlib.pyplot as plt
 import numpy as np
+from folium import folium
 
 
 def plot_yandex(points: np.ndarray):
@@ -43,5 +44,44 @@ def plot_on_gmaps(points: np.ndarray):
     fig.add_layer(markers)
 
     return fig
+
+
+def plot_folium(data):
+    mos_map = folium.Map()
+    folium.PolyLine(data['points'], color=data['color'], weight=5).add_to(mos_map)
+
+# TODO: Tableau, PowerBI, FineReport, ArcGIS Online Platform
+
+# TODO: mapboxgl, earthpy, rasterio
+# TODO: spatialite
+# TODO: pyecharts, plotly, folium, bokeh, basemap, geopandas
+
+# Хорошие ссылки, которые можно посмотреть
+# 1. https://pypi.org/project/gmaps/
+
+# Можно рисовать норм карты через matplotlib
+# https://jakevdp.github.io/PythonDataScienceHandbook/04.13-geographic-data-with-basemap.html
+
+# https://www.coursera.org/projects/python-world-map-geovisualization-dashboard-covid-data
+
+# Огненный курс
+# https://www.earthdatascience.org/courses/scientists-guide-to-plotting-data-in-python/plot-spatial-data/customize-raster-plots/interactive-maps/
+
+# Тут есть про работу с геоjson и чем попало
+# https://rosenfelder.ai/create-maps-with-python/
+
+# https://developers.arcgis.com/python/guide/visualizing-data-with-the-spatial-dataframe/
+
+# https://stackoverflow.com/questions/32649494/why-python-vincent-map-visuzalization-does-not-map-data-from-data-frame
+
+# https://plotly.com/python/maps/
+
+# https://medium.com/@minaienick/why-you-should-be-using-geopandas-to-visualize-data-on-maps-aka-geo-visualization-fd1e3b6211b4
+# https://www.finereport.com/en/data-visualization/3-types-of-map-data-visualization-in-python.html
+# https://towardsdatascience.com/level-up-your-visualizations-make-interactive-maps-with-python-and-bokeh-7a8c1da911fd
+# https://towardsdatascience.com/a-complete-guide-to-an-interactive-geographical-map-using-python-f4c5197e23e0
+# http://darribas.org/gds15/content/labs/lab_03.html
+# https://programming.vip/docs/python-easy-map-visualization-with-detailed-source-code.html
+# https://github.com/topics/map-visualization
 
 # TODO: graphviz visualizer
