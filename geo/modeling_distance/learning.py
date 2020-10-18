@@ -1,23 +1,23 @@
 """
 Изучаем, как расстояние по прямой связано с расстоянием по дорогам в москве
 """
+import geopy
 import lightgbm as lgb
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
+from scipy.spatial.distance import cdist
+from sklearn.metrics.pairwise import haversine_distances
 
 from geo.providers import osrm
-from geo.transforms import line_distance_matrix
+from geo.transforms import line_distance_matrix, haversine_numba
 from utils.serialization import load_np, save_np, save_pickle, read_pickle
-from utils.types import Array
-import matplotlib
-import seaborn as sns
-matplotlib.use('QT4Agg', force=True)
+
+# matplotlib.use('QT4Agg', force=True)
 
 
-def get_data(size):
-    """
-    Получаем набор данных для эксперимента
-    """
+def random_coords(size):
     coords = np.random.random(size=(size, 2))
     center = np.array([55.7558, 37.6173])
 
@@ -31,6 +31,15 @@ def get_data(size):
 
     coords[:, 0] *= lon_diff
     coords[:, 0] += lon_start
+
+    return coords, center
+
+
+def get_data(size):
+    """
+    Получаем набор данных для эксперимента
+    """
+    coords, center = random_coords(size)
 
     matrix = osrm.get_osrm_matrix(coords)
 
@@ -75,7 +84,8 @@ def plot_test():
     plt.plot(test, pred)
     plt.show()
 
+
 if __name__ == "__main__":
-    # get_data(1000)
-    train_model()
-    plot_test()
+    get_data(100)
+    # train_model()
+    # plot_test()

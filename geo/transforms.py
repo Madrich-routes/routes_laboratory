@@ -2,35 +2,38 @@
 В этом модуле описаны различные функции преобразования координат.
 Тут не используются классы, только обычные numpy массивы и так далее.
 """
+import math
 from datetime import datetime
-from typing import Tuple, Set
+from typing import Tuple, Set, Optional
 
 import geopy
 import numpy as np
 import timezonefinder as tf
 from auromat.coordinates.transform import spherical_to_cartesian
 from geopy.distance import geodesic
+from numba import jit, njit
 from pytz import timezone, utc
 from scipy.spatial import Delaunay
-from scipy.spatial.distance import pdist
 from scipy.spatial.qhull import ConvexHull
 from sklearn.decomposition import PCA
-from sklearn.metrics import pairwise_distances
+from sklearn.metrics.pairwise import haversine_distances
 from sklearn.neighbors._dist_metrics import DistanceMetric
 
 from utils.types import Array
 
-EARTH_R = 6373
+EARTH_R = 6371.0087714150598
 
 
 # TODO: нормальную матрицу расстояний -> 2мерные координаты (картографическая проекция)
 
 
-def line_distance_matrix(a: Array) -> Array:
+def line_distance_matrix(a: Array, b: Optional[Array] = None) -> Array:
     """
     Матрица расстояний по прямой
     """
-    return pairwise_distances(a, metric=great_circle_distance)
+    # TODO: try https://github.com/mapado/haversine
+    # return pairwise_distances(a, metric=great_circle_distance)  # этот способ медленнее
+    return haversine_distances(a, b)
 
 
 def sklearn_haversine(a, b):
@@ -57,12 +60,47 @@ def great_circle_distance(a, b):
 
 def geo_distance(a: Array, b: Array):
     """
-    Превращаем широту и долготу в трехмерные координаты.
-    Используем geopy — похоже, что это самое эффективное и точное, что есть.
-    Порядок - lat, lon
+    Вычисляем точное, но медленное расстояние по прямой по земле
     """
 
     return geopy.distance.distance(a, b).m
+
+
+def haversine_vectorize(lon1, lat1, lon2, lat2):
+    """
+    Векторизованная версия haversine
+    """
+    EARTH_R = 6371.0087714150598
+
+    lon1, lat1, lon2, lat2 = np.radians(lon1), np.radians(lat1), np.radians(lon2), np.radians(lat2)
+
+    newlon = lon2 - lon1
+    newlat = lat2 - lat1
+
+    haver_formula = np.sin(newlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(newlon / 2.0) ** 2
+
+    dist = 2 * np.arcsin(np.sqrt(haver_formula))
+    km = EARTH_R * dist
+    return km
+
+
+@njit()
+def haversine_numba(a, b):
+    """
+    Версия расстояния, оптимизированная numba
+    """
+    s_lat, s_lon = a
+    e_lat, s_lon = b
+
+    R = 6373.0
+    s_lat = s_lat * math.pi / 180
+    s_lng = s_lon * math.pi / 180
+    e_lat = e_lat * math.pi / 180
+    e_lng = s_lon * math.pi / 180
+    d = math.sin((e_lat - s_lat) / 2) ** 2 + \
+        math.cos(s_lat) * math.cos(e_lat) * \
+        math.sin((e_lng - s_lng) / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(d)) * 1000
 
 
 def geo_to_3d(lat, lon) -> Tuple[float, float, float]:
