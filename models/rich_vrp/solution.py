@@ -33,7 +33,7 @@ class VRPSolution:
                 route_list = []
                 for visit in route:
                     row = [visit.job.id, 
-                            ' '.join([str(visit.job.lon), str(visit.job.lat)]),
+                            ' '.join([str(visit.job.lat), str(visit.job.lon)]),
                             ' '.join(str(x) for x in visit.job.amounts.tolist()),
                             datetime.fromtimestamp(visit.time),
                             visit.job.delay]
