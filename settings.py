@@ -22,5 +22,5 @@ VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
 
 REDIS_HOST = '127.0.0.1'
 
-OSRM_HOST = 'desktop'
-OSRM_PORT = '5000'
+OSRM_HOST = 'osrm-foot.dimitrius.keenetic.link'
+OSRM_PORT = '80'

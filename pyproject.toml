@@ -22,8 +22,18 @@ mapclassify = "^2.3.0"
 rtree = "^0.9.4"
 pygeos = "^0.8"
 arcgis = "^1.8.2"
+herepy = "^3.0.2"
+ujson = "^4.0.1"
+numpy = "^1.19.2"
+numba = "^0.51.2"
+aiohttp = "^3.6.3"
+sklearn = "^0.0"
+polyline = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
+pytest = "^6.1.1"
+pytest-pycharm = "^0.7.0"
 
 [build-system]
 requires = ["poetry>=0.12"]

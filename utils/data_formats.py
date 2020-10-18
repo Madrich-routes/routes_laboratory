@@ -9,9 +9,9 @@ from typing import Any, Optional
 
 from dateutil.parser import parse
 from diskcache import FanoutCache
-from rich.traceback import install
 
-install()
+# from rich.traceback import install
+# install()
 
 # Кэш, в который можно сохранять на диск то, что уже было посчитано.
 cache = FanoutCache('/tmp/routes_cache/', shards=8, timeout=100)
