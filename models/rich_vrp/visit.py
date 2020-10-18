@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 
-from models.rich_vrp.job import Place
-
+from models.rich_vrp.job import Job
 
 @dataclass
 class Visit:
-    __slots__ = ('point', 'time')
+    __slots__ = ('job', 'time')
 
     def __str__(self):
-        return f'Visit({self.point}, {self.time / 3600:.2f}ч)'
+        return f'Visit({self.job.lon} {self.job.lat}, {self.time / 3600:.2f}ч)'
 
-    point: Place
+    # point: GeoPoint
+    job: Job
     time: int
