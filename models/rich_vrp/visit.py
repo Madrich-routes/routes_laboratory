@@ -9,6 +9,5 @@ class Visit:
     def __str__(self):
         return f'Visit({self.job.lon} {self.job.lat}, {self.time / 3600:.2f}ч)'
 
-    # point: GeoPoint
     job: Job
     time: int
