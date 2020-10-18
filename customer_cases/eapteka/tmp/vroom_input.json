@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "vehicles": [
         {
             "id": 0,
@@ -94,4 +95,64 @@
             0
         ]
     ]
+=======
+  "vehicles": [
+    {
+      "id": 0,
+      "start_index": 0,
+      "end": 0,
+      "capacity": [50],
+      "skills": [2, 3],
+      "time_window": [1602824400, 1602867600]
+    }
+  ],
+  "jobs": [
+    {
+      "id": 0,
+      "location": [0, 0],
+      "location_index": 0,
+      "service": 5,
+      "skills": [2],
+      "priority": 0,
+      "delivery": [10],
+      "time_windows": [[1602831600, 1602835200]]
+    },
+    {
+      "id": 1,
+      "location": [3, 0],
+      "location_index": 1,
+      "service": 5,
+      "skills": [3],
+      "priority": 0,
+      "delivery": [10],
+      "time_windows": [[1602835200, 1602838800]]
+    },
+    {
+      "id": 2,
+      "location": [5, 0],
+      "location_index": 2,
+      "service": 5,
+      "skills": [3],
+      "priority": 0,
+      "delivery": [10],
+      "time_windows": [[1602838800, 1602842400]]
+    },
+    {
+      "id": 3,
+      "location": [8, 0],
+      "location_index": 3,
+      "service": 5,
+      "skills": [3],
+      "priority": 0,
+      "delivery": [10],
+      "time_windows": [[1602871200, 1602874800]]
+    }
+  ],
+  "matrix": [
+    [0, 3, 5, 8],
+    [3, 0, 2, 5],
+    [5, 2, 0, 3],
+    [8, 5, 3, 0]
+  ]
+>>>>>>> call_vroom
 }
