@@ -83,6 +83,9 @@ def read_out_json(path, excel_path):
                                 lat = route['steps'][i]['location'][1],
                                 delay = route['steps'][i]['service'],
                                 amounts= np.array(route['steps'][i-1]['load']) - np.array(route['steps'][i]['load']))
+                    job.amounts = job.amounts.astype(float)
+                    job.amounts[0] /= 1000
+                    job.amounts[1] /= 1000000
                     visit = Visit(job, route['steps'][i]['arrival'])
                     tour.append(visit)
             toursList.append(tour)
@@ -147,7 +150,7 @@ def get_eapteka_problem():
         job = Job(id=i, lon=row['lng'], lat=row['lat'], time_windows=time_windows, delay=5, amounts=amounts, priority=int(row['Приоритет']))
         jobs_list.append(job)
     matrix = calculate_dist_matrix()
-    problem = RichVRPProblem(DistanceMatrixGeometry(np.array([]), np.array(matrix), 20), agents_list, jobs_list, [])
+    problem = RichVRPProblem(DistanceMatrixGeometry(np.array([]), matrix, 200), agents_list, jobs_list, [])
     return problem
 
 '''
