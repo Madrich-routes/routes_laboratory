@@ -6,6 +6,13 @@ import json
 from dataclasses import dataclass
 from typing import List, Optional
 
+from models import rich_vrp
+from models.problems.base import BaseRoutingProblem
+
+
+def serialize_problem(problem: BaseRoutingProblem):
+    pass
+
 
 @dataclass
 class Place:
@@ -16,6 +23,15 @@ class Place:
     # Location
     lat: float
     lng: float
+
+    @classmethod
+    def from_rich_vrp(cls, job: rich_vrp.Job):
+        return cls(
+            duration=job.delay,
+            times=job.time_windows,
+            lat=job.lat,
+            lon=job.lon,
+        )
 
     def dump(self):
         res = dict(
@@ -53,7 +69,7 @@ class Pickup:
 
 
 @dataclass
-class Deliverie:
+class Delivery:
     tag: str  # None
     places: List[Place]
     demand: List[int]
@@ -75,9 +91,8 @@ class Deliverie:
 
 @dataclass
 class Job:
-    # Own
     id: str
-    deliveries: List[Deliverie]  # None
+    deliveries: List[Delivery]  # None
     pickups: List[Pickup]  # None
     skills: List[str]  # None
 
@@ -87,6 +102,17 @@ class Job:
         self.deliveries = deliveries
         self.pickups = pickups
         self.skills = skills
+
+    @classmethod
+    def from_rich_vrp(cls, job: rich_vrp.Job):
+        return cls(
+            id=job.id,
+
+            duration=job.delay,
+            times=job.time_windows,
+            lat=job.lat,
+            lon=job.lon,
+        )
 
     def dump(self):
         dump_Job = {}

@@ -2,8 +2,6 @@
 Модуль с утилитами для обращения к OSRM серверу
 """
 
-import os
-from dataclasses import dataclass
 from itertools import chain
 from typing import Tuple
 from urllib.parse import quote
@@ -16,15 +14,7 @@ from polyline import encode as polyline_encode
 import settings
 from geo.transforms import geo_distance
 from utils.data_formats import cache, is_number
-
-
-@dataclass
-class Point:
-    lat: float
-    lon: float
-
-    def coords(self) -> Tuple[float, float]:
-        return self.lon, self.lat
+from utils.types import Array
 
 
 def _encode_src_dst(src, dst):
@@ -64,7 +54,7 @@ def table(host, src, dst=None, profile="driving"):
 
 
 @cache.memoize()
-def get_osrm_matrix(points: Tuple[Point]) -> np.ndarray:
+def get_osrm_matrix(points: Array) -> np.ndarray:
     """
     Получаем расстояния.
     """

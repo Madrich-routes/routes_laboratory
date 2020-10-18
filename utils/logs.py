@@ -5,7 +5,7 @@ from rich.console import Console
 
 # Создаем logger
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # Создаем форматтер для логов
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
