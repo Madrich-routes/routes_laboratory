@@ -14,10 +14,23 @@ def dump_problem():
 
 def dump_vehicle(a: Agent, root: ET.Element):
     """
-    Дампаем компонент машины
+    Создаем XML-компонент машины
     """
     vehicle = ET.SubElement(root, 'vehicle')
-    
+
+    vid = ET.SubElement(vehicle, 'id')
+    vid.text = a.id
+
+    type_id = ET.SubElement(vehicle, 'typeId')
+    type_id.text = a.type.id
+
+
+def dump_location():
+    """
+    Создаем xml компонент машины
+    """
+
+
 
 
 items = ET.SubElement(data, 'items')

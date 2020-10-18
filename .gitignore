@@ -536,4 +536,3 @@ buildNumber.properties
 /snap/.snapcraft/
 
 .vscode
-.vscode/*

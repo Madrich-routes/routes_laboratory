@@ -1,23 +1,22 @@
 """
 Изучаем, как расстояние по прямой связано с расстоянием по дорогам в москве
 """
-import geopy
 import lightgbm as lgb
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from scipy.spatial.distance import cdist
-from sklearn.metrics.pairwise import haversine_distances
 
-from geo.providers import osrm
-from geo.transforms import line_distance_matrix, haversine_numba
+from geo.providers import osrm_module
+from geo.transforms import line_distance_matrix
 from utils.serialization import load_np, save_np, save_pickle, read_pickle
+
 
 # matplotlib.use('QT4Agg', force=True)
 
-
 def random_coords(size):
+    """
+    Получаем случайные координаты примерно в москве
+    """
     coords = np.random.random(size=(size, 2))
     center = np.array([55.7558, 37.6173])
 
@@ -41,7 +40,7 @@ def get_data(size):
     """
     coords, center = random_coords(size)
 
-    matrix = osrm.get_osrm_matrix(coords)
+    matrix = osrm_module.get_osrm_matrix(coords)
 
     save_np('points.npz', coords)
     save_np('osrm_matr.npz', matrix)
@@ -68,6 +67,9 @@ def build_features():
 
 
 def train_model():
+    """
+    Обучаем модель оценивать расстояние
+    """
     X, y = build_features()
     model = lgb.LGBMRegressor()
     model.fit(X, y)
@@ -76,6 +78,9 @@ def train_model():
 
 
 def plot_test():
+    """
+    Строим то, что нам напредиктила модель
+    """
     model = read_pickle('model.pkl')
 
     test = np.linspace(0, 50000, num=1000)

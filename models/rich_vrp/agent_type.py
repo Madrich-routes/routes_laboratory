@@ -10,12 +10,14 @@ class AgentType:
 
     def __init__(
             self,
+            id: int,
             speed: int,  # скорость перемещения
             distance_matrix_id: int,  # его собственная матрица расстояний
             capacities: List[int],  # вектор ограничений
             costs: AgentCosts,
             skills: List[int],  # список флагов, что он умеет
     ):
+        self.id = id
         # Характеристики перемещения
         self.speed: int = speed
         self.distance_matrix_id: int = distance_matrix_id

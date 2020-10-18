@@ -19,5 +19,6 @@ def mdvrp_to_vrp(
     Расстояние между фейковым входом и выходом = inf
     """
     get_inf(matrix)
-    n = len(matrix) + (len(max_ins) + len(max_outs)) * len(depots) + 1
+    n = 1 + len(matrix) + (len(max_ins) + len(max_outs)) * len(depots) + 1
     res = np.zeros((n, n))
+

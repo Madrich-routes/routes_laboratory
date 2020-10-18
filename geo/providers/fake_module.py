@@ -17,7 +17,7 @@ coefficient = {
 
 def generate_matrix(points: Union[array, List[Point]], factor='travelTime') -> array:
     matrix = adjacency_matrix(points) * 1e4
-    return (np.random.random_sample(matrix.shape) * matrix / 2 + matrix) * coefficient[factor]
+    return ((np.random.random_sample(matrix.shape) * matrix / 2 + matrix) * coefficient[factor]).astype(np.int64)
 
 
 def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]] = 'travelTime') -> Matrices:

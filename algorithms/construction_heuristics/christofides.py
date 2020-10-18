@@ -8,7 +8,6 @@ import networkx as nx
 import copy
 import itertools
 from operator import itemgetter
-from . import graph
 import time
 
 
@@ -194,7 +193,6 @@ if __name__ == "__main__":
     end = time.time() - start
     print('Computation Successful...')
     print('Distance Matrix:\n')
-    print(graph.d)
     print('\n1.5 Approximation of TSP (Christofide\'s algorithm):\n',
           Approximation['Christofides_Solution'])
     print('Travel Cost:', Approximation['Travel_Cost'])
