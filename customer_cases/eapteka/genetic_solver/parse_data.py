@@ -158,10 +158,15 @@ def reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: Dict[str
     return internal_mapping
 
 
-def load_matrix(profiles: List[str], depots: Dict[str, Depot], global_revers: dict, orders: Dict[str, List[Task]],
-                address_mapping: Dict[Point, Tuple[str, str, str]]
-                ) -> Tuple[Dict[str, List[Point]], Dict[str, dict], Dict[str, List[str]]]:
-    """ Load file matrix info and reindexing for tasks
+def load_matrix(
+        profiles: List[str],
+        depots: Dict[str, Depot],
+        global_revers: Dict,
+        orders: Dict[str, List[Task]],
+        address_mapping: Dict[Point, Tuple[str, str, str]]
+) -> Tuple[Dict[str, List[Point]], Dict[str, dict], Dict[str, List[str]]]:
+    """
+    Load file matrix info and reindexing for tasks
     """
 
     points = {}
@@ -176,6 +181,7 @@ def load_matrix(profiles: List[str], depots: Dict[str, Depot], global_revers: di
     for i, (depot_id, pts) in enumerate(points.items()):
         name = depot_id
         for profile in profiles:
+            # TODO: сюда добавить вычисление!
             file = f'./tmp/{name}.{profile}.routing_matrix.json'
             files[depot_id].append(file)
 
