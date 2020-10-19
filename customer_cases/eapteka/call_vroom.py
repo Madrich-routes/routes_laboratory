@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, time
 
-from geo.providers import osrm
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.geometry import DistanceMatrixGeometry
 from models.rich_vrp.agent import Agent
@@ -71,7 +70,7 @@ def problem_to_json(problem, path):
 Конвертация решения от vroom в Excel
 '''
 def read_out_json(path, excel_path):
-    with open(path) as data_file:    
+    with open(path) as data_file:
         data = ujson.load(data_file)
         toursList = []
         for route in data['routes']:
@@ -89,7 +88,7 @@ def read_out_json(path, excel_path):
                     visit = Visit(job, route['steps'][i]['arrival'])
                     tour.append(visit)
             toursList.append(tour)
-        
+
         solution = VRPSolution(BaseRoutingProblem(np.empty((1,1))), toursList)
         solution.to_excel(excel_path)
 
@@ -123,7 +122,7 @@ def get_eapteka_problem():
 
     #собираем агентов
     agents_list = []
-    for i in range(len(agents.index)):   
+    for i in range(len(agents.index)):
         row = agents.iloc[i]
         if row['Должность'] == 'Курьер':
             value = [100*1000, 500*1000000]
@@ -135,18 +134,18 @@ def get_eapteka_problem():
             end = int(datetime(2020, 10, 16, 23, 59).timestamp())
         else:
             end = int(datetime(2020, 10, 16, int(time_interval[1]), 00).timestamp())
-        
+
         agent = Agent(id=i,value=value,start_time=start,end_time=end, costs=None, start_place = 0, end_place=0, type=None)
         agents_list.append(agent)
-    
+
     #собираем заказы
     jobs_list = []
-    for  i in range(len(data.index)): 
+    for  i in range(len(data.index)):
         row = data.iloc[i]
         window_to = int(datetime(2020, 10, 16, 23, 59).timestamp()) if row['t_to'] == 24 else int(datetime(2020, 10, 16, row['t_to'], 00).timestamp())
         time_windows = [(int(datetime(2020, 10, 16, row['t_from'], 00).timestamp()), window_to)]
         amounts = np.array((int(row['ВесЗаказа']*1000), int(row['ОбъемЗаказа']*1000000)))
-        
+
         job = Job(id=i, lon=row['lng'], lat=row['lat'], time_windows=time_windows, delay=5, amounts=amounts, priority=int(row['Приоритет']))
         jobs_list.append(job)
     matrix = calculate_dist_matrix()
@@ -157,8 +156,8 @@ def get_eapteka_problem():
 Получаем матрицу, пока тупо
 TODO переделать
 '''
-def calculate_dist_matrix(): 
-    data = pd.read_excel("data/update_3.xlsx") 
+def calculate_dist_matrix():
+    data = pd.read_excel("data/update_3.xlsx")
     stock = [55.8075060, 37.6053370]
     points = list([row.lat, row.lng] for row in data.itertuples())
     points.insert(0, [stock[0], stock[1]]) #добавляю склад как 0 точку
