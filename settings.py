@@ -22,5 +22,12 @@ VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
 
 REDIS_HOST = '127.0.0.1'
 
-OSRM_HOST = 'osrm-foot.dimitrius.keenetic.link'
-OSRM_PORT = '80'
+# Адреса OSRM-серверов
+OSRM_CAR_HOST = 'osrm-car.dimitrius.keenetic.link'
+OSRM_CAR_PORT = '80'
+
+OSRM_FOOT_HOST = 'osrm-foot.dimitrius.keenetic.link'
+OSRM_FOOT_PORT = '80'
+
+OSRM_BICYCLE_HOST = 'osrm-bicycle.dimitrius.keenetic.link'
+OSRM_BICYCLE_PORT = '80'
