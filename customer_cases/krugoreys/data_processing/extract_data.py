@@ -7,8 +7,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from geo.providers.osrm import fix_matrix
-from models.graph.distance_matrix import Geometry
+from geo.providers.osrm_module import fix_matrix
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from utils.logs import logger

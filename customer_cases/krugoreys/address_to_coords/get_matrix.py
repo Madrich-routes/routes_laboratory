@@ -4,7 +4,7 @@ import numpy as np
 
 import pandas as pd
 
-from geo.providers.osrm import get_osrm_matrix, Point
+from geo.providers.osrm_module import get_osrm_matrix, Point
 
 df = pd.read_csv('../data/coordinates.csv', sep=';')
 df.columns = ['address', 'lat', 'lon']
