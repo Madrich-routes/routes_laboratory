@@ -29,11 +29,21 @@ numba = "^0.51.2"
 aiohttp = "^3.6.3"
 sklearn = "^0.0"
 polyline = "^1.4.0"
+"yandex.rasp" = "^0.0.2"
+ortools = "^8.0.8283"
+tsplib95 = "^0.7.1"
+openpyxl = "^3.0.5"
+transliterate = "^1.10.2"
+pyarrow = "^1.0.1"
+fastparquet = "^0.4.1"
+more_itertools = "^8.5.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"
 pytest = "^6.1.1"
 pytest-pycharm = "^0.7.0"
+jupyter = "^1.0.0"
+tqdm = "^4.50.2"
 
 [build-system]
 requires = ["poetry>=0.12"]

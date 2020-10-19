@@ -9,7 +9,6 @@ from urllib.parse import quote
 import numpy as np
 import requests
 import ujson
-from madrich.utils import to_array
 from polyline import encode as polyline_encode
 
 import settings
@@ -129,25 +128,38 @@ def table(host, src, dst=None, profile="driving"):
     url = f"{host}/table/v1/{profile}/polyline({polyline})?annotations=duration,distance"
     parsed_json = ujson.loads(requests.get(url).content)
 
-    return np.array(parsed_json["distances"])  # noqa
+    return np.array(parsed_json["distances"]), np.array(parsed_json["duration"])
 
 
 @cache.memoize()
-def get_osrm_matrix(points: Array) -> np.ndarray:
+def get_osrm_matrix(
+        points: Array,
+        transport='car',
+) -> np.ndarray:
     """
     Получаем расстояния.
     """
     print("Не нашли в кеше. Обновляем матрицу расстояний...")
-    osrm_host = f'http://{settings.OSRM_HOST}:{settings.OSRM_PORT}'
 
-    durations = table(
+    if transport == 'car':
+        osrm_host = f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}'
+    elif transport == 'foot':
+        osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
+    elif transport == 'bicycle':
+        osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
+    else:
+        raise ValueError('Неизвестный транспорт')
+
+    distances, durations = table(
         host=osrm_host,
         src=points,
     )
 
-    # assert np.abs(durations).sum() != 0, "OSRM вернул 0 матрицу. Проверьте порядок координат."
+    assert np.abs(durations).sum() != 0 and np.abs(distances).sum() != 0, (
+        "OSRM вернул 0 матрицу. Проверьте порядок координат."
+    )
 
-    return durations
+    return distances
 
 
 def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarray:
