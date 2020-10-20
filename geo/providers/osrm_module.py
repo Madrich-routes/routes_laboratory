@@ -163,7 +163,10 @@ def get_osrm_matrix(
     )
 
     assert np.abs(durations).sum() != 0 and np.abs(distances).sum() != 0, (
-        "OSRM вернул 0 матрицу. Проверьте порядок координат."
+        f"OSRM вернул 0 матрицу. Проверьте порядок координат."
+        f"{points}"
+        f"{durations}"
+        f"{distances}"
     )
 
     # TODO: фиксить матрицу. Оценивать коэффициент прямо тут
