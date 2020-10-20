@@ -11,7 +11,7 @@ def three_opt(route: Route, problem: Problem) -> bool:
     size = len(tmp_route.jobs)
     changed = True
 
-    logging.info(f'\nThree opt started, tt:{state.travel_time}, cost:{state.cost}')
+    logging.info(f'\nThree opt started, tt:{state.transport_travel_time}, cost:{state.cost}')
 
     while changed:
         changed = False
@@ -33,9 +33,9 @@ def three_opt(route: Route, problem: Problem) -> bool:
 
         if changed:
             tmp_state, tmp_route = best_state, best_route
-            logging.info(f'Updated, tt:{best_state.travel_time}, cost:{best_state.cost}')
+            logging.info(f'Updated, tt:{best_state.transport_travel_time}, cost:{best_state.cost}')
 
-    logging.info(f'Ended, tt:{tmp_state.travel_time}, cost:{tmp_state.cost}')
+    logging.info(f'Ended, tt:{tmp_state.transport_travel_time}, cost:{tmp_state.cost}')
     if tmp_state < state:
         route.jobs = tmp_route.jobs
         return True
@@ -48,7 +48,7 @@ def two_opt(route: Route, problem: Problem) -> bool:
     size = len(tmp_route.jobs)
     changed = True
 
-    logging.info(f'\nTwo opt started, tt:{state.travel_time}, cost:{state.cost}')
+    logging.info(f'\nTwo opt started, tt:{state.transport_travel_time}, cost:{state.cost}')
 
     while changed:
         changed = False
@@ -68,9 +68,9 @@ def two_opt(route: Route, problem: Problem) -> bool:
 
         if changed:
             tmp_state, tmp_route = best_state, best_route
-            logging.info(f'Updated, tt:{best_state.travel_time}, cost:{best_state.cost}')
+            logging.info(f'Updated, tt:{best_state.transport_travel_time}, cost:{best_state.cost}')
 
-    logging.info(f'Ended, tt:{tmp_state.travel_time}, cost:{tmp_state.cost}')
+    logging.info(f'Ended, tt:{tmp_state.transport_travel_time}, cost:{tmp_state.cost}')
     if tmp_state < state:
         route.jobs = tmp_route.jobs
         return True
