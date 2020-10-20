@@ -4,10 +4,12 @@ from collections import defaultdict
 from typing import Tuple, List, Dict
 
 import pandas as pd
+import ujson
 from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
+from geo.providers.osrm_module import get_osrm_matrix
 
 Point = Tuple[float, float]
 
@@ -180,9 +182,16 @@ def load_matrix(
     files = defaultdict(list)
     for i, (depot_id, pts) in enumerate(points.items()):
         name = depot_id
+
         for profile in profiles:
-            # TODO: сюда добавить вычисление!
             file = f'./tmp/{name}.{profile}.routing_matrix.json'
+
+            if profile == 'bicycle':
+                print('Принтим велосипеды')
+                durations = get_osrm_matrix(points=pts, transport='bicycle')
+                with open(file, 'w') as f:
+                    ujson.dump(durations, f)
+
             files[depot_id].append(file)
 
     return points, internal_mappings, files
