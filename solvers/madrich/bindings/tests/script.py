@@ -34,7 +34,7 @@ Courier_class.end_location = Point_class
 Matrix_class = Tour.Matrix()
 Matrix_class.profile = "profile"
 Matrix_class.distance = [[3, 5, 8]]
-Matrix_class.travel_time = [[3, 5, 8]]
+Matrix_class.transport_travel_time = [[3, 5, 8]]
 
 Job_class = Tour.Job()
 Job_class.job_id = '12345'
@@ -51,7 +51,7 @@ Route_class.courier = Courier_class
 Route_class.matrix = Matrix_class
 Route_class.start_time = 10
 Route_class.jobs = [Job_class, Job_class, Job_class]
-Route_class.travel_time = 100
+Route_class.transport_travel_time = 100
 Route_class.distance = 500
 Route_class.cost = 3.5
 
