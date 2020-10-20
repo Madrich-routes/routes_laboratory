@@ -119,13 +119,13 @@ def build_cars():
 
 
 if __name__ == "__main__":
-    data_dir = Path('../data/')
+    data_dir = Path('./data/')
     big_data_dir = Path('../big_data/')
 
     df = load_data(data_dir)
     fix_data_errors(df)
     small_matrix = load_np("../big_data/small_matrix.npz")
-    coords = pd.read_csv("../data/coordinates.csv", sep=';')[["0", "1"]].values
+    coords = pd.read_csv("./data/coordinates.csv", sep=';')[["0", "1"]].values
     small_matrix = fix_matrix(matrix=small_matrix, coords=coords, coeff=1.23)
 
     build_tasks()
