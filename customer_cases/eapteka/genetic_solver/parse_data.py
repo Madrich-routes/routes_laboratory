@@ -15,6 +15,7 @@ from transliterate import translit
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
 from geo.providers.osrm_module import get_osrm_matrix, _turn_over
+from geo.transport.calc_distance import get_travel_times
 
 Point = Tuple[float, float]
 
@@ -191,15 +192,21 @@ def load_matrix(
         for profile in profiles:
             file = f'./tmp/{name}.{profile}.routing_matrix.json'
 
-            if profile == 'bicycle':
-                print(f'Принтим велосипеды {pts}')
+            if profile == 'transport_complex':
+                # print(f'Принтим велосипеды {pts}')
 
-                distances, durations = get_osrm_matrix(
+                # durations = get_osrm_matrix(
+                #     points=_turn_over(np.array(pts)),
+                #     transport='bicycle',
+                #     return_distances=True,
+                #     return_durations=True,
+                # )
+
+                durations = get_travel_times(
                     points=_turn_over(np.array(pts)),
-                    transport='bicycle',
-                    return_distances=True,
-                    return_durations=True,
                 )
+
+                distances = durations.copy()
 
                 with open(file, 'w') as f:
                     data = {
