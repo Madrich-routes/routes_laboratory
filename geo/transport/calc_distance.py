@@ -70,6 +70,7 @@ def add_walk_matrix(stations_matrix: Array, walk_matrix: Array):
 def build_graph(
         stations_df: pd.DataFrame,
         walk_matrix: Array,
+        final_matrix_file: str
 ):
     """
     Построить граф перемещений по всем станциям
