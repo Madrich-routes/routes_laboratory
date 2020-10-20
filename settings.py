@@ -6,6 +6,8 @@ import os
 # TODO: И вообще забирать все из переменных среды. А их ставить через мок файл или через .env
 
 os.environ["LKH2"] = "/usr/local/bin/LKH2"
+os.environ["LKH3"] = "/usr/local/bin/LKH3"
+
 os.environ["LKH"] = "/usr/local/bin/LKH"
 os.environ["CONCORDE"] = "/usr/local/bin/concorde"
 os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
