@@ -131,7 +131,7 @@ def table(host, src, dst=None, profile="driving"):
     url = f"{host}/table/v1/{profile}/polyline({polyline})?annotations=duration,distance"
     parsed_json = ujson.loads(requests.get(url).content)
 
-    return np.array(parsed_json["distances"]), np.array(parsed_json["durations"])
+    return np.array(parsed_json["distances"], dtype=np.int32), np.array(parsed_json["durations"], dtype=np.int32)
 
 
 @cache.memoize()
