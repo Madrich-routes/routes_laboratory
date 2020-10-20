@@ -120,6 +120,9 @@ def get_matrices(points: Union[array, List[Point]], factor: Union[str, List[str]
 
 
 def table(host, src, dst=None, profile="driving"):
+    """
+    Отправляем запрос в OSRM и получаем ответ
+    """
     if dst is not None:
         polyline, params = _encode_src_dst(src, dst)
     else:
