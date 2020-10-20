@@ -17,8 +17,8 @@ def runner(
         files: Dict,
         max_time: int = 3 * 3600,  # максимальное время работы
         max_generations: int = 30_000,  # максимальное количество поколений
-        variation_generations: int = 500,  # на скольких поколениях измеряется cost_variation
-        min_variation: int = 0.03,  # минимальная вариация (критерий остановки)
+        variation_generations: int = 100,  # на скольких поколениях измеряется cost_variation
+        min_variation: int = 0.1,  # минимальная вариация (критерий остановки)
 ):
     """
     Вызываем солвер vrp_cli.
@@ -47,7 +47,7 @@ def runner(
         # f'--max-time={max_time}',  # максимальное время работы
         # f'--max-generations={max_generations}',  # максимальное количетсво поколений оптимизации
         # насколько медленно нужно оптимизировать, чтобы перестать
-        f'--cost-variation={variation_generations},{min_variation}',
+        # f'--cost-variation={variation_generations},{min_variation}',
         # f'--geo-json=<filename>'
         # f'-i <initial_solution>',
     ])
