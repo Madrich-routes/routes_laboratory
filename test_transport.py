@@ -10,7 +10,7 @@ from geo.transport.matrix import build_walk_matrix
 
 def main():
     if os.path.exists('./data/full_df_refactored.pkl'):
-        dataset = pd.read_pickle('../data/full_df_refactored.pkl')
+        dataset = pd.read_pickle('./data/full_df_refactored.pkl')
     else:
         dataset = build_dataset_from_files()
         dataset.to_pickle('./data/full_df_refactored.pkl')
