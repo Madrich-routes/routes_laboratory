@@ -19,7 +19,7 @@ def improve_tour(tour: Tour, problem: Problem, cross=False, three=False) -> Tupl
     while changed:
         changed = False
         logging.info(f'Routes: {statistic([len(route) for route in tour.routes])}')
-        logging.info(f'Travel time: {statistic([route.travel_time for route in tour.routes])}')
+        logging.info(f'Travel time: {statistic([route.transport_travel_time for route in tour.routes])}')
 
         if __inter_improve(tour, problem, cross):
             changed = result = True
@@ -31,7 +31,7 @@ def improve_tour(tour: Tour, problem: Problem, cross=False, three=False) -> Tupl
             changed = result = True
 
     logging.info(f'\nDone\nRoutes: {statistic([len(route) for route in tour.routes])}')
-    logging.info(f'Travel time: {statistic([route.travel_time for route in tour.routes])}')
+    logging.info(f'Travel time: {statistic([route.transport_travel_time for route in tour.routes])}')
     return result, tour
 
 
@@ -83,8 +83,8 @@ def __route_decrease(tour: Tour, problem: Problem) -> bool:
     idx, size = -1, -1
 
     for i, route in enumerate(tour.routes):
-        if size == -1 or size > route.travel_time:
-            idx, size = i, route.travel_time
+        if size == -1 or size > route.transport_travel_time:
+            idx, size = i, route.transport_travel_time
 
     if idx == -1:
         return False
