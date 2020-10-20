@@ -1,3 +1,4 @@
+import numpy as np
 import logging
 import math
 from collections import defaultdict
@@ -9,7 +10,7 @@ from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
-from geo.providers.osrm_module import get_osrm_matrix
+from geo.providers.osrm_module import get_osrm_matrix, _turn_over
 
 Point = Tuple[float, float]
 
@@ -187,10 +188,10 @@ def load_matrix(
             file = f'./tmp/{name}.{profile}.routing_matrix.json'
 
             if profile == 'bicycle':
-                print('Принтим велосипеды')
-                durations = get_osrm_matrix(points=pts, transport='bicycle')
+                print(f'Принтим велосипеды {pts}')
+                durations = get_osrm_matrix(points=_turn_over(np.array(pts)), transport='bicycle')
                 with open(file, 'w') as f:
-                    ujson.dump(durations, f)
+                    ujson.dump(durations.tolist(), f)
 
             files[depot_id].append(file)
 
