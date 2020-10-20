@@ -17,5 +17,5 @@ run.run_pharmacy(
     driver_weight=200,
     driver_capacity=400,
     delay=5,
-    fg='25',  # номер результата
+    fg='26',  # номер результата
 )
