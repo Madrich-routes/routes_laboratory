@@ -36,6 +36,6 @@ def build_walk_matrix(
     logger.info('Вычисляем матрицу расстояний остановок...')
 
     points = stations_df['coord'].values
-    walk_matrix = get_osrm_matrix(points)
+    walk_matrix = get_osrm_matrix(points, transport="foot")
 
     return walk_matrix
