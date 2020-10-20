@@ -1,3 +1,6 @@
+import json
+from pprint import pprint
+
 import numpy as np
 import logging
 import math
@@ -6,6 +9,7 @@ from typing import Tuple, List, Dict
 
 import pandas as pd
 import ujson
+from more_itertools import flatten
 from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
@@ -189,9 +193,22 @@ def load_matrix(
 
             if profile == 'bicycle':
                 print(f'Принтим велосипеды {pts}')
-                durations = get_osrm_matrix(points=_turn_over(np.array(pts)), transport='bicycle')
+
+                distances, durations = get_osrm_matrix(
+                    points=_turn_over(np.array(pts)),
+                    transport='bicycle',
+                    return_distances=True,
+                    return_durations=True,
+                )
+
                 with open(file, 'w') as f:
-                    ujson.dump(durations.tolist(), f)
+                    data = {
+                        "travelTimes": list(flatten(durations.tolist())),
+                        "distances": list(flatten(distances.tolist())),
+                        "profile": profile,
+                    }
+                    # print(data)
+                    json.dump(data, f)
 
             files[depot_id].append(file)
 
