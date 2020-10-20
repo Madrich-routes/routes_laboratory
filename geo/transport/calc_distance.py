@@ -8,6 +8,7 @@ from geopy.distance import great_circle
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph._shortest_path import floyd_warshall
 
+from geo.providers import osrm_module
 from utils.logs import logger
 from utils.types import Array
 
@@ -150,3 +151,17 @@ def combined_matrix(
         res_times[src, dst] = time
 
     return res_times
+
+
+def get_travel_times(
+        points: Array,
+):
+    stations = pd.read_pickle('./data/full_df_refactored.pkl')['coord'].values.tolist()
+    stations = np.array(stations)
+
+    p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
+    s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
+    p_matrix = osrm_module.get_osrm_matrix(points)
+    s_matrix = np.load('./data/final_mat.npz')['walk_matrix']
+
+    return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
