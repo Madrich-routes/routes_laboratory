@@ -11,7 +11,6 @@ from tqdm import tqdm
 
 # from geo.transport import bus
 from geo.transport.calc_distance import build_graph
-from geo.transport.settings import routes_file_pattern
 from utils.logs import logger
 from utils.types import Array
 import os
@@ -54,7 +53,7 @@ def build_df(
         else:
             logger.info('Считаем датафрейм с соседними станциями наземного транспорта')
             bus_df = load_bus_file(routes_files, bus_filename, stations, n_processes = os.cpu_count())
-        merged_bus_df = merge_bus_data(bus_data, merged_bus_filename)
+        merged_bus_df = merge_bus_data(bus_df, merged_bus_filename)
     return merged_bus_df
 
 def load_transport_dict(stations_file: str):
@@ -78,6 +77,8 @@ def build_station_data(stations: List[Dict]):
         for station in stations
     }
 
+def read_csv(f):
+    return pd.read_csv(f, sep=';')
 
 def load_bus_file(
         filenames: List[str],
@@ -91,7 +92,7 @@ def load_bus_file(
     """
     logger.info(f'Загружем информацию об автобусах ({len(filenames)}) потоков...')
     process_pool = Pool(processes=len(filenames))
-    dfs = process_pool.map(partial(pd.read_csv, sep=';'), filenames)
+    dfs = process_pool.map(read_csv, filenames)
 
     logger.info(f'Объединяем датафреймы...')
     routes_df = pd.concat(dfs)
