@@ -128,7 +128,7 @@ def table(host, src, dst=None, profile="driving"):
     url = f"{host}/table/v1/{profile}/polyline({polyline})?annotations=duration,distance"
     parsed_json = ujson.loads(requests.get(url).content)
 
-    return np.array(parsed_json["distances"]), np.array(parsed_json["duration"])
+    return np.array(parsed_json["distances"]), np.array(parsed_json["durations"])
 
 
 @cache.memoize()
@@ -159,7 +159,7 @@ def get_osrm_matrix(
         "OSRM вернул 0 матрицу. Проверьте порядок координат."
     )
 
-    return distances
+    return durations
 
 
 def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarray:
