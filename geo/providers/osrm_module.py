@@ -146,7 +146,7 @@ def get_osrm_matrix(
     elif transport == 'foot':
         osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
     elif transport == 'bicycle':
-        osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
+        osrm_host = f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_HOST}'
     else:
         raise ValueError('Неизвестный транспорт')
 

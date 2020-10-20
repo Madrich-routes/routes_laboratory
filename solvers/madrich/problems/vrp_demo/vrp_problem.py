@@ -44,7 +44,7 @@ class ProblemVrp(Problem):
         if not ProblemVrp.__validate_courier(state, route):
             return None
 
-        route.travel_time = state.travel_time
+        route.transport_travel_time = state.transport_travel_time
         route.distance = state.distance
         route.cost = state.cost
 
@@ -173,10 +173,10 @@ class ProblemVrp(Problem):
     @staticmethod
     def __go_storage(curr_point: int, state: State, route: Route) -> Optional[State]:
         """ Оценка стоимости поездки на склад """
-        tt = route.matrix.travel_time[curr_point][route.storage.location.matrix_id] + route.storage.load
+        tt = route.matrix.transport_travel_time[curr_point][route.storage.location.matrix_id] + route.storage.load
         d = route.matrix.distance[curr_point][route.storage.location.matrix_id]
 
-        if not ProblemVrp.__validate_storage(state.travel_time + tt, route):
+        if not ProblemVrp.__validate_storage(state.transport_travel_time + tt, route):
             return None
 
         return State(tt, d, ProblemVrp.__cost(tt, d, route), None)
@@ -184,10 +184,10 @@ class ProblemVrp(Problem):
     @staticmethod
     def __go_job(curr_point: int, state: State, job: Job, route: Route) -> Optional[State]:
         """ Оценка стоимости поездки на следующую задачу """
-        tt = route.matrix.travel_time[curr_point][job.location.matrix_id] + job.delay
+        tt = route.matrix.transport_travel_time[curr_point][job.location.matrix_id] + job.delay
         d = route.matrix.distance[route.storage.location.matrix_id][job.location.matrix_id]
 
-        if not ProblemVrp.__validate_job(state.travel_time + tt, job, route):
+        if not ProblemVrp.__validate_job(state.transport_travel_time + tt, job, route):
             return None
 
         tmp = State(tt, d, ProblemVrp.__cost(tt, d, route), job.value.copy())
@@ -222,7 +222,7 @@ class ProblemVrp(Problem):
         # 1. проверяем время работы
         start_shift, end_shift = route.courier.work_time.window
         start_time = route.start_time
-        if not (start_shift <= start_time + state.travel_time <= end_shift):
+        if not (start_shift <= start_time + state.transport_travel_time <= end_shift):
             return False
 
         # 2. проверяем максимальную дистанцию
@@ -241,7 +241,7 @@ class ProblemVrp(Problem):
     def __start(route: Route) -> State:
         """ Стартуем, едем от куда-то на склад """
         distance_matrix = route.matrix.distance
-        travel_time_matrix = route.matrix.travel_time
+        travel_time_matrix = route.matrix.transport_travel_time
         start_id = route.courier.start_location.matrix_id
         storage_id = route.storage.location.matrix_id
 
@@ -256,7 +256,7 @@ class ProblemVrp(Problem):
     def __end(curr_point: int, route: Route) -> State:
         """ Заканчиваем, едем с последней задачи в конечную точку """
         distance_matrix = route.matrix.distance
-        travel_time_matrix = route.matrix.travel_time
+        travel_time_matrix = route.matrix.transport_travel_time
         end_id = route.courier.start_location.matrix_id
 
         tt = travel_time_matrix[curr_point][end_id]
