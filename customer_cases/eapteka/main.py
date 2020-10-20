@@ -6,7 +6,7 @@ from customer_cases.eapteka import run
 faulthandler.enable()
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
-TYPE = 'transport_simple_2'
+TYPE = 'bicycle'
 
 run.run_pharmacy(
     type_m=TYPE,

@@ -137,11 +137,15 @@ def table(host, src, dst=None, profile="driving"):
 @cache.memoize()
 def get_osrm_matrix(
         points: Array,
-        transport='car',
-) -> np.ndarray:
+        transport: str = 'car',
+        return_distances: bool = False,
+        return_durations: bool = True,
+) -> Union[Array, Tuple[Array, Array]]:
     """
     Получаем расстояния.
     """
+    assert return_distances or return_durations, 'Ничего не возвращаем'
+
     print("Не нашли в кеше. Обновляем матрицу расстояний...")
 
     if transport == 'car':
@@ -149,7 +153,7 @@ def get_osrm_matrix(
     elif transport == 'foot':
         osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
     elif transport == 'bicycle':
-        osrm_host = f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_HOST}'
+        osrm_host = f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_PORT}'
     else:
         raise ValueError('Неизвестный транспорт')
 
@@ -162,7 +166,14 @@ def get_osrm_matrix(
         "OSRM вернул 0 матрицу. Проверьте порядок координат."
     )
 
-    return durations
+    # TODO: фиксить матрицу. Оценивать коэффициент прямо тут
+
+    if return_durations and not return_distances:
+        return durations
+    elif return_distances and not return_durations:
+        return distances
+    else:
+        return distances, durations
 
 
 def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarray:
@@ -171,7 +182,7 @@ def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarr
 
     :param matrix: Вычисленная матрица расстояний
     :param coords: Координаты
-    :param coeff: Коэффициент отличия расстояний по прямой и не по прямой
+    :param coeff: Коэффициент отличия расстояний по прямой и не по прямойы
     """
     n = len(matrix)
 
