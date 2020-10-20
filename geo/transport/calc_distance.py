@@ -1,3 +1,6 @@
+from itertools import permutations
+from typing import Tuple, Optional
+
 import numpy as np
 import pandas as pd
 import tqdm
@@ -88,11 +91,33 @@ def build_graph(
     return dist_matrix
 
 
-def closest_stations(
+def transport_travel_time(
+        src: int, dst: int,  # откуда до куда
+        p_matrix: Array,  # время пешком между точками
         p2s_matrix: Array,  # время пешком от точек до остановок
-        k: int = 10,
-):
-    indices = p2s_matrix.argpartition(kth=k, axis=1)
+        s2p_matrix: Array,  # время пешком от остановок до точек
+        s_matrix: Array,  # время проезда между точками
+
+        src_closest: Array,  # индексы ближайших к старту остановок
+        dst_closest: Array,  # индексы ближайших к концу остановок
+) -> Tuple[int, Optional[int], Optional[int]]:
+    """
+    Считаем время проезда из src в dst с учетом транспорта
+    Возвращаем минимальное время и индексы остановок, если они есть, иначе None
+    """
+
+    # считаем время на транспорте для каждой комбинации
+    times = p2s_matrix[src, src_closest].reshape(-1, 1) + s2p_matrix[dst_closest, dst]
+    times += s_matrix[np.ix_(src_closest, dst_closest)]
+
+    # находим индексы лучших остановак в массивах closest
+    min_idx = np.unravel_index(times.argmin(), times.shape)
+
+    # считаем как быстрее: пешком или на транспорте и возвращаем
+    if times[min_idx] < p_matrix[src, dst]:
+        return times[min_idx], src_closest[min_idx[0]], dst_closest[min_idx[1]]
+    else:
+        return p_matrix[src, dst], None, None
 
 
 def combined_matrix(
@@ -100,58 +125,28 @@ def combined_matrix(
         p2s_matrix: Array,  # время пешком от точек до остановок
         s2p_matrix: Array,  # время пешком от остановок до точек
         s_matrix: Array,  # время проезда между точками
-        s_walk_matrix: Array,  # время проезда между точками
         candidates: int = 10,  # сколько ближайших остановок рассматривать
-):
+) -> Array:
     """
-    Составляем матрицу времени перемещения с учетом транспортных матриц
+    Составляем матрицу времени перемещения от каждой точки до каждой с учетом тспользования транспорта
     """
-    p2s_matrix.argpartition(axis=1)
-    p2s_matrix.argsort(axis=1)
 
-    np = len(p_matrix)
-    ns = len(s_matrix)
+    # ближайшие станции к каждой точке в обоих направлениях
+    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)
+    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)
 
-    for p_from in range(np):
-        ...
+    p = len(p_matrix)
+    res_times = np.zeros((p, p), dtype='int32')
 
+    logger.info("Считаем матрицу кратчайших проездов...")
+    for src, dst in permutations(range(p), 2):
+        time, src_s, dst_s = transport_travel_time(
+            src=src, dst=dst,
+            p_matrix=p_matrix, p2s_matrix=p2s_matrix,
+            s2p_matrix=s2p_matrix, s_matrix=s_matrix,
+            src_closest=src_closest[src], dst_closest=dst_closest[dst]
+        )
 
+        res_times[src, dst] = time
 
-def calc_time(start, finish, matrix, dataframe, transfer_cost=0):
-    """
-    Посчитать время в секундах между А и Б для матрицы перемещений, используя координаты и названия станций из датасета
-    """
-    station_map = dict(zip(dataframe.index, range(len(dataframe))))
-    by_walk = great_circle_distance(start, finish)
-
-    # print(f"Time by walk: {by_walk:.2f}sec")
-    dataframe['from_start'] = list(map(lambda x: great_circle_distance(start, x), dataframe['coord']))
-    dataframe['from_finish'] = list(map(lambda x: great_circle_distance(x, finish), dataframe['coord']))
-
-    best_time = by_walk
-    best_route = None
-
-    for fr in dataframe.sort_values(by='from_start')[:10].index:
-        print(f'Closest: fr {fr}')
-        for to in dataframe.sort_values(by='from_finish')[:10].index:
-            print(f'Closest: to {to}')
-            budget = transfer_cost + matrix[station_map[fr], station_map[to]] + dataframe['from_start'][fr] + \
-                     dataframe['from_finish'][to]
-            if budget <= best_time:
-                best_time = budget
-                best_route = [fr, to]
-            best_time = min(best_time, budget)
-
-            ### Printing
-            print(f"Time for route {fr}->{to}:\t \
-                    walk: {dataframe['from_start'][fr]:.2f} + wait: {transfer_cost:.2f} + transport:{matrix[station_map[fr]][station_map[to]]:.2f} + \
-                    walk: {dataframe['from_finish'][to]:.2f} = {budget:.2f}sec")
-
-    if best_route is not None:
-        print(
-            f"Best time: {best_time:.2f}sec, Best route: {dataframe.loc[best_route[0], 'name']}->{dataframe.loc[best_route[1], 'name']}")
-        print(f"Best time: {best_time:.2f}sec, Best route code: {best_route[0]}->{best_route[1]}")
-    else:
-        print(f"Best time: {best_time:.2f}sec, walking")
-
-    return best_time
+    return res_times
