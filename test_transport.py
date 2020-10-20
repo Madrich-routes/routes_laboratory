@@ -21,5 +21,9 @@ def main():
     np.savez_compressed('./data/final_mat.npz', walk_matrix=final_mat)
 
 
+# def build_final_matrix():
+#     ...
+
+
 if __name__ == "__main__":
     main()
