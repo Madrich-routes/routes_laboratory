@@ -38,7 +38,7 @@ def runner(
         m.append(matrix)
 
     logging.info('Solving...')
-    command = ' '.join(
+    command = ' '.join([
         f'vrp-cli solve',  # вызываем решалку
         f'pragmatic {problem_file}',  # файл, в котором сфорумлирована проблемаы
         f'{" ".join(m)}',  # матрицы расстояний
@@ -50,7 +50,7 @@ def runner(
         f'--cost-variation={variation_generations},{min_variation}',
         # f'--geo-json=<filename>'
         # f'-i <initial_solution>',
-    )
+   ])
     os.system(command)
     solution = convert_json(solution_file)
     os.remove(problem_file)
