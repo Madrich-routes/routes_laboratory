@@ -137,6 +137,7 @@ def table(host, src, dst=None, profile="driving"):
 @cache.memoize()
 def get_osrm_matrix(
         points: Array,
+        dst_points: Array = None,
         transport: str = 'car',
         return_distances: bool = False,
         return_durations: bool = True,
@@ -160,6 +161,7 @@ def get_osrm_matrix(
     distances, durations = table(
         host=osrm_host,
         src=points,
+        dst=dst_points,
     )
 
     assert np.abs(durations).sum() != 0 and np.abs(distances).sum() != 0, (
