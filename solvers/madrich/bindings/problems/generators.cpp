@@ -70,7 +70,6 @@ generate_vrp(int jobs, int couriers) {
     }
 
     Window window = Window("2020-10-01T10:00:00Z", "2020-10-01T20:00:00Z");
-    window.print();
     Storage storage(300, "storage", {"brains"}, points[0], window, generate_jobs(points, 1, 1 + jobs, "storage"));
 
     std::vector<Courier> couriers_list(couriers);

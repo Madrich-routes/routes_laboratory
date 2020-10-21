@@ -14,7 +14,7 @@ class Window {
 public:
     std::tuple<std::size_t, std::size_t> window;
 
-    Window() = delete;
+    explicit Window() = default;
 
     Window(const Window &window) = default;
 
@@ -32,7 +32,7 @@ public:
     std::tuple<float, float> point;
     [[maybe_unused]] std::optional<std::string> address;
 
-    explicit Point() = delete;
+    explicit Point() = default;
 
     Point(const Point &point) = default;
 
@@ -52,7 +52,7 @@ public:
     float second = 0;
     float meter = 0;
 
-    explicit Cost() = delete;
+    explicit Cost() = default;
 
     Cost(const Cost &cost) = default;
 
@@ -68,7 +68,7 @@ public:
     std::vector<std::vector<int>> distance;
     std::vector<std::vector<int>> travel_time;
 
-    explicit Matrix() = delete;
+    explicit Matrix() = default;
 
     Matrix(const Matrix &matrix) = default;
 
