@@ -39,21 +39,21 @@ def run_pharmacy(
 
     points, internal_mappings, files = load_matrix(profiles, depots, global_revers, orders, address_mapping)
 
-    # depots = {k: v for k, v in sorted(depots.items(), key=lambda x: x[1].time_window[0][11:13], reverse=True)}
-    #
-    # tmp_depots = [(i, k, v) for i, (k, v) in enumerate(depots.items())]
-    # tmp_depots[0], tmp_depots[9] = tmp_depots[9], tmp_depots[0]
-    # tmp_depots[1], tmp_depots[8] = tmp_depots[8], tmp_depots[1]
-    # tmp_depots[2], tmp_depots[3] = tmp_depots[3], tmp_depots[2]
-    # depots = {k: v for _, k, v in tmp_depots}
-    #
-    # couriers_file, depots_file, couriers_dir = 'couriers.csv', 'depots.csv', './couriers'
-    # if not os.path.exists(couriers_dir):
-    #     os.mkdir(couriers_dir)
-    #
-    # get_solution(depots, deepcopy(couriers), orders, internal_mappings, files, profiles,
-    #              address_mapping, couriers_file, depots_file, couriers_dir)
-    #
-    # solver_info = save_excel(fg, couriers_file, depots_file)
-    # save_couriers(fg, couriers_dir)
-    # convert_excel(solver_info)
+    depots = {k: v for k, v in sorted(depots.items(), key=lambda x: x[1].time_window[0][11:13], reverse=True)}
+
+    tmp_depots = [(i, k, v) for i, (k, v) in enumerate(depots.items())]
+    tmp_depots[0], tmp_depots[9] = tmp_depots[9], tmp_depots[0]
+    tmp_depots[1], tmp_depots[8] = tmp_depots[8], tmp_depots[1]
+    tmp_depots[2], tmp_depots[3] = tmp_depots[3], tmp_depots[2]
+    depots = {k: v for _, k, v in tmp_depots}
+
+    couriers_file, depots_file, couriers_dir = 'couriers.csv', 'depots.csv', './couriers'
+    if not os.path.exists(couriers_dir):
+        os.mkdir(couriers_dir)
+
+    get_solution(depots, deepcopy(couriers), orders, internal_mappings, files, profiles,
+                 address_mapping, couriers_file, depots_file, couriers_dir)
+
+    solver_info = save_excel(fg, couriers_file, depots_file)
+    save_couriers(fg, couriers_dir)
+    convert_excel(solver_info)
