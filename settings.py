@@ -6,6 +6,8 @@ import os
 # TODO: И вообще забирать все из переменных среды. А их ставить через мок файл или через .env
 
 os.environ["LKH2"] = "/usr/local/bin/LKH2"
+os.environ["LKH3"] = "/usr/local/bin/LKH3"
+
 os.environ["LKH"] = "/usr/local/bin/LKH"
 os.environ["CONCORDE"] = "/usr/local/bin/concorde"
 os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
@@ -22,5 +24,12 @@ VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
 
 REDIS_HOST = '127.0.0.1'
 
-OSRM_HOST = 'osrm-foot.dimitrius.keenetic.link'
-OSRM_PORT = '80'
+# Адреса OSRM-серверов
+OSRM_CAR_HOST = 'dimitrius.keenetic.link'
+OSRM_CAR_PORT = '5000'
+
+OSRM_FOOT_HOST = 'dimitrius.keenetic.link'
+OSRM_FOOT_PORT = '5001'
+
+OSRM_BICYCLE_HOST = 'dimitrius.keenetic.link'
+OSRM_BICYCLE_PORT = '5002'

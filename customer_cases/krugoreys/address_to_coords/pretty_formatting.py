@@ -5,10 +5,10 @@ import pandas as pd
 import pickle5 as pickle
 
 res = []
-data = pd.read_excel("../data/data.xlsx")
-coords_df = pd.read_csv("../data/coordinates.csv", sep=";").reset_index()
+data = pd.read_excel("./data/data.xlsx")
+coords_df = pd.read_csv("./data/coordinates.csv", sep=";").reset_index()
 coords_df["matrix_id"] = coords_df.index
-matrix = pickle.load(gzip.open("../data/res_matrix.pkl.gz", "rb"))
+matrix = pickle.load(gzip.open("./data/res_matrix.pkl.gz", "rb"))
 
 rows_count = len(data.index)
 
@@ -78,7 +78,7 @@ result_df = pd.DataFrame(
         "Машина",
     ],
 )
-result_df.to_excel("../data/pretty_result.xlsx")
+result_df.to_excel("./data/pretty_result.xlsx")
 
 # a = '141870, Московская обл, Дмитровский р-н, Зараменье д, дом № 41, строение 1'
 # b = '350059, Краснодарский край, Краснодар г, Новороссийская ул, дом № 234'
