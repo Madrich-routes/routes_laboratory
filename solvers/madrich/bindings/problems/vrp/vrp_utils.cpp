@@ -56,7 +56,9 @@ three_opt_exchange(const std::vector<Job> &jobs, int best_exchange, int x, int y
     } else if (best_exchange == 6) {
         return swap(jobs, b, c);
     } else {
-        throw std::invalid_argument("Bad exchange for three opt");
+        printf("Unexpected error!\n");
+        return jobs;
+        // throw std::invalid_argument("Bad exchange for three opt");
     }
 }
 

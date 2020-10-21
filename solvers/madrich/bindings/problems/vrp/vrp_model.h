@@ -19,7 +19,7 @@ public:
     Window work_time;
     std::vector<Job> unassigned_jobs;
 
-    Storage() = delete;
+    explicit Storage() = default;
 
     Storage(const Storage &s) = default;
 
@@ -48,7 +48,7 @@ public:
     Point start_location;
     Point end_location;
 
-    Courier() = delete;
+    explicit Courier() = default;
 
     Courier(const Courier &courier) = default;
 
@@ -78,7 +78,7 @@ public:
     std::vector<Job> jobs;
     State state;
 
-    Route() = delete;
+    explicit Route() = default;
 
     Route(const Route &route) = default;
 
@@ -102,7 +102,7 @@ public:
     Storage storage;
     std::vector<Route> routes;
 
-    Tour() = delete;
+    explicit Tour() = default;
 
     Tour(const Tour &tour) = default;
 
@@ -111,8 +111,6 @@ public:
     [[maybe_unused]] [[noreturn]] void print() const;
 
     State get_state();
-
-    [[nodiscard]] int len() const;
 };
 
 

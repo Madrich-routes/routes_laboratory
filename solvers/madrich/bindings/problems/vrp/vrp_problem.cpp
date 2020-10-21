@@ -76,8 +76,8 @@ float VrpProblem::cost(int travel_time, int distance, const Route &route) {
 
 State VrpProblem::start(const Route &route) {
     // Стартуем, едем от куда-то на склад
-    array_i distance_matrix = route.matrix.distance;
-    array_i travel_time_matrix = route.matrix.travel_time;
+    std::vector distance_matrix = route.matrix.distance;
+    std::vector travel_time_matrix = route.matrix.travel_time;
 
     int start_id = route.courier.start_location.matrix_id.value();
     int storage_id = route.storage.location.matrix_id.value();
@@ -93,8 +93,8 @@ State VrpProblem::start(const Route &route) {
 
 State VrpProblem::end(int curr_point, const Route &route) {
     // Заканчиваем, едем с последней задачи в конечную точку
-    array_i distance_matrix = route.matrix.distance;
-    array_i travel_time_matrix = route.matrix.travel_time;
+    std::vector distance_matrix = route.matrix.distance;
+    std::vector travel_time_matrix = route.matrix.travel_time;
 
     int end_id = route.courier.end_location.matrix_id.value();
     int tt = travel_time_matrix[curr_point][end_id];
