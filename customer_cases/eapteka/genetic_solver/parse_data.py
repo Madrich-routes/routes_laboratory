@@ -131,7 +131,7 @@ def parse_data(matrix_type: str, aver: float, address_mapping: Dict[Point, Tuple
     courier_typing = {'Водитель': 'driver', 'Курьер': matrix_type}
     mapping, index = {}, 0
 
-    index, date, orders = parse_orders(aver, index, mapping, delay, 'mkad')
+    index, date, orders = parse_orders(aver, index, mapping, delay)
     couriers = parse_couriers(date, courier_typing, type_weight, type_capacity, driver_weight, driver_capacity)
     index, depots = parse_depots(date, index, mapping, address_mapping, time_depot, time_pharmacy)
 
