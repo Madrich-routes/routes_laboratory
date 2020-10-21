@@ -197,7 +197,7 @@ def load_matrix(
 
                 # durations = get_osrm_matrix(
                 #     points=_turn_over(np.array(pts)),
-                #     transport='bicycle',
+                #     transport='еbicycle',
                 #     return_distances=True,
                 #     return_durations=True,
                 # )
