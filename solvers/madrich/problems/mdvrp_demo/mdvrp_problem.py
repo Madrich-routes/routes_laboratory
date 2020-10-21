@@ -83,7 +83,7 @@ class ProblemMdvrp(Problem):
         state = State.empty()
 
         for job in track.jobs:
-            tt = route.matrix.travel_time[location][job.location.matrix_id]
+            tt = route.matrix.transport_travel_time[location][job.location.matrix_id]
             d = route.matrix.distance[location][job.location.matrix_id]
             c = ProblemMdvrp.__cost(tt, d, route)
             location = job.location.matrix_id
@@ -137,7 +137,7 @@ class ProblemMdvrp(Problem):
         :return: состояние
         """
         distance_matrix = route.matrix.distance
-        travel_time_matrix = route.matrix.travel_time
+        travel_time_matrix = route.matrix.transport_travel_time
         end_id = route.courier.start_location.matrix_id
         tt = travel_time_matrix[curr_point][end_id]
         d = distance_matrix[curr_point][end_id]
@@ -175,7 +175,7 @@ class ProblemMdvrp(Problem):
         # 1. проверяем время работы
         start_shift, end_shift = route.courier.work_time.window
         start_time = route.start_time
-        if not (start_shift <= start_time + state.travel_time <= end_shift):
+        if not (start_shift <= start_time + state.transport_travel_time <= end_shift):
             return False
         # 2. проверяем максимальную дистанцию
         if state.distance > route.courier.max_distance:
@@ -234,14 +234,14 @@ class ProblemMdvrp(Problem):
             # 2. Курьер подходит
             if not ProblemMdvrp.__validate_skills(storage, route.courier):
                 continue
-            tt = matrix.travel_time[location][storage.location.matrix_id]
+            tt = matrix.transport_travel_time[location][storage.location.matrix_id]
             d = matrix.distance[location][storage.location.matrix_id]
             new_state = State(tt, d, ProblemMdvrp.__cost(tt, d, route))
             tmp_state = state + new_state
             # 3. Доедет
             if not ProblemMdvrp.__validate_courier(tmp_state, route):
                 continue
-            if not ProblemMdvrp.__validate_storage(tmp_state.travel_time, storage, route):
+            if not ProblemMdvrp.__validate_storage(tmp_state.transport_travel_time, storage, route):
                 continue
             states.append((tt, i))
 
@@ -319,9 +319,9 @@ class ProblemMdvrp(Problem):
         :param route: маршрут
         :return: на сколько увеличится State
         """
-        tt = route.matrix.travel_time[curr_point][storage.location.matrix_id] + storage.load
+        tt = route.matrix.transport_travel_time[curr_point][storage.location.matrix_id] + storage.load
         d = route.matrix.distance[curr_point][storage.location.matrix_id]
-        if not ProblemMdvrp.__validate_storage(state.travel_time + tt, storage, route):
+        if not ProblemMdvrp.__validate_storage(state.transport_travel_time + tt, storage, route):
             return None
         return State(tt, d, ProblemMdvrp.__cost(tt, d, route), None)
 
@@ -335,9 +335,9 @@ class ProblemMdvrp(Problem):
         :param route: маршрут
         :return: на сколько увеличится State
         """
-        tt = route.matrix.travel_time[curr_point][job.location.matrix_id] + job.delay
+        tt = route.matrix.transport_travel_time[curr_point][job.location.matrix_id] + job.delay
         d = route.matrix.distance[storage.location.matrix_id][job.location.matrix_id]
-        if not ProblemMdvrp.__validate_job(state.travel_time + tt, job, route):
+        if not ProblemMdvrp.__validate_job(state.transport_travel_time + tt, job, route):
             return None
         tmp = State(tt, d, ProblemMdvrp.__cost(tt, d, route), job.value.copy())
         if not ProblemMdvrp.__validate_courier(tmp + state, route):
