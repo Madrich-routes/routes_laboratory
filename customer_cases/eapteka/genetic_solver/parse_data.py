@@ -5,12 +5,12 @@ from typing import Tuple, List, Dict
 
 import pandas as pd
 import ujson
-from madrich.utils import to_array
 from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
 from geo.providers import osrm_module
+from solvers.madrich.utils import to_array
 
 Point = Tuple[float, float]
 
