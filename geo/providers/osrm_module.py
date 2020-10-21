@@ -1,7 +1,7 @@
 """
 Модуль с утилитами для обращения к OSRM серверу
 """
-
+import urllib
 from itertools import chain
 from typing import List, Union, Tuple
 from urllib.parse import quote
@@ -14,10 +14,8 @@ from polyline import encode as polyline_encode
 import settings
 from geo.transforms import geo_distance
 from utils.data_formats import cache, is_number
+from utils.logs import logger
 from utils.types import Array
-
-array = np.ndarray
-Point = Tuple[float, float]
 
 osrm_host = 'http://osrm-car.dimitrius.keenetic.link'
 
@@ -32,8 +30,8 @@ def _encode_src_dst(src, dst):
 
     params = dict(
         sources=";".join(map(str, range(ls))),
-        dests=";".join(map(str, range(ls, ls + ld))),
-        annotations=True,
+        destinations=";".join(map(str, range(ls, ls + ld))),
+        annotations="duration,distance",
     )
 
     return quote(polyline), params
@@ -43,80 +41,16 @@ def _encode_src(src):
     coords = tuple((c[1], c[0]) for c in src)
     polyline = polyline_encode(coords)
 
-    params = dict(annotations="duration")
+    params = dict(annotations="duration,distance")
 
     return quote(polyline), params
 
 
-def _turn_over(points):
-    pts = points.copy()
-    for i in range(len(pts)):
-        pts[i][0], pts[i][1] = points[i][1], points[i][0]
-    return pts
-
-
-def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]], host=osrm_host, dst=None,
-               profile="driving") -> Union[array, List[array]]:
-    """ Возвращает ассиметричные матрицы смежности
-    :param points: points
-    :param factor: duration; distance annotation for osrm
-    :param host: osrm host
-    :param dst:
-    :param profile: default 'driving'
-    :return: one matrix in case key=str and list of matrix when key=list
+def _turn_over(points: Array):
     """
-    points = points if type(points) == array else to_array(points)
-    points = _turn_over(points)
-    if dst is not None:
-        polyline, _ = _encode_src_dst(points, dst)
-    else:
-        polyline, _ = _encode_src(points)
-
-    annotation = ','.join(factor) if type(factor) is list else factor
-    r = requests.get(f"{host}/table/v1/{profile}/polyline({polyline})?annotations={annotation}")
-    assert r.status_code == 200, f'osrm bad request: {r.reason}'
-    parsed_json = ujson.loads(r.content)
-
-    if type(factor) is str:
-        output = np.array(parsed_json[f'{factor}s'])
-        assert output.sum() != 0, 'координаты переверни, да?'
-        return output
-    else:
-        output = [np.array(parsed_json[f'{fact}s']) for fact in factor]
-        assert any([m.sum() == 0 for m in output]), 'координаты переверни, да?'
-        return output
-
-
-def get_matrices(points: Union[array, List[Point]], factor: Union[str, List[str]], max_cost: int, split=15,
-                 host=osrm_host, dst=None, profile="driving") -> Union[array, List[array]]:
-    """ Возвращает нужное кол-во матриц смежностей
-    :param points: points
-    :param factor: duration, distance
-    :param max_cost: сколько времени со старта пройдет
-    :param split: минуты
-    :param host: osrm host
-    :param dst:
-    :param profile: default 'driving'
-    :return: one matrix of matrix in case key=str and list when key=list
+    Переворачиваем все значения по заданной оси
     """
-    split *= 60
-    size = len(points)
-    length = int(np.ceil(max_cost / split))
-
-    result = get_matrix(points, factor, host, dst, profile)
-    if type(result) is list:
-        output = []
-        for res in result:
-            matrices = np.zeros(shape=(length, size, size), dtype=np.int64)
-            for i in range(length):
-                matrices[i] = res.copy()
-            output.append(matrices)
-    else:
-        output = np.zeros(shape=(length, size, size), dtype=np.int64)
-        for i in range(length):
-            output[i] = result
-
-    return output
+    return np.fliplr(points)
 
 
 def table(host, src, dst=None, profile="driving"):
@@ -128,7 +62,11 @@ def table(host, src, dst=None, profile="driving"):
     else:
         polyline, params = _encode_src(src)
 
-    url = f"{host}/table/v1/{profile}/polyline({polyline})?annotations=duration,distance"
+    url = (
+        f"{host}/table/v1/{profile}/polyline({polyline})?" + urllib.parse.urlencode(params)
+        # f'&annotations=duration,distance'
+        # f'&dests='
+    )
     parsed_json = ujson.loads(requests.get(url).content)
 
     return np.array(parsed_json["distances"], dtype=np.int32), np.array(parsed_json["durations"], dtype=np.int32)
@@ -143,11 +81,12 @@ def get_osrm_matrix(
         return_durations: bool = True,
 ) -> Union[Array, Tuple[Array, Array]]:
     """
-    Получаем расстояния.
+    Получаем расстояния
     """
     assert return_distances or return_durations, 'Ничего не возвращаем'
 
-    print("Не нашли в кеше. Обновляем матрицу расстояний...")
+    dst_len = len(dst_points) if dst_points is not None else None
+    logger.info(f"Не нашли в кеше. Обновляем матрицу расстояний... {len(points), dst_len}")
 
     if transport == 'car':
         osrm_host = f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}'
@@ -197,3 +136,74 @@ def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarr
                 matrix[i, j] = coeff * geo_distance(coords[i], coords[i])
 
     return matrix.astype('int32')
+
+
+# ----------------------------------------------- extra functions --------------------------------------------------
+
+
+def get_matrix(
+        points: Array, factor: Union[str, List[str]],
+        host=osrm_host, dst=None,
+        profile="driving"
+) -> Union[Array, List[Array]]:
+    """
+    Возвращает ассиметричные матрицы смежности
+    :param points: points
+    :param factor: duration; distance annotation for osrm
+    :param host: osrm host
+    :param dst:
+    :param profile: default 'driving'
+    :return: one matrix in case key=str and list of matrix when key=list
+    """
+    points = _turn_over(points)
+    if dst is not None:
+        polyline, _ = _encode_src_dst(points, dst)
+    else:
+        polyline, _ = _encode_src(points)
+
+    annotation = ','.join(factor) if type(factor) is list else factor
+    r = requests.get(f"{host}/table/v1/{profile}/polyline({polyline})?annotations={annotation}")
+    assert r.status_code == 200, f'osrm bad request: {r.reason}'
+    parsed_json = ujson.loads(r.content)
+
+    if type(factor) is str:
+        output = np.array(parsed_json[f'{factor}s'])
+        assert output.sum() != 0, 'координаты переверни, да?'
+        return output
+    else:
+        output = [np.array(parsed_json[f'{fact}s']) for fact in factor]
+        assert any([m.sum() == 0 for m in output]), 'координаты переверни, да?'
+        return output
+
+
+def get_matrices(points: Array, factor: Union[str, List[str]], max_cost: int, split=15,
+                 host=osrm_host, dst=None, profile="driving") -> Union[Array, List[Array]]:
+    """
+    Возвращает нужное кол-во матриц смежностей
+    :param points: points
+    :param factor: duration, distance
+    :param max_cost: сколько времени со старта пройдет
+    :param split: минуты
+    :param host: osrm host
+    :param dst:
+    :param profile: default 'driving'
+    :return: one matrix of matrix in case key=str and list when key=list
+    """
+    split *= 60
+    size = len(points)
+    length = int(np.ceil(max_cost / split))
+
+    result = get_matrix(points, factor, host, dst, profile)
+    if type(result) is list:
+        output = []
+        for res in result:
+            matrices = np.zeros(shape=(length, size, size), dtype=np.int64)
+            for i in range(length):
+                matrices[i] = res.copy()
+            output.append(matrices)
+    else:
+        output = np.zeros(shape=(length, size, size), dtype=np.int64)
+        for i in range(length):
+            output[i] = result
+
+    return output
