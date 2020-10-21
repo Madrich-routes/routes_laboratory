@@ -30,7 +30,7 @@ def __add_point(mapping: dict, idx: int, lt: float, ln: float) -> Tuple[int, int
     return mapping[point], idx
 
 
-def parse_orders(aver: float, index: int, mapping: dict, minutes: int) -> Tuple[int, str, Dict[str, List[Task]]]:
+def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border:str='mkad') -> Tuple[int, str, Dict[str, List[Task]]]:
     """ Parse orders data
     """
     logging.info('Parsing orders...')
@@ -42,7 +42,10 @@ def parse_orders(aver: float, index: int, mapping: dict, minutes: int) -> Tuple[
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
 
     center = (sum(orders_loc.lat)/len(orders_loc.index), sum(orders_loc.lng)/len(orders_loc.index)) #нахождение центра масс точек
-    radius = 0.5 #задаем ограничительный радиус для точек в градусах
+    if border == 'mkad': #задаем ограничительный радиус для точек в градусах
+        radius = 0.25
+    else:
+        radius = 0.5
     for i, row in orders_inf.iterrows():
         try:
             lat, lng = orders_loc['lat'][i], orders_loc['lng'][i]
@@ -132,7 +135,7 @@ def parse_data(matrix_type: str, aver: float, address_mapping: Dict[Point, Tuple
     courier_typing = {'Водитель': 'driver', 'Курьер': matrix_type}
     mapping, index = {}, 0
 
-    index, date, orders = parse_orders(aver, index, mapping, delay)
+    index, date, orders = parse_orders(aver, index, mapping, delay, 'mkad')
     couriers = parse_couriers(date, courier_typing, type_weight, type_capacity, driver_weight, driver_capacity)
     index, depots = parse_depots(date, index, mapping, address_mapping, time_depot, time_pharmacy)
 
@@ -150,21 +153,21 @@ def reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: Dict[str
     """
 
     internal_mapping, index = {}, 0
+    if len(tasks[depot_id]) > 10:
+        tmp_loc = depot_loc = global_revers[depot.location]
+        depot_loc, index = __add_point(internal_mapping, index, depot_loc[0], depot_loc[1])
+        depot.location = depot_loc
 
-    tmp_loc = depot_loc = global_revers[depot.location]
-    depot_loc, index = __add_point(internal_mapping, index, depot_loc[0], depot_loc[1])
-    depot.location = depot_loc
+        min_priority = min([task.priority for task in tasks[depot_id]])
+        for task in tasks[depot_id]:
+            task_loc = global_revers[task.location]
+            task_loc, index = __add_point(internal_mapping, index, task_loc[0], task_loc[1])
+            task.location = task_loc
+            task.priority = task.priority if min_priority == 1 else 1
 
-    min_priority = min([task.priority for task in tasks[depot_id]])
-    for task in tasks[depot_id]:
-        task_loc = global_revers[task.location]
-        task_loc, index = __add_point(internal_mapping, index, task_loc[0], task_loc[1])
-        task.location = task_loc
-        task.priority = task.priority if min_priority == 1 else 1
-
-    courier_loc = (round(tmp_loc[0] + 5e-4, 6), round(tmp_loc[1], 6))
-    address_mapping[courier_loc] = ('depot', 'depot', 'depot')
-    __add_point(internal_mapping, index, courier_loc[0], courier_loc[1])
+        courier_loc = (round(tmp_loc[0] + 5e-4, 6), round(tmp_loc[1], 6))
+        address_mapping[courier_loc] = ('depot', 'depot', 'depot')
+        __add_point(internal_mapping, index, courier_loc[0], courier_loc[1])
 
     return internal_mapping
 
