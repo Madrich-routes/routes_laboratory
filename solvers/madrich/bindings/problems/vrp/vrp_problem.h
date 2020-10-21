@@ -38,9 +38,9 @@ private:
 
     static float cost(int travel_time, int distance, const Route &route);
 
-    static State start(const Route &route);
+    static std::optional<State> start(const Route &route);
 
-    static State end(int curr_point, const Route &route);
+    static std::optional<State> end(int curr_point, const State &state, const Route &route);
 
     static std::optional<State> go_job(int curr_point, const State &state, const Job &job, const Route &route);
 
