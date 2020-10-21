@@ -2,7 +2,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/complex.h>
 #include <pybind11/stl.h>
-#include "problem.cpp"
+#include "../vrp/vrp_problem.cpp"
 
 namespace py = pybind11;
 
@@ -131,15 +131,13 @@ PYBIND11_MODULE(Tour, m) {
 		.def_readwrite("unassigned_jobs", &Tour::unassigned_jobs);
 		// .def_readwrite("problem", &Tour::problem);
 
-	
-
 	py::class_<ClassicProblem>(m, "ClassicProblem")
 		.def(py::init())
-		// не уверен, что правильно работает (работает, но не от абстрактного класса
+		// не уверен, что правильно работает (работает, но не от абстрактного класса)
 		.def("__init", &ClassicProblem::init)
 		.def("__get_state", &ClassicProblem::get_state)
-		// .def("__validate_skills", (bool (ClassicProblem::*)(Job, Courier)) &ClassicProblem::__validate_skills)
-		// .def("__validate_skills", (bool (ClassicProblem::*)(Storage, Courier)) &ClassicProblem::__validate_skills)
+		.def("__validate_skills", py::overload_cast<Job, Courier>(&ClassicProblem::__validate_skills))
+		.def("__validate_skills", py::overload_cast<Storage, Courier>(&ClassicProblem::__validate_skills))
 		.def("__cost", &ClassicProblem::__cost)
 		.def("__start", &ClassicProblem::__start)
 		.def("__validate_job", &ClassicProblem::__validate_job)
@@ -151,129 +149,4 @@ PYBIND11_MODULE(Tour, m) {
 		.def("__validate_courier", &ClassicProblem::__validate_courier)
 		.def("__greedy_route", &ClassicProblem::__greedy_route)
 		.def("__greedy_tour", &ClassicProblem::__greedy_tour);
-
-	// m.def("go_init", &go_init);
-	// m.def("go_get_state", &go_get_state);
-	m.def("go_print", &go_print);
-	
-
-	/*
-	py::class_<ClassicProblem, Problem>(m, "ClassicProblem")
-		.def(py::init())
-		.def("__cost", &ClassicProblem::__cost)
-		.def("__start", &ClassicProblem::__start)
-		.def("__validate_job", &ClassicProblem::__validate_job)
-		.def("__go_job", &ClassicProblem::__go_job)
-		.def("__validate_storage", &ClassicProblem::__validate_storage)
-		.def("__go_storage", &ClassicProblem::__go_storage)
-		.def("__next_job", &ClassicProblem::__next_job)
-		.def("__end", &ClassicProblem::__end)
-		.def("__validate_courier", &ClassicProblem::__validate_courier)
-		.def("__greedy_route", &ClassicProblem::__greedy_route)
-		.def("__greedy_tour", &ClassicProblem::__greedy_tour)
-		.def("init", &ClassicProblem::init)
-		.def("get_state", &ClassicProblem::get_state);
-	*/
-
-	/*
-	py::class_<ClassicProblem, Problem>(m, "ClassicProblem")
-		.def(py::init())
-		.def("__cost", &ClassicProblem::__cost)
-		.def("__start", &ClassicProblem::__start)
-		.def("__validate_job", &ClassicProblem::__validate_job)
-		.def("__go_job", &ClassicProblem::__go_job)
-		.def("__validate_storage", &ClassicProblem::__validate_storage)
-		.def("__go_storage", &ClassicProblem::__go_storage)
-		.def("__next_job", &ClassicProblem::__next_job)
-		.def("__end", &ClassicProblem::__end)
-		.def("__validate_courier", &ClassicProblem::__validate_courier)
-		.def("__greedy_route", &ClassicProblem::__greedy_route)
-		.def("__greedy_tour", &ClassicProblem::__greedy_tour)
-		.def("init", &ClassicProblem::init)
-		.def("get_state", &ClassicProblem::get_state);
-	*/
-
-	/** /
-	py::class_<State>(m, "State")
-		.def(py::init())
-		// .def(py::self + py::self)
-		// .def(py::self += py::self)
-		// .def(py::self < py::self)
-		.def("__value", &State::__value)
-		.def_readwrite("travel_time", &State::travel_time)
-		.def_readwrite("distance", &State::distance)
-		.def_readwrite("cost", &State::cost)
-		.def_readwrite("value", &State::value);
-
-	py::class_<vrp>(m, "vrp")
-		.def(py::init())
-		.def_readwrite("a", &vrp::a);
-
-	m.def("generate_vrp", &generate_vrp);
-	m.def("generate_points", &generate_points);
-	/**/
-
-	/*
-	py::class_<optional>(m, "optional")
-		.def(py::init<int>())
-		.def("foo", py::overload_cast<const optional<int> &>(&foo));
-	*/
-
-	/*
-	py::class_<Problem>(m, "Problem")
-		.def(py::init())
-		.def("init", &Problem::init)
-		.def("get_state", &Problem::get_state);
-
-	py::class_<ClassicProblem, Problem>(m, "ClassicProblem")
-		.def(py::init())
-		.def("__cost", &ClassicProblem::__cost)
-		.def("__start", &ClassicProblem::__start)
-		.def("__validate_job", &ClassicProblem::__validate_job)
-		.def("__go_job", &ClassicProblem::__go_job)
-		.def("__validate_storage", &ClassicProblem::__validate_storage)
-		.def("__go_storage", &ClassicProblem::__go_storage)
-		.def("__next_job", &ClassicProblem::__next_job)
-		.def("__end", &ClassicProblem::__end)
-		.def("__validate_courier", &ClassicProblem::__validate_courier)
-		.def("__greedy_route", &ClassicProblem::__greedy_route)
-		.def("__greedy_tour", &ClassicProblem::__greedy_tour)
-		.def("init", &ClassicProblem::init)
-		.def("get_state", &ClassicProblem::get_state);
-	*/
-
-	// .def("__validate_skills", py::overload_cast<Job, Courier>(&ClassicProblem::__validate_skills))
-	// .def("__validate_skills", py::overload_cast<Storage, Courier>(&ClassicProblem::__validate_skills));
-	
-	/*
-	py::class_<ClassicProblem, Problem>(m, "ClassicProblem")
-		.def(py::init())
-		.def("__validate_skills", py::overload_cast<Job, Courier>(&ClassicProblem::__validate_skills))
-		.def("__validate_skills", py::overload_cast<Storage, Courier>(&ClassicProblem::__validate_skills));
-	*/
-
-	/*
-	m.def("add", &add);
-	m.def("func_ret_struct", &func_ret_struct);
-	m.def("ret_Cost_class", &Cost::ret_Cost_class);
-
-	py::class_<simple_print>(m, "simple_print")
-		.def(py::init())							// Указываем конструктор. Которого у структуры нет, но он нужен python.
-		.def("print_c", &simple_print::print)
-		.def_readwrite("a", &simple_print::a)
-		.def_readwrite("b", &simple_print::b)
-		.def_readwrite("c", &simple_print::c);
-
-	py::class_<Cost>(m, "Cost")
-		.def(py::init())							// Указываем конструктор. Которого у структуры нет, но он нужен python.
-		.def_readwrite("start", &Cost::start)	// переменные структуры
-		.def_readwrite("second", &Cost::second)
-		.def_readwrite("meter", &Cost::meter);
-
-	py::class_<simple_s>(m, "simple_s")
-		.def(py::init())							// Указываем конструктор. Которого у структуры нет, но он нужен python.
-		.def_readwrite("val1", &simple_s::val1)	// переменные структуры
-		.def_readwrite("val2", &simple_s::val2)
-		.def_readwrite("val3", &simple_s::val3);
-	*/
 };
