@@ -14,6 +14,7 @@ from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
+from geo.providers import osrm_module
 from geo.providers.osrm_module import get_osrm_matrix, _turn_over
 from geo.transport.calc_distance import get_travel_times
 
@@ -192,33 +193,33 @@ def load_matrix(
         name = depot_id
 
         for profile in profiles:
-            file = f'./tmp/{name}.{profile}.routing_matrix.json'
+            file = f'./tmp_matrices/{name}.{profile}.routing_matrix.json'
 
-            if profile == 'transport_complex':
-                # print(f'Принтим велосипеды {pts}')
-
-                # durations = get_osrm_matrix(
-                #     points=_turn_over(np.array(pts)),
-                #     transport='еbicycle',
-                #     return_distances=True,
-                #     return_durations=True,
-                # )
-
-                durations = get_travel_times(
-                    points=_turn_over(np.array(pts)),
-                )
-
-                distances = durations.copy()
-
-                with open(file, 'w') as f:
-                    data = {
-                        "travelTimes": list(flatten(durations.tolist())),
-                        "distances": list(flatten(distances.tolist())),
-                        "profile": profile,
-                    }
-                    # print(data)
-                    json.dump(data, f)
+            if profile == 'transport_simple':
+                pass
+            elif profile == 'pedestrian':
+                pass
+            elif profile == 'driver':
+                pass
+            elif profile == 'bicycle':
+                download_pedestrian(file, __points)
 
             files[depot_id].append(file)
 
     return points, internal_mappings, files
+
+
+def download_pedestrian(file, points):
+    osrm_host = f'http://dimitrius.keenetic.link:5002'
+    distance_matrix = osrm_module.get_matrix(points, 'distance', host=osrm_host)
+    time_matrix = osrm_module.get_matrix(points, 'duration', host=osrm_host)
+    travel_times, distances = [], []
+    for i in range(len(points)):
+        for j in range(len(points)):
+            travel_times.append(int(time_matrix['bicycle'][i][j]))
+            distances.append(int(distance_matrix['bicycle'][i][j]))
+
+    routing = {'profile': 'bicycle', 'travelTimes': travel_times, 'distances': distances}
+
+    with open(file, 'w') as f:
+        ujson.dump(routing, f)
