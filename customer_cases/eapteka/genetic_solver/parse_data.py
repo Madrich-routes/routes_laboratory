@@ -1,7 +1,3 @@
-import json
-from pprint import pprint
-
-import numpy as np
 import logging
 import math
 from collections import defaultdict
@@ -28,7 +24,8 @@ def __add_point(mapping: dict, idx: int, lt: float, ln: float) -> Tuple[int, int
     return mapping[point], idx
 
 
-def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border:str='mkad') -> Tuple[int, str, Dict[str, List[Task]]]:
+def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border: str = 'nemkad') -> Tuple[
+    int, str, Dict[str, List[Task]]]:
     """ Parse orders data
     """
     logging.info('Parsing orders...')
@@ -39,8 +36,9 @@ def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border:st
     date = orders_inf.iloc[0]['ДатаДоставки']
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
 
-    center = (sum(orders_loc.lat)/len(orders_loc.index), sum(orders_loc.lng)/len(orders_loc.index)) #нахождение центра масс точек
-    if border == 'mkad': #задаем ограничительный радиус для точек в градусах
+    center = (sum(orders_loc.lat) / len(orders_loc.index),
+              sum(orders_loc.lng) / len(orders_loc.index))  # нахождение центра масс точек
+    if border == 'mkad':  # задаем ограничительный радиус для точек в градусах
         radius = 0.25
     else:
         radius = 0.5
