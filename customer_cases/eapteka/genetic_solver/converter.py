@@ -1,8 +1,8 @@
-import ujson
 import os
 from typing import Tuple, List, Dict
 
 import numpy as np
+import ujson
 
 from customer_cases.eapteka.genetic_solver.models import Task, Depot, Courier
 
@@ -11,11 +11,11 @@ array = np.ndarray
 
 
 def convert_json(file: str) -> dict:
-    """ Return Solver result
+    """
+    Просто парсим и возвращаем результат солвера
     """
     with open(file, 'r') as f:
-        solution = ujson.load(f)
-    return solution
+        return ujson.load(f)
 
 
 def generate_matrix(name: str, profiles: List[str], distance_matrix: Dict[str, array], time_matrix: Dict[str, array]):

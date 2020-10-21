@@ -1,13 +1,21 @@
+import json
+from pprint import pprint
+
+import numpy as np
 import logging
 import math
 from collections import defaultdict
 from typing import Tuple, List, Dict
 
 import pandas as pd
+import ujson
+from more_itertools import flatten
 from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
+from geo.providers.osrm_module import get_osrm_matrix, _turn_over
+from geo.transport.calc_distance import get_travel_times
 
 Point = Tuple[float, float]
 
@@ -158,10 +166,15 @@ def reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: Dict[str
     return internal_mapping
 
 
-def load_matrix(profiles: List[str], depots: Dict[str, Depot], global_revers: dict, orders: Dict[str, List[Task]],
-                address_mapping: Dict[Point, Tuple[str, str, str]]
-                ) -> Tuple[Dict[str, List[Point]], Dict[str, dict], Dict[str, List[str]]]:
-    """ Load file matrix info and reindexing for tasks
+def load_matrix(
+        profiles: List[str],
+        depots: Dict[str, Depot],
+        global_revers: Dict,
+        orders: Dict[str, List[Task]],
+        address_mapping: Dict[Point, Tuple[str, str, str]]
+) -> Tuple[Dict[str, List[Point]], Dict[str, dict], Dict[str, List[str]]]:
+    """
+    Load file matrix info and reindexing for tasks
     """
 
     points = {}
@@ -175,8 +188,35 @@ def load_matrix(profiles: List[str], depots: Dict[str, Depot], global_revers: di
     files = defaultdict(list)
     for i, (depot_id, pts) in enumerate(points.items()):
         name = depot_id
+
         for profile in profiles:
             file = f'./tmp/{name}.{profile}.routing_matrix.json'
+
+            if profile == 'transport_complex':
+                # print(f'Принтим велосипеды {pts}')
+
+                # durations = get_osrm_matrix(
+                #     points=_turn_over(np.array(pts)),
+                #     transport='еbicycle',
+                #     return_distances=True,
+                #     return_durations=True,
+                # )
+
+                durations = get_travel_times(
+                    points=_turn_over(np.array(pts)),
+                )
+
+                distances = durations.copy()
+
+                with open(file, 'w') as f:
+                    data = {
+                        "travelTimes": list(flatten(durations.tolist())),
+                        "distances": list(flatten(distances.tolist())),
+                        "profile": profile,
+                    }
+                    # print(data)
+                    json.dump(data, f)
+
             files[depot_id].append(file)
 
     return points, internal_mappings, files
