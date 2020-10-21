@@ -74,33 +74,29 @@ float VrpProblem::cost(int travel_time, int distance, const Route &route) {
            float(distance) * route.courier.cost.meter;
 }
 
-State VrpProblem::start(const Route &route) {
+std::optional<State> VrpProblem::start(const Route &route) {
     // Стартуем, едем от куда-то на склад
-    std::vector distance_matrix = route.matrix.distance;
-    std::vector travel_time_matrix = route.matrix.travel_time;
-
+    State state(0, 0, 0);
     int start_id = route.courier.start_location.matrix_id.value();
-    int storage_id = route.storage.location.matrix_id.value();
-
-    int tt = travel_time_matrix[start_id][storage_id];
-    int d = distance_matrix[start_id][storage_id];
-
-    Cost cost = route.courier.cost;
-    float c = VrpProblem::cost(tt, d, route) + cost.start;
-    State st(tt, d, c);
-    return st;
+    std::optional status = VrpProblem::go_storage(start_id, state, route);
+    if (!status) {
+        return std::nullopt;
+    }
+    state += status.value();
+    return state;
 }
 
-State VrpProblem::end(int curr_point, const Route &route) {
+std::optional<State> VrpProblem::end(int curr_point, const State &state, const Route &route) {
     // Заканчиваем, едем с последней задачи в конечную точку
     std::vector distance_matrix = route.matrix.distance;
     std::vector travel_time_matrix = route.matrix.travel_time;
-
     int end_id = route.courier.end_location.matrix_id.value();
     int tt = travel_time_matrix[curr_point][end_id];
     int d = distance_matrix[curr_point][end_id];
-
     State st(tt, d, VrpProblem::cost(tt, d, route));
+    if (!VrpProblem::validate_courier(state + st, route)) {
+        return std::nullopt;
+    }
     return st;
 }
 
@@ -137,21 +133,22 @@ std::optional<State> VrpProblem::next_job(int curr_point, const State &state, co
         // 1. если не влезло едем на склад, если склад открыт и успеваем загрузиться до закрытия
         answer = VrpProblem::go_storage(curr_point, new_state, route);
         if (!answer) {
+            printf("11\n");
             return std::nullopt;
         }
         new_state += answer.value();
-        std::vector<int> v(job.value.size());
-        std::fill(v.begin(), v.end(), 0);  // check this
-        new_state.value = v;
+        new_state.value = std::vector<int>(job.value.size());
         // 2. едем на точку и успеваем отдать до конца окна
         answer = VrpProblem::go_job(route.storage.location.matrix_id.value(), new_state, job, route);
         if (!answer) {
+            printf("12\n");
             return std::nullopt;
         }
         new_state += answer.value();
     } else {
         new_state += answer.value();
     }
+    printf("13\n");
     return new_state;
 }
 
@@ -167,39 +164,56 @@ Route VrpProblem::init_route(int vec,
     Route route(vec, std::get<0>(courier.work_time.window), tour.storage, courier, matrix);
 
     int curr_point = route.storage.location.matrix_id.value();
-    State state = VrpProblem::start(route);
+    std::optional answer = VrpProblem::start(route);
+    if (!answer) {
+        printf("Created Route, Jobs: %d\n", 0);
+        return route;
+    }
+    State state = answer.value();
     state.value = std::vector<int>(vec);
 
-    while (tour.storage.unassigned_jobs.empty()) {
+    while (true) {
+        printf("restart\n");
+        int best_index = -1;
         std::optional<Job> best_job = std::nullopt;
         std::optional<State> best_state = std::nullopt;
+        auto size = tour.storage.unassigned_jobs.size();
+        printf("size: %llu\n", size);
 
-        for (const auto &job : tour.storage.unassigned_jobs) {
-            std::optional<State> answer = VrpProblem::next_job(curr_point, state, job, route);
+        for (std::size_t i = 0; i < size; ++i) {
+            Job job = tour.storage.unassigned_jobs[i];
+            printf("1 start\n");
+            answer = VrpProblem::next_job(curr_point, state, job, route);
             if (!answer) {
+                printf("1\n");
                 continue;
             }
-
-            State end = VrpProblem::end(job.location.matrix_id.value(), route);
-            if (!VrpProblem::validate_courier(answer.value() + end, route)) {
+            printf("2 start\n");
+            answer = VrpProblem::end(job.location.matrix_id.value(), state, route);
+            if (!answer) {
+                printf("2\n");
                 continue;
             }
-
+            printf("3 start\n");
             if ((!best_job) || (answer.value() < best_state.value())) {
+                best_index = i;
                 best_job = job;
                 best_state = answer;
             }
         }
+
+        printf("tut1\n");
         if (!best_job) {
             break;
         }
-
         state = best_state.value();
         curr_point = best_job.value().location.matrix_id.value();
         route.jobs.push_back(best_job.value());
+        printf("tut2\n");
+        tour.storage.unassigned_jobs.erase(tour.storage.unassigned_jobs.begin() + best_index);
     }
 
-    state += VrpProblem::end(curr_point, route);
+    state += VrpProblem::end(curr_point, state, route).value();
     route.state = state;
     printf("Created Route, Jobs: %d\n", route.length());
     return route;
@@ -235,7 +249,11 @@ std::optional<State> VrpProblem::get_state(const Route &route) {
     }
 
     int curr_point = route.storage.location.matrix_id.value();
-    State state = VrpProblem::start(route);
+    std::optional answer = VrpProblem::start(route);
+    if (!answer) {
+        return std::nullopt;
+    }
+    State state = answer.value();
     state.value = std::vector<int>(route.vec);
 
     for (const auto &job : route.jobs) {
@@ -247,7 +265,7 @@ std::optional<State> VrpProblem::get_state(const Route &route) {
             return std::nullopt;
         }
 
-        std::optional<State> answer = VrpProblem::next_job(curr_point, state, job, route);
+        answer = VrpProblem::next_job(curr_point, state, job, route);
         if (!answer) {
             return std::nullopt;
         }
@@ -259,11 +277,11 @@ std::optional<State> VrpProblem::get_state(const Route &route) {
         curr_point = job.location.matrix_id.value();
     }
 
-    state += VrpProblem::end(curr_point, route);
-    if (!VrpProblem::validate_courier(state, route)) {
+    answer = VrpProblem::end(curr_point, state, route);
+    if (!answer) {
         return std::nullopt;
     }
-
+    state += answer.value();
     state.value = std::nullopt;
     return state;
 }
