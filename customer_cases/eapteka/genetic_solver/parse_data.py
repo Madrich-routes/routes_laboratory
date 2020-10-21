@@ -40,10 +40,12 @@ def parse_orders(aver: float, index: int, mapping: dict, minutes: int) -> Tuple[
     date = orders_inf.iloc[0]['ДатаДоставки']
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
 
+    center = (sum(orders_loc.lat)/len(orders_loc.index), sum(orders_loc.lng)/len(orders_loc.index)) #нахождение центра масс точек
+    radius = 0.5 #задаем ограничительный радиус для точек в градусах
     for i, row in orders_inf.iterrows():
         try:
             lat, lng = orders_loc['lat'][i], orders_loc['lng'][i]
-            check_point(lat, lng)
+            check_point(lat, lng, center, radius)
             point_index, index = __add_point(mapping, index, lat, lng)
             time_windows = make_windows_orders(date, row['ИнтервалДоставки'])
             if math.isnan(row['ВесЗаказа']) and not math.isnan(row['ОбъемЗаказа']):
