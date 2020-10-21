@@ -7,7 +7,7 @@ float generate_value() {
 }
 
 std::tuple<float, float> generate_tuple() {
-    return std::tuple<float, float>(generate_value(), generate_value());
+    return {generate_value(), generate_value()};
 }
 
 std::vector<std::tuple<float, float>> generate_points(int n, float min_x, float max_x, float min_y, float max_y) {
@@ -29,12 +29,13 @@ generate_matrix(const std::vector<std::tuple<float, float>> &points, const std::
     std::size_t size = points.size();
     std::vector<std::vector<int>> matrix(size, std::vector<int>(size, 0));
     for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < size; ++j) {
+        for (int j = i + 1; j < size; ++j) {
             auto[first_x, first_y] = points[i];
             auto[second_x, second_y] = points[j];
-            double value = sqrt(pow((second_x - first_x), 2) + pow((second_y - second_x), 2));
-            matrix[i][j] = static_cast<int>((value * (generate_value() / 2) + value) * c * 1e4);
-            matrix[j][i] = static_cast<int>((value * (generate_value() / 2) + value) * c * 1e4);
+            double value = sqrt(pow((second_x - first_x), 2) + pow((second_y - first_y), 2));
+            value *= 1e4;
+            matrix[i][j] = (value * (generate_value() / 2) + value) * c;
+            matrix[j][i] = (value * (generate_value() / 2) + value) * c;
         }
     }
     return matrix;
