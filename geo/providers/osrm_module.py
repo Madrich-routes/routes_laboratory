@@ -63,7 +63,7 @@ def table(host, src, dst=None, profile="driving"):
         polyline, params = _encode_src(src)
 
     url = (
-        f"{host}/table/v1/{profile}/polyline({polyline})?" + urllib.parse.urlencode(params)
+            f"{host}/table/v1/{profile}/polyline({polyline})?" + urllib.parse.urlencode(params)
         # f'&annotations=duration,distance'
         # f'&dests='
     )
