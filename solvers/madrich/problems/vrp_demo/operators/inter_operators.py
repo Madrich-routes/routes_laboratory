@@ -8,19 +8,19 @@ from madrich.problems.vrp_demo.models import Problem, Route
 
 
 def inter_swap(route1: Route, route2: Route, problem: Problem) -> bool:
-    logging.info(f'\nSwap started, tt:{route1.travel_time + route2.travel_time}')
+    logging.info(f'\nSwap started, tt:{route1.transport_travel_time + route2.transport_travel_time}')
     ret = __inter_opt(__inter_swap, route1, route2, problem)
-    logging.info(f'Ended, tt:{route1.travel_time + route2.travel_time}')
+    logging.info(f'Ended, tt:{route1.transport_travel_time + route2.transport_travel_time}')
     return ret
 
 
 def inter_replace(route1: Route, route2: Route, problem: Problem) -> bool:
-    logging.info(f'\nReplace started, tt:{route1.travel_time + route2.travel_time}')
+    logging.info(f'\nReplace started, tt:{route1.transport_travel_time + route2.transport_travel_time}')
     return __symmetric_function(__inter_replace, route1, route2, problem)
 
 
 def inter_cross(route1: Route, route2: Route, problem: Problem) -> bool:
-    logging.info(f'\nCross started, tt:{route1.travel_time + route2.travel_time}')
+    logging.info(f'\nCross started, tt:{route1.transport_travel_time + route2.transport_travel_time}')
     return __symmetric_function(__inter_cross, route1, route2, problem)
 
 
@@ -61,7 +61,7 @@ def __symmetric_function(func, route1: Route, route2: Route, problem: Problem) -
     state = problem.get_state(route1) + problem.get_state(route2)
     tmp_state = problem.get_state(tmp_route1) + problem.get_state(tmp_route2)
 
-    logging.info(f'Ended, tt:{tmp_state.travel_time}')
+    logging.info(f'Ended, tt:{tmp_state.transport_travel_time}')
     if tmp_state < state:
         route1.jobs = tmp_route1.jobs
         route2.jobs = tmp_route2.jobs
@@ -80,7 +80,7 @@ def __inter_opt(func, route1: Route, route2: Route, problem: Problem) -> bool:
         if changed:
             tmp_state = best_state
             tmp_route1, tmp_route2 = best_route1, best_route2
-            logging.info(f'Updated, tt:{best_state.travel_time}, cost:{best_state.cost}')
+            logging.info(f'Updated, tt:{best_state.transport_travel_time}, cost:{best_state.cost}')
 
     if tmp_state < state:
         route1.jobs = tmp_route1.jobs

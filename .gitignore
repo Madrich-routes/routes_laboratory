@@ -536,3 +536,7 @@ buildNumber.properties
 /snap/.snapcraft/
 
 .vscode
+
+.virtual_documents
+
+data

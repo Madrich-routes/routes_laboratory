@@ -52,7 +52,7 @@ class Route:
     cost: float
 
     def save_state(self, state: State) -> None:
-        self.travel_time += state.travel_time
+        self.travel_time += state.transport_travel_time
         self.cost += state.cost
         self.distance += state.distance
 
