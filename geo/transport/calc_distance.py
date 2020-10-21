@@ -133,8 +133,8 @@ def combined_matrix(
     """
 
     # ближайшие станции к каждой точке в обоих направлениях
-    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)
-    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)
+    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:candidates]
+    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:candidates]
 
     p = len(p_matrix)
     res_times = np.zeros((p, p), dtype='int32')
