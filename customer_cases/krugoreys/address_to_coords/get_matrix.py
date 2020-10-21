@@ -6,7 +6,7 @@ import pandas as pd
 
 from geo.providers.osrm_module import get_osrm_matrix, Point
 
-df = pd.read_csv('../data/coordinates.csv', sep=';')
+df = pd.read_csv('./data/coordinates.csv', sep=';')
 df.columns = ['address', 'lat', 'lon']
 
 print(df.info())
