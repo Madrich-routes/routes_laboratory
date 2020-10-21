@@ -2,25 +2,38 @@ import os
 
 import numpy as np
 import pandas as pd
-
+from geo.providers.osrm_module import get_osrm_matrix
 from geo.transport.calc_distance import build_graph
 from geo.transport.matrix import build_dataset_from_files
 from geo.transport.matrix import build_walk_matrix
 
 
 def main():
-    if os.path.exists('./data/full_df_refactored.pkl'):
-        dataset = pd.read_pickle('./data/full_df_refactored.pkl')
+    dataset_filename = '../data/full_df_refactored.pkl'
+    if os.path.exists(dataset_filename):
+        dataset = pd.read_pickle(dataset_filename)
     else:
         dataset = build_dataset_from_files()
-        dataset.to_pickle('./data/full_df_refactored.pkl')
-    walk_matrix = build_walk_matrix(dataset)
-    np.savez_compressed('./data/walk_matrix_refactored.npz', walk_matrix=walk_matrix)
-    final_matrix_file = './data/full_matrix_refactored.npz'
-    final_mat = build_graph(dataset, walk_matrix, final_matrix_file)
-    np.savez_compressed('./data/final_mat.npz', walk_matrix=final_mat)
+        dataset.to_pickle(dataset_filename)
 
 
+    dataset = dataset[:1000]
+    
+    walk_matrix_filename = '../data/walk_matrix_refactored_smol.npz'
+    if os.path.exists(walk_matrix_filename):
+        walk_matrix = np.load(walk_matrix_filename)['walk_matrix']
+    else:
+        walk_matrix = build_walk_matrix(dataset)
+        np.savez_compressed(walk_matrix_filename, walk_matrix=walk_matrix)
+
+    final_matrix_file = '../data/full_matrix_refactored_smol.npz'
+    if os.path.exists(final_matrix_file):
+        final_mat = np.load(final_matrix_file)['matrix']
+    else:
+        final_mat = build_graph(dataset, walk_matrix, final_matrix_file)
+        # np.savez_compressed(final_matrix_file, walk_matrix=final_mat)
+
+    return
 # def build_final_matrix():
 #     ...
 
