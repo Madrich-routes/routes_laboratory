@@ -36,11 +36,17 @@ def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
     return [(f'{date}T{start}:00Z', f'{date}T{end}:00Z')]
 
 
-def check_point(lat, lon):
+def check_point(lat, lon, center, radius):
     """ Check that point in some borders near Moscow
     """
-    assert 54.966833 < lat < 56.393109, f'bad point {lat}'
-    assert 36.1686653 < lon < 38.9163203, f'bad point {lon}'
+    # assert 54.966833 < lat < 56.393109, f'bad point {lat}'
+    # assert 36.1686653 < lon < 38.9163203, f'bad point {lon}'
+
+    """v.2
+    Check that point in some radius near Moscow
+    """
+
+    assert((lat - center[0])**2 + (lon - center[1])**2)**(1/2) < radius, f'bad point {lat}, {lon}'
 
 
 def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
