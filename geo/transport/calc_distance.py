@@ -1,4 +1,5 @@
 from itertools import permutations
+from pathlib import Path
 from typing import Tuple, Optional
 
 import numpy as np
@@ -139,12 +140,13 @@ def combined_matrix(
 def get_travel_times(
         points: Array,
 ):
-    stations = pd.read_pickle('../data/full_df_refactored_2210.pkl')['coord'].values.tolist()
+    data_dir = Path('/media/dimitrius/avg_data/data')
+    stations = pd.read_pickle(data_dir / 'full_df_refactored_2210.pkl')['coord'].values.tolist()
     stations = np.array(stations)
 
     p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
     s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
     p_matrix = osrm_module.get_osrm_matrix(points)
-    s_matrix = np.load('../data/walk_matrix_refactored_2210.npz')['walk_matrix']
+    s_matrix = np.load(data_dir / 'walk_matrix_refactored_2210.npz')['walk_matrix']
 
     return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
