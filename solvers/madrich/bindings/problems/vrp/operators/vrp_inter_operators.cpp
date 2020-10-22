@@ -1,6 +1,7 @@
 #include "vrp_inter_operators.h"
 
-bool inter_swap(Route &route1, Route &route2) {
+
+bool inter_swap(VrpRoute &route1, VrpRoute &route2) {
     int size1 = route1.jobs.size();
     int size2 = route2.jobs.size();
     State state1 = route1.state;
@@ -8,7 +9,7 @@ bool inter_swap(Route &route1, Route &route2) {
     State state = route1.state + route2.state;
     bool changed = true;
     bool result = false;
-    printf("Swap started, tt: %d, cost: %f\n", state.travel_time, state.cost);
+    printf("\nSwap started, tt: %d, cost: %f\n", state.travel_time, state.cost);
 
     while (changed) {
         changed = false;
@@ -24,6 +25,7 @@ bool inter_swap(Route &route1, Route &route2) {
                 std::optional<State> new_state1 = VrpProblem::get_state(route1);
                 std::optional<State> new_state2 = VrpProblem::get_state(route2);
                 if ((!new_state1) || (!new_state2)) {
+                    std::swap(route1.jobs[it1], route2.jobs[it2]);
                     continue;
                 }
                 State new_state = new_state1.value() + new_state2.value();
@@ -54,7 +56,7 @@ bool inter_swap(Route &route1, Route &route2) {
     return result;
 }
 
-bool uns_inter_replace(Route &route1, Route &route2) {
+bool uns_inter_replace(VrpRoute &route1, VrpRoute &route2) {
     int size1 = route1.jobs.size();
     int size2 = route2.jobs.size();
     std::vector jobs1 = route1.jobs;
@@ -75,12 +77,14 @@ bool uns_inter_replace(Route &route1, Route &route2) {
 
         for (std::size_t it1 = 0; it1 < size1; ++it1) {
             for (std::size_t it2 = 0; it2 < size2; ++it2) {
-                auto[new_jobs1, new_jobs2] = replace(route1.jobs, route2.jobs, it1, it2);
+                auto[new_jobs1, new_jobs2] = replace_point(jobs1, jobs2, it1, it2);
                 route1.jobs = new_jobs1;
                 route2.jobs = new_jobs2;
                 std::optional<State> new_state1 = VrpProblem::get_state(route1);
                 std::optional<State> new_state2 = VrpProblem::get_state(route2);
                 if ((!new_state1) || (!new_state2)) {
+                    route1.jobs = jobs1;
+                    route2.jobs = jobs2;
                     continue;
                 }
                 State new_state = new_state1.value() + new_state2.value();
@@ -112,11 +116,11 @@ bool uns_inter_replace(Route &route1, Route &route2) {
     return result;
 }
 
-bool inter_replace(Route &route1, Route &route2) {
+bool inter_replace(VrpRoute &route1, VrpRoute &route2) {
     bool result = false;
     bool changed = true;
     State state = route1.state + route2.state;
-    printf("Replace started, tt: %d, cost: %f\n", state.travel_time, state.cost);
+    printf("\nReplace started, tt: %d, cost: %f\n", state.travel_time, state.cost);
 
     while (changed) {
         bool changed1 = uns_inter_replace(route1, route2);
@@ -132,28 +136,33 @@ bool inter_replace(Route &route1, Route &route2) {
     return result;
 }
 
-bool inter_cross(Route &route1, Route &route2) {
+bool inter_cross(VrpRoute &route1, VrpRoute &route2) {
     int size1 = route1.jobs.size();
     int size2 = route2.jobs.size();
     std::vector jobs1 = route1.jobs;
     std::vector jobs2 = route2.jobs;
     State state = route1.state + route2.state;
+    printf("\nCross started, tt: %d, cost: %f\n", state.travel_time, state.cost);
+
     for (std::size_t it1 = 0; it1 < size1; ++it1) {
         for (std::size_t it2 = it1; it2 < size1; ++it2) {
             for (std::size_t it3 = 0; it3 < size2; ++it3) {
                 for (std::size_t it4 = it3; it4 < size2; ++it4) {
-                    auto[new_jobs1, new_jobs2] = cross(route1.jobs, route2.jobs, it1, it2, it3, it4);
+                    auto[new_jobs1, new_jobs2] = cross(jobs1, jobs2, it1, it2, it3, it4);
                     route1.jobs = new_jobs1;
                     route2.jobs = new_jobs2;
                     std::optional<State> new_state1 = VrpProblem::get_state(route1);
                     std::optional<State> new_state2 = VrpProblem::get_state(route2);
                     if ((!new_state1) || (!new_state2)) {
+                        route1.jobs = jobs1;
+                        route2.jobs = jobs2;
                         continue;
                     }
                     State new_state = new_state1.value() + new_state2.value();
                     if (new_state < state) {
                         route1.state = new_state1.value();
                         route2.state = new_state2.value();
+                        printf("Ended\n");
                         return true;
                     }
                     route1.jobs = jobs1;

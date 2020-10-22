@@ -1,74 +1,14 @@
 #ifndef MADRICH_SOLVER_VRP_MODEL_H
 #define MADRICH_SOLVER_VRP_MODEL_H
 
-
 #include <string>
 #include <map>
 #include <vector>
 #include <optional>
-
-#include "base_model.h"
-
-
-class Storage {
-public:
-    int load = 0;
-    std::string name;
-    std::vector<std::string> skills;
-    Point location;
-    Window work_time;
-    std::vector<Job> unassigned_jobs;
-
-    explicit Storage() = default;
-
-    Storage(const Storage &s) = default;
-
-    explicit Storage(
-            int load,
-            std::string name,
-            std::vector<std::string> skills,
-            const Point &location,
-            const Window &work_time,
-            std::vector<Job> unassigned_jobs = std::vector<Job>()
-    );
-
-    [[maybe_unused]] [[noreturn]] void print() const;
-};
+#include <base_model.h>
 
 
-class Courier {
-public:
-    std::string name;
-    std::string profile;
-    Cost cost;
-    std::vector<int> value;
-    std::vector<std::string> skills;
-    int max_distance = 0;
-    Window work_time;
-    Point start_location;
-    Point end_location;
-
-    explicit Courier() = default;
-
-    Courier(const Courier &courier) = default;
-
-    Courier(std::string name,
-            std::string profile,
-            const Cost &cost,
-            std::vector<int> value,
-            std::vector<std::string> skills,
-            int max_distance,
-            const Window &work_time,
-            const Point &start_location,
-            const Point &end_location);
-
-    [[maybe_unused]] [[noreturn]] void print() const;
-
-    bool operator==(const Courier &other) const;
-};
-
-
-class Route {
+class VrpRoute {
 public:
     int vec = 0;
     Storage storage;
@@ -78,37 +18,34 @@ public:
     std::vector<Job> jobs;
     State state;
 
-    explicit Route() = default;
+    explicit VrpRoute() = default;
 
-    Route(const Route &route) = default;
+    VrpRoute(const VrpRoute &route) = default;
 
-    Route(int vec,
-          int start_time,
-          const Storage &storage,
-          const Courier &courier,
-          const Matrix &matrix,
-          std::vector<Job> job = std::vector<Job>(),
-          const State &state = State());
+    VrpRoute(int vec,
+             int start_time,
+             const Storage &storage,
+             const Courier &courier,
+             const Matrix &matrix,
+             std::vector<Job> job = std::vector<Job>(),
+             const State &state = State());
 
-    [[maybe_unused]] [[noreturn]] void print() const;
-
-    [[nodiscard]] int length() const;
-
+    [[maybe_unused]] void print() const;
 };
 
 
-class Tour {
+class VrpTour {
 public:
     Storage storage;
-    std::vector<Route> routes;
+    std::vector<VrpRoute> routes;
 
-    explicit Tour() = default;
+    explicit VrpTour() = default;
 
-    Tour(const Tour &tour) = default;
+    VrpTour(const VrpTour &tour) = default;
 
-    explicit Tour(const Storage &storage);
+    explicit VrpTour(const Storage &storage);
 
-    [[maybe_unused]] [[noreturn]] void print() const;
+    [[maybe_unused]] void print() const;
 
     State get_state();
 };

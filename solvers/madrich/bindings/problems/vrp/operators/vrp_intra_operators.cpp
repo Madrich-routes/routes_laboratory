@@ -1,12 +1,12 @@
 #include "vrp_intra_operators.h"
 
 
-bool three_opt(Route &route) {
+bool three_opt(VrpRoute &route) {
     State tmp_state = route.state;
     std::vector<Job> tmp_jobs = route.jobs;
     int size = route.jobs.size();
     bool changed = true;
-    printf("Three opt started, tt: %d, cost: %f\n", tmp_state.travel_time, tmp_state.cost);
+    printf("\nThree opt started, tt: %d, cost: %f\n", tmp_state.travel_time, tmp_state.cost);
 
     while (changed) {
         changed = false;
@@ -49,12 +49,12 @@ bool three_opt(Route &route) {
 }
 
 
-bool two_opt(Route &route) {
+bool two_opt(VrpRoute &route) {
     State tmp_state = route.state;
     std::vector<Job> tmp_jobs = route.jobs;
     int size = route.jobs.size();
     bool changed = true;
-    printf("Two opt started, tt: %d, cost: %f\n", tmp_state.travel_time, tmp_state.cost);
+    printf("\nTwo opt started, tt: %d, cost: %f\n", tmp_state.travel_time, tmp_state.cost);
 
     while (changed) {
         changed = false;

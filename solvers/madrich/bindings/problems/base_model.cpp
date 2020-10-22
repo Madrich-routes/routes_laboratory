@@ -2,7 +2,9 @@
 
 // TODO: Нормальный логгинг
 
+
 //// Window
+
 
 Window::Window(std::tuple<std::size_t, std::size_t> window) : window(std::move(window)) {}
 
@@ -21,7 +23,9 @@ Window::Window(const std::string &start_t, const std::string &end_t) {
     printf("start: %llu, end: %llu\n", std::get<0>(window), std::get<1>(window));
 }
 
+
 //// Point
+
 
 Point::Point(std::optional<int> matrix_id, std::tuple<float, float> point, std::optional<std::string> addr)
         : matrix_id(matrix_id), point(std::move(point)), address(std::move(addr)) {}
@@ -32,7 +36,9 @@ Point::Point(std::optional<int> matrix_id, std::tuple<float, float> point, std::
            matrix_id.has_value() ? matrix_id.value() : -1);
 }
 
+
 //// Cost
+
 
 Cost::Cost(float start, float second, float meter) : start(start), second(second), meter(meter) {}
 
@@ -40,7 +46,9 @@ Cost::Cost(float start, float second, float meter) : start(start), second(second
     printf("%f %f %f\n", second, meter, start);
 }
 
+
 //// Matrix
+
 
 Matrix::Matrix(std::string profile, std::vector<std::vector<int>> distance, std::vector<std::vector<int>> travel_time)
         : profile(std::move(profile)), distance(std::move(distance)), travel_time(std::move(travel_time)) {}
@@ -49,7 +57,9 @@ Matrix::Matrix(std::string profile, std::vector<std::vector<int>> distance, std:
     printf("Matrix: %s, size: %llu\n", profile.c_str(), distance.size());
 }
 
+
 //// State
+
 
 State::State(int travel_time, int distance, float cost, std::optional<std::vector<int>> value)
         : travel_time(travel_time), distance(distance), cost(cost), value(std::move(value)) {}
@@ -102,7 +112,9 @@ bool State::operator<(const State &other) const {
     return false;
 }
 
+
 //// Job
+
 
 Job::Job(int delay,
          std::string job_id,
@@ -120,4 +132,47 @@ Job::Job(int delay,
 
 bool Job::operator==(const Job &other) const {
     return other.job_id == job_id;
+}
+
+
+//// Storage
+
+
+Storage::Storage(
+        int load,
+        std::string name,
+        std::vector<std::string> skills,
+        const Point &location,
+        const Window &work_time,
+        std::vector<Job> unassigned_jobs)
+        : load(load), name(std::move(name)), skills(std::move(skills)),
+          location(location), work_time(work_time), unassigned_jobs(std::move(unassigned_jobs)) {}
+
+[[maybe_unused]] void Storage::print() const {
+    printf("Storage: %s\n", name.c_str());
+}
+
+
+//// Courier
+
+
+Courier::Courier(std::string name,
+                 std::string profile,
+                 const Cost &cost,
+                 std::vector<int> value,
+                 std::vector<std::string> skills,
+                 int max_distance,
+                 const Window &work_time,
+                 const Point &start_location,
+                 const Point &end_location)
+        : name(std::move(name)), profile(std::move(profile)), cost(cost), value(std::move(value)),
+          skills(std::move(skills)), max_distance(max_distance), work_time(work_time),
+          start_location(start_location), end_location(end_location) {}
+
+[[maybe_unused]] void Courier::print() const {
+    printf("Courier; name: %s\n", name.c_str());
+}
+
+bool Courier::operator==(const Courier &other) const {
+    return name == other.name;
 }
