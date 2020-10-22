@@ -67,7 +67,19 @@ def table(host, src, dst=None, profile="driving"):
         # f'&annotations=duration,distance'
         # f'&dests='
     )
-    parsed_json = ujson.loads(requests.get(url).content)
+    r = requests.get(url)
+    import pickle 
+    n_bytes = 2**31
+    max_bytes = 2**31 - 1
+    data = bytearray(n_bytes)
+
+    # pkl.dump(r, open('response', 'wb+'))
+    bytes_out = pickle.dumps(r)
+    with open('reponse', 'wb+') as f_out:
+        for idx in range(0, len(bytes_out), max_bytes):
+            f_out.write(bytes_out[idx:idx+max_bytes])
+
+    parsed_json = ujson.loads(r.text)
 
     return np.array(parsed_json["distances"], dtype=np.int32), np.array(parsed_json["durations"], dtype=np.int32)
 
