@@ -23,7 +23,7 @@ bool VrpProblem::validate_skills(const Storage &storage, const Courier &courier)
     return true;
 }
 
-bool VrpProblem::validate_job(int travel_time, const Job &job, const Route &route) {
+bool VrpProblem::validate_job(int travel_time, const Job &job, const VrpRoute &route) {
     // Проверяем, что поездка на эту задачу возможна
     int start_time = route.start_time;
     for (const auto &window : job.time_windows) {
@@ -35,7 +35,7 @@ bool VrpProblem::validate_job(int travel_time, const Job &job, const Route &rout
     return false;
 }
 
-bool VrpProblem::validate_storage(int travel_time, const Route &route) {
+bool VrpProblem::validate_storage(int travel_time, const VrpRoute &route) {
     // Проверяем, что поездка на склад возможна
     auto[start_shift, end_shift] = route.storage.work_time.window;
     int start_time = route.start_time;
@@ -45,7 +45,7 @@ bool VrpProblem::validate_storage(int travel_time, const Route &route) {
     return true;
 }
 
-bool VrpProblem::validate_courier(const State &state, const Route &route) {
+bool VrpProblem::validate_courier(const State &state, const VrpRoute &route) {
     // Проверяем, что курьер еще жив
     // 1. проверяем время работы
     auto[start_shift, end_shift] = route.courier.work_time.window;
@@ -70,14 +70,14 @@ bool VrpProblem::validate_courier(const State &state, const Route &route) {
     return true;
 }
 
-float VrpProblem::cost(int travel_time, int distance, const Route &route) {
+float VrpProblem::cost(int travel_time, int distance, const VrpRoute &route) {
     // Получение стоимости
     return route.courier.cost.start +
            float(travel_time) * route.courier.cost.second +
            float(distance) * route.courier.cost.meter;
 }
 
-std::optional<State> VrpProblem::start(const Route &route) {
+std::optional<State> VrpProblem::start(const VrpRoute &route) {
     // Стартуем, едем от куда-то на склад
     State state(0, 0, 0);
     int start_id = route.courier.start_location.matrix_id.value();
@@ -89,7 +89,7 @@ std::optional<State> VrpProblem::start(const Route &route) {
     return state;
 }
 
-std::optional<State> VrpProblem::end(int curr_point, const State &state, const Route &route) {
+std::optional<State> VrpProblem::end(int curr_point, const State &state, const VrpRoute &route) {
     // Заканчиваем, едем с последней задачи в конечную точку
     std::vector distance_matrix = route.matrix.distance;
     std::vector travel_time_matrix = route.matrix.travel_time;
@@ -103,7 +103,7 @@ std::optional<State> VrpProblem::end(int curr_point, const State &state, const R
     return st;
 }
 
-std::optional<State> VrpProblem::go_job(int curr_point, const State &state, const Job &job, const Route &route) {
+std::optional<State> VrpProblem::go_job(int curr_point, const State &state, const Job &job, const VrpRoute &route) {
     // Оценка стоимости поездки на следующую задачу
     int tt = route.matrix.travel_time[curr_point][job.location.matrix_id.value()] + job.delay;
     int d = route.matrix.distance[route.storage.location.matrix_id.value()][job.location.matrix_id.value()];
@@ -117,7 +117,7 @@ std::optional<State> VrpProblem::go_job(int curr_point, const State &state, cons
     return tmp;
 }
 
-std::optional<State> VrpProblem::go_storage(int curr_point, const State &state, const Route &route) {
+std::optional<State> VrpProblem::go_storage(int curr_point, const State &state, const VrpRoute &route) {
     // Оценка стоимости поездки на склад
     int tt = route.matrix.travel_time[curr_point][route.storage.location.matrix_id.value()] + route.storage.load;
     int d = route.matrix.distance[curr_point][route.storage.location.matrix_id.value()];
@@ -128,7 +128,7 @@ std::optional<State> VrpProblem::go_storage(int curr_point, const State &state, 
     return s;
 }
 
-std::optional<State> VrpProblem::next_job(int curr_point, const State &state, const Job &job, const Route &route) {
+std::optional<State> VrpProblem::next_job(int curr_point, const State &state, const Job &job, const VrpRoute &route) {
     // Получаем оценку стоимости поезкки на следующую задачу (со складом) """
     State new_state(state);
     std::optional<State> answer = VrpProblem::go_job(curr_point, new_state, job, route);
@@ -152,24 +152,25 @@ std::optional<State> VrpProblem::next_job(int curr_point, const State &state, co
     return new_state;
 }
 
-Route VrpProblem::init_route(int vec,
-                             Tour &tour,
-                             const Courier &courier,
-                             std::map<std::string, Matrix> &matrices) {
+VrpRoute VrpProblem::init_route(int vec,
+                                VrpTour &tour,
+                                const Courier &courier,
+                                std::map<std::string, Matrix> &matrices) {
     // Строим жадно тур: по ближайшим подходящим соседям
-    printf("Creating Route, Courier: %s, jobs: %llu, type: %s\n",
+    printf("Creating VrpRoute, Courier: %s, jobs: %llu, type: %s\n",
            courier.name.c_str(), tour.storage.unassigned_jobs.size(), courier.profile.c_str());
 
     Matrix matrix = matrices[courier.profile];
-    Route route(vec, std::get<0>(courier.work_time.window), tour.storage, courier, matrix);
+    VrpRoute route(vec, std::get<0>(courier.work_time.window), tour.storage, courier, matrix);
 
     int curr_point = route.storage.location.matrix_id.value();
     std::optional answer = VrpProblem::start(route);
     if (!answer) {
-        printf("Created Route, Jobs: %d\n", 0);
+        printf("Created VrpRoute, Jobs: %d\n", 0);
         return route;
     }
     State state = answer.value();
+    // printf("%d min %d km\n", state.travel_time / 60, state.distance / 1000);
     state.value = std::vector<int>(vec);
 
     while (true) {
@@ -181,11 +182,7 @@ Route VrpProblem::init_route(int vec,
         for (std::size_t i = 0; i < size; ++i) {
             Job job = tour.storage.unassigned_jobs[i];
             answer = VrpProblem::next_job(curr_point, state, job, route);
-            if (!answer) {
-                continue;
-            }
-            answer = VrpProblem::end(job.location.matrix_id.value(), state, route);
-            if (!answer) {
+            if (!answer || !VrpProblem::end(job.location.matrix_id.value(), state + answer.value(), route)) {
                 continue;
             }
             if ((!best_job) || (answer.value() < best_state.value())) {
@@ -198,7 +195,9 @@ Route VrpProblem::init_route(int vec,
         if (!best_job) {
             break;
         }
+        printf(".");
         state = best_state.value();
+        // printf("%d min %d km\n", state.travel_time / 60, state.distance / 1000);
         curr_point = best_job.value().location.matrix_id.value();
         route.jobs.push_back(best_job.value());
         tour.storage.unassigned_jobs.erase(tour.storage.unassigned_jobs.begin() + best_index);
@@ -206,33 +205,31 @@ Route VrpProblem::init_route(int vec,
 
     state += VrpProblem::end(curr_point, state, route).value();
     route.state = state;
-    printf("Created Route, Jobs: %d\n", route.length());
+    printf("\nCreated VrpRoute, Jobs: %llu\n\n", route.jobs.size());
     return route;
 }
 
-
-Tour VrpProblem::init_tour(int vec,
-                           Storage &storage,
-                           std::vector<Courier> &couriers,
-                           std::map<std::string, Matrix> &matrices) {
+VrpTour VrpProblem::init_tour(int vec,
+                              Storage &storage,
+                              std::vector<Courier> &couriers,
+                              std::map<std::string, Matrix> &matrices) {
     // Строим жадно тур: по ближайшим подходящим соседям для каждого курьера
-    printf("Creating Tour: %s, Couriers: %llu, Jobs: %llu\n",
+    printf("Creating VrpTour: %s, Couriers: %llu, Jobs: %llu\n",
            storage.name.c_str(), couriers.size(), storage.unassigned_jobs.size());
 
-    Tour tour(storage);
+    VrpTour tour(storage);
     for (const auto &courier : couriers) {
         if (!VrpProblem::validate_skills(storage, courier)) {
             continue;
         }
-        Route route = VrpProblem::init_route(vec, tour, courier, matrices);
+        VrpRoute route = VrpProblem::init_route(vec, tour, courier, matrices);
         tour.routes.push_back(route);
     }
-    printf("Created Tour, Routes: %llu\n", tour.routes.size());
+    printf("Created VrpTour, Routes: %llu\n", tour.routes.size());
     return tour;
 }
 
-
-std::optional<State> VrpProblem::get_state(const Route &route) {
+std::optional<State> VrpProblem::get_state(const VrpRoute &route) {
     int size_t = route.jobs.size();
     if (size_t == 0) {
         State st(0, 0, 0.0);
@@ -251,12 +248,12 @@ std::optional<State> VrpProblem::get_state(const Route &route) {
         if (!VrpProblem::validate_skills(job, route.courier)) {
             return std::nullopt;
         }
-
         if (!VrpProblem::validate_courier(state, route)) {
             return std::nullopt;
         }
 
         answer = VrpProblem::next_job(curr_point, state, job, route);
+
         if (!answer) {
             return std::nullopt;
         }

@@ -7,6 +7,7 @@
 #include <cmath>
 #include <vrp/vrp_model.h>
 
+
 float generate_value();
 
 std::tuple<float, float> generate_tuple();

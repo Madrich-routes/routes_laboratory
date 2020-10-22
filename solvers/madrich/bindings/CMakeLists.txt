@@ -10,7 +10,7 @@ add_executable(SolverRunner problems/vrp_main.cpp
         problems/vrp/vrp_improve.h problems/vrp/vrp_improve.cpp
         problems/vrp/vrp_model.h problems/vrp/vrp_model.cpp
         problems/vrp/vrp_problem.h problems/vrp/vrp_problem.cpp
-        problems/vrp/vrp_utils.h problems/vrp/vrp_utils.cpp
+        problems/route_utils.h problems/route_utils.cpp
         problems/vrp/operators/vrp_insert_job.h problems/vrp/operators/vrp_insert_job.cpp
         problems/vrp/operators/vrp_inter_operators.h problems/vrp/operators/vrp_inter_operators.cpp
         problems/vrp/operators/vrp_intra_operators.h problems/vrp/operators/vrp_intra_operators.cpp)

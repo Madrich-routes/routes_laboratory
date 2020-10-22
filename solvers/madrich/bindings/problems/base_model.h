@@ -1,7 +1,6 @@
 #ifndef MADRICH_SOLVER_BASE_MODEL_H
 #define MADRICH_SOLVER_BASE_MODEL_H
 
-
 #include <string>
 #include <map>
 #include <vector>
@@ -129,6 +128,64 @@ public:
     [[maybe_unused]] void print() const;
 
     bool operator==(const Job &other) const;
+};
+
+
+class Storage {
+public:
+    int load = 0;
+    std::string name;
+    std::vector<std::string> skills;
+    Point location;
+    Window work_time;
+    std::vector<Job> unassigned_jobs;
+
+    explicit Storage() = default;
+
+    Storage(const Storage &s) = default;
+
+    explicit Storage(
+            int load,
+            std::string name,
+            std::vector<std::string> skills,
+            const Point &location,
+            const Window &work_time,
+            std::vector<Job> unassigned_jobs = std::vector<Job>()
+    );
+
+    [[maybe_unused]] void print() const;
+};
+
+
+class Courier {
+public:
+    std::string name;
+    std::string profile;
+    Cost cost;
+    std::vector<int> value;
+    std::vector<std::string> skills;
+    int max_distance = 0;
+    Window work_time;
+    Point start_location;
+    Point end_location;
+
+    explicit Courier() = default;
+
+    Courier(const Courier &courier) = default;
+
+    Courier(std::string name,
+            std::string profile,
+            const Cost &cost,
+            std::vector<int> value,
+            std::vector<std::string> skills,
+            int max_distance,
+            const Window &work_time,
+            const Point &start_location,
+            const Point &end_location);
+
+    [[maybe_unused]] void print() const;
+
+    bool operator==(const Courier &other) const;
 };
 
 

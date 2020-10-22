@@ -1,9 +1,12 @@
 #include <generators.h>
 #include <vrp_problem.h>
+#include <vrp/vrp_improve.h>
 
 
 int main() {
-    auto[vec, couriers, storage, matrix] = generate_vrp(40, 5);
+    printf("Generating...\n");
+    auto[vec, couriers, storage, matrix] = generate_vrp(100, 5);
+    printf("Building...\n");
     auto tour = VrpProblem::init_tour(vec, storage, couriers, matrix);
-    tour.print();
+    // improve_tour(tour);
 }
