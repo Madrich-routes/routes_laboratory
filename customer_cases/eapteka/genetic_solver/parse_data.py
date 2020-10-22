@@ -14,6 +14,8 @@ from transliterate import translit
 
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
+from geo.providers import osrm_module
+from solvers.madrich.utils import to_array
 from geo.providers.osrm_module import get_osrm_matrix, _turn_over
 from geo.transport.calc_distance import get_travel_times
 
@@ -29,7 +31,8 @@ def __add_point(mapping: dict, idx: int, lt: float, ln: float) -> Tuple[int, int
     return mapping[point], idx
 
 
-def parse_orders(aver: float, index: int, mapping: dict, minutes: int) -> Tuple[int, str, Dict[str, List[Task]]]:
+def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border: str = 'nemkad') -> Tuple[
+    int, str, Dict[str, List[Task]]]:
     """ Parse orders data
     """
     logging.info('Parsing orders...')
@@ -40,10 +43,16 @@ def parse_orders(aver: float, index: int, mapping: dict, minutes: int) -> Tuple[
     date = orders_inf.iloc[0]['ДатаДоставки']
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
 
+    center = (sum(orders_loc.lat) / len(orders_loc.index),
+              sum(orders_loc.lng) / len(orders_loc.index))  # нахождение центра масс точек
+    if border == 'mkad':  # задаем ограничительный радиус для точек в градусах
+        radius = 0.25
+    else:
+        radius = 0.5
     for i, row in orders_inf.iterrows():
         try:
             lat, lng = orders_loc['lat'][i], orders_loc['lng'][i]
-            check_point(lat, lng)
+            check_point(lat, lng, center, radius)
             point_index, index = __add_point(mapping, index, lat, lng)
             time_windows = make_windows_orders(date, row['ИнтервалДоставки'])
             if math.isnan(row['ВесЗаказа']) and not math.isnan(row['ОбъемЗаказа']):
@@ -147,21 +156,21 @@ def reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: Dict[str
     """
 
     internal_mapping, index = {}, 0
+    if len(tasks[depot_id]) > 10:
+        tmp_loc = depot_loc = global_revers[depot.location]
+        depot_loc, index = __add_point(internal_mapping, index, depot_loc[0], depot_loc[1])
+        depot.location = depot_loc
 
-    tmp_loc = depot_loc = global_revers[depot.location]
-    depot_loc, index = __add_point(internal_mapping, index, depot_loc[0], depot_loc[1])
-    depot.location = depot_loc
+        min_priority = min([task.priority for task in tasks[depot_id]])
+        for task in tasks[depot_id]:
+            task_loc = global_revers[task.location]
+            task_loc, index = __add_point(internal_mapping, index, task_loc[0], task_loc[1])
+            task.location = task_loc
+            task.priority = task.priority if min_priority == 1 else 1
 
-    min_priority = min([task.priority for task in tasks[depot_id]])
-    for task in tasks[depot_id]:
-        task_loc = global_revers[task.location]
-        task_loc, index = __add_point(internal_mapping, index, task_loc[0], task_loc[1])
-        task.location = task_loc
-        task.priority = task.priority if min_priority == 1 else 1
-
-    courier_loc = (round(tmp_loc[0] + 5e-4, 6), round(tmp_loc[1], 6))
-    address_mapping[courier_loc] = ('depot', 'depot', 'depot')
-    __add_point(internal_mapping, index, courier_loc[0], courier_loc[1])
+        courier_loc = (round(tmp_loc[0] + 5e-4, 6), round(tmp_loc[1], 6))
+        address_mapping[courier_loc] = ('depot', 'depot', 'depot')
+        __add_point(internal_mapping, index, courier_loc[0], courier_loc[1])
 
     return internal_mapping
 
@@ -190,33 +199,123 @@ def load_matrix(
         name = depot_id
 
         for profile in profiles:
-            file = f'./tmp/{name}.{profile}.routing_matrix.json'
+            file = f'./new_matrices_1/{name}.{profile}.routing_matrix.json'
+            # durations = get_travel_times(
+            #     points=_turn_over(np.array(pts)),
+            # )
 
-            if profile == 'transport_complex':
-                # print(f'Принтим велосипеды {pts}')
-
-                # durations = get_osrm_matrix(
-                #     points=_turn_over(np.array(pts)),
-                #     transport='еbicycle',
-                #     return_distances=True,
-                #     return_durations=True,
-                # )
-
-                durations = get_travel_times(
-                    points=_turn_over(np.array(pts)),
-                )
-
-                distances = durations.copy()
-
-                with open(file, 'w') as f:
-                    data = {
-                        "travelTimes": list(flatten(durations.tolist())),
-                        "distances": list(flatten(distances.tolist())),
-                        "profile": profile,
-                    }
-                    # print(data)
-                    json.dump(data, f)
-
+            # print('profile', profile, 'file', file)
+            #
+            # if profile == 'transport_simple':
+            #     download_transport_simple(file, points[depot_id])
+            # elif profile == 'pedestrian':
+            #     download_pedestrian(file, points[depot_id])
+            # elif profile == 'driver':
+            #     download_driver(file, points[depot_id])
+            # elif profile == 'bicycle':
+            #     download_bicycle(file, points[depot_id])
             files[depot_id].append(file)
 
     return points, internal_mappings, files
+
+
+def download_bicycle(file, points: list):
+    def return_checked(__time, __distance: int):
+        if __time != 0 and 2 < __distance / __time < 5:
+            if __time > 2 * 60 * 60:
+                return __distance / 4, __distance
+            elif __distance > 100 * 1000:
+                return __time, __time * 4
+            else:
+                return __distance / 4, __distance
+        return __time, __distance
+
+    osrm_host = f'http://dimitrius.keenetic.link:5002'
+    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
+    time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
+    travel_times, distances = [], []
+    for i in range(len(points)):
+        for j in range(len(points)):
+            tt, d = return_checked(time_matrix[i][j], distance_matrix[i][j])
+            travel_times.append(int(tt))
+            distances.append(int(d))
+    routing = {'profile': 'bicycle', 'travelTimes': travel_times, 'distances': distances}
+    with open(file, 'w') as f:
+        ujson.dump(routing, f)
+
+
+def download_driver(file, points: list):
+    def return_checked(__time, __distance: int):
+        if __time != 0 and 5 < __distance / __time < 13:
+            if __time > 2 * 60 * 60:
+                return __distance / 12, __distance
+            elif __distance > 100 * 1000:
+                return __time, __time * 12
+            else:
+                return __distance / 12, __distance
+        return __time, __distance
+
+    osrm_host = f'http://dimitrius.keenetic.link:5000'
+    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
+    time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
+    travel_times, distances = [], []
+    for i in range(len(points)):
+        for j in range(len(points)):
+            tt, d = return_checked(time_matrix[i][j], distance_matrix[i][j])
+            travel_times.append(int(tt))
+            distances.append(int(d))
+    routing = {'profile': 'driver', 'travelTimes': travel_times, 'distances': distances}
+    with open(file, 'w') as f:
+        ujson.dump(routing, f)
+
+
+def download_pedestrian(file, points: list):
+    osrm_host = f'http://dimitrius.keenetic.link:5002'
+    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
+    time_matrix = distance_matrix / 1
+    travel_times, distances = [], []
+    for i in range(len(points)):
+        for j in range(len(points)):
+            travel_times.append(int(time_matrix[i][j]))
+            distances.append(int(distance_matrix[i][j]))
+    routing = {'profile': 'pedestrian', 'travelTimes': travel_times, 'distances': distances}
+    with open(file, 'w') as f:
+        ujson.dump(routing, f)
+
+
+def download_transport_simple(file, points: list):
+    def return_checked(__time, __distance: int):
+        if __time != 0 and 5 < __distance / __time < 13:
+            if __time > 2 * 60 * 60:
+                return __distance / 12, __distance
+            elif __distance > 100 * 1000:
+                return __time, __time * 12
+            else:
+                return __distance / 12, __distance
+        return __time, __distance
+
+    osrm_host = f'http://dimitrius.keenetic.link:5002'
+    pedestrian_distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
+    osrm_host = f'http://dimitrius.keenetic.link:5000'
+    driver_distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
+    driver_time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
+
+    travel_times, distances = [], []
+    for i in range(len(points)):
+        for j in range(len(points)):
+            pt = pedestrian_distance_matrix[i][j]
+            dtt, dd = return_checked(driver_time_matrix[i][j], driver_distance_matrix[i][j])
+            if pt <= 15 * 60:
+                travel_times.append(int(pt))
+                distances.append(int(pt))
+            elif 15 * 60 < pt < 45 * 60:
+                tt = int(min(dtt * 1.5, pt))
+                travel_times.append(tt)
+                distances.append(int(dd))
+            else:
+                tt = int(min(dtt * 2, pt))
+                travel_times.append(tt)
+                distances.append(int(dd))
+    routing = {'profile': 'transport_simple', 'travelTimes': travel_times, 'distances': distances}
+    with open(file, 'w') as f:
+        ujson.dump(routing, f)
