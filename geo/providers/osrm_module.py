@@ -81,9 +81,10 @@ def table(
 
     parsed_json = r.json()
 
+    di, du = parsed_json.get("distances"), parsed_json.get("durations")
     return (
-        np.array(parsed_json["distances"], dtype=np.int32),
-        np.array(parsed_json["durations"], dtype=np.int32),
+        np.array(di, dtype=np.int32) if di is not None else None,
+        np.array(du, dtype=np.int32) if du is not None else None,
     )
 
 
