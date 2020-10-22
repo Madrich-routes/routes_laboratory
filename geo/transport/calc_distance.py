@@ -1,3 +1,4 @@
+import os
 from itertools import permutations
 from pathlib import Path
 from typing import Tuple, Optional
@@ -41,7 +42,7 @@ def build_stations_matrix(stations_df: pd.DataFrame):
     return matrix
 
 
-def add_walk_matrix(stations_matrix: Array, walk_matrix: Array, delay_matrix = 300):
+def add_walk_matrix(stations_matrix: Array, walk_matrix: Array, delay_matrix=300):
     """
     Объединяем пешеходную матрицу с матриццей станций
     TODO: тут косяк в логике. В stations_matrix уже учитывается ожидание.
@@ -117,8 +118,8 @@ def combined_matrix(
     """
 
     # ближайшие станции к каждой точке в обоих направлениях
-    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:candidates]
-    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:candidates]
+    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:, :candidates]
+    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:, :candidates]
 
     p = len(p_matrix)
     res_times = np.zeros((p, p), dtype='int32')
@@ -140,7 +141,7 @@ def combined_matrix(
 def get_travel_times(
         points: Array,
 ):
-    data_dir = Path('/media/dimitrius/avg_data/data')
+    data_dir = Path(os.environ['DATA_DIR'])
     stations = pd.read_pickle(data_dir / 'full_df_refactored_2210.pkl')['coord'].values.tolist()
     stations = np.array(stations)
 
