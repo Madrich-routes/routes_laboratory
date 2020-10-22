@@ -155,7 +155,7 @@ def fix_matrix(
 
     if (
             (distances == 0).sum() > distances.size() * 0.1
-            and (durations == 0).sum() > durations.size() * 0.1
+            or (durations == 0).sum() > durations.size() * 0.1
     ):
         logger.warning('Более 10% нулевых или неверных значений в матрице расстояний!!!')
 
