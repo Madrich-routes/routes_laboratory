@@ -139,12 +139,12 @@ def combined_matrix(
 def get_travel_times(
         points: Array,
 ):
-    stations = pd.read_pickle('./data/full_df_refactored.pkl')['coord'].values.tolist()
+    stations = pd.read_pickle('../data/full_df_refactored_2210.pkl')['coord'].values.tolist()
     stations = np.array(stations)
 
     p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
     s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
     p_matrix = osrm_module.get_osrm_matrix(points)
-    s_matrix = np.load('./data/final_mat.npz')['walk_matrix']
+    s_matrix = np.load('../data/walk_matrix_refactored_2210.npz')['walk_matrix']
 
     return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
