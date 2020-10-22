@@ -1,6 +1,4 @@
-import os
 from itertools import permutations
-from pathlib import Path
 from typing import Tuple, Optional
 
 import numpy as np
@@ -24,6 +22,24 @@ def great_circle_distance(a, b):
     return (great_circle(a, b).km / 5) * 3600
 
 
+def build_full_matrix(
+        walk_matrix: Array,
+        station_df: pd.DataFrame,
+        threshold=1200,  # Максимальное расстояние пешком в секундах
+        transfer_cost=300,  # Ждать на остановке 5 минут
+):
+    """
+    Собираем итоговую матрицу расстояний
+    """
+    walk_matrix_reduced = walk_matrix.copy()
+    walk_matrix_reduced[walk_matrix > threshold] = 0
+    walk_matrix_reduced[walk_matrix_reduced != 0] += transfer_cost
+
+    logger.info('Билдим итоговую матрицу алгоритмом floyd_warshall...')
+    matrix = build_graph(station_df, walk_matrix_reduced)
+    return matrix
+
+
 def build_stations_matrix(stations_df: pd.DataFrame):
     """
     Строим матрицу известных первичных расстояний между точками
@@ -42,14 +58,13 @@ def build_stations_matrix(stations_df: pd.DataFrame):
     return matrix
 
 
-def add_walk_matrix(stations_matrix: Array, walk_matrix: Array, delay_matrix=300):
+def add_walk_matrix(stations_matrix: Array, walk_matrix: Array):
     """
     Объединяем пешеходную матрицу с матриццей станций
     TODO: тут косяк в логике. В stations_matrix уже учитывается ожидание.
         К каждой остановке прибавлено ожидание?
     """
     # matrix * walk_matrix != 0
-    walk_matrix += delay_matrix
     idx = (stations_matrix != 0) & (walk_matrix != 0)
 
     stations_matrix[idx] = np.minimum(stations_matrix, walk_matrix)[idx]  #
@@ -72,7 +87,7 @@ def build_graph(
     dist_matrix, predecessors = floyd_warshall(csgraph=graph, directed=True, return_predecessors=True)
 
     logger.info('Сохраняю матрицу...')
-    np.savez_compressed(final_matrix_file, matrix=dist_matrix, predecessors=predecessors)
+    np.savez_compressed(final_matrix_file, matrix=matrix, predecessors=predecessors)
 
     return dist_matrix
 
@@ -118,8 +133,8 @@ def combined_matrix(
     """
 
     # ближайшие станции к каждой точке в обоих направлениях
-    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:, :candidates]
-    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:, :candidates]
+    src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:candidates]
+    dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:candidates]
 
     p = len(p_matrix)
     res_times = np.zeros((p, p), dtype='int32')
@@ -141,13 +156,12 @@ def combined_matrix(
 def get_travel_times(
         points: Array,
 ):
-    data_dir = Path(os.environ['DATA_DIR'])
-    stations = pd.read_pickle(data_dir / 'full_df_refactored_2210.pkl')['coord'].values.tolist()
+    stations = pd.read_pickle('./data/full_df_refactored.pkl')['coord'].values.tolist()
     stations = np.array(stations)
 
     p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
     s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
     p_matrix = osrm_module.get_osrm_matrix(points)
-    s_matrix = np.load(data_dir / 'walk_matrix_refactored_2210.npz')['walk_matrix']
+    s_matrix = np.load('./data/final_mat.npz')['walk_matrix']
 
     return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)

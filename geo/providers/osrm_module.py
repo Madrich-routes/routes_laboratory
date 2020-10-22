@@ -3,7 +3,7 @@
 """
 import urllib
 from itertools import chain
-from typing import List, Union, Tuple
+from typing import Tuple, Optional
 from urllib.parse import quote
 
 import numpy as np
@@ -12,38 +12,40 @@ import ujson
 from polyline import encode as polyline_encode
 
 import settings
-from geo.transforms import geo_distance
-from utils.data_formats import cache, is_number
+from geo.transforms import line_distance_matrix
+from utils.data_formats import cache
 from utils.logs import logger
 from utils.types import Array
-
-osrm_host = 'http://osrm-car.dimitrius.keenetic.link'
 
 coefficient = {'speed_car': 7.5, 'speed_pedestrian': 1, 'distance_car': 1.06, 'distance_pedestrian': 0.8}
 
 
-def _encode_src_dst(src, dst):
+def encode_src_dst(
+        src: Array,
+        dst: Optional[Array] = None,
+        *,
+        return_distances: bool = False,  # что мы хотим получить в результате
+        return_durations: bool = True,
+):
+    """
+    Кодируем координаты src, dst в виде параетров.
+    Возвращаем закодированный polyline и закодированные params
+    """
     coords = tuple((c[1], c[0]) for c in chain(src, dst))
-    polyline = polyline_encode(coords)
+    polyline = polyline_encode(coords, precision=6)
 
-    ls, ld = map(len, (src, dst))
+    params = {
+        'annotations': ','.join(
+            ['duration'] * return_durations
+            + ['distance'] * return_distances
+        )
+    }
+    if dst is not None:
+        ls, ld = map(len, (src, dst))
+        params['sources'] = ";".join(map(str, range(ls)))
+        params['destinations'] = ";".join(map(str, range(ls, ls + ld))),
 
-    params = dict(
-        sources=";".join(map(str, range(ls))),
-        destinations=";".join(map(str, range(ls, ls + ld))),
-        annotations="duration,distance",
-    )
-
-    return quote(polyline), params
-
-
-def _encode_src(src):
-    coords = tuple((c[1], c[0]) for c in src)
-    polyline = polyline_encode(coords)
-
-    params = dict(annotations="duration,distance")
-
-    return quote(polyline), params
+    return urllib.parse.quote(polyline), urllib.parse.urlencode(params)
 
 
 def _turn_over(points: Array):
@@ -53,169 +55,127 @@ def _turn_over(points: Array):
     return np.fliplr(points)
 
 
-def table(host, src, dst=None, profile="driving"):
+def table(
+        host: str,
+        src: Array,
+        dst: Optional[Array] = None,
+        profile: str = "driving",
+        return_distances: bool = False,  # что мы хотим получить в результате
+        return_durations: bool = True,
+) -> Tuple[Array, Array]:
     """
-    Отправляем запрос в OSRM и получаем ответ
+    Отправляем запрос матрицы расстояний в OSRM и получаем ответ
     """
-    if dst is not None:
-        polyline, params = _encode_src_dst(src, dst)
-    else:
-        polyline, params = _encode_src(src)
-
-    url = (
-        f"{host}/table/v1/{profile}/polyline({polyline})?" + urllib.parse.urlencode(params)
-        # f'&annotations=duration,distance'
-        # f'&dests='
+    polyline, params = encode_src_dst(
+        src, dst,
+        return_distances=return_distances,
+        return_durations=return_durations
     )
+    url = f"{host}/table/v1/{profile}/polyline({polyline})?{params}"
+
+    dst_len = len(dst) if dst is not None else None
+    logger.info(f"Не нашли в кеше. Обновляем матрицу расстояний... {len(src), dst_len}")
+
     r = requests.get(url)
-    import pickle 
-    n_bytes = 2**31
-    max_bytes = 2**31 - 1
-    data = bytearray(n_bytes)
+    r.raise_for_status()
+    logger.log(f'{r.elapsed} затрачно на вычисление матрицы.')
 
-    # pkl.dump(r, open('response', 'wb+'))
-    bytes_out = pickle.dumps(r)
-    with open('reponse', 'wb+') as f_out:
-        for idx in range(0, len(bytes_out), max_bytes):
-            f_out.write(bytes_out[idx:idx+max_bytes])
+    parsed_json = r.json()
 
-    parsed_json = ujson.loads(r.text)
-
-    return np.array(parsed_json["distances"], dtype=np.int32), np.array(parsed_json["durations"], dtype=np.int32)
+    di, du = parsed_json.get("distances"), parsed_json.get("durations")
+    return (
+        np.array(di, dtype=np.int32) if di is not None else None,
+        np.array(du, dtype=np.int32) if du is not None else None,
+    )
 
 
 @cache.memoize()
 def get_osrm_matrix(
-        points: Array,
-        dst_points: Array = None,
-        transport: str = 'car',
-        return_distances: bool = False,
+        src: Array,
+        dst: Array = None,
+
+        transport: str = 'car',  # для каких параметров получаем расстояния
+        profile: str = 'driving',  # я хз что это...
+
+        return_distances: bool = False,  # что мы хотим получить в результате
         return_durations: bool = True,
-) -> Union[Array, Tuple[Array, Array]]:
+) -> Tuple[Optional[Array], Optional[Array]]:
     """
-    Получаем расстояния
+    Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан.
+    Матрица с одинаковыми параметрами кешируется при первом вызове.
     """
     assert return_distances or return_durations, 'Ничего не возвращаем'
 
-    dst_len = len(dst_points) if dst_points is not None else None
-    logger.info(f"Не нашли в кеше. Обновляем матрицу расстояний... {len(points), dst_len}")
-
-    if transport == 'car':
-        osrm_host = f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}'
-    elif transport == 'foot':
-        osrm_host = f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}'
-    elif transport == 'bicycle':
-        osrm_host = f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_PORT}'
-    else:
-        raise ValueError('Неизвестный транспорт')
+    host = dict(
+        car=f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}',
+        foot=f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}',
+        osrm_host=f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_PORT}',
+    )[transport]
 
     distances, durations = table(
-        host=osrm_host,
-        src=points,
-        dst=dst_points,
+        host=host,
+        src=src,
+        dst=dst,
+        profile=profile,
+        return_distances=return_distances,
+        return_durations=return_durations,
     )
 
     assert np.abs(durations).sum() != 0 and np.abs(distances).sum() != 0, (
         f"OSRM вернул 0 матрицу. Проверьте порядок координат."
-        f"{points}"
+        f"{src}"
         f"{durations}"
         f"{distances}"
     )
 
-    # TODO: фиксить матрицу. Оценивать коэффициент прямо тут
+    # заменяем сомнительные значения
+    distances, durations = fix_matrix(distances, durations, src, dst)
 
-    if return_durations and not return_distances:
-        return durations
-    elif return_distances and not return_durations:
-        return distances
-    else:
-        return distances, durations
+    return distances, durations
 
 
-def fix_matrix(matrix: np.ndarray, coords: np.ndarray, coeff: float) -> np.ndarray:
+def fix_matrix(
+        distances: Array,
+        durations: Array,
+        src: Array,
+        dst: Array,
+        speed_ratio_low_threshold: float = 2,  # во сколько раз скорость может быть меньше средней
+        speed_ratio_up_threshold: float = 1.5,  # во сколько раз скорость может быть больше средней
+) -> np.ndarray:
     """
-    Чиним отсустсвующие значения в матрице расстояния.
+    Чиним отсустсвующие и неправильные значения в матрице расстояний
 
-    :param matrix: Вычисленная матрица расстояний
-    :param coords: Координаты
-    :param coeff: Коэффициент отличия расстояний по прямой и не по прямойы
+    Постусловия:
+    1. Нет отсутствующих, и заведомо неверных значений
+    2. Скорости не отличаются слишком сильно от средней скорости
     """
-    n = len(matrix)
+    line_matrix = line_distance_matrix(src, dst)  # считаем расстояния по прямой
 
-    for i in range(n):
-        for j in range(n):
-            if not is_number(matrix[i, j]):
-                matrix[i, j] = coeff * geo_distance(coords[i], coords[i])
+    # заменяем мусорные значения на 0
+    distances[(distances < 0) | (distances > 1e7) | ~np.isfinite(distances)] = 0
+    durations[(durations < 0) | (durations > 1e7) | ~np.isfinite(durations)] = 0
 
-    return matrix.astype('int32')
+    if (
+            (distances == 0).sum() > distances.size() * 0.1
+            or (durations == 0).sum() > durations.size() * 0.1
+    ):
+        logger.warning('Более 10% нулевых или неверных значений в матрице расстояний!!!')
 
+    # заполняем нулевые расстояния
+    di_sum = distances[durations != 0].sum()  # считаем сумму там, где нет 0
+    l_sum = line_matrix[(distances != 0) & (durations != 0)].sum()
+    l_di_coeff = di_sum / l_sum
+    distances[distances == 0] = l_di_coeff * line_matrix[distances == 0]
 
-# ----------------------------------------------- extra functions --------------------------------------------------
+    # заполняем нулевое время
+    du_sum = durations[distances != 0].sum()
+    di_sum = distances[durations != 0].sum()
+    avg_speed = di_sum / du_sum
+    durations[durations == 0] = distances[durations == 0] / avg_speed
 
+    # заменяем время там, где скорости выглядять сомнительно
+    speeds = distances / (durations + 1e-10)
+    speeds = speeds.clip(avg_speed / speed_ratio_low_threshold, avg_speed * speed_ratio_up_threshold)
+    durations = distances / (speeds + 1e-10)
 
-def get_matrix(
-        points: Array, factor: Union[str, List[str]],
-        host=osrm_host, dst=None,
-        profile="driving"
-) -> Union[Array, List[Array]]:
-    """
-    Возвращает ассиметричные матрицы смежности
-    :param points: points
-    :param factor: duration; distance annotation for osrm
-    :param host: osrm host
-    :param dst:
-    :param profile: default 'driving'
-    :return: one matrix in case key=str and list of matrix when key=list
-    """
-    points = _turn_over(points)
-    if dst is not None:
-        polyline, _ = _encode_src_dst(points, dst)
-    else:
-        polyline, _ = _encode_src(points)
-
-    annotation = ','.join(factor) if type(factor) is list else factor
-    r = requests.get(f"{host}/table/v1/{profile}/polyline({polyline})?annotations={annotation}")
-    assert r.status_code == 200, f'osrm bad request: {r.reason}'
-    parsed_json = ujson.loads(r.content)
-
-    if type(factor) is str:
-        output = np.array(parsed_json[f'{factor}s'])
-        assert output.sum() != 0, 'координаты переверни, да?'
-        return output
-    else:
-        output = [np.array(parsed_json[f'{fact}s']) for fact in factor]
-        assert any([m.sum() == 0 for m in output]), 'координаты переверни, да?'
-        return output
-
-
-def get_matrices(points: Array, factor: Union[str, List[str]], max_cost: int, split=15,
-                 host=osrm_host, dst=None, profile="driving") -> Union[Array, List[Array]]:
-    """
-    Возвращает нужное кол-во матриц смежностей
-    :param points: points
-    :param factor: duration, distance
-    :param max_cost: сколько времени со старта пройдет
-    :param split: минуты
-    :param host: osrm host
-    :param dst:
-    :param profile: default 'driving'
-    :return: one matrix of matrix in case key=str and list when key=list
-    """
-    split *= 60
-    size = len(points)
-    length = int(np.ceil(max_cost / split))
-
-    result = get_matrix(points, factor, host, dst, profile)
-    if type(result) is list:
-        output = []
-        for res in result:
-            matrices = np.zeros(shape=(length, size, size), dtype=np.int64)
-            for i in range(length):
-                matrices[i] = res.copy()
-            output.append(matrices)
-    else:
-        output = np.zeros(shape=(length, size, size), dtype=np.int64)
-        for i in range(length):
-            output[i] = result
-
-    return output
+    return distances.astype('int32'), durations.astype('int32')
