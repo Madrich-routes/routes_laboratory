@@ -58,6 +58,9 @@ bool VrpProblem::validate_courier(const State &state, const Route &route) {
         return false;
     }
     // 3. проверяем на перевес
+    if (!state.value) {
+        return true;
+    }
     int size_v = state.value.value().size();
     for (int i = 0; i < size_v; i++) {
         if (state.value.value()[i] > route.courier.value[i]) {
@@ -133,7 +136,6 @@ std::optional<State> VrpProblem::next_job(int curr_point, const State &state, co
         // 1. если не влезло едем на склад, если склад открыт и успеваем загрузиться до закрытия
         answer = VrpProblem::go_storage(curr_point, new_state, route);
         if (!answer) {
-            printf("11\n");
             return std::nullopt;
         }
         new_state += answer.value();
@@ -141,14 +143,12 @@ std::optional<State> VrpProblem::next_job(int curr_point, const State &state, co
         // 2. едем на точку и успеваем отдать до конца окна
         answer = VrpProblem::go_job(route.storage.location.matrix_id.value(), new_state, job, route);
         if (!answer) {
-            printf("12\n");
             return std::nullopt;
         }
         new_state += answer.value();
     } else {
         new_state += answer.value();
     }
-    printf("13\n");
     return new_state;
 }
 
@@ -173,28 +173,21 @@ Route VrpProblem::init_route(int vec,
     state.value = std::vector<int>(vec);
 
     while (true) {
-        printf("restart\n");
         int best_index = -1;
         std::optional<Job> best_job = std::nullopt;
         std::optional<State> best_state = std::nullopt;
         auto size = tour.storage.unassigned_jobs.size();
-        printf("size: %llu\n", size);
 
         for (std::size_t i = 0; i < size; ++i) {
             Job job = tour.storage.unassigned_jobs[i];
-            printf("1 start\n");
             answer = VrpProblem::next_job(curr_point, state, job, route);
             if (!answer) {
-                printf("1\n");
                 continue;
             }
-            printf("2 start\n");
             answer = VrpProblem::end(job.location.matrix_id.value(), state, route);
             if (!answer) {
-                printf("2\n");
                 continue;
             }
-            printf("3 start\n");
             if ((!best_job) || (answer.value() < best_state.value())) {
                 best_index = i;
                 best_job = job;
@@ -202,14 +195,12 @@ Route VrpProblem::init_route(int vec,
             }
         }
 
-        printf("tut1\n");
         if (!best_job) {
             break;
         }
         state = best_state.value();
         curr_point = best_job.value().location.matrix_id.value();
         route.jobs.push_back(best_job.value());
-        printf("tut2\n");
         tour.storage.unassigned_jobs.erase(tour.storage.unassigned_jobs.begin() + best_index);
     }
 
