@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vrp"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Dmiriy Yampolkiy <yampolskiydv@gmail.com>"]
 
@@ -41,6 +41,7 @@ dask = "^2.30.0"
 modin = "^0.8.1"
 swifter = "^1.0.7"
 gdown = "^3.12.2"
+fastcore = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"
