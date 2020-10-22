@@ -9,7 +9,7 @@ from geo.transport.matrix import build_walk_matrix
 
 
 def main():
-    dataset_filename = '../data/full_df_refactored.pkl'
+    dataset_filename = '../data/full_df_refactored_2210.pkl'
     if os.path.exists(dataset_filename):
         dataset = pd.read_pickle(dataset_filename)
     else:
@@ -17,16 +17,17 @@ def main():
         dataset.to_pickle(dataset_filename)
 
 
-    dataset = dataset[:1000]
-    
-    walk_matrix_filename = '../data/walk_matrix_refactored_smol.npz'
+    # dataset = dataset[dataset['links']!={}]
+    # dataset.to_pickle(dataset_filename+'2')
+
+    walk_matrix_filename = '../data/walk_matrix_refactored_2210.npz'
     if os.path.exists(walk_matrix_filename):
         walk_matrix = np.load(walk_matrix_filename)['walk_matrix']
     else:
         walk_matrix = build_walk_matrix(dataset)
         np.savez_compressed(walk_matrix_filename, walk_matrix=walk_matrix)
 
-    final_matrix_file = '../data/full_matrix_refactored_smol.npz'
+    final_matrix_file = '../data/full_matrix_refactored_2210.npz'
     if os.path.exists(final_matrix_file):
         final_mat = np.load(final_matrix_file)['matrix']
     else:
