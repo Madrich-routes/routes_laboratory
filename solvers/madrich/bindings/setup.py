@@ -62,13 +62,13 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name='madrich_solver',
+    name='Tour',
     version='0.0.1',
-    author='madrich_cor',
-    author_email='madrich',
-    description='madrich_solver',
+    author='Savchenko B. S.',
+    author_email='TG: @SBSerg',
+    description='Pybind11&CMake',
     long_description='',
-    ext_modules=[CMakeExtension('madrich_solver')],
+    ext_modules=[CMakeExtension('Tour')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
