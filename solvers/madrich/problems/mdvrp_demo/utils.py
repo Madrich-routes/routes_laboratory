@@ -2,8 +2,8 @@ from typing import List
 
 import matplotlib.pyplot as plt
 
-from madrich.problems.mdvrp_demo.models import Storage, Tour
-from madrich.utils import draw_points, draw_route
+from solvers.madrich.problems.mdvrp_demo.models import Storage, Tour
+from solvers.madrich.utils import draw_points, draw_route
 
 
 def draw_mdvrp(storages: List[Storage], tour: Tour):

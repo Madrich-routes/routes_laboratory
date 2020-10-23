@@ -2,8 +2,8 @@ import logging
 from sys import maxsize
 from typing import List
 
-from madrich.problems.mdvrp_demo.models import Problem, Route, Job, Tour
-from madrich.problems.mdvrp_demo.operators.utils import Block
+from solvers.madrich.problems.mdvrp_demo.models import Problem, Route, Job, Tour
+from solvers.madrich.problems.mdvrp_demo.operators.utils import Block
 
 """
 def insert_greedy(job: Job, routes: List[Route], problem: Problem) -> bool:
@@ -22,7 +22,8 @@ def insert_greedy(job: Job, routes: List[Route], problem: Problem) -> bool:
     return False
 """
 
-def insert_best(block : Block, job: Job, routes: List[Route], problem: Problem) -> bool:
+
+def insert_best(block: Block, job: Job, routes: List[Route], problem: Problem) -> bool:
     logging.info('Insert started')
     best_insert = (-1, -1, -1)
     best_time = maxsize
@@ -70,6 +71,7 @@ def insert_best(block : Block, job: Job, routes: List[Route], problem: Problem) 
     route.tracks[k].jobs = route.tracks[k].jobs[:j] + [job] + route.tracks[k].jobs[j:]
     logging.info('Insert positive')
     return True
+
 
 def insert(tour: Tour, problem: Problem) -> bool:
     logging.info(f'\nUnassigned insert started, routes:{len(tour)}')

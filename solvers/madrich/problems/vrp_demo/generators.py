@@ -2,10 +2,10 @@ from typing import List
 
 import numpy as np
 
-from madrich.api_module import fake_module
-from madrich.problems.models import Window, Point, Cost, Matrix
-from madrich.problems.vrp_demo.models import Storage, Job, Courier
-from madrich.tests.generators import generate_points
+from geo.providers import fake_module
+from solvers.madrich.problems.models import Window, Point, Cost, Matrix
+from solvers.madrich.problems.vrp_demo.models import Storage, Job, Courier
+from solvers.madrich.tests.generators import generate_points
 
 
 def generate_storage(n: int, loc: Point, load=300):

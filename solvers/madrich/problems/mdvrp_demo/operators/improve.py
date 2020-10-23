@@ -1,10 +1,10 @@
 import logging
 from typing import Tuple
 
-from madrich.problems.mdvrp_demo.models import Tour, Problem, Route
-from madrich.problems.mdvrp_demo.operators.inter_operator import inter_swap, inter_replace, inter_cross
-from madrich.problems.mdvrp_demo.operators.intra_operator import two_opt, three_opt
-from madrich.problems.mdvrp_demo.operators.utils import Block
+from solvers.madrich.problems.mdvrp_demo.models import Tour, Problem, Route
+from solvers.madrich.problems.mdvrp_demo.operators.inter_operator import inter_swap, inter_replace, inter_cross
+from solvers.madrich.problems.mdvrp_demo.operators.intra_operator import two_opt, three_opt
+from solvers.madrich.problems.mdvrp_demo.operators.utils import Block
 
 
 def improve_tour(tour: Tour, problem: Problem, cross=False, three=False) -> Tuple[bool, Tour]:

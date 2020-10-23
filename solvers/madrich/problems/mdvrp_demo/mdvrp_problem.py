@@ -3,8 +3,8 @@ from typing import Optional, List, Dict, Union, Tuple
 
 import numpy as np
 
-from madrich.problems.mdvrp_demo.models import Storage, Tour, Courier, Route, Job, Track, Problem
-from madrich.problems.models import Matrix, State
+from solvers.madrich.problems.mdvrp_demo.models import Storage, Tour, Courier, Route, Job, Track, Problem
+from solvers.madrich.problems.models import Matrix, State
 
 array = np.ndarray
 

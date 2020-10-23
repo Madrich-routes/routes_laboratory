@@ -1,8 +1,8 @@
 import logging
 from typing import Callable
 
-from madrich.problems.mdvrp_demo.models import Route, Problem
-from madrich.problems.utils import three_opt_exchange, swap
+from solvers.madrich.problems.mdvrp_demo.models import Route, Problem
+from solvers.madrich.problems.utils import three_opt_exchange, swap
 
 OptFunc = Callable[[int, Route, Problem], bool]
 

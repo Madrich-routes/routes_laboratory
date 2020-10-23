@@ -2,9 +2,9 @@ import logging
 from copy import deepcopy
 from typing import Tuple
 
-from madrich.problems.models import State
-from madrich.problems.utils import cross, replace
-from madrich.problems.vrp_demo.models import Problem, Route
+from solvers.madrich.problems.models import State
+from solvers.madrich.problems.utils import cross, replace
+from solvers.madrich.problems.vrp_demo.models import Problem, Route
 
 
 def inter_swap(route1: Route, route2: Route, problem: Problem) -> bool:
