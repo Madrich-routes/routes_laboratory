@@ -12,7 +12,7 @@ from madrich.utils import to_array
 array = np.ndarray
 Point = Tuple[float, float]
 
-osrm_host = 'http://osrm-car.dimitrius.keenetic.link'
+osrm_host = 'http://dimitrius.keenetic.link:5000'
 
 coefficient = {'speed_car': 7.5, 'speed_pedestrian': 1, 'distance_car': 1.06, 'distance_pedestrian': 0.8}
 
