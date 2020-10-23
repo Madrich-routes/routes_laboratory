@@ -60,10 +60,5 @@ Tour_main_class.storage = Storage_class
 Tour_main_class.routes = [Route_class, Route_class, Route_class]
 Tour_main_class.unassigned_jobs = [Job_class, Job_class, Job_class]
 
-obj = Tour.ClassicProblem()
-Tour.go_print(obj)
-
-# Tour_main_class.problem = 'Problem'
-#ret = Tour_main_class.improve_tour(False, False)
-
-# print('ret')
+Tour.ClassicProblem().__init(Storage_class, [Job_class, Job_class, Job_class], [Courier_class, Courier_class, Courier_class], {"ads" : Matrix_class})
+Tour.ClassicProblem().__get_state(Route_class)
