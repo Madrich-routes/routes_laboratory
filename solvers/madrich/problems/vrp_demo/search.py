@@ -1,11 +1,11 @@
 import logging
 from typing import List, Dict, Tuple, Optional
 
-from madrich.api_module import osrm_module
-from madrich.problems.vrp_demo.operators.improve import improve_tour
-from madrich.problems.models import Matrix
-from madrich.problems.vrp_demo.models import Problem, Storage, Courier, Job
-from madrich.utils import to_array
+from solvers.madrich.api_module import osrm_module
+from solvers.madrich.problems.models import Matrix
+from solvers.madrich.problems.vrp_demo.models import Problem, Storage, Courier, Job
+from solvers.madrich.problems.vrp_demo.operators.improve import improve_tour
+from solvers.madrich.utils import to_array
 
 
 class PointsMapping:

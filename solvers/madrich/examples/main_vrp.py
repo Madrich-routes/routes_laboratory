@@ -1,9 +1,9 @@
 import faulthandler
 import logging
 
-from madrich.problems.vrp_demo.generators import generate_vrp
-from madrich.problems.vrp_demo.vrp_problem import ProblemVrp
-from madrich.problems.vrp_demo.search import SearchEngine
+from solvers.madrich.problems.vrp_demo.generators import generate_vrp
+from solvers.madrich.problems.vrp_demo.search import SearchEngine
+from solvers.madrich.problems.vrp_demo.vrp_problem import ProblemVrp
 
 faulthandler.enable()
 logging.basicConfig(format='%(message)s', level=logging.INFO)

@@ -1,10 +1,7 @@
-import logging
-
-from madrich.problems.mdvrp_demo.models import Tour, Problem, Route, Job, Track
-from madrich.problems.mdvrp_demo.operators.utils import Block
+from solvers.madrich.problems.mdvrp_demo.models import Problem, Route, Job, Track
 
 
-def delete_job(vec : int, job : Job, track : Track, route : Route, problem : Problem) -> None:
+def delete_job(vec: int, job: Job, track: Track, route: Route, problem: Problem) -> None:
     """
     :param vec:
     :param job: работа на удаление
@@ -17,6 +14,4 @@ def delete_job(vec : int, job : Job, track : Track, route : Route, problem : Pro
     for t in route.tracks:
         t.storage.unassigned_jobs += t.storage.assigned_jobs
         t.storage.assigned_jobs = []
-    route = problem.greedy_route(vec, route.courier, {route.courier.profile : route.matrix})
-
-
+    route = problem.greedy_route(vec, route.courier, {route.courier.profile: route.matrix})

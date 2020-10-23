@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 
 import numpy as np
 
-from madrich.problems.models import State, Matrix, Point, Window, Cost
+from solvers.madrich.problems.models import State, Matrix, Point, Window, Cost
 
 array = np.ndarray
 
@@ -13,7 +13,7 @@ class Storage:
     name: str  # адрес или название; unique
     load: int  # перегрузка\загрузка
     skills: List[str]  # требуемые навыки
-    location: Point   # расположение
+    location: Point  # расположение
     work_time: Window  # время работы
 
 
@@ -34,7 +34,7 @@ class Courier:
     cost: Cost  # стоимость работы
     value: array  # физические размеры; [1, 2, 3, ...]
     skills: List[str]  # навыки
-    max_distance: int   # максимальная дистанция за смену
+    max_distance: int  # максимальная дистанция за смену
     work_time: Window  # время работы
     start_location: Point  # место начала работы
     end_location: Point  # место окончания работы

@@ -2,10 +2,10 @@ from typing import List, Tuple, Dict
 
 import numpy as np
 
-from madrich.api_module import fake_module
-from madrich.problems.mdvrp_demo.models import Storage, Job, Courier
-from madrich.problems.models import Window, Point, Matrix, Cost
-from madrich.tests.generators import generate_points
+from geo.providers import fake_module
+from solvers.madrich.problems.mdvrp_demo.models import Storage, Job, Courier
+from solvers.madrich.problems.models import Window, Point, Matrix, Cost
+from solvers.madrich.tests.generators import generate_points
 
 
 def generate_mdvrp(jobs: int, storages: int, couriers: int) -> Tuple[List[Storage], List[Courier], Dict[str, Matrix]]:

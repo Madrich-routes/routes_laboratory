@@ -2,9 +2,9 @@ import faulthandler
 import logging
 from time import time
 
-from madrich.problems.mdvrp_demo.generators import generate_mdvrp
-from madrich.problems.mdvrp_demo.mdvrp_problem import ProblemMdvrp
-from madrich.problems import mdvrp_demo
+from solvers.madrich.problems.mdvrp_demo.generators import generate_mdvrp
+from solvers.madrich.problems.mdvrp_demo.mdvrp_problem import ProblemMdvrp
+from solvers.madrich.problems import mdvrp_demo
 
 faulthandler.enable()
 logging.basicConfig(format='%(message)s', level=logging.INFO)

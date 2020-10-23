@@ -4,8 +4,8 @@ from typing import Optional, List, Dict, Union
 
 import numpy as np
 
-from madrich.problems.models import State, Matrix
-from madrich.problems.vrp_demo.models import Problem, Storage, Job, Route, Courier, Tour
+from solvers.madrich.problems.models import State, Matrix
+from solvers.madrich.problems.vrp_demo.models import Problem, Storage, Job, Route, Courier, Tour
 
 array = np.ndarray
 

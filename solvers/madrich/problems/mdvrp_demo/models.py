@@ -3,7 +3,7 @@ from typing import List, Optional, Dict
 
 import numpy as np
 
-from madrich.problems.models import Window, Cost, Matrix, State, Point
+from solvers.madrich.problems.models import Window, Cost, Matrix, State, Point
 
 array = np.ndarray
 
