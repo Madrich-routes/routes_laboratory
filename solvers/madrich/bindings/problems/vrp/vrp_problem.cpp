@@ -3,36 +3,40 @@
 
 bool VrpProblem::validate_skills(const Job &job, const Courier &courier) {
     // Проверяем, что задача подходит курьеру
-    for (const auto &skill : job.skills) {
-        bool found = (std::find(courier.skills.begin(), courier.skills.end(), skill) != courier.skills.end());
-        if (!found) {
-            return false;
-        }
-    }
-    return true;
+    return std::ranges::all_of(
+            job.skills.begin(),
+            job.skills.end(),
+            [&courier](const std::string& skill) {
+                return std::ranges::find(courier.skills, skill) != courier.skills.end();
+            }
+    );
 }
 
 bool VrpProblem::validate_skills(const Storage &storage, const Courier &courier) {
     // Проверяем, что склад подходит курьеру
-    for (const auto &skill : storage.skills) {
-        bool found = (std::find(courier.skills.begin(), courier.skills.end(), skill) != courier.skills.end());
-        if (!found) {
-            return false;
-        }
-    }
-    return true;
+    return std::ranges::all_of(
+            storage.skills.begin(),
+            storage.skills.end(),
+            [&courier](const std::string& skill) {
+                return std::ranges::find(courier.skills, skill) != courier.skills.end();
+            }
+    );
 }
 
 bool VrpProblem::validate_job(int travel_time, const Job &job, const VrpRoute &route) {
     // Проверяем, что поездка на эту задачу возможна
     int start_time = route.start_time;
-    for (const auto &window : job.time_windows) {
-        auto[start_shift, end_shift] = window.window;
-        if ((start_shift <= start_time + travel_time) && (start_time + travel_time <= end_shift)) {
-            return true;
-        }
-    }
-    return false;
+    return std::ranges::all_of(
+            job.time_windows.begin(),
+            job.time_windows.end(),
+            [&start_time, &travel_time](const Window& window) {
+                auto[start_shift, end_shift] = window.window;
+                if ((start_shift <= start_time + travel_time) && (start_time + travel_time <= end_shift)) {
+                    return true;
+                }
+                return false;
+            }
+    );
 }
 
 bool VrpProblem::validate_storage(int travel_time, const VrpRoute &route) {
