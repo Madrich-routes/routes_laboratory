@@ -45,9 +45,32 @@ public:
 
     explicit VrpTour(const Storage &storage);
 
+    bool inter_improve(bool post_cross);
+
+    bool intra_improve(bool post_three_opt);
+
+    bool unassigned_insert();
+
+    void improve_tour(bool cross = false, bool three_opt = false);
+
     [[maybe_unused]] void print() const;
 
     State get_state();
+
+private:
+    int phase = 0;
+    std::map<std::string, bool> previous_phase;
+    std::map<std::string, bool> current_phase;
+
+    void check_block();
+
+    void update_phase();
+
+    void mark_route(bool value, const VrpRoute &route);
+
+    void mark_route(bool value, const VrpRoute &route1, const VrpRoute &route2);
+
+    bool check_route(const VrpRoute &route);
 };
 
 

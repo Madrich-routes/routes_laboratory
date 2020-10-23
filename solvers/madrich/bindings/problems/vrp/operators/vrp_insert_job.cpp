@@ -15,7 +15,7 @@ std::vector<Job> insert(int place, const Job &job, const std::vector<Job> &jobs)
     return new_route;
 }
 
-bool insert_best(const Job &job, VrpTour &tour) {
+int insert_best(const Job &job, VrpTour &tour) {
     int a = -1;
     int b = -1;
     int best_time = -1;
@@ -44,11 +44,11 @@ bool insert_best(const Job &job, VrpTour &tour) {
 
     if (best_time == -1) {
         printf("Insert negative\n");
-        return false;
+        return -1;
     }
 
     VrpRoute& route = tour.routes[a];
     route.jobs = insert(b, job, route.jobs);
     printf("Insert positive\n");
-    return true;
+    return a;
 }    
