@@ -168,6 +168,7 @@ public:
     Window work_time;
     Point start_location;
     Point end_location;
+    std::optional<std::vector<Storage>> storages = std::nullopt;
 
     explicit Courier() = default;
 
