@@ -27,13 +27,13 @@ def insert_best(job: Job, routes: List[Route], problem: Problem) -> bool:
     best_time = maxsize
 
     for i, route in enumerate(routes):
-        old_tt = route.transport_travel_time
+        old_tt = route.travel_time
         for j in range(len(route) + 1):
             jobs = route.jobs[:j] + [job] + route.jobs[j:]
             state = problem.get_state(route.new_route(jobs))
             if state is None:
                 continue
-            new_time = state.transport_travel_time - old_tt
+            new_time = state.travel_time - old_tt
             if new_time < best_time:
                 best_time = new_time
                 best_insert = (i, j)
