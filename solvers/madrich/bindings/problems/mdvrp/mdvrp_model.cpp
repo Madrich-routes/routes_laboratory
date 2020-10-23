@@ -1,6 +1,10 @@
 #include "mdvrp_model.h"
 
 
+[[maybe_unused]] void Track::print() const {
+    printf("Track; storage: %s, jobs: %llu", storage.name.c_str(), jobs.size());
+}
+
 MdvrpRoute::MdvrpRoute(int vec,
                        int start_time,
                        const Courier &courier,
@@ -22,9 +26,16 @@ int MdvrpRoute::assigned_jobs() const {
     return t;
 }
 
+MdvrpTour::MdvrpTour(std::vector<Storage> storages) : storages(std::move(storages)) {}
 
-[[maybe_unused]] void Track::print() const {
-    printf("Track; storage: %s, jobs: %llu", storage.name.c_str(), jobs.size());
+State MdvrpTour::get_state() {
+    State state;
+    for (const auto &route : routes) {
+        state += route.state;
+    }
+    return state;
 }
 
-MdvrpTour::MdvrpTour(std::vector<Storage> storages) : storages(std::move(storages)) {}
+[[maybe_unused]] void MdvrpTour::print() const {
+    printf("Tour; storages: %llu, routes: %llu", storages.size(), routes.size());
+}
