@@ -23,7 +23,7 @@ bool VrpProblem::validate_skills(const Storage &storage, const Courier &courier)
     );
 }
 
-bool VrpProblem::validate_job(int travel_time, const Job &job, const VrpRoute &route) {
+[[maybe_unused]] bool VrpProblem::validate_job(int travel_time, const Job &job, const VrpRoute &route) {
     // Проверяем, что поездка на эту задачу возможна
     int start_time = route.start_time;
     return std::ranges::all_of(
@@ -74,6 +74,29 @@ bool VrpProblem::validate_courier(const State &state, const VrpRoute &route) {
     return true;
 }
 
+int VrpProblem::get_next_job_time(int arrival_time, const Job &job, const VrpRoute &route) {
+    int waiting = -1;
+    int start_time = route.start_time;
+    
+    for (const auto& window : job.time_windows) {
+        auto[start_shift, end_shift] = window.window;
+        if ((start_shift <= start_time + arrival_time) && (start_time + arrival_time <= end_shift)) {
+            return 0;
+        }
+        int new_waiting = start_shift - (start_time + arrival_time);
+        if (new_waiting > 0) {
+            if (waiting == -1 || new_waiting < waiting) {
+                waiting = new_waiting;
+            }
+        }
+    }
+
+    if (waiting == -1) {
+        return -1;
+    }
+    return waiting;
+}
+
 float VrpProblem::cost(int travel_time, int distance, const VrpRoute &route) {
     // Получение стоимости
     return route.courier.cost.start +
@@ -111,9 +134,11 @@ std::optional<State> VrpProblem::go_job(int curr_point, const State &state, cons
     // Оценка стоимости поездки на следующую задачу
     int tt = route.matrix.travel_time[curr_point][job.location.matrix_id.value()] + job.delay;
     int d = route.matrix.distance[route.storage.location.matrix_id.value()][job.location.matrix_id.value()];
-    if (!VrpProblem::validate_job(state.travel_time + tt, job, route)) {
+    int waiting = VrpProblem::get_next_job_time(state.travel_time + tt, job, route);
+    if (waiting == -1) {
         return std::nullopt;
     }
+    tt += waiting;
     State tmp(tt, d, VrpProblem::cost(tt, d, route), std::optional<std::vector<int>>(job.value));
     if (!VrpProblem::validate_courier(tmp + state, route)) {
         return std::nullopt;

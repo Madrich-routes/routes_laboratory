@@ -31,7 +31,7 @@ private:
 
     static bool validate_skills(const Storage &storage, const Courier &courier);
 
-    static bool validate_job(int travel_time, const Job &job, const VrpRoute &route);
+    [[maybe_unused]] static bool validate_job(int travel_time, const Job &job, const VrpRoute &route);
 
     static bool validate_storage(int travel_time, const VrpRoute &route);
 
@@ -42,6 +42,8 @@ private:
     static std::optional<State> start(const VrpRoute &route);
 
     static std::optional<State> end(int curr_point, const State &state, const VrpRoute &route);
+
+    static int get_next_job_time(int arrival_time, const Job &job, const VrpRoute &route);
 
     static std::optional<State> go_job(int curr_point, const State &state, const Job &job, const VrpRoute &route);
 

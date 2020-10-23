@@ -11,13 +11,13 @@
 
 class Window {
 public:
-    std::tuple<std::size_t, std::size_t> window;
+    std::tuple<int, int> window;
 
     explicit Window() = default;
 
     Window(const Window &window) = default;
 
-    explicit Window(std::tuple<std::size_t, std::size_t> window);
+    explicit Window(std::tuple<int, int> window);
 
     explicit Window(const std::string &start_t, const std::string &end_t);
 
