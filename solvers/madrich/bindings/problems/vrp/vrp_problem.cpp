@@ -62,7 +62,7 @@ bool VrpProblem::validate_courier(const State &state, const VrpRoute &route) {
         return true;
     }
     int size_v = state.value.value().size();
-    for (int i = 0; i < size_v; i++) {
+    for (std::size_t i = 0; i < size_v; ++i) {
         if (state.value.value()[i] > route.courier.value[i]) {
             return false;
         }
@@ -182,7 +182,7 @@ VrpRoute VrpProblem::init_route(int vec,
         for (std::size_t i = 0; i < size; ++i) {
             Job job = tour.storage.unassigned_jobs[i];
             answer = VrpProblem::next_job(curr_point, state, job, route);
-            if (!answer || !VrpProblem::end(job.location.matrix_id.value(), state + answer.value(), route)) {
+            if (!answer || !VrpProblem::end(job.location.matrix_id.value(), answer.value(), route)) {
                 continue;
             }
             if ((!best_job) || (answer.value() < best_state.value())) {
@@ -197,15 +197,16 @@ VrpRoute VrpProblem::init_route(int vec,
         }
         printf(".");
         state = best_state.value();
-        // printf("%d min %d km\n", state.travel_time / 60, state.distance / 1000);
+        // printf("%d min %d km kg: %d\n", state.travel_time / 60, state.distance / 1000, state.value.value()[0]);
         curr_point = best_job.value().location.matrix_id.value();
         route.jobs.push_back(best_job.value());
         tour.storage.unassigned_jobs.erase(tour.storage.unassigned_jobs.begin() + best_index);
     }
 
     state += VrpProblem::end(curr_point, state, route).value();
+    // printf("%d min %d km kg: %d\n", state.travel_time / 60, state.distance / 1000, state.value.value()[0]);
     route.state = state;
-    printf("\nCreated VrpRoute, Jobs: %llu\n\n", route.jobs.size());
+    printf("\nCreated VrpRoute, Jobs: %llu\n", route.jobs.size());
     return route;
 }
 
@@ -214,7 +215,7 @@ VrpTour VrpProblem::init_tour(int vec,
                               std::vector<Courier> &couriers,
                               std::map<std::string, Matrix> &matrices) {
     // Строим жадно тур: по ближайшим подходящим соседям для каждого курьера
-    printf("Creating VrpTour: %s, Couriers: %llu, Jobs: %llu\n",
+    printf("\nCreating VrpTour: %s, Couriers: %llu, Jobs: %llu\n",
            storage.name.c_str(), couriers.size(), storage.unassigned_jobs.size());
 
     VrpTour tour(storage);

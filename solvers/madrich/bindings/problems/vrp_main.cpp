@@ -5,8 +5,12 @@
 
 int main() {
     printf("Generating...\n");
-    auto[vec, couriers, storage, matrix] = generate_vrp(100, 5);
+    auto[vec, couriers, storage, matrix] = generate_vrp(400, 5);
     printf("Building...\n");
     auto tour = VrpProblem::init_tour(vec, storage, couriers, matrix);
-    // improve_tour(tour);
+
+//    for (auto& route : tour.routes) {
+//        VrpProblem::get_state(route);
+//    }
+    improve_tour(tour);
 }
