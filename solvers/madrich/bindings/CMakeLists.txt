@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(SolverRunner problems/vrp_main.cpp
         problems/base_model.h problems/base_model.cpp
         problems/generators.h problems/generators.cpp
-        problems/vrp/vrp_improve.h problems/vrp/vrp_improve.cpp
         problems/vrp/vrp_model.h problems/vrp/vrp_model.cpp
         problems/vrp/vrp_problem.h problems/vrp/vrp_problem.cpp
         problems/route_utils.h problems/route_utils.cpp

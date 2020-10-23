@@ -4,6 +4,6 @@
 #include <vrp_problem.h>
 
 
-bool insert_best(const Job &job, VrpTour &tour);
+int insert_best(const Job &job, VrpTour &tour);
 
 #endif //MADRICH_SOLVER_VRP_INSERT_JOB_H

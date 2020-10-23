@@ -2,7 +2,7 @@
 #define MADRICH_SOLVER_VRP_UTILS_H
 
 #include <stdexcept>
-#include <vrp_model.h>
+#include <base_model.h>
 
 
 std::vector<Job>
