@@ -6,7 +6,7 @@
 //// Window
 
 
-Window::Window(std::tuple<std::size_t, std::size_t> window) : window(std::move(window)) {}
+Window::Window(std::tuple<int, int> window) : window(std::move(window)) {}
 
 int to_seconds(const std::string &time) {
     std::tm t{};
@@ -20,7 +20,7 @@ Window::Window(const std::string &start_t, const std::string &end_t) {
 }
 
 [[maybe_unused]] void Window::print() const {
-    printf("start: %llu, end: %llu\n", std::get<0>(window), std::get<1>(window));
+    printf("start: %d, end: %d\n", std::get<0>(window), std::get<1>(window));
 }
 
 
@@ -99,15 +99,15 @@ State &State::operator+=(const State &rhs) {
     return *this;
 }
 
-bool State::operator<(const State &other) const {
-    if (travel_time != other.travel_time) {
-        return travel_time < other.travel_time;
+bool State::operator<(const State &rhs) const {
+    if (travel_time != rhs.travel_time) {
+        return travel_time < rhs.travel_time;
     }
-    if (cost != other.cost) {
-        return cost < other.cost;
+    if (cost != rhs.cost) {
+        return cost < rhs.cost;
     }
-    if (distance != other.distance) {
-        return distance < other.distance;
+    if (distance != rhs.distance) {
+        return distance < rhs.distance;
     }
     return false;
 }
