@@ -2,8 +2,8 @@ from typing import Union, List, Tuple
 
 import numpy as np
 
-from madrich.problems.utils import adjacency_matrix
-from madrich.utils import to_array
+from solvers.madrich.problems.utils import adjacency_matrix
+from solvers.madrich.utils import to_array
 
 array = np.ndarray
 Point = Tuple[float, float]
