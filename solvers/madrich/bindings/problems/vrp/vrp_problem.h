@@ -5,8 +5,8 @@
 #include <map>
 #include <vector>
 #include <iomanip>
-#include <string>
 #include <cstdlib>
+#include <algorithm>
 #include <vrp_model.h>
 
 

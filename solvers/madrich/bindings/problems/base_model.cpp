@@ -77,10 +77,10 @@ std::optional<std::vector<int>> State::sum_values(const State &lt, const State &
         return rt.value;
     } else {
         int size = lt.value.value().size();
-        std::optional<std::vector<int>> ret = std::vector<int>(size);
+        std::optional ret = std::vector<int>(size);
         std::vector<int> ltv = lt.value.value();
         std::vector<int> rtv = rt.value.value();
-        for (int i = 0; i < size; i++) {
+        for (std::size_t i = 0; i < size; ++i) {
             ret.value()[i] = ltv[i] + rtv[i];
         }
         return ret;
