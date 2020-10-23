@@ -76,9 +76,10 @@ def intra_improve(tour: Tour, problem: Problem, block: Block, three=True) -> boo
             block.mark_route(route, False)
             continue
 
-        status = two_opt(route, problem)
+        status_two = two_opt(route, problem)
+        status_three = False
         if three:
-            status = three_opt(route, problem)
-        block.mark_route(route, status)
+            status_three = three_opt(route, problem)
+        block.mark_route(route, status_two or status_three)
 
     return tour.get_state() < state

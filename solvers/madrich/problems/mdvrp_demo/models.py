@@ -94,6 +94,9 @@ class Tour:
             state += route.state
         return state
 
+    def __len__(self):
+        return len(self.routes)
+
     def __repr__(self):
         return f'Tour: {self.get_state()}, routes: {len(self.routes)}, storages: {len(self.storages)}'
 
