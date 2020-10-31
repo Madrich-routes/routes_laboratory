@@ -1,6 +1,3 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import math
 import math
 
 import matplotlib.pyplot as plt

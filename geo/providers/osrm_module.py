@@ -8,7 +8,6 @@ from urllib.parse import quote
 
 import numpy as np
 import requests
-import ujson
 from polyline import encode as polyline_encode
 
 import settings
@@ -93,11 +92,10 @@ def table(
 def get_osrm_matrix(
         src: Array,
         dst: Array = None,
-
+        *,
         transport: str = 'car',  # для каких параметров получаем расстояния
         profile: str = 'driving',  # я хз что это...
-
-        return_distances: bool = False,  # что мы хотим получить в результате
+        return_distances: bool = True,  # что мы хотим получить в результате
         return_durations: bool = True,
 ) -> Tuple[Optional[Array], Optional[Array]]:
     """
