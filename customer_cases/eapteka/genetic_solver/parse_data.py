@@ -3,6 +3,7 @@ import math
 from collections import defaultdict
 from typing import Tuple, List, Dict
 
+import numpy as np
 import pandas as pd
 import ujson
 from transliterate import translit
@@ -10,7 +11,10 @@ from transliterate import translit
 from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
 from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
 from geo.providers import osrm_module
+from geo.providers.osrm_module import _turn_over
+from geo.transport.calc_distance import get_travel_times
 from solvers.madrich.utils import to_array
+from utils.types import Array
 
 Point = Tuple[float, float]
 
@@ -24,11 +28,17 @@ def __add_point(mapping: dict, idx: int, lt: float, ln: float) -> Tuple[int, int
     return mapping[point], idx
 
 
-def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border: str = 'nemkad') -> Tuple[
-    int, str, Dict[str, List[Task]]]:
-    """ Parse orders data
+def parse_orders(
+        aver: float,
+        index: int,
+        mapping: dict,
+        minutes: int,
+        border: str = 'nemkad'
+) -> Tuple[int, str, Dict[str, List[Task]]]:
     """
-    logging.info('Parsing orders...')
+    Парсим заказы
+    """
+    logging.info('Парсим заказы...')
     orders, errors = defaultdict(list), 0
     orders_inf = pd.read_excel('./data/Заказы_13.xlsx')
     orders_loc = pd.read_excel('./data/update_3.xlsx')
@@ -38,10 +48,10 @@ def parse_orders(aver: float, index: int, mapping: dict, minutes: int, border: s
 
     center = (sum(orders_loc.lat) / len(orders_loc.index),
               sum(orders_loc.lng) / len(orders_loc.index))  # нахождение центра масс точек
-    if border == 'mkad':  # задаем ограничительный радиус для точек в градусах
-        radius = 0.25
-    else:
-        radius = 0.5
+
+    # задаем ограничительный радиус для точек в градусах
+    radius = 0.25 if border == 'mkad' else 0.5
+
     for i, row in orders_inf.iterrows():
         try:
             lat, lng = orders_loc['lat'][i], orders_loc['lng'][i]
@@ -104,7 +114,8 @@ def parse_couriers(date: str, courier_typing: dict, t_w, t_c, d_w, d_c) -> List[
 
 
 def parse_depots(date: str, index: int, mapping: dict, address_mapping: dict, t_d, t_a) -> Tuple[int, Dict[str, Depot]]:
-    """ Parse depots data
+    """
+    Parse depots data
     """
     logging.info('Parsing depots...')
     depots_data = pd.read_excel('./data/Склады.xlsx')
@@ -193,107 +204,103 @@ def load_matrix(
 
         for profile in profiles:
             file = f'./new_matrices_1/{name}.{profile}.routing_matrix.json'
-            # print('profile', profile, 'file', file)
-            #
-            # if profile == 'transport_simple':
-            #     download_transport_simple(file, points[depot_id])
-            # elif profile == 'pedestrian':
-            #     download_pedestrian(file, points[depot_id])
-            # elif profile == 'driver':
-            #     download_driver(file, points[depot_id])
-            # elif profile == 'bicycle':
-            #     download_bicycle(file, points[depot_id])
-            files[depot_id].append(file)
+            pts = points[depot_id]
+
+            dict(
+                transport_complex=download_transport_complex,
+                transport_simple=download_transport_simple,
+                pedestrian=download_pedestrian,
+                driver=download_driver,
+                bicycle=download_bicycle,
+            )[profile](file, pts)
+
+            files[depot_id] += [file]
 
     return points, internal_mappings, files
 
 
 def download_bicycle(file, points: list):
-    def return_checked(__time, __distance: int):
-        if __time != 0 and 2 < __distance / __time < 5:
-            if __time > 2 * 60 * 60:
-                return __distance / 4, __distance
-            elif __distance > 100 * 1000:
-                return __time, __time * 4
-            else:
-                return __distance / 4, __distance
-        return __time, __distance
+    """
 
-    osrm_host = f'http://dimitrius.keenetic.link:5002'
-    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
-    time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
-    travel_times, distances = [], []
-    for i in range(len(points)):
-        for j in range(len(points)):
-            tt, d = return_checked(time_matrix[i][j], distance_matrix[i][j])
-            travel_times.append(int(tt))
-            distances.append(int(d))
-    routing = {'profile': 'bicycle', 'travelTimes': travel_times, 'distances': distances}
+    """
+    def return_checked(t, d: int):
+        if t != 0 and 2 < d / t < 5:
+            if t > 2 * 60 * 60:
+                return d / 4, d
+            elif d > 100 * 1000:
+                return t, t * 4
+            else:
+                return d / 4, d
+        return t, d
+
+    dist, time = osrm_module.get_osrm_matrix(points, transport='bicycle')
+    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
+
     with open(file, 'w') as f:
-        ujson.dump(routing, f)
+        ujson.dump(res, f)
 
 
 def download_driver(file, points: list):
-    def return_checked(__time, __distance: int):
-        if __time != 0 and 5 < __distance / __time < 13:
-            if __time > 2 * 60 * 60:
-                return __distance / 12, __distance
-            elif __distance > 100 * 1000:
-                return __time, __time * 12
+    """
+
+    """
+    def return_checked(t, d: int):
+        if t != 0 and 5 < d / t < 13:
+            if t > 3600:
+                return d / 12, d
+            elif d > 1e5:
+                return t, t * 12
             else:
-                return __distance / 12, __distance
-        return __time, __distance
+                return d / 12, d
+        return t, d
 
-    osrm_host = f'http://dimitrius.keenetic.link:5000'
-    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
-    time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
-    travel_times, distances = [], []
-    for i in range(len(points)):
-        for j in range(len(points)):
-            tt, d = return_checked(time_matrix[i][j], distance_matrix[i][j])
-            travel_times.append(int(tt))
-            distances.append(int(d))
-    routing = {'profile': 'driver', 'travelTimes': travel_times, 'distances': distances}
+    dist, time = osrm_module.get_osrm_matrix(points, transport='car')
+    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
+
     with open(file, 'w') as f:
-        ujson.dump(routing, f)
+        ujson.dump(res, f)
 
 
-def download_pedestrian(file, points: list):
-    osrm_host = f'http://dimitrius.keenetic.link:5002'
-    distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
-    time_matrix = distance_matrix / 1
-    travel_times, distances = [], []
-    for i in range(len(points)):
-        for j in range(len(points)):
-            travel_times.append(int(time_matrix[i][j]))
-            distances.append(int(distance_matrix[i][j]))
-    routing = {'profile': 'pedestrian', 'travelTimes': travel_times, 'distances': distances}
+def download_pedestrian(
+        file: str,
+        points: Array
+):
+    """
+    Получаем матрицы для пешеходов
+    """
+    dist, time = osrm_module.get_osrm_matrix(points, transport='foot')
+    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
+
     with open(file, 'w') as f:
-        ujson.dump(routing, f)
+        ujson.dump(res, f)
 
 
 def download_transport_simple(file, points: list):
-    def return_checked(__time, __distance: int):
-        if __time != 0 and 5 < __distance / __time < 13:
-            if __time > 2 * 60 * 60:
-                return __distance / 12, __distance
-            elif __distance > 100 * 1000:
-                return __time, __time * 12
+    def return_checked(t, d: int):
+        if t != 0 and 5 < d / t < 13:
+            if t > 2 * 60 * 60:
+                return d / 12, d
+            elif d > 100 * 1000:
+                return t, t * 12
             else:
-                return __distance / 12, __distance
-        return __time, __distance
+                return d / 12, d
+        return t, d
 
-    osrm_host = f'http://dimitrius.keenetic.link:5002'
-    pedestrian_distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
-    osrm_host = f'http://dimitrius.keenetic.link:5000'
-    driver_distance_matrix = osrm_module.get_matrix(to_array(points), 'distance', host=osrm_host)
-    driver_time_matrix = osrm_module.get_matrix(to_array(points), 'duration', host=osrm_host)
+    p_dist, p_time = osrm_module.get_osrm_matrix(points, transport='foot')
+    c_dist, c_time = osrm_module.get_osrm_matrix(points, transport='car')
+
+    res_time = np.zeros(p_dist.shape)
+    res_dist = np.zeros(p_dist.shape)
+
+    res_time[p_time <= 15 * 60] = p_time[p_time <= res_time['time']]
+    res_time[15 * 60 < p_time < 45 * 60] = p_time[15 * 60 < p_time < 45 * 60]
 
     travel_times, distances = [], []
     for i in range(len(points)):
         for j in range(len(points)):
-            pt = pedestrian_distance_matrix[i][j]
-            dtt, dd = return_checked(driver_time_matrix[i][j], driver_distance_matrix[i][j])
+            pt = p_dist[i][j]
+            dtt, dd = return_checked(p_time[i][j], p_time[i][j])
+
             if pt <= 15 * 60:
                 travel_times.append(int(pt))
                 distances.append(int(pt))
@@ -308,3 +315,9 @@ def download_transport_simple(file, points: list):
     routing = {'profile': 'transport_simple', 'travelTimes': travel_times, 'distances': distances}
     with open(file, 'w') as f:
         ujson.dump(routing, f)
+
+
+def download_transport_complex(file, points: Array):
+    durations = get_travel_times(
+        points=_turn_over(points),
+    )
