@@ -49,23 +49,6 @@ def check_time_window(tw_start: datetime, tw_end: datetime, max_window: int = 36
 
 def check_demand(demand: int):
     """
-    Проверяем, что demand >= 0 и является интомм
+    Проверяем, что demand >= 0 и является интом
     """
     return isinstance(demand, int) and demand >= 0
-
-
-def check_job(
-        job: Job,
-        max_delay_days: int = 30,
-        year: int = 2020,
-        max_window: int = 365
-):
-    checks = [
-        lambda: check_time_window(job.tw_start, job.tw_end, max_window=max_window),
-        lambda: check_year(job.tw_start, year=year),
-        lambda: check_year(job.tw_end, year=year),
-        lambda: check_delay(job.delay, max_days=max_delay_days),
-        lambda: check_demand(job.demand)
-    ]
-
-    return all(c() for c in checks)
