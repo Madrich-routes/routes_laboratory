@@ -9,4 +9,4 @@ class RustSolver(BaseSolver):
         self.solution_file = './tmp/solution.pragmatic'
 
     def solve(self, problem: BaseRoutingProblem) -> VRPSolution:
-
+        ...

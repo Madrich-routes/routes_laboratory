@@ -1,0 +1,78 @@
+version: "3.6"
+
+services:
+  api-server:
+#    build:
+#      context: .
+#    ports:
+#      - "8000:5000"
+#    volumes:
+#      - ".:/app"
+#    entrypoint: "flask run --host=0.0.0.0"
+#    networks:
+#      - main_net
+#    restart: always
+#
+#  workers:
+#    build:
+#      context: .
+#    volumes:
+#      - ".:/app"
+#    entrypoint: "rq worker --url redis://redis/0"
+#    networks:
+#      - main_net
+#    restart: always
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - main_net
+
+  minio:
+    image: minio:latest
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: "Minio_madrich"
+      MINIO_SECRET_KEY: "BefriendMyDick!"
+    volumes:
+      - "/media/dimitrius/avg_data/minio-data:/data"
+    entrypoint: "server /data"
+
+  osrm-car:
+    image: osrm/osrm-backend:latest
+    entrypoint: "osrm-routed --algorithm=CH /data/russia-latest.osrm --max-table-size 30000"
+    volumes:
+      - "/media/dimitrius/DATA/osrm_maps/russia/car/:/data"
+    ports:
+      - "5000:5000"
+    networks:
+      - main_net
+    restart: always
+
+  osrm-foot:
+    image: osrm/osrm-backend:latest
+    command: "osrm-routed --algorithm=CH /data/russia-latest.osrm --max-table-size 30000"
+    volumes:
+      - "/media/dimitrius/DATA/osrm_maps/russia/foot/:/data"
+    ports:
+      - "5001:5000"
+    networks:
+      - main_net
+    restart: always
+
+  osrm-bicycle:
+    image: osrm/osrm-backend:latest
+    command: "osrm-routed --algorithm=CH /data/russia-latest.osrm --max-table-size 30000"
+    volumes:
+      - "/media/dimitrius/DATA/osrm_maps/russia/bicycle/:/data"
+    ports:
+      - "5002:5000"
+    networks:
+      - main_net
+    restart: always
+
+networks:
+  main_net: { }
