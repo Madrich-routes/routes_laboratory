@@ -1,3 +1,6 @@
+"""
+Модуль для обработки матриц. Модуль не доработан.
+"""
 import pickle
 from copy import deepcopy
 from datetime import datetime
@@ -7,25 +10,31 @@ from typing import List, Tuple
 import numpy as np
 import ujson
 from herepy import RouteMode
-from madrich.api_module import here_module
-from madrich.utils import to_array
+
+from geo.providers import here_module
+from solvers.madrich.utils import to_array
+from utils.types import Array
 
 Point = Tuple[float, float]
 HERE_KEY = ''
 
 
-def assemble_matrix(subs: List[List[np.array]], small_size: int, full_size: int):
+def assemble_matrix(
+        submatrices: List[List[Array]],
+        small_size: int,
+        full_size: int
+):
     """
     Собираем большую матрицу из набора маленьких
     """
     res = np.zeros((full_size, full_size), dtype=np.int32)
 
-    for i, j in product(range(len(subs)), repeat=2):
+    for i, j in product(range(len(submatrices)), repeat=2):
         i_from = i * small_size
         i_to = min((i + 1) * small_size, full_size)
         j_from = j * small_size
         j_to = min((j + 1) * small_size, full_size)
-        res[i_from:i_to, j_from:j_to] = subs[i][j]
+        res[i_from:i_to, j_from:j_to] = submatrices[i][j]
 
     return res
 

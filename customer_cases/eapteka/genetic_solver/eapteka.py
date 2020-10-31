@@ -72,7 +72,8 @@ def prepare_statistic(depot_id: str, solution: dict, address_mapping: dict, reve
 
 
 def refactor_couriers(couriers: List[Courier], names: List[Tuple[str, str, str]]) -> Tuple[int, List[Courier]]:
-    """ Refactor used couriers for sending them to another depots
+    """
+    Refactor used couriers for sending them to another depots
     """
     sv, tmp_couriers = 0, []
 

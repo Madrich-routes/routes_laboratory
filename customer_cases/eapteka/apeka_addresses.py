@@ -1,4 +1,6 @@
-import json
+from returns.result import Result, safe
+from typing import Tuple
+from urllib.parse import urlencode
 
 import pandas as pd
 import requests
@@ -13,11 +15,11 @@ def main():
         comment = data.iloc[i]["КомментарийКлиента"]
 
         if str(comment) != "nan":
-            geocodeAddress, lot, lan = get_coords(comment)
+            geocodeAddress, lot, lan = geocode(comment)
             if geocodeAddress == "":
-                geocodeAddress, lot, lan = get_coords(address)
+                geocodeAddress, lot, lan = geocode(address)
         else:
-            geocodeAddress, lot, lan = get_coords(address)
+            geocodeAddress, lot, lan = geocode(address)
 
         res.append([address, comment, geocodeAddress, lot, lan])
         print(f"Обработали уже {i} из {rows_count}")
@@ -35,24 +37,22 @@ def main():
     i = 0
 
 
-def get_coords(address):
-    map_request = "http://search.maps.sputnik.ru/search/addr?q={address})".format(
-        address=address.replace(" ", "%20")
-    )
-    response = requests.get(map_request)
-    content = json.loads(response.content)
-    geocodeAddress, lot, lan = "", "", ""
-    if len(content["result"]) > 1:
-        coord = content["result"]["address"][0]["features"][0]["geometry"][
-            "geometries"
-        ][0]["coordinates"]
-        lot = str(coord[1])
-        lan = str(coord[0])
-        geocodeAddress = content["result"]["address"][0]["features"][0]["properties"][
-            "display_name"
-        ]
-    return geocodeAddress, lot, lan
+# @safe
+def geocode(address: str) -> Tuple[int, int, int]:
+    """
+    Функция возвращает Result
+    """
+    url = f"http://search.maps.sputnik.ru/search/addr?q={urlencode(address)})"
+    content = requests.get(url).json()
+
+    features = content["result"]["address"][0]["features"][0]
+    geocodeAddress = features["properties"]["display_name"]
+    coord = features["geometry"]["geometries"][0]["coordinates"]
+    lat, lon = float(coord[1]), str(coord[0])
+
+    return geocodeAddress, lat, lon
 
 
 if __name__ == "__main__":
-    main()
+    res = geocode('Москва, Земляной Вал, 38-40/15')
+    print(res)

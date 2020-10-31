@@ -128,7 +128,8 @@ def send_courier(courier: Courier, start_time: str, end_time: str) -> Optional[C
     return None
 
 
-def add_courier(data, name, depot, start_time, end_time, distance, duration, points):
+def add_courier(
+        data, name, depot, start_time, end_time, distance, duration, points):
     data['name'].append(name)
     data['depot'].append(depot)
     data['start_time'].append(start_time)
