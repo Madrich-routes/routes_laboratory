@@ -4,7 +4,7 @@ from geo.providers.osrm_module import get_osrm_matrix
 from geo.transport import land, metro, suburban
 from utils.logs import logger
 import glob, ujson
-
+import numpy as np
 
 def build_dataset_from_files():
     """
@@ -35,7 +35,7 @@ def build_walk_matrix(
     """
     logger.info('Вычисляем матрицу расстояний остановок...')
 
-    points = stations_df['coord'].values
+    points = np.array(stations_df['coord'].values.tolist())[:,::-1]
     walk_matrix = get_osrm_matrix(points, transport="foot")
 
     return walk_matrix

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from models.rich_vrp.job import Job
 
+
 @dataclass
 class Visit:
     __slots__ = ('job', 'time')
