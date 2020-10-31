@@ -1,9 +1,52 @@
+"""
+В этом модуле описаны всякие визуализации транспортных задач
+
+# TODO: Tableau, PowerBI, FineReport, ArcGIS Online Platform
+
+# TODO: mapboxgl, earthpy, rasterio
+# TODO: spatialite
+# TODO: pyecharts, plotly, folium, bokeh, basemap, geopandas
+
+# Хорошие ссылки, которые можно посмотреть
+# 1. https://pypi.org/project/gmaps/
+
+# Можно рисовать норм карты через matplotlib
+# https://jakevdp.github.io/PythonDataScienceHandbook/04.13-geographic-data-with-basemap.html
+
+# https://www.coursera.org/projects/python-world-map-geovisualization-dashboard-covid-data
+
+# Огненный курс
+# https://www.earthdatascience.org/courses/scientists-guide-to-plotting-data-in-python/plot-spatial-data/customize-raster-plots/interactive-maps/
+
+# Тут есть про работу с геоjson и чем попало
+# https://rosenfelder.ai/create-maps-with-python/
+
+# https://developers.arcgis.com/python/guide/visualizing-data-with-the-spatial-dataframe/
+
+# https://stackoverflow.com/questions/32649494/why-python-vincent-map-visuzalization-does-not-map-data-from-data-frame
+
+# https://plotly.com/python/maps/
+
+# https://medium.com/@minaienick/why-you-should-be-using-geopandas-to-visualize-data-on-maps-aka-geo-visualization-fd1e3b6211b4
+# https://www.finereport.com/en/data-visualization/3-types-of-map-data-visualization-in-python.html
+# https://towardsdatascience.com/level-up-your-visualizations-make-interactive-maps-with-python-and-bokeh-7a8c1da911fd
+# https://towardsdatascience.com/a-complete-guide-to-an-interactive-geographical-map-using-python-f4c5197e23e0
+# http://darribas.org/gds15/content/labs/lab_03.html
+# https://programming.vip/docs/python-easy-map-visualization-with-detailed-source-code.html
+# https://github.com/topics/map-visualization
+
+# TODO: graphviz visualizer
+"""
+
 from pprint import pprint
+from typing import Optional
 
 import gmaps
 import matplotlib.pyplot as plt
 import numpy as np
-from folium import folium
+from folium import folium, CircleMarker, Marker, FeatureGroup
+
+from utils.types import Array
 
 
 def plot_yandex(points: np.ndarray):
@@ -46,42 +89,63 @@ def plot_on_gmaps(points: np.ndarray):
     return fig
 
 
-def plot_folium(data):
-    mos_map = folium.Map()
-    folium.PolyLine(data['points'], color=data['color'], weight=5).add_to(mos_map)
+def plot_folium(
+        points: Optional[Array] = None,
+        priority_points: Optional[Array] = None,
+        stocks: Optional[Array] = None,
+        tiles: str = 'Stamen Terrain',
+) -> folium.Map:
+    """
 
-# TODO: Tableau, PowerBI, FineReport, ArcGIS Online Platform
+    :param points: обычные точки
+    :type points: np.array
+    :param priority_points: приоритетные заказы
+    :type priority_points: np.array
+    :param stocks: Склады
+    :type stocks: np.array
+    :param tiles: раскраска карты
+    :type tiles: str ['Stamen Toner', 'Stamen Terrain']
 
-# TODO: mapboxgl, earthpy, rasterio
-# TODO: spatialite
-# TODO: pyecharts, plotly, folium, bokeh, basemap, geopandas
+    :return: карту с отрисованным обхектами
+    :rtype:
+    """
 
-# Хорошие ссылки, которые можно посмотреть
-# 1. https://pypi.org/project/gmaps/
+    # Вся карты москвы
+    mos_map = folium.Map(location=[55.7539, 37.6208], zoom_start=11, tiles=tiles)
+    unused = FeatureGroup()  # неиспользованные
 
-# Можно рисовать норм карты через matplotlib
-# https://jakevdp.github.io/PythonDataScienceHandbook/04.13-geographic-data-with-basemap.html
+    # рисуем обычные точки
+    for lat, lon in points:
+        a = CircleMarker(
+            [lat, lon],
+            radius=5,
+            color=10,
+            popup=str([lat, lon]),
+            fill=False,
+            fill_color='blue',
+            fill_opacity=0.6,
+        ).add_to(unused)
 
-# https://www.coursera.org/projects/python-world-map-geovisualization-dashboard-covid-data
+    # рисуем приоритетные точки
+    for lat, lon in priority_points:
+        a = CircleMarker(
+            [lat, lon],
+            radius=5,
+            color=10,
+            popup=str([lat, lon]),
+            fill=False,
+            fill_color='blue',
+            fill_opacity=0.6,
+        ).add_to(unused)
 
-# Огненный курс
-# https://www.earthdatascience.org/courses/scientists-guide-to-plotting-data-in-python/plot-spatial-data/customize-raster-plots/interactive-maps/
+    # рисуем склады
+    for lat, lon in stocks:
+        a = Marker(
+            [lat, lon],
+        ).add_to(unused)
 
-# Тут есть про работу с геоjson и чем попало
-# https://rosenfelder.ai/create-maps-with-python/
+    mos_map.add_child(unused)
 
-# https://developers.arcgis.com/python/guide/visualizing-data-with-the-spatial-dataframe/
+    return mos_map
 
-# https://stackoverflow.com/questions/32649494/why-python-vincent-map-visuzalization-does-not-map-data-from-data-frame
-
-# https://plotly.com/python/maps/
-
-# https://medium.com/@minaienick/why-you-should-be-using-geopandas-to-visualize-data-on-maps-aka-geo-visualization-fd1e3b6211b4
-# https://www.finereport.com/en/data-visualization/3-types-of-map-data-visualization-in-python.html
-# https://towardsdatascience.com/level-up-your-visualizations-make-interactive-maps-with-python-and-bokeh-7a8c1da911fd
-# https://towardsdatascience.com/a-complete-guide-to-an-interactive-geographical-map-using-python-f4c5197e23e0
-# http://darribas.org/gds15/content/labs/lab_03.html
-# https://programming.vip/docs/python-easy-map-visualization-with-detailed-source-code.html
-# https://github.com/topics/map-visualization
-
-# TODO: graphviz visualizer
+    # folium.PolyLine(data['points'], color=data['color'], weight=5).add_to(mos_map)

@@ -1399,14 +1399,6 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
-name = "pygraphviz"
-version = "1.6"
-description = "Python interface to Graphviz"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "pykerberos"
 version = "1.2.1"
 description = "High-level interface to Kerberos"
@@ -1580,7 +1572,7 @@ python-versions = "*"
 name = "regex"
 version = "2020.10.28"
 description = "Alternative regular expression module, to replace re."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -2031,7 +2023,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "56a84b4075eb0eb4b72671b1c4fda9f97d5dbfabb274c1325776cf01e62f42f8"
+content-hash = "14d896a61d2ae61b3649e4fd3230e398d9fb71a0daac067443b799e41c60afa7"
 
 [metadata.files]
 aiohttp = [
@@ -2822,9 +2814,6 @@ pygeos = [
 pygments = [
     {file = "Pygments-2.7.2-py3-none-any.whl", hash = "sha256:88a0bbcd659fcb9573703957c6b9cff9fab7295e6e76db54c9d00ae42df32773"},
     {file = "Pygments-2.7.2.tar.gz", hash = "sha256:381985fcc551eb9d37c52088a32914e00517e57f4a21609f48141ba08e193fa0"},
-]
-pygraphviz = [
-    {file = "pygraphviz-1.6.zip", hash = "sha256:411ae84a5bc313e3e1523a1cace59159f512336318a510573b47f824edef8860"},
 ]
 pykerberos = [
     {file = "pykerberos-1.2.1.tar.gz", hash = "sha256:4f2dca8df5f84a3be039c026893850d731a8bb38395292e1610ffb0a08ba876c"},
