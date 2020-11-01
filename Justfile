@@ -4,9 +4,6 @@ lint:
 test:
     pytest --hypothesis-show-statistics --tb=no -n=$(nproc)
 
-example:
-    mw_flow_calculator/examples/print_tests.py
-
 isort:
     isort -e -m 4 -w 120 -y
 
