@@ -54,15 +54,13 @@ def dump_demands(demands: List[int]):
 
 
 def split_into_tours(nodes, size):
+    res = []
     nodes = np.array(nodes)
-    nodes *= (nodes < size | nodes == 1)
-
-    bounds = np.where(nodes == 0)[0]
-    res = [nodes[bounds[-1]:]]
-
+    bounds = list(np.where(nodes > size)[0])
+    bounds.insert(0, 0)
     for i in range(len(bounds) - 1):
-        res += [nodes[bounds[i]: bounds[i + 1] + 1]]
-
+        res += [nodes[bounds[i]: bounds[i + 1]]]
+    res.append(nodes[bounds[-1]:])
     return res
 
 
