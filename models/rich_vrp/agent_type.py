@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from models.rich_vrp.costs import AgentCosts
 
@@ -11,13 +11,16 @@ class AgentType:
     def __init__(
             self,
             id: int,
-            speed: int,  # скорость перемещения
+            speed: Optional[float],  # скорость перемещения
             distance_matrix_id: int,  # его собственная матрица расстояний
             capacities: List[int],  # вектор ограничений
             costs: AgentCosts,
             skills: List[int],  # список флагов, что он умеет
+            name: str = '',  # список флагов, что он умеет
     ):
         self.id = id
+        self.name = name
+
         # Характеристики перемещения
         self.speed: int = speed
         self.distance_matrix_id: int = distance_matrix_id

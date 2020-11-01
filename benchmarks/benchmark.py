@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2c01c131e0ba90a5d81bddbb6f7726d3be05c911c3dd668252eec4db43b2a17d
-size 428
+from typing import List
+
+from models.rich_vrp.problem import RichVRPProblem
+
+
+class Benchmark:
+    def __init__(
+        self,
+        problem: RichVRPProblem,
+        length: float,
+        solution: List[int]
+    ):
+        self.problem = problem
+        self.length = length
+        self.solution = solution

@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Tuple
 
 from models.rich_vrp.agent_type import AgentType
 from models.rich_vrp.costs import AgentCosts
@@ -14,8 +14,8 @@ class Agent:
 
     costs: AgentCosts  # на сколько дорого обходится использования средства (fixed, time, distance)
     value: List[int]  # вместимость (можно inf, ну или очень много)
-    start_time: str  # время начала работы
-    end_time: str  # время конца работы
+
+    time_windows: List[Tuple[int, int]]
 
     start_place: int  # стартовая точка
     end_place: int  # конечная точка прибытия

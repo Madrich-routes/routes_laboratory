@@ -26,7 +26,11 @@ def save_excel(
     return file_name
 
 
-def save_couriers(name: str, couriers_directory: str, directory="") -> str:
+def save_couriers(
+        name: str,
+        couriers_directory: str,
+        directory=""
+) -> str:
     """
     Generate first couriers file; return file path
     """

@@ -1,9 +1,22 @@
-import os
+"""
+Здесь описаны основные настройки системы.
 
-# TODO: добавить cplex, cbc, glpk, scip, ipopt, etc
-# TODO: lkh2 и lkh3
+# TODO: добавить cplex, cbc, glpk, scip, ipopt, z3, etc
+# TODO: lkh2 и lkh3 и скомпиленные с разными структурами
 # TODO: Мб большие буквы? Или маленькие?
 # TODO: И вообще забирать все из переменных среды. А их ставить через мок файл или через .env
+
+"""
+import os
+
+from pathlib import Path
+
+from environs import Env
+
+env = Env()
+env.read_env()  # read .env file, if it exists
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 os.environ["LKH2"] = "/usr/local/bin/LKH2"
 os.environ["LKH3"] = "/usr/local/bin/LKH3"
@@ -24,7 +37,7 @@ VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
 
 REDIS_HOST = '127.0.0.1'
 
-# Адреса OSRM-серверов
+# ------------------------------------------------ Адреса OSRM-серверов -------------------------------------------
 OSRM_CAR_HOST = 'dimitrius.keenetic.link'
 OSRM_CAR_PORT = '5000'
 
@@ -33,3 +46,5 @@ OSRM_FOOT_PORT = '5001'
 
 OSRM_BICYCLE_HOST = 'dimitrius.keenetic.link'
 OSRM_BICYCLE_PORT = '5002'
+
+DATA_DIR = '.'

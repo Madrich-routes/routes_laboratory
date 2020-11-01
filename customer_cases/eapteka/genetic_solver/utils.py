@@ -5,23 +5,6 @@ from typing import Tuple, List, Optional
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot
 
 
-def make_windows_orders(date: str, interval: str) -> List[Tuple[str, str]]:
-    """ Makes time windows for orders
-    """
-    start, end = f'{date}T00:00:00Z', f'{date}T23:59:00Z'
-    tokens = interval.split(' ')
-    size = len(tokens)
-    for i, token in enumerate(tokens):
-        if token == 'с' and i != size - 1:
-            if tokens[i + 1]:
-                start = f'{date}T{tokens[i + 1]}:00Z'
-        if token == 'по' and i != size - 1:
-            if tokens[i + 1]:
-                end_t = f'{tokens[i + 1]}' if 9 < int(tokens[i + 1][:2]) < 24 else f'23:59'
-                end = f'{date}T{end_t}:00Z'
-    return [(start, end)]
-
-
 def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
     """ Makes time windows for couriers and depots
     """
@@ -36,21 +19,10 @@ def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
     return [(f'{date}T{start}:00Z', f'{date}T{end}:00Z')]
 
 
-def check_point(lat, lon, center, radius):
-    """ Check that point in some borders near Moscow
-    """
-    # assert 54.966833 < lat < 56.393109, f'bad point {lat}'
-    # assert 36.1686653 < lon < 38.9163203, f'bad point {lon}'
-
-    """v.2
-    Check that point in some radius near Moscow
-    """
-
-    assert((lat - center[0])**2 + (lon - center[1])**2)**(1/2) < radius, f'bad point {lat}, {lon}'
-
 
 def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
-    """ Adapt couriers time windows for depot; returns new list of couriers
+    """
+    Adapt couriers time windows for depot; returns new list of couriers
     """
     start_depot, end_depot = depot.time_window
     start_dt = datetime.strptime(start_depot, '%Y-%m-%dT%H:%M:%SZ')
@@ -78,7 +50,8 @@ def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
 
 
 def get_index(internal_mapping):
-    """ Return location dict by index from mapping
+    """
+    Return location dict by index from mapping
     """
     mapping = {}
     for point, index in internal_mapping.items():

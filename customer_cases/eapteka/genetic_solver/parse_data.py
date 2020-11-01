@@ -46,8 +46,10 @@ def parse_orders(
     date = orders_inf.iloc[0]['ДатаДоставки']
     date = f'{date[6:10]}-{date[3:5]}-{date[0:2]}'
 
-    center = (sum(orders_loc.lat) / len(orders_loc.index),
-              sum(orders_loc.lng) / len(orders_loc.index))  # нахождение центра масс точек
+    center = (
+        sum(orders_loc.lat) / len(orders_loc.index),
+        sum(orders_loc.lng) / len(orders_loc.index),
+    )  # нахождение центра масс точек
 
     # задаем ограничительный радиус для точек в градусах
     radius = 0.25 if border == 'mkad' else 0.5
@@ -219,62 +221,6 @@ def load_matrix(
     return points, internal_mappings, files
 
 
-def download_bicycle(file, points: list):
-    """
-
-    """
-    def return_checked(t, d: int):
-        if t != 0 and 2 < d / t < 5:
-            if t > 2 * 60 * 60:
-                return d / 4, d
-            elif d > 100 * 1000:
-                return t, t * 4
-            else:
-                return d / 4, d
-        return t, d
-
-    dist, time = osrm_module.get_osrm_matrix(points, transport='bicycle')
-    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
-
-    with open(file, 'w') as f:
-        ujson.dump(res, f)
-
-
-def download_driver(file, points: list):
-    """
-
-    """
-    def return_checked(t, d: int):
-        if t != 0 and 5 < d / t < 13:
-            if t > 3600:
-                return d / 12, d
-            elif d > 1e5:
-                return t, t * 12
-            else:
-                return d / 12, d
-        return t, d
-
-    dist, time = osrm_module.get_osrm_matrix(points, transport='car')
-    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
-
-    with open(file, 'w') as f:
-        ujson.dump(res, f)
-
-
-def download_pedestrian(
-        file: str,
-        points: Array
-):
-    """
-    Получаем матрицы для пешеходов
-    """
-    dist, time = osrm_module.get_osrm_matrix(points, transport='foot')
-    res = dict(profile='pedestrian', travelTimes=time.flatten().tolist(), distances=dist.flatten().tolist())
-
-    with open(file, 'w') as f:
-        ujson.dump(res, f)
-
-
 def download_transport_simple(file, points: list):
     def return_checked(t, d: int):
         if t != 0 and 5 < d / t < 13:
@@ -312,12 +258,8 @@ def download_transport_simple(file, points: list):
                 tt = int(min(dtt * 2, pt))
                 travel_times.append(tt)
                 distances.append(int(dd))
+
     routing = {'profile': 'transport_simple', 'travelTimes': travel_times, 'distances': distances}
+
     with open(file, 'w') as f:
         ujson.dump(routing, f)
-
-
-def download_transport_complex(file, points: Array):
-    durations = get_travel_times(
-        points=_turn_over(points),
-    )

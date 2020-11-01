@@ -13,8 +13,14 @@ from customer_cases.eapteka.genetic_solver.utils import cut_windows, get_index, 
 Point = Tuple[float, float]
 
 
-def prepare_courier(internal_mappings: dict, depot_id: str, depot: Depot, couriers: List[Courier]):
-    """ Prepare courier for send them to depot
+def prepare_courier(
+        internal_mappings: dict,
+        depot_id: str,
+        depot: Depot,
+        couriers: List[Courier]
+):
+    """
+    Prepare courier for send them to depot
     """
     courier_loc = 0
     for point in internal_mappings[depot_id]:
@@ -30,8 +36,15 @@ def prepare_courier(internal_mappings: dict, depot_id: str, depot: Depot, courie
     return revers_internal_mapping, tmp_couriers
 
 
-def prepare_statistic(depot_id: str, solution: dict, address_mapping: dict, revers_mapping: dict, tours: dict,
-                      depots_output: dict, couriers_output: dict):
+def prepare_statistic(
+        depot_id: str,
+        solution: dict,
+        address_mapping: dict,
+        revers_mapping: dict,
+        tours: dict,
+        depots_output: dict,
+        couriers_output: dict
+):
     """
     Save statistic from solution
     """

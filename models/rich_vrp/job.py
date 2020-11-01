@@ -7,7 +7,8 @@ import numpy as np
 
 @dataclass
 class Place:
-    id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.  # TODO: а оно нам нужно? uuid?
+    id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.
+    name: Optional[str] = None
 
     lat: Optional[float] = None
     lon: Optional[float] = None
