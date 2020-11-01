@@ -15,7 +15,12 @@ from environs import Env
 env = Env()
 env.read_env()  # read .env file, if it exists
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# ------------------------------------- Основные директории проекта -----------------------------------------------
+BASE_DIR = Path(__file__).resolve()
+DATA_DIR = BASE_DIR / 'data'
+TMP_DIR = DATA_DIR / 'tmp'
+CACHE_DIR = TMP_DIR / 'cache'
 
 os.environ["LKH2"] = "/usr/local/bin/LKH2"
 os.environ["LKH3"] = "/usr/local/bin/LKH3"

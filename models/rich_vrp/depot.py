@@ -1,7 +1,6 @@
-from typing import Tuple
+from typing import Tuple, List
 
 from models.rich_vrp.job import Place
-from temp.tsp import List
 
 
 class Depot(Place):

@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 class Plan:
     def __init__(
         self,
-        agent: Agent,
-        waypoints: List[Visit]
+        agent: 'Agent',
+        waypoints: List['Visit']
     ):
         self.agent = agent
         self.waypoints = waypoints
@@ -23,7 +23,7 @@ class PlanReport:
     def __init__(
         self,
         plan: Plan,
-        problem: RichVRPProblem,
+        problem: 'RichVRPProblem',
     ):
         self.plan = plan
         self.problem = problem

@@ -9,15 +9,12 @@ from typing import Optional, Set, Tuple
 import geopy
 import numpy as np
 import timezonefinder as tf
-from auromat.coordinates.transform import spherical_to_cartesian
 from geopy.distance import geodesic
 from numba import njit
 from pytz import timezone, utc
-from scipy.spatial import Delaunay
-from scipy.spatial.qhull import ConvexHull
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import haversine_distances
-from sklearn.neighbors._dist_metrics import DistanceMetric
+from sklearn.neighbors._dist_metrics import DistanceMetric  # noqa
 
 from utils.types import Array
 
@@ -80,8 +77,8 @@ def haversine_vectorize(lon1, lat1, lon2, lat2):
     haver_formula = np.sin(newlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(newlon / 2.0) ** 2
 
     dist = 2 * np.arcsin(np.sqrt(haver_formula))
-    km = EARTH_R * dist
-    return km
+
+    return EARTH_R * dist
 
 
 @njit()
@@ -107,6 +104,8 @@ def geo_to_3d(lat, lon) -> Tuple[float, float, float]:
     """
     Получаем 3D координаты точки
     """
+    from auromat.coordinates.transform import spherical_to_cartesian
+
     return spherical_to_cartesian(EARTH_R, lat, lon)
 
 
@@ -126,6 +125,8 @@ def delaunay_graph(points: np.ndarray) -> Set[Tuple[int, int]]:
     :param points: Множество точек в 2D (np.array).
     :return: Множество ребер в виде пар индексов точек
     """
+    from scipy.spatial import Delaunay  # noqa
+
     assert len(points[0]) == 2, "Координаты должны быть двумерными"
 
     tri = Delaunay(points)
@@ -156,6 +157,8 @@ class DynamicConvexHull:
     """
 
     def __init__(self, points: np.ndarray):
+        from scipy.spatial.qhull import ConvexHull  # noqa
+
         self.hull = ConvexHull(points, incremental=True)
 
     def volume(self):

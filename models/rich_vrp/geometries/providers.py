@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from geo.providers.osrm_module import get_osrm_matrix
 from models.rich_vrp.geometries.base import BaseGeometry
 from utils.types import Array
 
@@ -13,8 +14,11 @@ class OSRMMatrixGeometry(BaseGeometry):
     def __init__(
         self,
         points: Array,
+        transport: str,
     ) -> None:
         super().__init__(points)
+
+        get_osrm_matrix(points, transport=transport)
 
         self.d = distance_matrix  # расстояния
         self.default_speed = default_speed  # скорость в метрах в секунду
