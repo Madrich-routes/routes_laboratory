@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from functools import cached_property, reduce
-from typing import Set, List, Optional, Tuple
+from typing import List, Optional, Set, Tuple, Iterable
 
 import numpy as np
 
@@ -43,12 +43,15 @@ class CompositeJob(Job):
     Позволяет склеивать джобы, которые гарантированно нужны вместе.
     """
 
-    def __init__(self, jobs: List[Job]):
-        self.jobs = jobs[:]
+    def __init__(
+        self,
+        jobs: Iterable[Job]
+    ):
+        self.jobs = list(jobs)
 
     @cached_property
     def id(self):
-        return tuple(c.id for c in self.containers)
+        return tuple(c.id for c in self.jobs)
 
     @cached_property
     def tw_start(self):
@@ -67,18 +70,18 @@ class CompositeJob(Job):
         """
         Общая цена всех заказов в списке
         """
-        return sum(c.amounts for c in self.containers)
+        return sum(c.amounts for c in self.jobs)
 
     @cached_property
     def required_skills(self):
         """
         Объединение required скилов от всех пацанов
         """
-        return list(reduce(lambda x, y: x.required_skills | y.required_skills, self.containers, set()))
+        return list(reduce(lambda x, y: x.required_skills | y.required_skills, self.jobs, set()))
 
     @cached_property
     def price(self):
         """
         Общая цена всех заказов в списке
         """
-        return sum(c.price for c in self.containers)
+        return sum(c.price for c in self.jobs)

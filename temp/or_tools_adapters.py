@@ -1,8 +1,5 @@
-from typing import List
-
-from ortools.constraint_solver import routing_enums_pb2
-from ortools.constraint_solver import pywrapcp
 import numpy as np
+from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 
 def print_solution(data, manager, routing, solution):

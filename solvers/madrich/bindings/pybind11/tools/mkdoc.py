@@ -6,16 +6,16 @@
 #
 
 import os
-import sys
 import platform
 import re
+import sys
 import textwrap
+from collections import OrderedDict
+from multiprocessing import cpu_count
+from threading import Semaphore, Thread
 
 from clang import cindex
 from clang.cindex import CursorKind
-from collections import OrderedDict
-from threading import Thread, Semaphore
-from multiprocessing import cpu_count
 
 RECURSE_LIST = [
     CursorKind.TRANSLATION_UNIT,

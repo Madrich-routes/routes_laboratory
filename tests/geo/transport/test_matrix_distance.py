@@ -1,6 +1,6 @@
 import numpy as np
 
-from geo.transport.calc_distance import transport_travel_time, combined_matrix
+from geo.transport.calc_distance import combined_matrix, transport_travel_time
 from utils.types import Array
 
 

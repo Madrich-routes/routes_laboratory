@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution

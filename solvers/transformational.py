@@ -6,12 +6,13 @@ TODO: Перепроектировать, в таком виде это очен
  Рандомно прыгаешь из одного трансформера в другой
 """
 
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import List
+
+from transformers.base import BaseTransformer
 
 from models.problems.base import BaseRoutingProblem
 from solvers.base import BaseSolver
-from transformers.base import BaseTransformer
 
 
 class CompositeTransformer(BaseTransformer):

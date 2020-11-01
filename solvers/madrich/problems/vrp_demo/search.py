@@ -1,9 +1,9 @@
 import logging
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 from solvers.madrich.api_module import osrm_module
 from solvers.madrich.problems.models import Matrix
-from solvers.madrich.problems.vrp_demo.models import Problem, Storage, Courier, Job
+from solvers.madrich.problems.vrp_demo.models import Courier, Job, Problem, Storage
 from solvers.madrich.problems.vrp_demo.operators.improve import improve_tour
 from solvers.madrich.utils import to_array
 

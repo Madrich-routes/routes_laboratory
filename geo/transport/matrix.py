@@ -1,10 +1,12 @@
+import glob
+
+import numpy as np
 import pandas as pd
 
 from geo.providers.osrm_module import get_osrm_matrix
 from geo.transport import land, metro, suburban
 from utils.logs import logger
-import glob, ujson
-import numpy as np
+
 
 def build_dataset_from_files():
     """

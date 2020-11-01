@@ -1,10 +1,10 @@
 import os
-from typing import Tuple, List, Dict
+from typing import Dict, List, Tuple
 
 import numpy as np
 import ujson
 
-from customer_cases.eapteka.genetic_solver.models import Task, Depot, Courier
+from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
 from utils.types import Array
 
 Point = Tuple[float, float]

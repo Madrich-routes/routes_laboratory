@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 import numpy as np
 
-from solvers.madrich.problems.models import Window, Cost, Matrix, State, Point
+from solvers.madrich.problems.models import Cost, Matrix, Point, State, Window
 
 array = np.ndarray
 

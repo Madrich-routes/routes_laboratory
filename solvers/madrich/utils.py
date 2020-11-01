@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
-import numpy as np
 import numba as nb
+import numpy as np
 
 array = np.ndarray
 vector = nb.typed.List

@@ -1,11 +1,11 @@
 import asyncio
-from asyncio import get_event_loop, Future
+from asyncio import Future, get_event_loop
 from datetime import datetime
-from typing import List, Union, Set, Tuple
+from typing import List, Set, Tuple, Union
 
 import numpy as np
 from aiohttp.client import ClientSession
-from herepy import RouteMode, MatrixSummaryAttribute
+from herepy import MatrixSummaryAttribute, RouteMode
 from ujson import loads
 
 array = np.ndarray

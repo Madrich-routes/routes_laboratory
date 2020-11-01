@@ -7,7 +7,6 @@ from algorithms.candidate_edges.models import CandidateEdge
 from utils.iteration import sets_intersection
 from utils.types import Array
 
-
 # TODO: Делать pruning до начала расчета кандидатов. И заменять в матрице на большие значения.
 # TODO: Продумать оценку исходя из всех посчитанных характеристик.
 

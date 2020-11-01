@@ -1,10 +1,11 @@
 import os
+
 import bs4
-import numpy as np
 import pandas as pd
 import requests
 
 from utils.logs import logger
+
 
 def build_df(xml_url) -> pd.DataFrame:
     """

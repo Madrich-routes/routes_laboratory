@@ -1,9 +1,12 @@
 import pickle as pkl
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from yandex_rasp import YandexRasp
+
 from utils.logs import logger
+
 
 def build_df(all_uids_file, all_pathes_file) -> pd.DataFrame:
     """

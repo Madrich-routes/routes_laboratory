@@ -1,6 +1,5 @@
-from pyomo.core import AbstractModel, Binary, Constraint, NonNegativeReals, Objective, Param, Reals, Set, Var, value, \
-    minimize
-
+from pyomo.core import (
+    AbstractModel, Binary, Constraint, NonNegativeReals, Objective, Param, Set, Var, minimize)
 # from py
 from pyomo.opt import SolverFactory
 from pyomo.repn.plugins.baron_writer import NonNegativeIntegers

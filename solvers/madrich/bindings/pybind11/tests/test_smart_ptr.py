@@ -1,6 +1,6 @@
 import pytest
-from pybind11_tests import smart_ptr as m
 from pybind11_tests import ConstructorStats
+from pybind11_tests import smart_ptr as m
 
 
 def test_smart_ptr(capture):

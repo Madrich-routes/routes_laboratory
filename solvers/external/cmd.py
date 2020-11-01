@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from typing import List, Dict
+from typing import Dict, List
 
 
 def exec_and_print(cmd: List[str]):

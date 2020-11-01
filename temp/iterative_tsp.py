@@ -1,18 +1,19 @@
 
 #   Import Pandas - List of cities can be found here https://simplemaps.com/data/world-cities
+#   Math functions for distance calculation
+import math
+#   To measure the optimizataion time
+import time
+
+#   Matplotlib for debugging
+import matplotlib.pyplot as plt
+#   Networkx to get connected components and subtours
+import networkx as nx
 import pandas as pd
 #   Import PuLP modeler functions
 from pulp import *
-#   Math functions for distance calculation
-import math
-#   Networkx to get connected components and subtours
-import networkx as nx
-#   Matplotlib for debugging
-import matplotlib.pyplot as plt
 #   Visually see loops progression
 from tqdm import tqdm
-#   To measure the optimizataion time
-import time
 
 
 class TSP():

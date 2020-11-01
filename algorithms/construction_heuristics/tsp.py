@@ -1,6 +1,6 @@
 import random
 from itertools import combinations
-from random import randrange, choice
+from random import choice, randrange
 
 import numexpr as ne
 import numpy as np
@@ -9,7 +9,6 @@ from scipy.sparse.csgraph._min_spanning_tree import minimum_spanning_tree
 
 from data_structures.unionfind import UnionFind
 from utils.types import Array
-
 
 # TODO: TSP, convex hull?
 # TODO: Найти все жадные туры одновременно, вероятно, можно быстро. (За квадрат)

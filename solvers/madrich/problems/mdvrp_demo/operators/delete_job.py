@@ -1,4 +1,4 @@
-from solvers.madrich.problems.mdvrp_demo.models import Problem, Route, Job, Track
+from solvers.madrich.problems.mdvrp_demo.models import Job, Problem, Route, Track
 
 
 def delete_job(vec: int, job: Job, track: Track, route: Route, problem: Problem) -> None:

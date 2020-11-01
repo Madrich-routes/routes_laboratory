@@ -8,10 +8,9 @@ from typing import Callable
 
 import pygraphviz as pgv
 import yaml
-from ortools.constraint_solver.pywrapcp import (Assignment, DefaultRoutingSearchParameters,
-                                                RoutingDimension, RoutingIndexManager, RoutingModel)
-from ortools.constraint_solver.routing_enums_pb2 import (FirstSolutionStrategy,
-                                                         LocalSearchMetaheuristic)
+from ortools.constraint_solver.pywrapcp import (
+    Assignment, DefaultRoutingSearchParameters, RoutingDimension, RoutingIndexManager, RoutingModel)
+from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy, LocalSearchMetaheuristic
 
 TransitCallback = Callable[[int, int], int]
 UnaryTransitCallback = Callable[[int], int]

@@ -1,7 +1,7 @@
 import numba as nb
 import numpy as np
 
-from solvers.madrich.problems.mdvrp_demo.models import Tour, Route
+from solvers.madrich.problems.mdvrp_demo.models import Route, Tour
 
 
 @nb.njit

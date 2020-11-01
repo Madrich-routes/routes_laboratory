@@ -2,7 +2,7 @@ import logging
 from sys import maxsize
 from typing import List
 
-from solvers.madrich.problems.vrp_demo.models import Problem, Route, Job
+from solvers.madrich.problems.vrp_demo.models import Job, Problem, Route
 
 
 def insert_greedy(job: Job, routes: List[Route], problem: Problem) -> bool:

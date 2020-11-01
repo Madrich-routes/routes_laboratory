@@ -1,5 +1,7 @@
-from models.rich_vrp import VRPSolution
 import pandas as pd
+
+from models.rich_vrp import VRPSolution
+
 
 def save_info_excel(
         name: str,

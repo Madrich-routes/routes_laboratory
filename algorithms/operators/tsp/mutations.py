@@ -2,7 +2,6 @@ import random
 from itertools import chain
 from typing import List
 
-
 # TODO: Мутации и скрещивания со множеством кандидатов
 
 def invert(a: List[int]):

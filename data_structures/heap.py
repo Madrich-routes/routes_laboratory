@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from heapq import heappush, heappop
-from typing import List, TypeVar, Optional
+from heapq import heappop, heappush
+from typing import List, Optional, TypeVar
 
 T = TypeVar('T')
 

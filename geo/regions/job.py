@@ -3,8 +3,6 @@
 """
 from datetime import datetime, timedelta
 
-from models.rich_vrp.job import Job
-
 
 def check_moscow_region(lat: float, lon: float) -> bool:
     """

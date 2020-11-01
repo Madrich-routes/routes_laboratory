@@ -3,7 +3,7 @@
 """
 import urllib
 from itertools import chain
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 from urllib.parse import quote
 
 import numpy as np

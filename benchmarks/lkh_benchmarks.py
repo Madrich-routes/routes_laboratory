@@ -1,18 +1,19 @@
 import os
-from utils.types import Array
 from typing import List, Tuple
-import numpy as np
 
-from models.rich_vrp.problem import RichVRPProblem
-from models.rich_vrp.geometry import DistanceMatrixGeometry
+import numpy as np
+from benchmark import Benchmark
+
+from models.problems.base import BaseRoutingProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.agent_type import AgentType
 from models.rich_vrp.costs import AgentCosts
-from models.rich_vrp.visit import Visit
-from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.geometry import DistanceMatrixGeometry
 from models.rich_vrp.job import Job
-from models.problems.base import BaseRoutingProblem
-from benchmark import Benchmark
+from models.rich_vrp.problem import RichVRPProblem
+from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.visit import Visit
+from utils.types import Array
 
 
 def get_distance_matrix(nodes: List[Tuple[int, int]]) -> Array:

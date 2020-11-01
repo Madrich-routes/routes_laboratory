@@ -1,6 +1,6 @@
 from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import Tuple, List, Optional
+from typing import List, Optional, Tuple
 
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot
 

@@ -3,8 +3,8 @@ from __future__ import annotations
 from sys import maxsize
 from typing import Tuple
 
-import numpy as np
 import numba as nb
+import numpy as np
 
 from algorithms.candidate_edges.alpha_measure.one_tree import one_tree
 

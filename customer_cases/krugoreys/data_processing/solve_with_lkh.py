@@ -2,15 +2,15 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
+from transformers.clipper import make_symmetric, remove_longer
+from transformers.fake_depot import add_fake_depot
+from transformers.scaler import scale_down
 
 from models.graph.distance_matrix import Geometry
 from models.problems.mtsp import MTSPProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
 from solvers.external.lkh import LKHSolver
-from transformers.clipper import remove_longer, make_symmetric
-from transformers.fake_depot import add_fake_depot
-from transformers.scaler import scale_down
 from utils.logs import logger
 from utils.serialization import read_pickle, save_pickle
 

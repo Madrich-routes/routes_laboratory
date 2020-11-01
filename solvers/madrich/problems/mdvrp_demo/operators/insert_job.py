@@ -2,7 +2,7 @@ import logging
 from sys import maxsize
 from typing import List
 
-from solvers.madrich.problems.mdvrp_demo.models import Problem, Route, Job, Tour
+from solvers.madrich.problems.mdvrp_demo.models import Job, Problem, Route, Tour
 from solvers.madrich.problems.mdvrp_demo.operators.utils import Block
 
 """

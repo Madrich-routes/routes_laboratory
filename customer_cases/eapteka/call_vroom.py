@@ -1,18 +1,25 @@
-import ujson, sys, subprocess, os, re, pickle
-import numpy as np
-import pandas as pd
+import os
+import pickle
+import re
+import subprocess
+import sys
 from datetime import datetime, time
 
-from models.rich_vrp.problem import RichVRPProblem
-from models.rich_vrp.geometry import DistanceMatrixGeometry
+import numpy as np
+import pandas as pd
+import ujson
+
+from geo.transforms import line_distance_matrix
+from models.problems.base import BaseRoutingProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.agent_type import AgentType
 from models.rich_vrp.costs import AgentCosts
-from models.rich_vrp.visit import Visit
-from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.geometry import DistanceMatrixGeometry
 from models.rich_vrp.job import Job
-from models.problems.base import BaseRoutingProblem
-from geo.transforms import line_distance_matrix
+from models.rich_vrp.problem import RichVRPProblem
+from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.visit import Visit
+
 '''
 Функция генерации тестовой проблемы и депо
 '''

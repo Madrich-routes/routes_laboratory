@@ -2,10 +2,10 @@ import os
 
 import numpy as np
 import pandas as pd
+
 from geo.providers.osrm_module import get_osrm_matrix
 from geo.transport.calc_distance import build_graph
-from geo.transport.matrix import build_dataset_from_files
-from geo.transport.matrix import build_walk_matrix
+from geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 
 
 def main():

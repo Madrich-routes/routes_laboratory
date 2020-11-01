@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Dict, Union, Optional
+from typing import Dict, List, Optional, Tuple, Union
 
 Point = Tuple[float, float]
 Location = Union[int, Point]

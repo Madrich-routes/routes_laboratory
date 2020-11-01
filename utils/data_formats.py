@@ -4,7 +4,7 @@
 import datetime as dt
 import math
 import numbers
-from math import isclose, isfinite, floor, log10
+from math import floor, isclose, isfinite, log10
 from typing import Any, Optional
 
 from dateutil.parser import parse

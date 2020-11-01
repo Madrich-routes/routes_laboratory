@@ -1,8 +1,8 @@
-import pytest
 import sys
 
-from pybind11_tests import pytypes as m
+import pytest
 from pybind11_tests import debug_enabled
+from pybind11_tests import pytypes as m
 
 
 def test_list(capture, doc):

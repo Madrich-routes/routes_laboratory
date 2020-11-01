@@ -1,11 +1,10 @@
-import ujson as json
 import os
 import uuid
 from typing import List, Tuple
 
+import ujson as json
 from autologging import logged, traced
-
-from solving.models import Task, Vehicle, DistanceMatrix, Tour, Solution
+from solving.models import DistanceMatrix, Solution, Task, Tour, Vehicle
 
 
 @traced

@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 from urllib.parse import quote
 
 import numpy as np

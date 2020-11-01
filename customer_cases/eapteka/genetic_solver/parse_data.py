@@ -1,15 +1,15 @@
 import logging
 import math
 from collections import defaultdict
-from typing import Tuple, List, Dict
+from typing import Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
 import ujson
 from transliterate import translit
 
-from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
-from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows_orders, make_windows
+from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
+from customer_cases.eapteka.genetic_solver.utils import check_point, make_windows, make_windows_orders
 from geo.providers import osrm_module
 from geo.providers.osrm_module import _turn_over
 from geo.transport.calc_distance import get_travel_times

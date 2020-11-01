@@ -1,14 +1,14 @@
 import logging
 from collections import defaultdict
-from typing import Tuple, List, Dict
+from typing import Dict, List, Tuple
 
 import pandas as pd
 import ujson
 
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
 from customer_cases.eapteka.genetic_solver.runner import runner
-from customer_cases.eapteka.genetic_solver.utils import cut_windows, get_index, add_depot, send_courier, add_tour, \
-    add_courier
+from customer_cases.eapteka.genetic_solver.utils import (
+    add_courier, add_depot, add_tour, cut_windows, get_index, send_courier)
 
 Point = Tuple[float, float]
 

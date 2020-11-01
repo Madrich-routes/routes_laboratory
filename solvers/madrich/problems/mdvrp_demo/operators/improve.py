@@ -1,9 +1,9 @@
 import logging
 from typing import Tuple
 
-from solvers.madrich.problems.mdvrp_demo.models import Tour, Problem, Route
-from solvers.madrich.problems.mdvrp_demo.operators.inter_operator import inter_swap, inter_replace, inter_cross
-from solvers.madrich.problems.mdvrp_demo.operators.intra_operator import two_opt, three_opt
+from solvers.madrich.problems.mdvrp_demo.models import Problem, Route, Tour
+from solvers.madrich.problems.mdvrp_demo.operators.inter_operator import inter_cross, inter_replace, inter_swap
+from solvers.madrich.problems.mdvrp_demo.operators.intra_operator import three_opt, two_opt
 from solvers.madrich.problems.mdvrp_demo.operators.utils import Block
 
 

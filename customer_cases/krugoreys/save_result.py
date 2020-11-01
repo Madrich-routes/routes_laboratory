@@ -2,14 +2,14 @@ import collections
 from datetime import datetime
 from pathlib import Path
 
+import pandas as pd
 from more_itertools import flatten
 from tqdm import tqdm
 
 from customer_cases.krugoreys.data_processing.extract_data import load_data
 from formats import sintef
 from utils.logs import logger
-from utils.serialization import read_pickle, load_np
-import pandas as pd
+from utils.serialization import load_np, read_pickle
 
 
 def build_row(trip: int, time: int, vehicle: int):

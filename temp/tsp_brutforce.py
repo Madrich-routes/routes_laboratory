@@ -1,4 +1,5 @@
 from itertools import permutations
+
 import numpy as np
 
 
@@ -34,7 +35,7 @@ def tsp(nodes, dist=None):
     import numpy as np
     import pandas as pd
     from more_itertools import iterate, take
-    from pulp import LpProblem, LpVariable, LpBinary, lpDot, lpSum, value
+    from pulp import LpBinary, LpProblem, LpVariable, lpDot, lpSum, value
 
     n = len(nodes)
     if not dist:
@@ -77,8 +78,8 @@ def tsp2(pos):
         距離と点番号リスト
     """
     import numpy as np
-    from pulp import LpProblem, LpVariable, LpBinary, lpDot, lpSum, value
     from ortoolpy import unionfind
+    from pulp import LpBinary, LpProblem, LpVariable, lpDot, lpSum, value
 
     pos = np.array(pos)
     N = len(pos)

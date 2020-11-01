@@ -1,7 +1,6 @@
-from typing import Union, List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
-
 from madrich.problems.utils import adjacency_matrix
 from madrich.utils import to_array
 

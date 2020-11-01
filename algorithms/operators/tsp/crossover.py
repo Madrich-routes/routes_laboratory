@@ -6,9 +6,8 @@ from collections import defaultdict
 from itertools import chain
 from typing import List
 
-from more_itertools import windowed
 import numpy as np
-
+from more_itertools import windowed
 
 # TODO: все используют tournament selection почему-то.
 

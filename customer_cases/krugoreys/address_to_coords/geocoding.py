@@ -1,7 +1,9 @@
-import requests, json
+import json
+
+import numpy as np
 import pandas as pd
 import pickle5 as pickle
-import numpy as np
+import requests
 
 # читаем входной файл
 with open("addresses_excel.pkl", "rb") as f:

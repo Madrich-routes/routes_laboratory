@@ -1,5 +1,5 @@
 import math
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 square_bounds = {
     "мкад": ((54.288066, 57.172201), (34.619289, 39.724750)),

@@ -1,17 +1,16 @@
 import os
 import subprocess
 
+import numpy as np
 import tsplib95
+from transformers.scaler import MatrixScaler
 
 import settings
+from formats.tsplib import dumps_matrix
 from models.problems.base import BaseRoutingProblem
 from models.problems.tsp import TSPProblem
 from settings import PROBLEM_FILE
-import numpy as np
-
-from formats.tsplib import dumps_matrix
 from solvers.transformational import BaseTransformationalSolver
-from transformers.scaler import MatrixScaler
 
 
 class ConcordeSolver(BaseTransformationalSolver):

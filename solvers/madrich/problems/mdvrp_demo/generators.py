@@ -1,10 +1,10 @@
-from typing import List, Tuple, Dict
+from typing import Dict, List, Tuple
 
 import numpy as np
 
 from geo.providers import fake_module
-from solvers.madrich.problems.mdvrp_demo.models import Storage, Job, Courier
-from solvers.madrich.problems.models import Window, Point, Matrix, Cost
+from solvers.madrich.problems.mdvrp_demo.models import Courier, Job, Storage
+from solvers.madrich.problems.models import Cost, Matrix, Point, Window
 from solvers.madrich.tests.generators import generate_points
 
 

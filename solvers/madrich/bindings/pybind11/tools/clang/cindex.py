@@ -62,8 +62,8 @@ call is efficient.
 #
 # o implement additional SourceLocation, SourceRange, and File methods.
 
-from ctypes import *
 import collections
+from ctypes import *
 
 import clang.enumerations
 

@@ -1,9 +1,9 @@
 import logging
-from typing import Optional, List, Dict, Union, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-from solvers.madrich.problems.mdvrp_demo.models import Storage, Tour, Courier, Route, Job, Track, Problem
+from solvers.madrich.problems.mdvrp_demo.models import Courier, Job, Problem, Route, Storage, Tour, Track
 from solvers.madrich.problems.models import Matrix, State
 
 array = np.ndarray

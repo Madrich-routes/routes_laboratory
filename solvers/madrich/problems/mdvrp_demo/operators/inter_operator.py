@@ -1,10 +1,10 @@
 import logging
-from typing import Tuple, List, Callable
+from typing import Callable, List, Tuple
 
-from solvers.madrich.problems.mdvrp_demo.models import Route, Problem, Job
+from solvers.madrich.problems.mdvrp_demo.models import Job, Problem, Route
 from solvers.madrich.problems.mdvrp_demo.operators.utils import check_values
 from solvers.madrich.problems.models import State
-from solvers.madrich.problems.utils import replace, cross
+from solvers.madrich.problems.utils import cross, replace
 
 OptFunc = Callable[[State, int, int, Route, Route, Problem], Tuple[bool, State, List[Job], List[Job]]]
 

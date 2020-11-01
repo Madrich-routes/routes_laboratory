@@ -1,8 +1,7 @@
 # Python < 3 needs this: coding=utf-8
 import pytest
-
+from pybind11_tests import IncType, UserType
 from pybind11_tests import builtin_casters as m
-from pybind11_tests import UserType, IncType
 
 
 def test_simple_string():

@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from models.rich_vrp import Depot
 from models.rich_vrp.agent import Agent
-from models.rich_vrp.geometry import BaseGeometry
+from models.rich_vrp.geometries.base import BaseGeometry
 from models.rich_vrp.job import Job
 
 

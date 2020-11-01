@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
-import numpy as np
-from munkres import Munkres
-import networkx as nx
 import copy
 import itertools
-from operator import itemgetter
 import time
+from operator import itemgetter
+
+import networkx as nx
+import numpy as np
+from munkres import Munkres
+from scipy.sparse import csr_matrix
+from scipy.sparse.csgraph import minimum_spanning_tree
 
 
 def _csr_gen_triples(A):

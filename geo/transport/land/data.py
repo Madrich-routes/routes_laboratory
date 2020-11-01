@@ -1,25 +1,17 @@
-import glob
+import json
 import os
 from functools import partial
 from multiprocessing import Pool
-from typing import Tuple, List, Dict
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
-import ujson
+from more_itertools import windowed
 from tqdm import tqdm
 
 # from geo.transport import bus
-from geo.transport.calc_distance import build_graph
 from utils.logs import logger
-from utils.types import Array
-import os
-from typing import Dict
 
-import pandas as pd
-import json
-from more_itertools import windowed
-from tqdm import tqdm
 
 def id_to_idx(id) -> str:
     """
@@ -165,12 +157,12 @@ def add_travel_times(
 
         for fr_num, to_num in windowed(stops, n=2):
             if to_num not in route['stop_sequence'].values or fr_num not in route['stop_sequence'].values:
-                # Дробление на подфреймы приводит трассы + края не в маршруте 
+                # Дробление на подфреймы приводит трассы + края не в маршруте
                 logger.info(f'{to_num} or {fr_num} not in route {route_id}')
                 continue
             fr = route[route['stop_sequence'] == fr_num]
             to = route[route['stop_sequence'] == to_num]
-            
+
             start_id = id_to_idx(fr['stop_id'].values[0])
             stop_id = id_to_idx(to['stop_id'].values[0])
 
@@ -194,8 +186,3 @@ def trip_time(from_str: str, to_str: str) -> int:
     """
     diff = to_secs(to_str) - to_secs(from_str)
     return abs(diff)
-
-
-
-
-

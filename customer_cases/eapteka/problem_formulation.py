@@ -1,11 +1,11 @@
 import math
 from pathlib import Path
-from typing import Tuple, List
+from typing import List, Tuple
 
 import pandas as pd
 import regex
 
-from models.rich_vrp import Job, Depot, Agent, AgentType, AgentCosts
+from models.rich_vrp import Agent, AgentCosts, AgentType, Depot, Job
 
 
 def build_eapteka_problem(data_folder: Path):

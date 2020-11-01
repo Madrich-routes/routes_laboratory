@@ -1,9 +1,9 @@
 import numpy as np
+from models.rich_vrp.geometry import DistanceMatrixGeometry
 
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.agent_type import AgentType
 from models.rich_vrp.costs import AgentCosts
-from models.rich_vrp.geometry import DistanceMatrixGeometry
 from models.rich_vrp.job import Job
 from models.rich_vrp.problem import RichVRPProblem
 

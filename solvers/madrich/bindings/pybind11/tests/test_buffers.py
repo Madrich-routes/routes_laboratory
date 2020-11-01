@@ -1,7 +1,8 @@
 import struct
+
 import pytest
-from pybind11_tests import buffers as m
 from pybind11_tests import ConstructorStats
+from pybind11_tests import buffers as m
 
 pytestmark = pytest.requires_numpy
 

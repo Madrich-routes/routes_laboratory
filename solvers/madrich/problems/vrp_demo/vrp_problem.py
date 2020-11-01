@@ -1,11 +1,11 @@
 import logging
 from copy import deepcopy
-from typing import Optional, List, Dict, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 
-from solvers.madrich.problems.models import State, Matrix
-from solvers.madrich.problems.vrp_demo.models import Problem, Storage, Job, Route, Courier, Tour
+from solvers.madrich.problems.models import Matrix, State
+from solvers.madrich.problems.vrp_demo.models import Courier, Job, Problem, Route, Storage, Tour
 
 array = np.ndarray
 

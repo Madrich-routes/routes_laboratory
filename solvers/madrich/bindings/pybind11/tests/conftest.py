@@ -4,14 +4,15 @@ Extends output capture as needed by pybind11: ignore constructors, optional unor
 Adds docstring and exceptions message sanitizers: ignore Python 2 vs 3 differences.
 """
 
-import pytest
-import textwrap
+import contextlib
 import difflib
+import gc
+import platform
 import re
 import sys
-import contextlib
-import platform
-import gc
+import textwrap
+
+import pytest
 
 _unicode_marker = re.compile(r'u(\'[^\']*\')')
 _long_marker = re.compile(r'([0-9])L')

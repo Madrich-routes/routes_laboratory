@@ -7,11 +7,12 @@
 #  This software is distributed under the BSD License.
 #  _________________________________________________________________________
 
+import math
 #
 # Symmetric TSP with points on a plane
 #
 import re
-import math
+
 from pyomo.core import *
 from pyomo.repn.plugins.baron_writer import PositiveIntegers
 

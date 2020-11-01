@@ -8,7 +8,7 @@ import seaborn as sns
 
 from geo.providers import osrm_module
 from geo.transforms import line_distance_matrix
-from utils.serialization import load_np, save_np, save_pickle, read_pickle
+from utils.serialization import load_np, read_pickle, save_np, save_pickle
 
 
 # matplotlib.use('QT4Agg', force=True)

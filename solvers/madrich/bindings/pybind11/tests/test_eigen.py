@@ -4,8 +4,8 @@ from pybind11_tests import ConstructorStats
 pytestmark = pytest.requires_eigen_and_numpy
 
 with pytest.suppress(ImportError):
-    from pybind11_tests import eigen as m
     import numpy as np
+    from pybind11_tests import eigen as m
 
     ref = np.array([[ 0.,  3,  0,  0,  0, 11],
                     [22,  0,  0,  0, 17, 11],

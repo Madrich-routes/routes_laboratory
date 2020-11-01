@@ -1,8 +1,8 @@
 import logging
 from copy import deepcopy
 
-from solvers.madrich.problems.utils import three_opt_exchange, swap
-from solvers.madrich.problems.vrp_demo.models import Route, Problem
+from solvers.madrich.problems.utils import swap, three_opt_exchange
+from solvers.madrich.problems.vrp_demo.models import Problem, Route
 
 
 def three_opt(route: Route, problem: Problem) -> bool:

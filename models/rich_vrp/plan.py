@@ -2,16 +2,18 @@
 Описание класса Plan — план посещений одного агента на день
 """
 from typing import List
+from typing import TYPE_CHECKING
 
-from models.rich_vrp import Visit, Agent, Depot, Job
-from models.rich_vrp.problem import RichVRPProblem
+if TYPE_CHECKING:
+    from models.rich_vrp.problem import RichVRPProblem
+    from models.rich_vrp import Agent, Depot, Job, Visit
 
 
 class Plan:
     def __init__(
-            self,
-            agent: Agent,
-            waypoints: List[Visit]
+        self,
+        agent: Agent,
+        waypoints: List[Visit]
     ):
         self.agent = agent
         self.waypoints = waypoints
@@ -19,9 +21,9 @@ class Plan:
 
 class PlanReport:
     def __init__(
-            self,
-            plan: Plan,
-            problem: RichVRPProblem,
+        self,
+        plan: Plan,
+        problem: RichVRPProblem,
     ):
         self.plan = plan
         self.problem = problem

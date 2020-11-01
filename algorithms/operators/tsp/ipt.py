@@ -3,10 +3,9 @@
 """
 
 from random import randint
-from typing import List, Dict, Union
+from typing import Dict, List, Union
 
 import numpy as np
-
 
 # TODO: как будто бы нет объединения общих частей
 

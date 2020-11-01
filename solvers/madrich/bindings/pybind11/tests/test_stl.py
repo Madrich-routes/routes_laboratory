@@ -1,7 +1,6 @@
 import pytest
-
-from pybind11_tests import stl as m
 from pybind11_tests import UserType
+from pybind11_tests import stl as m
 
 
 def test_vector(doc):

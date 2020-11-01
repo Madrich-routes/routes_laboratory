@@ -44,7 +44,7 @@ from typing import Optional
 import gmaps
 import matplotlib.pyplot as plt
 import numpy as np
-from folium import folium, CircleMarker, Marker, FeatureGroup
+from folium import CircleMarker, FeatureGroup, Marker, folium
 
 from utils.types import Array
 

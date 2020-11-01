@@ -2,10 +2,11 @@
 
 # Setup script for PyPI; use CMakeFile.txt to build extension modules
 
-from setuptools import setup
-from distutils.command.install_headers import install_headers
-from pybind11 import __version__
 import os
+from distutils.command.install_headers import install_headers
+
+from pybind11 import __version__
+from setuptools import setup
 
 # Prevent installation of pybind11 headers by setting
 # PYBIND11_USE_CMAKE.

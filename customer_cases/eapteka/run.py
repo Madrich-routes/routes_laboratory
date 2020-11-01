@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 
 from customer_cases.eapteka.genetic_solver.eapteka import get_solution
-from customer_cases.eapteka.genetic_solver.excel_work import save_excel, save_couriers, convert_excel
-from customer_cases.eapteka.genetic_solver.parse_data import parse_data, load_matrix
+from customer_cases.eapteka.genetic_solver.excel_work import convert_excel, save_couriers, save_excel
+from customer_cases.eapteka.genetic_solver.parse_data import load_matrix, parse_data
 
 array = np.ndarray
 

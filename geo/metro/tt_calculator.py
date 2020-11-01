@@ -1,14 +1,15 @@
 """
 В этом модуле создается матрица расстояний с учетом общественного транспорта
 """
-import pandas as pd
-from geopy.distance import distance
+import os
+
+import bs4
 import numpy as np
+import pandas as pd
+import requests
+from geopy.distance import distance
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph._shortest_path import floyd_warshall
-import bs4
-import os
-import requests
 
 
 class MetroWalker():

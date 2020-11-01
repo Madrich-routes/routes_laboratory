@@ -2,10 +2,10 @@ import logging
 from copy import deepcopy
 from typing import Tuple
 
-from solvers.madrich.problems.vrp_demo.models import Tour, Problem
+from solvers.madrich.problems.vrp_demo.models import Problem, Tour
 from solvers.madrich.problems.vrp_demo.operators.insert_job import insert_best
-from solvers.madrich.problems.vrp_demo.operators.inter_operators import inter_swap, inter_replace, inter_cross
-from solvers.madrich.problems.vrp_demo.operators.intra_operators import two_opt, three_opt
+from solvers.madrich.problems.vrp_demo.operators.inter_operators import inter_cross, inter_replace, inter_swap
+from solvers.madrich.problems.vrp_demo.operators.intra_operators import three_opt, two_opt
 
 
 def improve_tour(tour: Tour, problem: Problem, cross=False, three=False) -> Tuple[bool, Tour]:

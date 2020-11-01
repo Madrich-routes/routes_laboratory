@@ -1,7 +1,7 @@
-from pybind11_tests import iostream as m
 import sys
-
 from contextlib import contextmanager
+
+from pybind11_tests import iostream as m
 
 try:
     # Python 3

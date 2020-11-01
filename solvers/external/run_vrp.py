@@ -1,8 +1,8 @@
-import subprocess
-from absl import flags
-from absl import app
-
 import logging
+import subprocess
+
+from absl import app, flags
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(lineno)d %(message)s"

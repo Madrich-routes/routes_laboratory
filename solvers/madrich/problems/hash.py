@@ -1,8 +1,7 @@
 from functools import lru_cache
 
-import numpy as np
 import numba as nb
-
+import numpy as np
 from madrich.problems.utils import rotate_zero
 
 # from lin_kernighan repository

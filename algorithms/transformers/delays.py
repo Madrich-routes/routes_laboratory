@@ -4,10 +4,10 @@
 чтобы получить эквивалентную задачу без задержек
 """
 import numpy as np
+from transformers.base import BaseTransformer
 
 from models.problems.base import BaseRoutingProblem, WithDelays
 from models.rich_vrp.solution import VRPSolution
-from transformers.base import BaseTransformer
 
 
 def remove_delays(matrix: np.ndarray, delays: np.ndarray, restore=False) -> None:

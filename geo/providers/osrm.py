@@ -2,7 +2,6 @@
 Модуль с утилитами для обращения к OSRM серверу
 """
 
-import os
 from dataclasses import dataclass
 from itertools import chain
 from typing import Tuple

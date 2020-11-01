@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import List, Tuple
 
 import numpy as np
 import tsplib95
@@ -16,14 +16,12 @@ def dumps_matrix(matrix: np.ndarray):
         for row in matrix
     )
 
-    res = "\n".join([
+    return "\n".join([
         f"EDGE_WEIGHT_TYPE: EXPLICIT",
         f"EDGE_WEIGHT_FORMAT: FULL_MATRIX",
         f"EDGE_WEIGHT_SECTION",
         f"{matrix_s}",
     ])
-
-    return res
 
 
 def dumps_time_windows(time_windows: List[Tuple[int, int]]):

@@ -1,9 +1,9 @@
 import logging
 import os
-from typing import Tuple, List, Dict
+from typing import Dict, List, Tuple
 
-from customer_cases.eapteka.genetic_solver.converter import generate_problem, convert_json
-from customer_cases.eapteka.genetic_solver.models import Task, Courier, Depot
+from customer_cases.eapteka.genetic_solver.converter import convert_json, generate_problem
+from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
 
 Point = Tuple[float, float]
 

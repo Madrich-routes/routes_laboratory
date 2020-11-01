@@ -4,14 +4,14 @@
 """
 import math
 from datetime import datetime
-from typing import Tuple, Set, Optional
+from typing import Optional, Set, Tuple
 
 import geopy
 import numpy as np
 import timezonefinder as tf
 from auromat.coordinates.transform import spherical_to_cartesian
 from geopy.distance import geodesic
-from numba import jit, njit
+from numba import njit
 from pytz import timezone, utc
 from scipy.spatial import Delaunay
 from scipy.spatial.qhull import ConvexHull
