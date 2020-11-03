@@ -14,36 +14,37 @@ from models.problems.base import BaseRoutingProblem
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.agent_type import AgentType
 from models.rich_vrp.costs import AgentCosts
-from models.rich_vrp.geometry import DistanceMatrixGeometry
 from models.rich_vrp.job import Job
+from models.rich_vrp.geometries.geometry import DistanceMatrixGeometry
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from models.rich_vrp.visit import Visit
+from models.rich_vrp.depot import Depot
 
 '''
 Функция генерации тестовой проблемы и депо
 '''
 
 
-def get_test_problem():
-    np_dist_matrix = np.array([[0, 3, 5, 8], [3, 0, 2, 5], [5, 2, 0, 3], [8, 5, 3, 0]])
-    dist_matrix = DistanceMatrixGeometry(np.array([]), np_dist_matrix, 10)
+# def get_test_problem():
+#     np_dist_matrix = np.array([[0, 3, 5, 8], [3, 0, 2, 5], [5, 2, 0, 3], [8, 5, 3, 0]])
+#     dist_matrix = DistanceMatrixGeometry(np.array([]), np_dist_matrix, 10)
 
-    costs = {"fixed": 100, "time": 3, "distance": 5}
-    value = [10000]
-    start = int(datetime(2020, 10, 16, 8, 00).timestamp())
-    end = int(datetime(2020, 10, 16, 20, 00).timestamp())
-    start_place = 0
-    end_place = 0
-    agent_cost = AgentCosts(5, 100, 2, 3, 5)
-    agent_type = AgentType(100, 0, [50], agent_cost, [2, 3])
-    agent = Agent(0, costs, value, start,end, start_place, end_place, agent_type)
-    j1 = Job(0, 0, 0, 0, 0, [(int(datetime(2020, 10, 16, 10, 00).timestamp()), int(datetime(2020, 10, 16, 11, 00).timestamp()))], 5, np.array([10]), [2], 5)
-    j2 = Job(1, 0, 3, 0, 3, [(int(datetime(2020, 10, 16, 11, 00).timestamp()), int(datetime(2020, 10, 16, 12, 00).timestamp()))], 5, np.array([10]), [3], 5)
-    j3 = Job(2, 0, 5, 0, 5, [(int(datetime(2020, 10, 16, 12, 00).timestamp()), int(datetime(2020, 10, 16, 13, 00).timestamp()))], 5, np.array([10]), [3], 5)
-    j4 = Job(3, 0, 8, 0, 8, [(int(datetime(2020, 10, 16, 21, 00).timestamp()), int(datetime(2020, 10, 16, 22, 00).timestamp()))], 5, np.array([10]), [3], 5)
-    res = RichVRPProblem(dist_matrix, [agent], [j1, j2, j3, j4], [''])
-    return res
+#     costs = {"fixed": 100, "time": 3, "distance": 5}
+#     value = [10000]
+#     start = int(datetime(2020, 10, 16, 8, 00).timestamp())
+#     end = int(datetime(2020, 10, 16, 20, 00).timestamp())
+#     start_place = 0
+#     end_place = 0
+#     agent_cost = AgentCosts(5, 100, 2, 3, 5)
+#     agent_type = AgentType(100, 0, [50], agent_cost, [2, 3])
+#     agent = Agent(0, costs, value, start,end, start_place, end_place, agent_type)
+#     j1 = Job(0, 0, 0, 0, 0, [(int(datetime(2020, 10, 16, 10, 00).timestamp()), int(datetime(2020, 10, 16, 11, 00).timestamp()))], 5, np.array([10]), [2], 5)
+#     j2 = Job(1, 0, 3, 0, 3, [(int(datetime(2020, 10, 16, 11, 00).timestamp()), int(datetime(2020, 10, 16, 12, 00).timestamp()))], 5, np.array([10]), [3], 5)
+#     j3 = Job(2, 0, 5, 0, 5, [(int(datetime(2020, 10, 16, 12, 00).timestamp()), int(datetime(2020, 10, 16, 13, 00).timestamp()))], 5, np.array([10]), [3], 5)
+#     j4 = Job(3, 0, 8, 0, 8, [(int(datetime(2020, 10, 16, 21, 00).timestamp()), int(datetime(2020, 10, 16, 22, 00).timestamp()))], 5, np.array([10]), [3], 5)
+#     res = RichVRPProblem(dist_matrix, [agent], [j1, j2, j3, j4], [''])
+#     return res
 
 
 '''
@@ -56,7 +57,7 @@ def problem_to_json(problem, path):
                  'start_index': 0,                                  # начало маршрута примем за 0 точку в матрице
                  'capacity': problem.agents[i].value,
                  #  'skills': problem.agents[i].type.skills,
-                 'time_window': [problem.agents[i].start_time, problem.agents[i].end_time]}
+                 'time_window': [problem.agents[i].time_windows[0][0], problem.agents[i].time_windows[0][1]]}
                 for i in range(len(problem.agents))]
     jobs = [{'id': problem.jobs[i].id,
              'location': [problem.jobs[i].lon, problem.jobs[i].lat],
@@ -76,6 +77,7 @@ def problem_to_json(problem, path):
 '''
 Конвертация решения от vroom в Excel
 '''
+
 def read_out_json(path, excel_path):
     with open(path) as data_file:
         data = ujson.load(data_file)
@@ -142,7 +144,7 @@ def get_eapteka_problem():
         else:
             end = int(datetime(2020, 10, 16, int(time_interval[1]), 00).timestamp())
 
-        agent = Agent(id=i,value=value,start_time=start,end_time=end, costs=None, start_place = 0, end_place=0, type=None)
+        agent = Agent(id=i,value=value, time_windows=[(start, end)], costs=None, start_place = 0, end_place=0, type=None)
         agents_list.append(agent)
 
     #собираем заказы
@@ -156,7 +158,9 @@ def get_eapteka_problem():
         job = Job(id=i, lon=row['lng'], lat=row['lat'], time_windows=time_windows, delay=5, amounts=amounts, priority=int(row['Приоритет']))
         jobs_list.append(job)
     matrix = calculate_dist_matrix()
-    problem = RichVRPProblem(DistanceMatrixGeometry(np.array([]), matrix, 200), agents_list, jobs_list, [])
+    stock = [55.8075060, 37.6053370]
+    depot = Depot(0, time_windows, stock[0], stock[1], 0, '')
+    problem = RichVRPProblem(DistanceMatrixGeometry(np.array([]), matrix, 200), agents_list, jobs_list, [depot], [])
     return problem
 
 '''
