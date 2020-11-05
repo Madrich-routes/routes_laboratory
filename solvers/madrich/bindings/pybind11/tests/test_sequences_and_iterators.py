@@ -25,7 +25,7 @@ def test_generalized_iterators():
     it = m.IntPairs([(0, 0)]).nonzero()
     for _ in range(3):
         with pytest.raises(StopIteration):
-            next(it)
+            next(it)  # noqa
 
     it = m.IntPairs([(0, 0)]).nonzero_keys()
     for _ in range(3):

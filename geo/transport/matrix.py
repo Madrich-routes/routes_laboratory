@@ -12,8 +12,9 @@ def build_dataset_from_files():
     """
     Собираем общий объединенный датасет транспорта
     """
-    routes_file_pattern = f'./data/xls/data-101784-2020-04-08-s*.csv'
-    xml_url = 'https://metro.mobile.yandex.net/metro/get_file?file=scheme_1.xml&ver='
+    # xml_url = 'https://metro.mobile.yandex.net/metro/get_file?file=scheme_1.xml&ver='
+
+    routes_file_pattern = './data/xls/data-101784-2020-04-08-s*.csv'
     xml_url = './data/metro.xml'
     all_uids_file = './data/all_uids.npy'
     all_pathes_file = './data/all_pathes'
@@ -38,6 +39,4 @@ def build_walk_matrix(
     logger.info('Вычисляем матрицу расстояний остановок...')
 
     points = np.array(stations_df['coord'].values.tolist())[:,::-1]
-    walk_matrix = get_osrm_matrix(points, transport="foot")
-
-    return walk_matrix
+    return get_osrm_matrix(points, transport="foot")

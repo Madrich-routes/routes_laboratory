@@ -100,13 +100,13 @@ def test_private_op_new():
         m.private_op_new_value()
     assert "the object is neither movable nor copyable" in str(excinfo.value)
 
-    assert m.private_op_new_reference().value == 1
+    assert m.private_op_new_reference().amounts == 1
 
 
 def test_move_fallback():
     """#389: rvp::move should fall-through to copy on non-movable objects"""
 
     m2 = m.get_moveissue2(2)
-    assert m2.value == 2
+    assert m2.amounts == 2
     m1 = m.get_moveissue1(1)
-    assert m1.value == 1
+    assert m1.amounts == 1

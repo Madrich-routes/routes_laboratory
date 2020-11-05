@@ -22,3 +22,9 @@ run.run_pharmacy(
     delay=5,
     fg=TYPE + "_1_bet",  # номер результата
 )
+
+def main():
+    ...
+
+if __name__ == "__main__":
+    main()

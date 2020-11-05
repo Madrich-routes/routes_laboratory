@@ -89,18 +89,18 @@ def test_nested():
     assert m.get_NestC(c) == 35
 
     abase = a.as_base()
-    assert abase.value == -2
-    a.as_base().value += 44
-    assert abase.value == 42
-    assert c.b.a.as_base().value == -2
-    c.b.a.as_base().value += 44
-    assert c.b.a.as_base().value == 42
+    assert abase.amounts == -2
+    a.as_base().amounts += 44
+    assert abase.amounts == 42
+    assert c.b.a.as_base().amounts == -2
+    c.b.a.as_base().amounts += 44
+    assert c.b.a.as_base().amounts == 42
 
     del c
     pytest.gc_collect()
     del a  # Should't delete while abase is still alive
     pytest.gc_collect()
 
-    assert abase.value == 42
+    assert abase.amounts == 42
     del abase, b
     pytest.gc_collect()

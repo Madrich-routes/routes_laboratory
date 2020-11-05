@@ -43,7 +43,7 @@ class ProblemMdvrp(Problem):
         state = State.empty()
 
         for track in route.tracks:
-            state.value = np.zeros(route.vec, dtype=np.int64)
+            state.amounts = np.zeros(route.vec, dtype=np.int64)
             # 1. Подходит ли он складу вообще
             if not ProblemMdvrp.__validate_skills(track.storage, route.courier):
                 return None
@@ -69,7 +69,7 @@ class ProblemMdvrp(Problem):
         if not ProblemMdvrp.__validate_courier(state, route):
             return None
 
-        state.value = None
+        state.amounts = None
         return state
 
     @staticmethod

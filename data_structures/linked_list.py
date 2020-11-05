@@ -55,12 +55,9 @@ class LinkedListNode:
         self._checked_link(self._next, self._prev)
         return self
 
-    def revert_until(self, a: 'LinkedListNode'):
-        start = self
-        end = a
+    def revert_until(self, end: 'LinkedListNode'):
 
         current = self._next
-
         while current != end:
             current._prev, current._next = current._next, current._prev
 

@@ -142,41 +142,41 @@ def test_noncopyable_containers():
     # std::vector
     vnc = m.get_vnc(5)
     for i in range(0, 5):
-        assert vnc[i].value == i + 1
+        assert vnc[i].amounts == i + 1
 
     for i, j in enumerate(vnc, start=1):
-        assert j.value == i
+        assert j.amounts == i
 
     # std::deque
     dnc = m.get_dnc(5)
     for i in range(0, 5):
-        assert dnc[i].value == i + 1
+        assert dnc[i].amounts == i + 1
 
     i = 1
     for j in dnc:
-        assert(j.value == i)
+        assert(j.amounts == i)
         i += 1
 
     # std::map
     mnc = m.get_mnc(5)
     for i in range(1, 6):
-        assert mnc[i].value == 10 * i
+        assert mnc[i].amounts == 10 * i
 
     vsum = 0
     for k, v in mnc.items():
-        assert v.value == 10 * k
-        vsum += v.value
+        assert v.amounts == 10 * k
+        vsum += v.amounts
 
     assert vsum == 150
 
     # std::unordered_map
     mnc = m.get_umnc(5)
     for i in range(1, 6):
-        assert mnc[i].value == 10 * i
+        assert mnc[i].amounts == 10 * i
 
     vsum = 0
     for k, v in mnc.items():
-        assert v.value == 10 * k
-        vsum += v.value
+        assert v.amounts == 10 * k
+        vsum += v.amounts
 
     assert vsum == 150

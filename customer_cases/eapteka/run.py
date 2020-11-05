@@ -17,32 +17,32 @@ def run_pharmacy(
         type_m, time_pharmacy, time_depot, type_weight, type_capacity,
         driver_weight, driver_capacity, delay, fg
 ):
-    # создаем маппинг адресов
-    logging.info('Started')
-    orders_loc = pd.read_excel('./data/update_3.xlsx')
-    address_mapping = {}
-    for i, row in orders_loc.iterrows():
-        lat, lng = row['lat'], row['lng']
-        address_mapping[(lat, lng)] = (row['place'], row['was'], row['corrected'])
-
-    # Считаем среднюю плотность заказа
-    num, aver = 0, 0
-    orders_inf = pd.read_excel('./data/Заказы_13.xlsx')
-    for i, row in orders_inf.iterrows():
-        if not math.isnan(row['ВесЗаказа']) and not math.isnan(row['ОбъемЗаказа']):
-            num += 1
-            aver += (row['ВесЗаказа'] / row['ОбъемЗаказа'])
-    aver = aver / num
-
-    # создаем возможные профайлы
-    profiles = [type_m, 'driver']
-    orders, depots, couriers, mapping = parse_data(type_m, aver, address_mapping, time_pharmacy, time_depot,
-                                                   type_weight, type_capacity, driver_weight, driver_capacity, delay)
-
+    # # создаем маппинг адресов
+    # logging.info('Started')
+    # orders_loc = pd.read_excel('./data/update_3.xlsx')
+    # address_mapping = {}
+    # for i, row in orders_loc.iterrows():
+    #     lat, lng = row['lat'], row['lng']
+    #     address_mapping[(lat, lng)] = (row['place'], row['was'], row['corrected'])
     #
-    global_revers = {v: k for k, v in mapping.items()}
-
-    points, internal_mappings, files = load_matrix(profiles, depots, global_revers, orders, address_mapping)
+    # # Считаем среднюю плотность заказа
+    # num, aver = 0, 0
+    # orders_inf = pd.read_excel('./data/Заказы_13.xlsx')
+    # for i, row in orders_inf.iterrows():
+    #     if not math.isnan(row['ВесЗаказа']) and not math.isnan(row['ОбъемЗаказа']):
+    #         num += 1
+    #         aver += (row['ВесЗаказа'] / row['ОбъемЗаказа'])
+    # aver = aver / num
+    #
+    # # создаем возможные профайлы
+    # profiles = [type_m, 'driver']
+    # orders, depots, couriers, mapping = parse_data(type_m, aver, address_mapping, time_pharmacy, time_depot,
+    #                                                type_weight, type_capacity, driver_weight, driver_capacity, delay)
+    #
+    # #
+    # global_revers = {v: k for k, v in mapping.items()}
+    #
+    # points, internal_mappings, files = load_matrix(profiles, depots, global_revers, orders, address_mapping)
 
     depots = {k: v for k, v in sorted(depots.items(), key=lambda x: x[1].time_window[0][11:13], reverse=True)}
 

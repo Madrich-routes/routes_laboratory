@@ -3,13 +3,12 @@
 TODO: заменить cprint на rich
 TODO: очень похоже на mw, поменять
 """
-from copy import deepcopy
-
-import numpy as np
 from termcolor import cprint
 
 from models.problems.base import BaseRoutingProblem
-from models.solutions.base import VRPSolution
+from models.rich_vrp import VRPSolution
+
+from models.rich_vrp.problem import RichVRPProblem
 
 
 class BaseTransformer:
@@ -21,13 +20,13 @@ class BaseTransformer:
     TODO: а что если потребуется передать параметры в трансформер, когда проблема станет известна?
     """
 
-    def transform(self, problem: BaseRoutingProblem) -> BaseRoutingProblem:
+    def transform(self, problem: RichVRPProblem) -> RichVRPProblem:
         raise NotImplementedError
 
     def restore(self, solution: VRPSolution) -> VRPSolution:
         raise NotImplementedError
 
-    def print_transform(self, p: BaseRoutingProblem, heading_color="on_green"):
+    def print_transform(self, p: RichVRPProblem, heading_color="on_green"):
         cprint("Initial:", on_color=heading_color)
         print(p)
 
@@ -41,13 +40,13 @@ class BaseTransformer:
         cprint("Transformed back:", on_color=heading_color)
         print(p)
 
-    def back_and_forth(self, p: BaseRoutingProblem):
+    def back_and_forth(self, p: RichVRPProblem):
         # self.transform(p)
         # self.restore(p)
         # TODO: это вообще нужно?
         ...
 
-    def _save_old_data(self, p: BaseRoutingProblem):
+    def _save_old_data(self, p: RichVRPProblem):
         """
         Сохраняет данные оригинальной проблемы, чтобы потом иметь возможность восстановить их
         TODO: должен быть реализован в этом классе
@@ -55,7 +54,7 @@ class BaseTransformer:
         ...
         # raise NotImplementedError
 
-    def _restore_old_data(self, p: BaseRoutingProblem):
+    def _restore_old_data(self, p: RichVRPProblem):
         """
         Восстанавливает данные оригинальной проболемы
         TODO: должен быть реализован в этом классе

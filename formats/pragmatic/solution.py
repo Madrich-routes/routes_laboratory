@@ -1,6 +1,24 @@
 from typing import Dict, List, Optional
 
+import ujson
+
 from formats.pragmatic.utils import iget
+from models.rich_vrp import VRPSolution
+
+
+def load_solution(pragmatic_solution: str) -> VRPSolution:
+    """
+    Загружаем решение проблемы
+
+    Parameters
+    ----------
+    pragmatic_solution : строка с решением
+
+    Returns
+    -------
+    VRPSolution instance
+    """
+    Solution(data=ujson.loads(pragmatic_solution))
 
 
 class Activity:
@@ -59,7 +77,7 @@ class Unassigned:
 
 
 class Solution:
-    def __init__(self, data):
+    def __init__(self, data: Dict):
         self.tours: List[Vehicle] = [Vehicle(i) for i in data['tours']]
         self.unassigned: List[Unassigned] = [Unassigned(i) for i in data.get('unassigned', [])]
 

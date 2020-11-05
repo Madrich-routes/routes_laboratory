@@ -26,7 +26,8 @@ EARTH_R = 6371.0087714150598
 
 def line_distance_matrix(a: Array, b: Optional[Array] = None) -> Array:
     """
-    Матрица расстояний по прямой
+    Матрица расстояний по прямой.
+    Максимально быстраа реализация из опробованных.
     """
     # TODO: try https://github.com/mapado/haversine
     # return pairwise_distances(a, metric=great_circle_distance)  # этот способ медленнее

@@ -15,4 +15,4 @@ class Visit:
 
     @property
     def delay(self):
-        return self.place.delay if hasattr(self.place, 'delay') else 0
+        return self.place.delay

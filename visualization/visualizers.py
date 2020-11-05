@@ -18,7 +18,7 @@
 # Огненный курс
 # https://www.earthdatascience.org/courses/scientists-guide-to-plotting-data-in-python/plot-spatial-data/customize-raster-plots/interactive-maps/
 
-# Тут есть про работу с геоjson и чем попало
+# Тут есть про работу с geojson и чем попало
 # https://rosenfelder.ai/create-maps-with-python/
 
 # https://developers.arcgis.com/python/guide/visualizing-data-with-the-spatial-dataframe/
@@ -90,10 +90,10 @@ def plot_on_gmaps(points: np.ndarray):
 
 
 def plot_folium(
-        points: Optional[Array] = None,
-        priority_points: Optional[Array] = None,
-        stocks: Optional[Array] = None,
-        tiles: str = 'Stamen Terrain',
+    points: Optional[Array] = None,
+    priority_points: Optional[Array] = None,
+    stocks: Optional[Array] = None,
+    tiles: str = 'Stamen Terrain',
 ) -> folium.Map:
     """
 
@@ -116,7 +116,7 @@ def plot_folium(
 
     # рисуем обычные точки
     for lat, lon in points:
-        a = CircleMarker(
+        CircleMarker(
             [lat, lon],
             radius=5,
             color=10,
@@ -128,7 +128,7 @@ def plot_folium(
 
     # рисуем приоритетные точки
     for lat, lon in priority_points:
-        a = CircleMarker(
+        CircleMarker(
             [lat, lon],
             radius=5,
             color=10,
@@ -140,7 +140,7 @@ def plot_folium(
 
     # рисуем склады
     for lat, lon in stocks:
-        a = Marker(
+        Marker(
             [lat, lon],
         ).add_to(unused)
 

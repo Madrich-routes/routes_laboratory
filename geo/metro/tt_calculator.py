@@ -17,28 +17,23 @@ class MetroWalker():
         """
         parse metro xml
         """
-        if not dataframe:
-            self.dataframe = self.parse_metrodata(xml_filename)
-        else:
-            self.dataframe = dataframe
+        self.dataframe = dataframe or self.parse_metrodata(xml_filename)
         """
         calculate time budgets
         """
-        if not matrix:
-            self.matrix = self.build_graph(self.dataframe)
-        else:
-            self.matrix = matrix
+        self.matrix = self.build_graph(self.dataframe) if not matrix else matrix
 
     def get_metro_xml(self, url):
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) G`ecko/20100101 Firefox/45.0'}
-        s = requests.Session()
-        r = s.get(url, headers=headers)
+        r = requests.get(url, headers=headers)
         return r.text
 
     def parse_metrodata(self, xml_url_or_filename):
         if os.path.exists(xml_url_or_filename):
             print(f'Get XML from file: {xml_url_or_filename}')
-            soup = bs4.BeautifulSoup(open(xml_url_or_filename).read(), 'lxml')
+
+            with open(xml_url_or_filename) as f:
+                soup = bs4.BeautifulSoup(f.read(), 'lxml')
         else:
             print(f'Get XML from url: {xml_url_or_filename}')
             soup = bs4.BeautifulSoup(self.get_metro_xml(xml_url_or_filename), 'lxml')
@@ -127,4 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

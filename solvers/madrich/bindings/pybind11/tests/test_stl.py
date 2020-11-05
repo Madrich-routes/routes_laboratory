@@ -76,7 +76,7 @@ def test_recursive_casting():
 
     # Issue #853 test case:
     z = m.cast_unique_ptr_vector()
-    assert z[0].value == 7 and z[1].value == 42
+    assert z[0].amounts == 7 and z[1].amounts == 42
 
 
 def test_move_out_container():
@@ -86,7 +86,7 @@ def test_move_out_container():
     also needs to be applied to the elements, not just the container."""
     c = m.MoveOutContainer()
     moved_out_list = c.move_list
-    assert [x.value for x in moved_out_list] == [0, 1, 2]
+    assert [x.amounts for x in moved_out_list] == [0, 1, 2]
 
 
 @pytest.mark.skipif(not hasattr(m, "has_optional"), reason='no <optional>')

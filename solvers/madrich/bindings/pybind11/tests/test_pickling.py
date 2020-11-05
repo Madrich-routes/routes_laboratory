@@ -16,7 +16,7 @@ def test_roundtrip(cls_name):
 
     data = pickle.dumps(p, 2)  # Must use pickle protocol >= 2
     p2 = pickle.loads(data)
-    assert p2.value() == p.value()
+    assert p2.amounts() == p.amounts()
     assert p2.extra1() == p.extra1()
     assert p2.extra2() == p.extra2()
 
@@ -31,6 +31,6 @@ def test_roundtrip_with_dict(cls_name):
 
     data = pickle.dumps(p, pickle.HIGHEST_PROTOCOL)
     p2 = pickle.loads(data)
-    assert p2.value == p.value
+    assert p2.amounts == p.amounts
     assert p2.extra == p.extra
     assert p2.dynamic == p.dynamic

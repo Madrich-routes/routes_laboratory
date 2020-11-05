@@ -1,5 +1,9 @@
+import os
 from typing import Dict, List, Optional
 
+import settings
+from formats.pragmatic.matrices import build_matrices
+from formats.pragmatic.problem import dumps_problem
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from solvers.base import BaseSolver
@@ -19,23 +23,17 @@ class RustSolver(BaseSolver):
     """
 
     def __init__(
-            self,
-            problem_file: str = "./tmp/problem.pragmatic",
-            solution_file: str = "./tmp/solution.pragmatic",
-            geojson_file: Optional[str] = "./tmp/solution.geojson",
-            initial_solution_file: Optional[str] = None,
-            max_time: int = 300,
-            max_generations: int = 3000,
-            variation_generations: int = 200,
-            min_variation: int = 0.1,
-            show_log: bool = True,
+        self,
+        initial_solution_file: Optional[str] = None,
+        max_time: int = 300,
+        max_generations: int = 3000,
+        variation_generations: int = 200,
+        min_variation: int = 0.1,
+        show_log: bool = True,
+        return_geojson = False,
     ):
         # Названия входных и выходных файлов
-        self.problem_file: str = problem_file
-        self.initial_solution_file: Optional[str] = initial_solution_file
-
-        self.solution_file: str = solution_file
-        self.geojson_file: Optional[str] = geojson_file
+        self.initial_solution_file: Optional[str] = initial_solution_file  # TODO: принимать само решение
 
         # Параметры солвера
         self.max_time: int = max_time
@@ -43,9 +41,10 @@ class RustSolver(BaseSolver):
         self.variation_generations: int = variation_generations
         self.min_variation: float = min_variation
         self.show_log: bool = show_log
+        self.return_geojson: bool = return_geojson
 
         # Параметры рантайма
-        self.matrix_files: Optional[List[str]] = None  # Список файлов матриц расстояний. Генерируется из проблемы.
+        self.matrix_files: Optional[Dict[str, str]] = None  # Список файлов матриц расстояний.
         self.problem: Optional[RichVRPProblem] = None  # Решаемая задача
         self.solution: Optional[VRPSolution] = None  # Полученное решение
 
@@ -67,11 +66,11 @@ class RustSolver(BaseSolver):
         """
         params = [
             f"vrp-cli solve",  # вызываем решалку
-            f"pragmatic {self.problem_file}",  # файл, в котором сфорумлирована проблемаы
+            f"pragmatic {problem_file}",  # файл, в котором сфорумлирована проблема
             f'{" ".join(self.matrix_files)}',  # матрицы расстояний
-            f"-o {self.solution_file}",  # куда писать результат
+            f"-o {solution_file}",  # куда писать результат
         ]
-        params += [f"--geo-json={self.geojson_file}"] * bool(self.geojson_file)  # вывод geojson
+        params += [f"--geo-json={geojson_file}"] * bool(self.return_geojson)  # вывод geojson
         params += [f"--log"] * bool(self.show_log)  # показывать лог на экране
         params += [f"--max-time={self.max_time}"] * bool(self.max_time)  # максимальное время работы
         params += [f"--max-generations={self.max_generations}"] * bool(
@@ -80,9 +79,9 @@ class RustSolver(BaseSolver):
 
         # насколько медленно нужно оптимизировать, чтобы перестать
         params += (
-                [f"--cost-variation={self.variation_generations},{self.min_variation}"]
-                * bool(self.variation_generations)
-                * bool(self.min_variation)
+            [f"--cost-variation={self.variation_generations},{self.min_variation}"]
+            * bool(self.variation_generations)
+            * bool(self.min_variation)
         )
 
         # возможность передавать начальное решение
@@ -90,15 +89,23 @@ class RustSolver(BaseSolver):
 
         return " ".join(params)
 
-    def build_data(self) -> None:
+    def build_data(self):
         """
         Собираем все файлы для решения проблемы
         """
+
+        self.matrix_files = {
+            f'matrix_{profile}.json': matrix
+            for profile, matrix in build_matrices(self.problem.matrix).items()
+        }
+
+        self.problem_data = dumps_problem(self.problem)
 
     def assemble_solution(self) -> VRPSolution:
         """
         Собираем VRPSolution из результатов работа
         """
+
 
     def solve(self, problem: RichVRPProblem) -> VRPSolution:
         """
@@ -112,24 +119,31 @@ class RustSolver(BaseSolver):
         Решение проблемы
         """
         logger.info(f'Решаем vrp_cli {problem.info()} ...')
-        self.problem = problem
-        self.build_data()
+
+        self.problem = problem  # сохраняем проблему
+        self.build_data()  # получаем все данные для солвера из проблемы
 
         # Получем входные файлы
-        input_files = {self.problem_file: self.problem_data}
+        input_files = {problem_file: self.problem_data}
         if self.initial_solution_file:
             input_files[self.initial_solution_file] = self.initial_solution_data,
 
-        # Получаем выходные файлы
-        output_files = [self.solution_file]
-        output_files += [self.geojson_file] * bool(self.geojson_file)
+        # Получаем список выходных файлов
+        output_files = [solution_file] + [geojson_file] * bool(self.return_geojson)
+        problem_dir = settings.TMP_DIR / 'rust_solver' / problem.name
 
+        # Запускаем саму комманду
         runner = CommandRunner(
             command=self.command(),
             input_files=input_files,
             output_files=output_files,
-            files_dir='rust_solver',
-            base_dir='rust_solver',
+            files_dir=problem_dir,
+            base_dir=problem_dir,
         ).run()
+
+        # Получаем результат
+        self.solution_data = runner.output_files_data[solution_file]
+        if self.return_geojson:
+            self.solution_geojson = runner.output_files_data[geojson_file]
 
         return self.assemble_solution()

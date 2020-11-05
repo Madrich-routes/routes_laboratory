@@ -14,7 +14,6 @@
 # serve to show the default.
 
 import os
-import shlex
 import subprocess
 import sys
 
@@ -130,8 +129,8 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 else:
     html_context = {
         'css_files': [
-            '//media.readthedocs.org/css/sphinx_rtd_theme.css',            
-            '//media.readthedocs.org/css/readthedocs-doc-embed.css',    
+            '//media.readthedocs.org/css/sphinx_rtd_theme.css',
+            '//media.readthedocs.org/css/readthedocs-doc-embed.css',
             '_static/theme_overrides.css'
         ]
     }
@@ -316,7 +315,7 @@ highlight_language = 'cpp'
 def generate_doxygen_xml(app):
     build_dir = os.path.join(app.confdir, '.build')
     if not os.path.exists(build_dir):
-        os.mkdir(build_dir)
+        os.makedirs(build_dir)
 
     try:
         subprocess.call(['doxygen', '--version'])

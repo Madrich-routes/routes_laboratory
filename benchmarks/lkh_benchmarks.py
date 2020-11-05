@@ -4,13 +4,13 @@ from typing import List, Tuple
 import numpy as np
 
 from benchmark import Benchmark
+from formats.tsplib import split_into_tours
 from models.rich_vrp.agent import Agent
+from models.rich_vrp.depot import Depot
 from models.rich_vrp.geometries.geometry import DistanceMatrixGeometry
 from models.rich_vrp.job import Job
-from models.rich_vrp.depot import Depot
 from models.rich_vrp.problem import RichVRPProblem
 from utils.types import Array
-from formats.tsplib import split_into_tours
 
 
 def get_distance_matrix(nodes: List[Tuple[int, int]]) -> Array:
@@ -36,9 +36,9 @@ def parse(file: str) -> Benchmark:
     vehicle = int(text[3].split(":")[1])
     capacity = int(text[4].split(":")[1])
     service_time = int(text[5].split(":")[1])
-    coords = text[coords_start : coords_start + count]
-    demands = text[coords_start + count + 1 : coords_start + 2 * count + 1]
-    time_windows = text[coords_start + 2 * count + 2 : coords_start + 3 * count + 2]
+    coords = text[coords_start: coords_start + count]
+    demands = text[coords_start + count + 1: coords_start + 2 * count + 1]
+    time_windows = text[coords_start + 2 * count + 2: coords_start + 3 * count + 2]
     # Приводим к необходимому формату
     nodes = [(int(coords[i].split()[1]), int(coords[i].split()[2])) for i in range(len(coords))]
     matrix = get_distance_matrix(nodes)
@@ -68,12 +68,21 @@ def parse(file: str) -> Benchmark:
         )
         jobs_list.append(job)
 
-    depot = Depot(0, (int(time_windows[0].split()[1]), int(time_windows[0].split()[2])), float(nodes[0][0]), float(nodes[0][1]), 0, '')
-    problem = RichVRPProblem(DistanceMatrixGeometry(np.array([]), matrix, 1), agents_list, jobs_list, [depot], [])
+    depot = Depot(
+        0,
+        (int(time_windows[0].split()[1]), int(time_windows[0].split()[2])),
+        float(nodes[0][0]),
+        float(nodes[0][1]),
+        0,
+        '',
+    )
+    problem = RichVRPProblem(
+        DistanceMatrixGeometry(np.array([]), matrix, 1), agents_list, jobs_list, [depot], []
+    )
 
     # Достаем правильное решение
     path_parts = file.split('/')
-    solution_dir = '/'.join(path_parts[0 : len(path_parts) - 1])
+    solution_dir = '/'.join(path_parts[0: len(path_parts) - 1])
     filename_start = '.'.join(path_parts[-1].split('.')[:-1])
     solution_file = [
         f
@@ -87,10 +96,11 @@ def parse(file: str) -> Benchmark:
     # Получаем необходимые данные о решении
     tour_len = int(text[4].split(":")[1])
     tour_start = 6
-    node_indexes = text[tour_start:tour_start + tour_len]
+    node_indexes = text[tour_start: tour_start + tour_len]
     raw_tour = [int(node_indexes[i]) for i in range(len(node_indexes))]
     tours = split_into_tours(raw_tour, count)
     return Benchmark(problem, best_known_lenght, tours)
+
 
 def get_benchmarks(nodes_count: int = None, benchmarks_count: int = None) -> List[Benchmark]:
     directories = [
@@ -164,6 +174,7 @@ def get_benchmarks(nodes_count: int = None, benchmarks_count: int = None) -> Lis
         files = files[:benchmarks_count]
     res = [parse(file) for file in files]
     return res
+
 
 if __name__ == "__main__":
     get_benchmarks(600, 10)

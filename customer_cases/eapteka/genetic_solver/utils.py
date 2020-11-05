@@ -5,21 +5,6 @@ from typing import List, Optional, Tuple
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot
 
 
-def make_windows(date: str, interval: str) -> List[Tuple[str, str]]:
-    """ Makes time windows for couriers and depots
-    """
-    if interval == 'круглосуточно':
-        return [(f'{date}T00:00:00Z', f'{date}T23:59:59Z')]
-    start, end = interval.split('-')
-    start = f'0{int(start)}:00' if int(start) < 10 else f'{start}:00'
-    if int(end) < 10:
-        end = f'0{int(end)}:00'
-    else:
-        end = f'{end}:00' if int(end) != 24 else f'23:59'
-    return [(f'{date}T{start}:00Z', f'{date}T{end}:00Z')]
-
-
-
 def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
     """
     Adapt couriers time windows for depot; returns new list of couriers
@@ -33,8 +18,8 @@ def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
         tmp_courier = deepcopy(courier)
 
         tw = []
-        for i in range(len(tmp_courier.time_windows)):
-            start, end = tmp_courier.time_windows[i]
+        for time_window in tmp_courier.time_windows:
+            start, end = time_window
             start_t = datetime.strptime(start, '%Y-%m-%dT%H:%M:%SZ')
             end_t = datetime.strptime(end, '%Y-%m-%dT%H:%M:%SZ')
 
@@ -53,10 +38,10 @@ def get_index(internal_mapping):
     """
     Return location dict by index from mapping
     """
-    mapping = {}
-    for point, index in internal_mapping.items():
-        mapping[str(index)] = {'lat': point[0], 'lon': point[1]}
-    return mapping
+    return {
+        str(index): {'lat': point[0], 'lon': point[1]}
+        for point, index in internal_mapping.items()
+    }
 
 
 def send_courier(courier: Courier, start_time: str, end_time: str) -> Optional[Courier]:

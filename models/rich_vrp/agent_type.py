@@ -1,37 +1,41 @@
-from typing import List, Optional
-
-from models.rich_vrp.costs import AgentCosts
+from typing import List
 
 
 class AgentType:
     """
-    Класс для описания общих характеристик агента
+    Класс для описания общих характеристик агента.
+    К одному типу относится то, что одинаково двигается, одинаково ограниченно, и умеет одинаковые штуки.
+
+    Parameters
+    ----------
+    id : Уникальный идентификатор типа
+    capacities : Вектор ограничения вместимости
+    skills : Список имеющихся у типа скилов
+    profile : Используемая типом геометрия (характеристики перемещения)
+    name : Печатное имя
     """
 
     def __init__(
-            self,
-            id: int,
-            speed: Optional[float],  # скорость перемещения
-            distance_matrix_id: int,  # его собственная матрица расстояний
-            capacities: List[int],  # вектор ограничений
-            costs: AgentCosts,
-            skills: List[int],  # список флагов, что он умеет
-            name: str = '',  # список флагов, что он умеет
+        self,
+        id: int,
+        capacities: List[int],
+        skills: List[int],
+        profile: str,
+        name: str = '',
     ):
         self.id = id
         self.name = name
 
-        # Характеристики перемещения
-        self.speed: int = speed
-        self.distance_matrix_id: int = distance_matrix_id
-
+        self.profile = profile
         self.capacity_constraints: List[int] = capacities
-        self.costs = costs
 
         self.skills = skills
 
     def __str__(self):
-        return f'Type(speed={self.speed * 3.6:.2f}, max_vol={self.capacity_constraints:.2f})'
+        return f'Type(max_vol={self.capacity_constraints}, skills={self.skills}, profile={self.profile})'
 
     def __repr__(self) -> str:
         return str(self)
+
+    def description(self):
+        return f"{self.name} ({self.id})"

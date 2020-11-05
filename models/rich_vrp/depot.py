@@ -13,9 +13,7 @@ class Depot(Place):
             delay: int,
             name: str = '',
     ):
-        super().__init__(id=id, name=name, lat=lat, lon=lon)
-        self.time_windows = time_windows
-        self.delay = delay
+        super().__init__(id=id, name=name, lat=lat, lon=lon, delay=delay, time_windows=time_windows)
 
     def __hash__(self):
         return hash(self.id)

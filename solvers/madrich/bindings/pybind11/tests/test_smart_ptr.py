@@ -108,7 +108,7 @@ def test_smart_ptr_refcounting():
 
 def test_unique_nodelete():
     o = m.MyObject4(23)
-    assert o.value == 23
+    assert o.amounts == 23
     cstats = ConstructorStats.get(m.MyObject4)
     assert cstats.alive() == 1
     del o
@@ -117,7 +117,7 @@ def test_unique_nodelete():
 
 def test_large_holder():
     o = m.MyObject5(5)
-    assert o.value == 5
+    assert o.amounts == 5
     cstats = ConstructorStats.get(m.MyObject5)
     assert cstats.alive() == 1
     del o
@@ -217,4 +217,4 @@ def test_shared_ptr_gc():
         el.add(m.ElementA(i))
     pytest.gc_collect()
     for i, v in enumerate(el.get()):
-        assert i == v.value()
+        assert i == v.amounts()

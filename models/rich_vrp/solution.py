@@ -1,12 +1,7 @@
-from datetime import datetime
-from typing import Dict, List
-
-import pandas as pd
+from typing import List, Optional
 
 from models.problems.base import BaseRoutingProblem
-from models.rich_vrp import Agent
 from models.rich_vrp.plan import Plan
-from models.rich_vrp.visit import Visit
 
 
 class VRPSolution:
@@ -18,6 +13,7 @@ class VRPSolution:
         # TODO: адекватно оформить решение
         self.problem = problem
         self.routes = routes
+        self.geojson: Optional[str] = None
 
     # def statistics(self):
     #     for a, r in self.routes.items():

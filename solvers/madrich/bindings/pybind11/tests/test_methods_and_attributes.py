@@ -48,8 +48,8 @@ def test_methods_and_attributes():
     assert instance1.overloaded_float(1., 1) == "(float, float)"
     assert instance1.overloaded_float(1., 1.) == "(float, float)"
 
-    assert instance1.value == 320
-    instance1.value = 100
+    assert instance1.amounts == 320
+    instance1.amounts = 100
     assert str(instance1) == "ExampleMandA[value=100]"
 
     cstats = ConstructorStats.get(m.ExampleMandA)
@@ -70,15 +70,15 @@ def test_copy_method():
     m.ExampleMandA.add2c = m.ExampleMandA.add2
     m.ExampleMandA.add2d = m.ExampleMandA.add2b
     a = m.ExampleMandA(123)
-    assert a.value == 123
+    assert a.amounts == 123
     a.add2(m.ExampleMandA(-100))
-    assert a.value == 23
+    assert a.amounts == 23
     a.add2b(m.ExampleMandA(20))
-    assert a.value == 43
+    assert a.amounts == 43
     a.add2c(m.ExampleMandA(6))
-    assert a.value == 49
+    assert a.amounts == 49
     a.add2d(m.ExampleMandA(-7))
-    assert a.value == 42
+    assert a.amounts == 42
 
 
 def test_properties():
@@ -192,20 +192,20 @@ def test_property_return_value_policies(access):
         obj = m.TestPropRVP
 
     ref = getattr(obj, access + "_ref")
-    assert ref.value == 1
-    ref.value = 2
-    assert getattr(obj, access + "_ref").value == 2
-    ref.value = 1  # restore original value for static properties
+    assert ref.amounts == 1
+    ref.amounts = 2
+    assert getattr(obj, access + "_ref").amounts == 2
+    ref.amounts = 1  # restore original value for static properties
 
     copy = getattr(obj, access + "_copy")
-    assert copy.value == 1
-    copy.value = 2
-    assert getattr(obj, access + "_copy").value == 1
+    assert copy.amounts == 1
+    copy.amounts = 2
+    assert getattr(obj, access + "_copy").amounts == 1
 
     copy = getattr(obj, access + "_func")
-    assert copy.value == 1
-    copy.value = 2
-    assert getattr(obj, access + "_func").value == 1
+    assert copy.amounts == 1
+    copy.amounts = 2
+    assert getattr(obj, access + "_func").amounts == 1
 
 
 def test_property_rvalue_policy():
@@ -214,10 +214,10 @@ def test_property_rvalue_policy():
 
     instance = m.TestPropRVP()
     o = instance.rvalue
-    assert o.value == 1
+    assert o.amounts == 1
 
     os = m.TestPropRVP.static_rvalue
-    assert os.value == 1
+    assert os.amounts == 1
 
 
 # https://bitbucket.org/pypy/pypy/issues/2447

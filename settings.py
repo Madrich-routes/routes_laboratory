@@ -17,7 +17,7 @@ env.read_env()  # read .env file, if it exists
 
 
 # ------------------------------------- Основные директории проекта -----------------------------------------------
-BASE_DIR = Path(__file__).resolve()
+BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
 TMP_DIR = DATA_DIR / 'tmp'
 CACHE_DIR = TMP_DIR / 'cache'
@@ -32,6 +32,7 @@ os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
 CONCORDE_PATH = os.environ["CONCORDE"]
 LKH3_PATH = os.environ["LKH"]
 VRP_CLI_PATH = os.environ["VRP_CLI"]
+VROOM_PATH = os.environ["VROOM"]
 
 HERE_API_KEY = "MOH6CaTy-5eQQmLRStCMT2wNujETT1ld7n8OZwOSGHo"
 

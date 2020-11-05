@@ -1,45 +1,82 @@
 """
 Здесь описан pragmatic формат используемый в растовском солвере
 """
-
 import json
 from dataclasses import dataclass
-from typing import List, Optional
+from datetime import datetime
+from typing import List, Optional, Tuple
 
 from models import rich_vrp
-from models.problems.base import BaseRoutingProblem
 
 
-def serialize_problem(problem: BaseRoutingProblem):
-    pass
+def ts_to_iso(ts: int) -> str:
+    """
+    Конвертируем unix timestamp в ISO 8601. В pragmatic время представлено в таком формате.
+
+    >>> ts_to_iso(0)
+    '1970-01-01T03:00:00'
+
+    Parameters
+    ----------
+    ts : Unix timestamp
+
+    Returns
+    -------
+    Время в формате ISO 8601 в UTC таймзоне без Z на конце.
+    """
+
+    return datetime.fromtimestamp(ts).isoformat()
+
+
+def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
+    """
+    Конвретируем временное окно из таймстампов в ISO 8601
+
+    >>> convert_tw([(0, 0)])
+    [('1970-01-01T03:00:00', '1970-01-01T03:00:00')]
+
+    Parameters
+    ----------
+    time_windows : Лист временных окон в unix timestamp
+
+    Returns
+    -------
+    Лист временных окон в iso
+    """
+    return [
+        (ts_to_iso(tw[0]), ts_to_iso(tw[1]))
+        for tw in time_windows
+    ]
 
 
 @dataclass
 class Place:
-    # Own
     duration: int
     times: List[List[str]]  # None
-
-    # Location
     lat: float
     lng: float
+    index: int
 
     @classmethod
-    def from_rich_vrp(cls, job: rich_vrp.Job):
+    def from_rich_vrp(cls, job: rich_vrp.Job, index: int):
         return cls(
             duration=job.delay,
-            times=job.time_windows,
+            times=convert_tw(job.time_windows),
             lat=job.lat,
-            lon=job.lon,
+            lng=job.lon,
+            index=index,
         )
 
-    def dump(self):
+    def dump(self) -> dict:
+        """
+        Словарь с описанием place
+        """
         res = dict(
             duration=self.duration,
             location={
                 'lat': self.lat,
                 'lng': self.lng,
-            }
+            },
         )
         if self.times is not None:
             res["times"] = self.times
@@ -95,28 +132,31 @@ class Job:
     deliveries: List[Delivery]  # None
     pickups: List[Pickup]  # None
     skills: List[str]  # None
+    priority: int
 
-    def __init__(self, id, deliveries=None, pickups=None, skills=None):
+    def __init__(self, id, deliveries=None, pickups=None, skills=None, priority=0):
         # Own
         self.id = id
         self.deliveries = deliveries
         self.pickups = pickups
         self.skills = skills
+        self.priority = priority
 
     @classmethod
-    def from_rich_vrp(cls, job: rich_vrp.Job):
+    def from_rich_vrp(cls, job: rich_vrp.Job, index: int):
         return cls(
             id=job.id,
-
             duration=job.delay,
             times=job.time_windows,
             lat=job.lat,
             lon=job.lon,
+            index=index,
+            priority=job.priority,
         )
 
     def dump(self):
-        dump_Job = {}
-        dump_Job["id"] = self.id
+        dump_Job = {"id": self.id}
+
         if self.deliveries is not None:
             dump_Job["deliveries"] = [i.dump() for i in self.deliveries]
 
@@ -148,10 +188,7 @@ class Reload:
     def dump(self):
         return dict(
             duration=self.duration,
-            location=dict(
-                lat=self.lat,
-                lng=self.lng
-            ),
+            location=dict(lat=self.lat, lng=self.lng),
         )
 
 
@@ -171,13 +208,7 @@ class Depot:
     lng: float
 
     def dump(self):
-        return dict(
-            duration=self.duration,
-            location=dict(
-                lat=self.lat,
-                lng=self.lng
-            )
-        )
+        return dict(duration=self.duration, location=dict(lat=self.lat, lng=self.lng))
 
 
 @dataclass
@@ -208,9 +239,22 @@ class Shift:  ########### ready +++++++
     l_lat: float  # None
     l_lng: float  # None
 
-    def __init__(self, earliest, s_lat, s_lng,
-                 end=None, depots=None, reloads=None, breaks=None,
-                 latest=None, e_lat=None, e_lng=None, time=None, l_lat=None, l_lng=None):
+    def __init__(
+        self,
+        earliest,
+        s_lat,
+        s_lng,
+        end=None,
+        depots=None,
+        reloads=None,
+        breaks=None,
+        latest=None,
+        e_lat=None,
+        e_lng=None,
+        time=None,
+        l_lat=None,
+        l_lng=None,
+    ):
         # Own
         self.depots = depots
         self.reloads = reloads
@@ -249,24 +293,25 @@ class Shift:  ########### ready +++++++
         if self.breaks is not None:
             dump_Shift["breaks"] = [i.dump() for i in self.breaks]
 
-        dump_Shift["start"] = {}
-        dump_Shift["start"]["earliest"] = self.earliest
-        dump_Shift["start"]["location"] = {}
-        dump_Shift["start"]["location"]["lat"] = self.s_lat
-        dump_Shift["start"]["location"]["lng"] = self.s_lng
-
+        dump_Shift["start"] = {
+            "earliest": self.earliest,
+            "location": {
+                "lat": self.s_lat,
+                "lng": self.s_lng
+            },
+        }
         if self.latest is not None:
-            dump_Shift["end"] = {}
-            dump_Shift["end"]["latest"] = self.latest
-            dump_Shift["end"]["location"] = {}
-            dump_Shift["end"]["location"]["lat"] = self.e_lat
+            dump_Shift["end"] = {"latest": self.latest, "location": {"lat": self.e_lat}}
             dump_Shift["end"]["location"]["lng"] = self.e_lng
+
         if self.time is not None:
-            dump_Shift["Latest"] = {}
-            dump_Shift["Latest"]["time"] = self.time
-            dump_Shift["Latest"]["location"] = {}
-            dump_Shift["Latest"]["location"]["lat"] = self.l_lat
-            dump_Shift["Latest"]["location"]["lng"] = self.l_lng
+            dump_Shift["Latest"] = {
+                "time": self.time,
+                "location": {
+                    "lat": self.l_lat,
+                    "lng": self.l_lng
+                },
+            }
         return dump_Shift
 
 
@@ -285,8 +330,7 @@ class Vehicle:  ############# ready ++++++++
     distance: float
     time: float
 
-    def __init__(self, typeId, vehicleIds, profile,
-                 capacity, shifts, fixed, distance, time, skills=None):
+    def __init__(self, typeId, vehicleIds, profile, capacity, shifts, fixed, distance, time, skills=None):
         # Own
         self.typeId = typeId
         self.vehicleIds = vehicleIds
@@ -312,7 +356,7 @@ class Vehicle:  ############# ready ++++++++
                 fixed=self.fixed,
                 distance=self.distance,
                 time=self.time,
-            )
+            ),
         )
 
 
@@ -353,9 +397,9 @@ class Problem:
     vehicles: List[Vehicle]
     profiles: List[Profile]
 
-    relations: List[Relation] = None
-    primary: List[Type] = None
-    secondary: List[Type] = None
+    relations: Optional[List[Relation]] = None
+    primary: Optional[List[Type]] = None
+    secondary: Optional[List[Type]] = None
 
     def __init__(self, jobs, vehicles, profiles, relations=None, primary=None, secondary=None):
         # Plan
@@ -383,7 +427,7 @@ class Problem:
             objectives=dict(
                 primary=[i.dump() for i in self.primary],
                 secondary=[i.dump() for i in self.secondary],
-            )
+            ),
         )
 
     def dump_json(self):

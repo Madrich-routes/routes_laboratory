@@ -246,14 +246,14 @@ def test_reference_wrapper():
 
     a1 = m.refwrap_list(copy=True)
     a2 = m.refwrap_list(copy=True)
-    assert [x.value for x in a1] == [2, 3]
-    assert [x.value for x in a2] == [2, 3]
+    assert [x.amounts for x in a1] == [2, 3]
+    assert [x.amounts for x in a2] == [2, 3]
     assert not a1[0] is a2[0] and not a1[1] is a2[1]
 
     b1 = m.refwrap_list(copy=False)
     b2 = m.refwrap_list(copy=False)
-    assert [x.value for x in b1] == [1, 2]
-    assert [x.value for x in b2] == [1, 2]
+    assert [x.amounts for x in b1] == [1, 2]
+    assert [x.amounts for x in b2] == [1, 2]
     assert b1[0] is b2[0] and b1[1] is b2[1]
 
     assert m.refwrap_iiw(IncType(5)) == 5

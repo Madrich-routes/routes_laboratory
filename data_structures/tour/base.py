@@ -1,8 +1,8 @@
 import numpy as np
 
-from models.graph.distance_matrix import Geometry
 from models.rich_vrp.agent import Agent
 # TODO: возможно, этот объект плохо спроектирован. Нет Single responsibility
+from models.rich_vrp.geometries.base import BaseGeometry
 from utils.algorithms import start_tw
 from utils.data_formats import format_distance
 from utils.iteration import sets_union
@@ -17,7 +17,7 @@ class Tour:
     def __init__(
             self,
             nodes: np.ndarray,
-            matrix: Geometry,
+            matrix: BaseGeometry,
             agent: Agent,
     ):
         """
@@ -111,15 +111,16 @@ class Tour:
     def tw_list(self):
         ...
 
-    def time_window(self):
-        return start_tw(time, travel_times=[])
+    # def time_window(self):
+    #     return start_tw(time, travel_times=[])
 
     def stats(self):
         """
         Печатаем общую статистику тура
         """
         return (
-                f'Ограничения: {self.amounts()}/{self.amounts()}, {format_distance(self.distance(), with_name=True, with_units=True)}, '
+                f'Ограничения: {self.amounts()}/{self.amounts()}, '
+                f'{format_distance(self.distance(), with_name=True, with_units=True)}, '
                 f'Скилы: {self.required_skills()}, Хопы {self.jobs_num()}, '
                 f'Время в пути(с депо): {self.time() / 3600:.2f}'
                 f'({self.time() / 3600:.2f})ч, '

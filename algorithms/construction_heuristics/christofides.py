@@ -63,23 +63,28 @@ def Munkres_cost(indexes, bipartite_graph):
     """Returns cost of the edges in Munkres_indexes
 
     """
-    cost = 0
-    for index in indexes:
-        cost = cost + bipartite_graph[index[0]][index[1]]
-    return cost
+    return sum(bipartite_graph[index[0]][index[1]] for index in indexes)
 
 
 def bipartite_Graph(M, bipartite_set, odd_vertices):
     """
+    Двудольный граф # TODO
+    Parameters
+    ----------
+    M :
+    bipartite_set :
+    odd_vertices :
+
+    Returns
+    -------
+
     """
     bipartite_graphs = []
     vertex_sets = []
     for vertex_set1 in bipartite_set:
         vertex_set1 = list(sorted(vertex_set1))
-        vertex_set2 = []
-        for vertex in odd_vertices:
-            if vertex not in vertex_set1:
-                vertex_set2.append(vertex)
+        vertex_set2 = [vertex for vertex in odd_vertices if vertex not in vertex_set1]
+
         matrix = [[np.inf for j in range(len(vertex_set2))] for i in range(len(vertex_set1))]
         for i in range(len(vertex_set1)):
             for j in range(len(vertex_set2)):
@@ -152,9 +157,9 @@ def cost(christofides_tour, M):
     previous_vertex = christofides_tour[len(christofides_tour) - 1]
     for current_vertex in christofides_tour:
         if previous_vertex > current_vertex:
-            Travel_Cost = Travel_Cost + M[current_vertex][previous_vertex]
+            Travel_Cost += M[current_vertex][previous_vertex]
         else:
-            Travel_Cost = Travel_Cost + M[previous_vertex][current_vertex]
+            Travel_Cost += M[previous_vertex][current_vertex]
         previous_vertex = current_vertex
     return Travel_Cost
 

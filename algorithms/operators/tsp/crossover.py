@@ -72,7 +72,10 @@ def edge_recombination_crossover(p1: List[int], p2: List[int]):
         if neighbours[x]:
             x = neighbour_with_fewest_neighbours(x)
         else:
-            x = next(iter(unused))
+            try:
+                x = next(iter(unused))
+            except:
+                raise ValueError("Пустое множество!")
 
     # TODO: возможно, это оптимизируется. Квадрат не оч :(
 

@@ -4,20 +4,26 @@ from typing import Dict, List, Tuple
 
 import pandas as pd
 import ujson
-
 from customer_cases.eapteka.genetic_solver.models import Courier, Depot, Task
+
 from customer_cases.eapteka.genetic_solver.runner import runner
 from customer_cases.eapteka.genetic_solver.utils import (
-    add_courier, add_depot, add_tour, cut_windows, get_index, send_courier)
+    add_courier,
+    add_depot,
+    add_tour,
+    cut_windows,
+    get_index,
+    send_courier,
+)
 
 Point = Tuple[float, float]
 
 
 def prepare_courier(
-        internal_mappings: dict,
-        depot_id: str,
-        depot: Depot,
-        couriers: List[Courier]
+    internal_mappings: dict,
+    depot_id: str,
+    depot: Depot,
+    couriers: List[Courier]
 ):
     """
     Prepare courier for send them to depot
@@ -37,13 +43,13 @@ def prepare_courier(
 
 
 def prepare_statistic(
-        depot_id: str,
-        solution: dict,
-        address_mapping: dict,
-        revers_mapping: dict,
-        tours: dict,
-        depots_output: dict,
-        couriers_output: dict
+    depot_id: str,
+    solution: dict,
+    address_mapping: dict,
+    revers_mapping: dict,
+    tours: dict,
+    depots_output: dict,
+    couriers_output: dict,
 ):
     """
     Save statistic from solution
@@ -55,7 +61,7 @@ def prepare_statistic(
     for tour in solution['tours']:
         name = tour['vehicleId']
         points = len(tour['stops'])
-        if points - 3 == 0:
+        if points == 3:
             continue
         st += points
         start_time = tour['stops'][0]['time']['arrival']
@@ -64,7 +70,7 @@ def prepare_statistic(
         distance = tour['statistic']['distance']
         tour_data = defaultdict(list)
 
-        for j in range(0, points):
+        for j in range(points):
             point = tour['stops'][j]
             arrival = point['time']['arrival']
             departure = point['time']['departure']
@@ -84,7 +90,10 @@ def prepare_statistic(
     return st, names
 
 
-def refactor_couriers(couriers: List[Courier], names: List[Tuple[str, str, str]]) -> Tuple[int, List[Courier]]:
+def refactor_couriers(
+    couriers: List[Courier],
+    names: List[Tuple[str, str, str]]
+) -> Tuple[int, List[Courier]]:
     """
     Refactor used couriers for sending them to another depots
     """
@@ -103,10 +112,20 @@ def refactor_couriers(couriers: List[Courier], names: List[Tuple[str, str, str]]
     return sv, tmp_couriers
 
 
-def get_solution(depots: Dict[str, Depot], couriers: List[Courier], orders: Dict[str, List[Task]],
-                 internal_mappings: dict, files: Dict[str, List[str]], profiles: List[str], address: dict,
-                 couriers_path: str, depots_path: str, directory_couriers: str):
-    """ Run solver and get solution
+def get_solution(
+    depots: Dict[str, Depot],
+    couriers: List[Courier],
+    orders: Dict[str, List[Task]],
+    internal_mappings: dict,
+    files: Dict[str, List[str]],
+    profiles: List[str],
+    address: dict,
+    couriers_path: str,
+    depots_path: str,
+    directory_couriers: str,
+):
+    """
+    Run solver and get solution
     """
     solutions, tours, all_points = {}, {}, 0
     couriers_output, depots_output = defaultdict(list), defaultdict(list)
@@ -123,7 +142,9 @@ def get_solution(depots: Dict[str, Depot], couriers: List[Courier], orders: Dict
 
         logging.info(f'Not Solved: {0 if "unassigned" not in solution else len(solution["unassigned"])}')
 
-        st, names = prepare_statistic(depot_id, solution, address, revers, tours, depots_output, couriers_output)
+        st, names = prepare_statistic(
+            depot_id, solution, address, revers, tours, depots_output, couriers_output
+        )
         sv, tmp_couriers = refactor_couriers(couriers, names)
         couriers += tmp_couriers
         all_points += st

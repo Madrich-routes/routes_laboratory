@@ -8,13 +8,18 @@ import numpy as np
 @dataclass
 class Place:
     id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.
-    name: Optional[str] = None
+    name: Optional[str] = None  # читаемый идентификатор. Например, адрес.
 
+    # позиция на карте
     lat: Optional[float] = None
     lon: Optional[float] = None
 
+    # иногда может понадобиться указать декартовы координаты
     x: Optional[int] = None
     y: Optional[int] = None
+
+    delay: int = 0  # сколько времени нужно пробыть в этом месте
+    time_windows: List[Tuple[int, int]] = field(default_factory=list)  # когда там можно находиться
 
 
 @dataclass
@@ -23,15 +28,11 @@ class Job(Place):
     Класс для описания работы, которую необходимо проделать агенту.
     Это самый общий класс. В него добавляются любые характеристики.
     """
-    time_windows: List[Tuple[int, int]] = field(default_factory=list)
-
-    delay: int = 0  # время обслуживания на точке
     amounts: np.ndarray = None  # количество разгрузки в точке (той же размерности, что capacities)
-
     required_skills: Set[int] = field(default_factory=set)  # какой набор скилов тут будет необходим
 
     price: int = 0  # награда, получаемая за выполнение этой работы
-    priority: int = 0
+    priority: int = 0  # приоритет выполнения этой работы
 
     def __le__(self, other):
         return self.id < other.id

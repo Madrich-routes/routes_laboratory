@@ -17,9 +17,9 @@ def dumps_matrix(matrix: np.ndarray):
     )
 
     return "\n".join([
-        f"EDGE_WEIGHT_TYPE: EXPLICIT",
-        f"EDGE_WEIGHT_FORMAT: FULL_MATRIX",
-        f"EDGE_WEIGHT_SECTION",
+        r"EDGE_WEIGHT_TYPE: EXPLICIT",
+        r"EDGE_WEIGHT_FORMAT: FULL_MATRIX",
+        r"EDGE_WEIGHT_SECTION",
         f"{matrix_s}",
     ])
 
@@ -54,14 +54,14 @@ def dump_demands(demands: List[int]):
 
 
 def split_into_tours(nodes, size):
-    res = []
     nodes = np.array(nodes)
     bounds = list(np.where(nodes > size)[0])
     bounds.insert(0, 0)
-    for i in range(len(bounds) - 1):
-        res += [nodes[bounds[i]: bounds[i + 1]]]
-    res.append(nodes[bounds[-1]:])
-    return res
+
+    return [
+        nodes[bounds[i]: bounds[i + 1]]
+        for i in range(len(bounds) - 1)
+    ] + nodes[bounds[-1]:]
 
 
 def parse_solution(

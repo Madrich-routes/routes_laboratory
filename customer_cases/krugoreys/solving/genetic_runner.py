@@ -82,7 +82,7 @@ def generate_json(
                     }
                 }
             ],
-            "capacity": [vehicle.value],
+            "capacity": [vehicle.amounts],
         }
         cars.append(car)
 
