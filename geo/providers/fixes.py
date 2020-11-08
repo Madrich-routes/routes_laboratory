@@ -4,6 +4,13 @@ from typing import Tuple, Dict
 from geo.settings import FOOT_SPEEDS
 
 
+def _fix_speed_unknown(
+    time: int,
+    distance: int,
+    speed_limits_dict: Dict[str, float],
+):
+
+
 def _fix_speed(
     time: int,
     distance: int,
@@ -17,7 +24,8 @@ def _fix_speed(
 
     Если назкая скорость и время больше одного часа, то пересчитываем через расстояние и среднюю скорость
     Если высокая скорость и расстояние больше 100км, то пересчитываем через время и средню скорость
-    Иначе делаем скорость, смещенную к тому, что было чезер trust_speed_coeff
+    Иначе делаем скорость, смещенную к тому, что было через trust_speed_coeff.
+    Меняем и время и расстояние
 
     Parameters
     ----------
@@ -43,15 +51,15 @@ def _fix_speed(
     speed = distance / time
 
     # альтернативно вычисленные время и расстояние
-    time2 = distance / speed_limits_dict["avg"]
-    dist2 = time * speed_limits_dict["avg"]
+    time_avg = distance / speed_limits_dict["avg"]
+    dist_avg = time * speed_limits_dict["avg"]
 
     if speed < speed_limits_dict["min"]:
         if time > max_time:
             # низкая скорость из-за большого времени
             return distance / speed_limits_dict['avg'], distance
         else:
-            # просто низкая скорость
+
             return
     elif speed > speed_limits_dict["max"]:
         if distance > max_distance:

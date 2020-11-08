@@ -4,7 +4,9 @@ from typing import Tuple
 import numba as nb
 import numpy as np
 
-from data_structures.tour.base import Tour
+from algorithms.data_structures.tour.base import Tour
+from algorithms.data_structures.tour.hashes import generate_hash
+from algorithms.data_structures.tour.transforms import get_set
 from utils.algorithms import make_pair
 
 Edge = Tuple[int, int]
@@ -36,79 +38,6 @@ class ArrayTour(Tour):
         return get_set(self.nodes)
 
 
-@lru_cache
-def generate_degrees(number: int, module: int, size: int) -> np.ndarray:
-    """
-    Вычисление степеней 0 - size числа number по модулю module
-    number: чьи степени ищем
-    module: по какому модулю
-    size: сколько степеней
-    return: [1, number, number^2 % module ... number^(size -1)]
-    """
-    nums = np.zeros(size, dtype=np.int64)
-    nums[0], nums[1] = 1, number
-    for i in range(1, size):
-        number = (number * number) % module
-        nums[i] = number
-    return nums
-
-
-def generate_hash_from(tour: np.ndarray, number: int, module: int) -> int:
-    """
-    # TODO: у хельсгауна через XOR сделано
-    Вычисление хеша для тура по туру и списку степенй
-    tour: список городов
-    number: чьи степени ищем
-    return: хеш
-    """
-    degrees = generate_degrees(number, module, len(tour))
-    return (tour * degrees % module).sum() % module
-
-
-@nb.njit
-def generate_hash(tour: np.ndarray, number=333667, module=909090909090909091) -> int:
-    """ Вычисления  хеша по туру
-    tour: список вершин
-    number: чьи степени будем искать
-    module: по какому модулю
-    return: хеш
-    """
-    with nb.objmode(h='int64'):
-        h = generate_hash_from(rotate_zero(tour), number, module)
-    return h
-
-
-@nb.njit()
-def rotate(tour: np.ndarray, num: int) -> np.ndarray:
-    """ Сдвиг массива влево на n элементов
-    tour: список вершин
-    num: на сколько двигаем
-    return: сдвинутый
-    """
-    if num == 0:
-        return tour
-    size, idx = len(tour), 0
-    temp = np.zeros(size, dtype=nb.int64)
-    for i in range(num, size):
-        temp[idx] = tour[i]
-        idx += 1
-    for j in range(0, num):
-        temp[idx] = tour[j]
-        idx += 1
-    return temp
-
-
-@nb.njit()
-def rotate_zero(tour: np.ndarray) -> np.ndarray:
-    """ Проворачиваем список так, что бы первым был ноль
-    tour: список вершин
-    return: свдинутый список
-    """
-    if tour[0] == 0:
-        return tour
-    return rotate(tour, np.where(tour == 0)[0][0])
-
-
 @nb.njit()
 def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     """ Взятие длины по матрице смежности и туру в виде последовательных вершин
@@ -120,26 +49,6 @@ def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     for idx in range(len(tour) - 1):
         length += matrix[tour[idx]][tour[idx + 1]]
     return length
-
-
-def get_inf(matrix: np.ndarray, mult: int = 30):
-    """Длина ребра, такая, чтобы точно не попасть в тур."""
-    # return get_length(np.arange(len(matrix)), matrix)
-    # return matrix.sum()
-
-    return matrix.max() * mult
-
-
-def get_set(tour: np.ndarray):
-    """
-     Генерация набора ребер тура
-    tour: список вершин
-    return: set из ребер
-    """
-    edges = set()
-    for i in range(len(tour)):
-        edges.add(make_pair(tour[i - 1], tour[i]))
-    return edges
 
 
 @nb.njit()

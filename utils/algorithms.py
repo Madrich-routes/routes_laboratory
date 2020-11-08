@@ -31,27 +31,6 @@ def make_pair(i: int, j: int) -> Tuple[int, int]:
 
 
 @nb.njit()
-def rotate(tour: np.ndarray, num: int) -> np.ndarray:
-    """
-    Сдвиг массива влево на n элементов
-    tour: список вершин
-    num: на сколько двигаем
-    return: сдвинутый
-    """
-    if num == 0:
-        return tour
-    size, idx = len(tour), 0
-    temp = np.zeros(size, dtype=nb.int64)
-    for i in range(num, size):
-        temp[idx] = tour[i]
-        idx += 1
-    for j in range(0, num):
-        temp[idx] = tour[j]
-        idx += 1
-    return temp
-
-
-@nb.njit()
 def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
     """
     Взятие длины по матрице смежности и туру в виде последовательных вершин

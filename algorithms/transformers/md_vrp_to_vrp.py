@@ -3,7 +3,6 @@ from typing import List
 
 import numpy as np
 
-from data_structures.tour.array_tour import get_inf
 from models.rich_vrp import Depot, Job
 from utils.types import Array
 
@@ -12,11 +11,33 @@ from .base import BaseTransformer
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from models.rich_vrp.geometries.geometry import DistanceAndTimeMatrixGeometry
+from ..utils.costs import get_inf
 
 
-class TransformerMdVrpToVrp:
-    @staticmethod
-    def transform(self, problem: RichVRPProblem, count: int) -> RichVRPProblem:
+def add_depot():
+
+
+def _transform_matrix(
+    matrix: Array,
+    pass_num: int,  # количество проходов
+) -> Array:
+    inf = get_inf(matrix)
+    n = len(matrix)
+    new_size = n + 1 + pass_num * 2
+    new_matrix = np.zeros((new_size, new_size))
+
+    new_matrix[:n, :n] = matrix
+
+
+class TransformerMdVrpToVrp(BaseTransformer):
+    def __init__(self, pass_num: int = 50):
+        self.pass_num = pass_num
+
+    def transform(
+        self,
+        problem: RichVRPProblem,
+        count: int
+    ) -> RichVRPProblem:
         # 1) check geom
         # 2) create fake deport
         # 3) move depots in jobs 'count' times
@@ -34,6 +55,7 @@ class TransformerMdVrpToVrp:
         # (except problem.depots, problem.jobs and matrixes)
 
         # change params
+        # TODO: а что если 0 уже занят? В крайнем случаем можно сделать uuid, но лучше по-другому
         fake_depot = Depot(id=0, time_windows=[], lat=0, lon=0, delay=0)
 
         for idx in place_mapping.geometries:
@@ -147,7 +169,6 @@ class TransformerMdVrpToVrp:
     def restore(self, solution: VRPSolution) -> VRPSolution:
         new_problem = solution.problem
         new_routes = solution.routes
-        solution_new = VRPSolution(new_problem, new_routes)
-        return solution_new
+        return VRPSolution(new_problem, new_routes)
 
 # TODO :: Проверить трансформацию на ошибки
