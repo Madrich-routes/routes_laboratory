@@ -8,26 +8,20 @@ from utils.logs import logger
 
 
 def build_df(xml_url) -> pd.DataFrame:
-    """
-    Получаем датафрейм для всего метро
-    """
+    """Получаем датафрейм для всего метро."""
     logger.info('Составляю словарь станций метро...')
     df = parse_metro(xml_url)
     return df
 
 def get_metro_xml(url: str):
-    """
-    Притворяемся браузером и получаем информацию по метро
-    """
+    """Притворяемся браузером и получаем информацию по метро."""
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) G`ecko/20100101 Firefox/45.0'}
     s = requests.Session()
     r = s.get(url, headers=headers)
     return r.text
 
 def parse_metro(xml_url_or_filename):
-    """
-    Парсим данные, которые нам отдает API метро
-    """
+    """Парсим данные, которые нам отдает API метро."""
     if os.path.exists(xml_url_or_filename):
         print(f'Get XML from file: {xml_url_or_filename}')
         soup = bs4.BeautifulSoup(open(xml_url_or_filename).read(), 'lxml')

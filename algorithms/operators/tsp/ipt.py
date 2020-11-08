@@ -1,6 +1,4 @@
-"""
-Реализация алгоритма IPT: Iterated partial transcription
-"""
+"""Реализация алгоритма IPT: Iterated partial transcription."""
 
 from random import randint
 from typing import Dict, List, Union
@@ -27,8 +25,9 @@ def create_filled_matrix(size: int, max_weight: int = 10):
 
 
 def get_weight_of_subchain(matrix: np.array, route: List[int]) -> int:
-    """
-    Получить вес подмаршрута. Считается, что подмаршрут незамкнут.
+    """Получить вес подмаршрута.
+
+    Считается, что подмаршрут незамкнут.
     """
     weight = 0
     for i in range(len(route) - 1):

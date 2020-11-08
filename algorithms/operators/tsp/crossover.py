@@ -1,6 +1,4 @@
-"""
-Тут реализованы разные популярные кросоверы для tsp
-"""
+"""Тут реализованы разные популярные кросоверы для tsp."""
 import random
 from collections import defaultdict
 from itertools import chain
@@ -14,9 +12,7 @@ from more_itertools import windowed
 # TODO: проследить, какую границу берем, какую не берем. С этим много косяков мб.
 
 def get_neighbours(p: List[int]):
-    """
-    Получаем список всех ребер
-    """
+    """Получаем список всех ребер."""
     res = defaultdict(set)
     for a, b in windowed(p, 2):
         res[a].add(b)
@@ -42,9 +38,7 @@ def edge_recombination_crossover(p1: List[int], p2: List[int]):
     unused = set(p1)
 
     def add_neighbours(p: List[int]):
-        """
-        Получаем список всех ребер
-        """
+        """Получаем список всех ребер."""
         nonlocal neighbours
         for a, b in windowed(p, 2):
             neighbours[a].add(b)
@@ -111,8 +105,9 @@ def order1_crossover(p1: List[int], p2: List[int]):
 
 
 def cycle_crossover_operator(p1: List[int], p2: List[int]):
-    """
-    Находим циклы перестановках. Копируем циклы по очереди то из одного, то из другого родителя.
+    """Находим циклы перестановках.
+
+    Копируем циклы по очереди то из одного, то из другого родителя.
     Источник: http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/CycleCrossoverOperator.aspx
     TODO: можно выбирать только лучшие циклы, будет почти IPT (или прямо IPT)
     """
@@ -203,12 +198,9 @@ def pmx(p1: List[int], p2: List[int]):
 
 
 def hgrex(p1: List[int], p2: List[int], matrix: np.ndarray):
-    """
-    Говорят, эта эвристика неплоха и вообще лучше всех.
-    Comparison of eight evolutionary crossover operators for the
-    vehicle routing problem
-    Krunoslav Puljic´
-    1,∗and Robert Manger1
+    """Говорят, эта эвристика неплоха и вообще лучше всех. Comparison of eight evolutionary crossover
+    operators for the vehicle routing problem Krunoslav Puljic´ 1,∗and Robert Manger1.
+
     # TODO: говорят, что она неплоха.
     """
 

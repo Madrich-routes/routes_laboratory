@@ -9,8 +9,8 @@ from utils.iteration import sets_union
 
 
 class Tour:
-    """
-    Круговой маршрут без повторов.
+    """Круговой маршрут без повторов.
+
     Начинается и заканчивается в одной и той же точке.
     """
 
@@ -20,8 +20,8 @@ class Tour:
             matrix: BaseGeometry,
             agent: Agent,
     ):
-        """
-        Храним набор вершин, которые
+        """Храним набор вершин, которые.
+
         :param problem:
         :param nodes:
         """
@@ -35,15 +35,11 @@ class Tour:
 
     @property
     def size(self):
-        """
-        Считаем длину маршрута в количестве точек
-        """
+        """Считаем длину маршрута в количестве точек."""
         return len(self.nodes)
 
     def distance(self):
-        """
-        Общая длина тура
-        """
+        """Общая длина тура."""
         raise NotImplementedError
 
     def prev(self, a: int):
@@ -86,21 +82,15 @@ class Tour:
         ...
 
     def time_from_depot_to_start(self):
-        """
-
-        """
+        """"""
         ...
 
     def time_from_finish_to_depot(self):
-        """
-
-        """
+        """"""
         ...
 
     def required_skills(self):
-        """
-        Набор всех необходимых скилов для порохождения этого тура
-        """
+        """Набор всех необходимых скилов для порохождения этого тура."""
         return sets_union(j.required_skills for j in self.jobs())
 
     # -------------------------------------- protected methods -------------------------------------------------
@@ -115,9 +105,7 @@ class Tour:
     #     return start_tw(time, travel_times=[])
 
     def stats(self):
-        """
-        Печатаем общую статистику тура
-        """
+        """Печатаем общую статистику тура."""
         return (
                 f'Ограничения: {self.amounts()}/{self.amounts()}, '
                 f'{format_distance(self.distance(), with_name=True, with_units=True)}, '

@@ -79,7 +79,7 @@ def test_lambda_closure_cleanup():
 
 
 def test_cpp_function_roundtrip():
-    """Test if passing a function pointer from C++ -> Python -> C++ yields the original pointer"""
+    """Test if passing a function pointer from C++ -> Python -> C++ yields the original pointer."""
 
     assert m.test_dummy_function(m.dummy_function) == "matches dummy_function: eval(1) = 2"
     assert (m.test_dummy_function(m.roundtrip(m.dummy_function)) ==

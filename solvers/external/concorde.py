@@ -40,9 +40,7 @@ class ConcordeSolver(BaseTransformationalSolver):
 
     # TODO: привести все в порядок по интерфейсу
     def basic_solve(self):
-        """
-        Собственно получить решение из солвера
-        """
+        """Собственно получить решение из солвера."""
         cur_dir = os.curdir
         os.chdir("/tmp/")
 
@@ -59,23 +57,17 @@ class ConcordeSolver(BaseTransformationalSolver):
         return [tour], output
 
     def parse_solution(self):
-        """
-        Парсим файл решения
-        """
+        """Парсим файл решения."""
         solution = tsplib95.load_solution(self.res_path)
         return np.array(solution.tours[0])
 
     def dump_matrix(self):
-        """
-        Записываем матрицу, которую будет использовать солвер
-        """
+        """Записываем матрицу, которую будет использовать солвер."""
         with open(PROBLEM_FILE, "w") as dest:
             dest.write(dumps_matrix(self.problem.matrix))
 
     def rotate_to_start(self, route, start):
-        """
-        Прокручиваем маршрут, чтобы он начинался из начала
-        """
+        """Прокручиваем маршрут, чтобы он начинался из начала."""
         while route[0] != start:
             route = route[1:] + route[:1]
         return route

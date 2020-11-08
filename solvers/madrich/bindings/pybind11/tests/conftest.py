@@ -1,7 +1,7 @@
-"""pytest configuration
+"""pytest configuration.
 
-Extends output capture as needed by pybind11: ignore constructors, optional unordered lines.
-Adds docstring and exceptions message sanitizers: ignore Python 2 vs 3 differences.
+Extends output capture as needed by pybind11: ignore constructors, optional unordered lines. Adds docstring
+and exceptions message sanitizers: ignore Python 2 vs 3 differences.
 """
 
 import contextlib
@@ -20,12 +20,12 @@ _hexadecimal = re.compile(r'0x[0-9a-fA-F]+')
 
 
 def _strip_and_dedent(s):
-    """For triple-quote strings"""
+    """For triple-quote strings."""
     return textwrap.dedent(s.lstrip('\n').rstrip())
 
 
 def _split_and_sort(s):
-    """For output which does not require specific line order"""
+    """For output which does not require specific line order."""
     return sorted(_strip_and_dedent(s).splitlines())
 
 
@@ -35,7 +35,7 @@ def _make_explanation(a, b):
 
 
 class Output(object):
-    """Basic output post-processing and comparison"""
+    """Basic output post-processing and comparison."""
     def __init__(self, string):
         self.string = string
         self.explanation = []
@@ -55,7 +55,7 @@ class Output(object):
 
 
 class Unordered(Output):
-    """Custom comparison for output without strict line ordering"""
+    """Custom comparison for output without strict line ordering."""
     def __eq__(self, other):
         a = _split_and_sort(self.string)
         b = _split_and_sort(other)
@@ -105,7 +105,7 @@ class Capture(object):
 
 @pytest.fixture
 def capture(capsys):
-    """Extended `capsys` with context manager and custom equality operators"""
+    """Extended `capsys` with context manager and custom equality operators."""
     return Capture(capsys)
 
 
@@ -146,7 +146,7 @@ def _sanitize_docstring(thing):
 
 @pytest.fixture
 def doc():
-    """Sanitize docstrings and add custom failure explanation"""
+    """Sanitize docstrings and add custom failure explanation."""
     return SanitizedString(_sanitize_docstring)
 
 
@@ -159,20 +159,20 @@ def _sanitize_message(thing):
 
 @pytest.fixture
 def msg():
-    """Sanitize messages and add custom failure explanation"""
+    """Sanitize messages and add custom failure explanation."""
     return SanitizedString(_sanitize_message)
 
 
 # noinspection PyUnusedLocal
 def pytest_assertrepr_compare(op, left, right):
-    """Hook to insert custom failure explanation"""
+    """Hook to insert custom failure explanation."""
     if hasattr(left, 'explanation'):
         return left.explanation
 
 
 @contextlib.contextmanager
 def suppress(exception):
-    """Suppress the desired exception"""
+    """Suppress the desired exception."""
     try:
         yield
     except exception:
@@ -180,14 +180,13 @@ def suppress(exception):
 
 
 def gc_collect():
-    ''' Run the garbage collector twice (needed when running
-    reference counting tests with PyPy) '''
+    """Run the garbage collector twice (needed when running reference counting tests with PyPy)"""
     gc.collect()
     gc.collect()
 
 
 def pytest_namespace():
-    """Add import suppression and test requirements to `pytest` namespace"""
+    """Add import suppression and test requirements to `pytest` namespace."""
     try:
         import numpy as np
     except ImportError:
@@ -219,7 +218,7 @@ def pytest_namespace():
 
 
 def _test_import_pybind11():
-    """Early diagnostic for test module initialization errors
+    """Early diagnostic for test module initialization errors.
 
     When there is an error during initialization, the first import will report the
     real error while all subsequent imports will report nonsense. This import test

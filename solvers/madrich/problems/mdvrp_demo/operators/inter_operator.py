@@ -10,7 +10,8 @@ OptFunc = Callable[[State, int, int, Route, Route, Problem], Tuple[bool, State, 
 
 
 def inter_replace(track_id1: int, track_id2: int, route1: Route, route2: Route, problem: Problem) -> bool:
-    """ Перемещает точку из одного тура в другой
+    """Перемещает точку из одного тура в другой.
+
     :param track_id1: номер первого подмаршрута
     :param track_id2: номер второго подмаршрута
     :param route1: маршрут
@@ -40,7 +41,8 @@ def inter_cross(track_id1: int, track_id2: int, route1: Route, route2: Route, pr
 
 
 def inter_swap(track_id1: int, track_id2: int, route1: Route, route2: Route, problem: Problem) -> bool:
-    """ Меняет две точки местами
+    """Меняет две точки местами.
+
     :param track_id1: номер первого подмаршрута
     :param track_id2: номер второго подмаршрута
     :param route1: маршрут
@@ -87,7 +89,8 @@ def inter_swap(track_id1: int, track_id2: int, route1: Route, route2: Route, pro
 
 
 def __symmetric_call(func: OptFunc, track_id1: int, track_id2: int, route1: Route, route2: Route, problem: Problem):
-    """ Применяет оптимизацию к обоим подмаршрутам
+    """Применяет оптимизацию к обоим подмаршрутам.
+
     :param func: функция, которая ищет улучшение не туре
     :param track_id1: номер первого подмаршрута
     :param track_id2: номер второго подмаршрута
@@ -109,7 +112,8 @@ def __symmetric_call(func: OptFunc, track_id1: int, track_id2: int, route1: Rout
 
 
 def __inter_opt(func: OptFunc, track_id1: int, track_id2: int, route1: Route, route2: Route, problem: Problem) -> bool:
-    """ Общий интерфейс к функции, которая внутри себя вызывает некоторую оптимизацию
+    """Общий интерфейс к функции, которая внутри себя вызывает некоторую оптимизацию.
+
     :param func: функция, которая ищет улучшение не туре
     :param track_id1: номер первого подмаршрута
     :param track_id2: номер второго подмаршрута
@@ -138,7 +142,8 @@ def __inter_opt(func: OptFunc, track_id1: int, track_id2: int, route1: Route, ro
 
 def __inter_replace(best_state: State, track_id1: int, track_id2: int, route1: Route, route2: Route,
                     problem: Problem) -> Tuple[bool, State, List[Job], List[Job]]:
-    """ Перемещает точку из одного тура в другой
+    """Перемещает точку из одного тура в другой.
+
     :param best_state: лучший на данный момент
     :param track_id1: номер первого подмаршрута
     :param track_id2: номер второго подмаршрута

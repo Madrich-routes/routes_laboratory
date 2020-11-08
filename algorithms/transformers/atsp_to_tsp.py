@@ -30,11 +30,9 @@ class TSPExact:
             self.tours = list(self.all_tours(self.nodes))
 
     def as_symmetric(self):
-        """
-        Переформулируем несимметричную TSP как симметриченую:
-        "Jonker and Volgenant 1983"
-        This is possible by doubling the number of nodes. For each city a dummy
-        node is added: (a, b, c) => (a, a', b, b', c, c')
+        """Переформулируем несимметричную TSP как симметриченую: "Jonker and Volgenant 1983" This is possible
+        by doubling the number of nodes. For each city a dummy node is added: (a, b, c) => (a, a', b, b', c,
+        c')
 
         distance = "value"
         distance (for each pair of dummy nodes and pair of nodes is INF)

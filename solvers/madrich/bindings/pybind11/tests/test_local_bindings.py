@@ -3,7 +3,7 @@ from pybind11_tests import local_bindings as m
 
 
 def test_local_bindings():
-    """Tests that duplicate `py::module_local` class bindings work across modules"""
+    """Tests that duplicate `py::module_local` class bindings work across modules."""
 
     # Make sure we can load the second module with the conflicting (but local) definition:
     import pybind11_cross_module_tests as cm
@@ -30,7 +30,7 @@ def test_local_bindings():
 
 
 def test_nonlocal_failure():
-    """Tests that attempting to register a non-local type in multiple modules fails"""
+    """Tests that attempting to register a non-local type in multiple modules fails."""
     import pybind11_cross_module_tests as cm
 
     with pytest.raises(RuntimeError) as excinfo:
@@ -39,7 +39,7 @@ def test_nonlocal_failure():
 
 
 def test_duplicate_local():
-    """Tests expected failure when registering a class twice with py::local in the same module"""
+    """Tests expected failure when registering a class twice with py::local in the same module."""
     with pytest.raises(RuntimeError) as excinfo:
         m.register_local_external()
     import pybind11_tests
@@ -99,9 +99,11 @@ def test_stl_bind_global():
 
 
 def test_mixed_local_global():
-    """Local types take precedence over globally registered types: a module with a `module_local`
-    type can be registered even if the type is already registered globally.  With the module,
-    casting will go to the local type; outside the module casting goes to the global type."""
+    """Local types take precedence over globally registered types: a module with a `module_local` type can be
+    registered even if the type is already registered globally.
+
+    With the module, casting will go to the local type; outside the module casting goes to the global type.
+    """
     import pybind11_cross_module_tests as cm
     m.register_mixed_global()
     m.register_mixed_local()
@@ -130,14 +132,14 @@ def test_mixed_local_global():
 
 
 def test_internal_locals_differ():
-    """Makes sure the internal local type map differs across the two modules"""
+    """Makes sure the internal local type map differs across the two modules."""
     import pybind11_cross_module_tests as cm
     assert m.local_cpp_types_addr() != cm.local_cpp_types_addr()
 
 
 def test_stl_caster_vs_stl_bind(msg):
-    """One module uses a generic vector caster from `<pybind11/stl.h>` while the other
-    exports `std::vector<int>` via `py:bind_vector` and `py::module_local`"""
+    """One module uses a generic vector caster from `<pybind11/stl.h>` while the other exports
+    `std::vector<int>` via `py:bind_vector` and `py::module_local`"""
     import pybind11_cross_module_tests as cm
 
     v1 = cm.VectorInt([1, 2, 3])

@@ -1,6 +1,6 @@
-"""
-Методы из работы
-Pisinger, Ropke. A general heuristic for vehicle routing problems.
+"""Методы из работы Pisinger, Ropke.
+
+A general heuristic for vehicle routing problems.
 """
 
 from dataclasses import dataclass
@@ -26,9 +26,7 @@ def ovrp_to_cvrp(
         matrix: Array,
         depots: Array
 ):
-    """
-    Откуда угодно до депо бесплатно
-    """
+    """Откуда угодно до депо бесплатно."""
     matrix[:, depots] = 0
 
 
@@ -37,6 +35,4 @@ def cvrp_to_vrptw(
         service_times: Array,
         max_capacity: int,
 ):
-    """
-    Cheapest
-    """
+    """Cheapest."""

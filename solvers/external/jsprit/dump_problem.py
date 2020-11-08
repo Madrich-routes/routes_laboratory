@@ -4,18 +4,14 @@ from models.rich_vrp import Agent
 
 
 def dump_problem():
-    """
-    Сохраняем xml для основной проблемы
-    """
+    """Сохраняем xml для основной проблемы."""
     data = ET.Element('problem')
 
     ...
 
 
 def dump_vehicle(a: Agent, root: ET.Element):
-    """
-    Создаем XML-компонент машины
-    """
+    """Создаем XML-компонент машины."""
     vehicle = ET.SubElement(root, 'vehicle')
 
     vid = ET.SubElement(vehicle, 'id')
@@ -26,9 +22,7 @@ def dump_vehicle(a: Agent, root: ET.Element):
 
 
 def dump_location():
-    """
-    Создаем xml компонент машины
-    """
+    """Создаем xml компонент машины."""
 
 
 

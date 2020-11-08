@@ -18,9 +18,7 @@ files_folder = 'rust_solver'
 
 
 class RustSolver(BaseSolver):
-    """
-    Интерфейс для солвера vrp-cli
-    """
+    """Интерфейс для солвера vrp-cli."""
 
     def __init__(
         self,
@@ -57,8 +55,7 @@ class RustSolver(BaseSolver):
         self.solution_geojson: Optional[str] = None
 
     def command(self) -> str:
-        """
-        Получаем команду, которой будет запускаться растовский солвера
+        """Получаем команду, которой будет запускаться растовский солвера.
 
         Returns
         -------
@@ -90,9 +87,7 @@ class RustSolver(BaseSolver):
         return " ".join(params)
 
     def build_data(self):
-        """
-        Собираем все файлы для решения проблемы
-        """
+        """Собираем все файлы для решения проблемы."""
 
         self.matrix_files = {
             f'matrix_{profile}.json': matrix
@@ -102,9 +97,7 @@ class RustSolver(BaseSolver):
         self.problem_data = dumps_problem(self.problem)
 
     def assemble_solution(self) -> VRPSolution:
-        """
-        Собираем VRPSolution из результатов работа
-        """
+        """Собираем VRPSolution из результатов работа."""
 
 
     def solve(self, problem: RichVRPProblem) -> VRPSolution:

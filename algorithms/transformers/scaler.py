@@ -13,15 +13,11 @@ class MatrixScaler:
         self.max_value = max_value
 
     def transform(self, problem: BaseRoutingProblem):
-        """
-        Приводим матрицу к интам заданного размера,
-        чтобы можно было передавать ее в разные конкретные солверы
-        """
+        """Приводим матрицу к интам заданного размера, чтобы можно было передавать ее в разные конкретные
+        солверы."""
         mult = self.max_value / problem.matrix.max()
         problem.matrix = (mult * problem.matrix).astype("int32")
 
     def restore(self):
-        """
-        Ничего делать не нужно у нас и так все хорошо — маршрут построен.
-        """
+        """Ничего делать не нужно у нас и так все хорошо — маршрут построен."""
         pass

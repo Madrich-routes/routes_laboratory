@@ -1,6 +1,4 @@
-"""
-Описание класса Plan — план посещений одного агента на день.
-"""
+"""Описание класса Plan — план посещений одного агента на день."""
 from typing import List
 from typing import TYPE_CHECKING
 
@@ -10,8 +8,8 @@ if TYPE_CHECKING:
 
 
 class Plan:
-    """
-    Полный маршрут одной конкретной машины.
+    """Полный маршрут одной конкретной машины.
+
     Содержит в себе
     1. agent — объект агента, который выполняет задания
     2. waypoints — набор объектов типа Visit (точка и время прибытия)
@@ -36,8 +34,7 @@ class PlanReport:
         self.problem = problem
 
     def duration(self) -> int:
-        """
-        Считаем общую длительность плана агента.
+        """Считаем общую длительность плана агента.
 
         Returns
         -------
@@ -53,33 +50,25 @@ class PlanReport:
         return last_point.time - first_point.time + last_duration
 
     def total_stops(self) -> int:
-        """
-        Общее количество остановок
-        """
+        """Общее количество остановок."""
         return len(self.plan.waypoints)
 
     def depot_stops(self) -> int:
-        """
-        Общее количество заездов в депо
-        """
+        """Общее количество заездов в депо."""
         return len(
             v for v in self.plan.waypoints
             if isinstance(v.place, Depot)
         )
 
     def job_stops(self):
-        """
-        Общее количество обработаных джоб
-        """
+        """Общее количество обработаных джоб."""
         return len(
             v for v in self.plan.waypoints
             if isinstance(v.place, Job)
         )
 
     def delay_time(self) -> int:
-        """
-        Суммарная задержка
-        """
+        """Суммарная задержка."""
         return sum(w.delay for w in self.plan.waypoints)
 
     def distance(self):

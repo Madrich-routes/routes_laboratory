@@ -6,9 +6,7 @@ import requests
 
 
 def geocode(address: str) -> Tuple[int, int, int]:
-    """
-    Функция возвращает Result
-    """
+    """Функция возвращает Result."""
     url = f"http://search.maps.sputnik.ru/search/addr?q={urlencode(address)})"
     content = requests.get(url).json()
 

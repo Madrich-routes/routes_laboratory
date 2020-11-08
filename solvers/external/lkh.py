@@ -81,16 +81,12 @@ class LKHSolver(BaseTransformationalSolver):
         return self.parse_solution(), output
 
     def parse_solution(self):
-        """
-        Парсим файл решения
-        """
+        """Парсим файл решения."""
         solution = tsplib95.load_solution(self.res_path)
         return np.array(solution.tours[0])
 
     def solver_par(self) -> str:
-        """
-        Часть файла параметров, которая относится к конфигурации солвера
-        """
+        """Часть файла параметров, которая относится к конфигурации солвера."""
         return '\n'.join([
             f"PROBLEM_FILE = {self.tsp_path}",
             f"TOUR_FILE = {self.res_path}",
@@ -124,15 +120,11 @@ class LKHSolver(BaseTransformationalSolver):
         ])
 
     def dumps_params(self) -> str:
-        """
-        Итоговая строка параметров с учетом параметров проболемы.
-        """
+        """Итоговая строка параметров с учетом параметров проболемы."""
         return self.solver_par() + '\n' + self.problem.lkh_par()
 
     def dumps_problem(self) -> str:
-        """
-        Получаем строку с tsplib описание проблемы
-        """
+        """Получаем строку с tsplib описание проблемы."""
         return self.problem.lkh_problem()
 
     def dump_problem(self) -> None:

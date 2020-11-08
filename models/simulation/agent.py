@@ -68,9 +68,7 @@ class SimutationAgent:
 
     @staticmethod
     def copy_attrs(src: 'SimutationAgent', dst: 'SimutationAgent') -> None:
-        """
-        Копируем всю изменяемую информацию из одной машины в другую
-        """
+        """Копируем всю изменяемую информацию из одной машины в другую."""
         immutable_attrs = ("is_active", 'current_price', 'current_volume',
                            'current_weight', 'current_distance', 'current_time')
 
@@ -123,9 +121,7 @@ class SimutationAgent:
         return self
 
     def atomic_goto_depot(self) -> 'SimutationAgent':
-        """
-        Аналогично goto_depot, но в случае ошибки состояние не меняется
-        """
+        """Аналогично goto_depot, но в случае ошибки состояние не меняется."""
         SimutationAgent.copy_attrs(self, SimutationAgent.dummy_car)
         try:
             return self.goto_depot()
@@ -146,7 +142,7 @@ class SimutationAgent:
         return self.current_time + duration
 
     def finish_time(self, point: 'Container') -> int:
-        """ Когда будем на базе """
+        """Когда будем на базе."""
         assert point.point_type == 'container'
         duration = 0
         duration += self.score_path(self.current_point, point)  # расстояние до заявки
@@ -198,7 +194,7 @@ class SimutationAgent:
         return len(self.containers) >= self.type.max_places_by_trip
 
     def slow_check_can_take(self, con: 'Container') -> bool:
-        """ Проверяем можем ли взять """
+        """Проверяем можем ли взять."""
         try:
             test_copy = copy.deepcopy(self)  # пробуем на липовой машине
             test_copy.take_bunker(con)
@@ -239,7 +235,7 @@ class SimutationAgent:
         return tuple(sum(p) for p in zip(m_stats, r_stats))
 
     def take_returnable(self, con: 'Container') -> 'SimutationAgent':
-        """ Логика по взятию контейнера """
+        """Логика по взятию контейнера."""
         self.take(con)
         self.goto_landfill()
         self.move_to(con)
@@ -390,7 +386,7 @@ class SimutationAgent:
         return self.way_points[-1].point
 
     def merge(self, other: 'SimutationAgent') -> 'SimutationAgent':
-        """ Продолжение этой машины сливается в нее """
+        """Продолжение этой машины сливается в нее."""
         if len(self.way_points) < 2:
             return copy.deepcopy(other)
 
@@ -414,10 +410,8 @@ class SimutationAgent:
         return res_car
 
     def transform_to_empty(self) -> 'SimutationAgent':
-        """
-        Получаем эту машину в этой точке и времени, но без посещейний и контейнеров
-        Нужно для передачи в другие решалки с последуюшим мержем
-        """
+        """Получаем эту машину в этой точке и времени, но без посещейний и контейнеров Нужно для передачи в
+        другие решалки с последуюшим мержем."""
         if not self.way_points or len(self.way_points) == 1:
             return self
 

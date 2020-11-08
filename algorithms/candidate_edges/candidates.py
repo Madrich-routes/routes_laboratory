@@ -7,9 +7,7 @@ from utils.types import Array
 
 
 def build_n_closest(matrix: Array, n: int) -> List[Tuple[int, int]]:
-    """
-    Строми ребра-кандидаты из i по принципу "Берем n самых коротких ребер"
-    """
+    """Строми ребра-кандидаты из i по принципу "Берем n самых коротких ребер"."""
     l = len(matrix)
     res = []
 
@@ -21,9 +19,7 @@ def build_n_closest(matrix: Array, n: int) -> List[Tuple[int, int]]:
 
 
 def pure_delaunay(points: Array, n: int):
-    """
-    Берем только те ребра, которые напрямую входят в триангуляцию делоне
-    """
+    """Берем только те ребра, которые напрямую входят в триангуляцию делоне."""
     return delaunay_graph()
 
 # TODO: взять триангуляцию делоне как у хельсгауна

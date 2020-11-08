@@ -9,9 +9,7 @@ from models.rich_vrp.problem import RichVRPProblem
 
 
 def get_test_problem():
-    """
-    Функция генерации тестовой проблемы и депо
-    """
+    """Функция генерации тестовой проблемы и депо."""
     np_dist_matrix = np.array([[0, 3, 5], [3, 0, 2], [5, 2, 0]])
     dist_matrix = DistanceMatrixGeometry(np.array([]), np_dist_matrix, 10)
 

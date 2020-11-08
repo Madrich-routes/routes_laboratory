@@ -58,7 +58,7 @@ def test_importing():
 
 
 def test_pydoc():
-    """Pydoc needs to be able to provide help() for everything inside a pybind11 module"""
+    """Pydoc needs to be able to provide help() for everything inside a pybind11 module."""
     import pydoc
 
     import pybind11_tests
@@ -69,6 +69,6 @@ def test_pydoc():
 
 
 def test_duplicate_registration():
-    """Registering two things with the same name"""
+    """Registering two things with the same name."""
 
     assert m.duplicate_registration() == []

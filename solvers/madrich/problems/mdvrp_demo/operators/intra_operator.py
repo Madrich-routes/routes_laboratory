@@ -8,7 +8,8 @@ OptFunc = Callable[[int, Route, Problem], bool]
 
 
 def three_opt(route: Route, problem: Problem) -> bool:
-    """ Выполняем 3-opt по маршруту
+    """Выполняем 3-opt по маршруту.
+
     :param route: маршрут
     :param problem: проблема
     :return: улучился или нет
@@ -20,7 +21,8 @@ def three_opt(route: Route, problem: Problem) -> bool:
 
 
 def two_opt(route: Route, problem: Problem) -> bool:
-    """ Выполняем 2-opt по маршруту
+    """Выполняем 2-opt по маршруту.
+
     :param route: маршрут
     :param problem: проблема
     :return: улучился или нет
@@ -46,7 +48,8 @@ def __opt(func: OptFunc, route: Route, problem: Problem) -> bool:
 
 
 def __three_opt(track_id: int, route: Route, problem: Problem) -> bool:
-    """ На основе текущего подмаршрута пытается сделать 3-opt и создать новый
+    """На основе текущего подмаршрута пытается сделать 3-opt и создать новый.
+
     :param track_id: подмаршрут
     :param route: маршрут
     :param problem: проблема
@@ -89,7 +92,8 @@ def __three_opt(track_id: int, route: Route, problem: Problem) -> bool:
 
 
 def __two_opt(track_id: int, route: Route, problem: Problem) -> bool:
-    """ На основе текущего подмаршрута пытается сделать 2-opt и создать новый
+    """На основе текущего подмаршрута пытается сделать 2-opt и создать новый.
+
     :param track_id: подмаршрут
     :param route: маршрут
     :param problem: проблема

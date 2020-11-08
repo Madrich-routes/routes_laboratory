@@ -9,7 +9,7 @@ class LinkedListNode:
         self.id: int = id
 
     def insert_after(self, new_node: 'LinkedListNode') -> 'LinkedListNode':
-        """ Returns new node """
+        """Returns new node."""
         if self._next is not None:
             self._link(new_node, self._next)
 
@@ -18,7 +18,7 @@ class LinkedListNode:
         return new_node
 
     def insert_before(self, new_node: 'LinkedListNode') -> 'LinkedListNode':
-        """ Returns new node """
+        """Returns new node."""
         if self._prev is not None:
             self._link(self._prev, new_node)
 
@@ -27,7 +27,7 @@ class LinkedListNode:
         return new_node
 
     def replace_by(self, new_node: 'LinkedListNode') -> 'LinkedListNode':
-        """ Returns new node """
+        """Returns new node."""
         if self._next is not None:
             self._link(new_node, self._next)
 
@@ -37,21 +37,21 @@ class LinkedListNode:
         return new_node
 
     def search_forward(self, key) -> Optional['LinkedListNode']:
-        """ Returns found node or None """
+        """Returns found node or None."""
         current = self
         while current is not None and current.id != id:
             current = current._next
         return current
 
     def search_backward(self, key) -> Optional['LinkedListNode']:
-        """ Returns found node or None """
+        """Returns found node or None."""
         current = self
         while current is not None and current.id != id:
             current = current._prev
         return current
 
     def delete(self) -> 'LinkedListNode':
-        """ Returns deleted """
+        """Returns deleted."""
         self._checked_link(self._next, self._prev)
         return self
 
@@ -64,22 +64,22 @@ class LinkedListNode:
     # ----------------------------------- protected ----------------------------------------------
 
     def _replace_last(self, new_node):
-        """ Faster method for replacing last """
+        """Faster method for replacing last."""
         self._link(self._prev, new_node)
         return new_node
 
     def _replace_first(self, new_node):
-        """ Faster method for replacing first """
+        """Faster method for replacing first."""
         self._link(new_node, self._next)
         return new_node
 
     def _append_last(self, new_node):
-        """ Faster method for appending after last """
+        """Faster method for appending after last."""
         self._link(self, new_node)
         return new_node
 
     def _append_first(self, new_node):
-        """ Faster method for appending before first """
+        """Faster method for appending before first."""
         self._link(new_node, self)
         return new_node
 
@@ -196,7 +196,7 @@ class LinkedList:
         return LinkedListIterator(searcher(key))
 
     def _add_if_first(self, key, value=None) -> bool:
-        """ Returns true if it was the first element """
+        """Returns true if it was the first element."""
         if self._len == 0:
             node = LinkedListNode(key, value)
             self._len = 1
@@ -206,7 +206,7 @@ class LinkedList:
             return False
 
     def _del_if_last(self):
-        """ Returns true if it was the last element """
+        """Returns true if it was the last element."""
         if self._len == 1:
             self._len = 0
             self._first = self._last = None

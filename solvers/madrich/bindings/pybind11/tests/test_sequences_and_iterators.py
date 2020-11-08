@@ -4,7 +4,7 @@ from pybind11_tests import sequences_and_iterators as m
 
 
 def isclose(a, b, rel_tol=1e-05, abs_tol=0.0):
-    """Like math.isclose() from Python 3.5"""
+    """Like math.isclose() from Python 3.5."""
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 

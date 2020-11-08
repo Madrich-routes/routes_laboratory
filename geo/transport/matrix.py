@@ -9,9 +9,7 @@ from utils.logs import logger
 
 
 def build_dataset_from_files():
-    """
-    Собираем общий объединенный датасет транспорта
-    """
+    """Собираем общий объединенный датасет транспорта."""
     # xml_url = 'https://metro.mobile.yandex.net/metro/get_file?file=scheme_1.xml&ver='
 
     routes_file_pattern = './data/xls/data-101784-2020-04-08-s*.csv'
@@ -33,9 +31,7 @@ def build_dataset_from_files():
 def build_walk_matrix(
         stations_df: pd.DataFrame
 ):
-    """
-    Вычисляем расстояние между всеми станциями в датафрейме stations_df
-    """
+    """Вычисляем расстояние между всеми станциями в датафрейме stations_df."""
     logger.info('Вычисляем матрицу расстояний остановок...')
 
     points = np.array(stations_df['coord'].values.tolist())[:,::-1]

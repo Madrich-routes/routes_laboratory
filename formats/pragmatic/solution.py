@@ -7,8 +7,7 @@ from models.rich_vrp import VRPSolution
 
 
 def load_solution(pragmatic_solution: str) -> VRPSolution:
-    """
-    Загружаем решение проблемы
+    """Загружаем решение проблемы.
 
     Parameters
     ----------

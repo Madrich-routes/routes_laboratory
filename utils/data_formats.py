@@ -1,6 +1,4 @@
-"""
-Утилиты для печати
-"""
+"""Утилиты для печати."""
 import datetime as dt
 import math
 import numbers
@@ -18,8 +16,9 @@ cache = FanoutCache('/tmp/routes_cache/', shards=8, timeout=100)
 
 
 def round_to_n(x: float, n=3) -> float:
-    """
-    Округляем до заданного количества знаков. Если int, то приводим
+    """Округляем до заданного количества знаков.
+
+    Если int, то приводим
     """
 
     if isclose(x, 0):
@@ -43,9 +42,8 @@ def is_number(a: Any) -> bool:
 def parse_time(
         time_obj: Any, errors: str = 'raise', none: Any = None
 ) -> Optional[int]:
-    """
-    Парсим время и возвращаем количество секунд в unixtime
-    Эта штуковина вроде как должна справляться почти с любыми форматами времени.
+    """Парсим время и возвращаем количество секунд в unixtime Эта штуковина вроде как должна справляться почти
+    с любыми форматами времени.
 
     :param time_obj:  время в каком-то виде
     :param errors:  что-то, что представляет из себя время
@@ -139,9 +137,7 @@ def format_time_window(
         end: int,
         with_name=False,
 ):
-    """
-    Формат в котором мы печатаем time_window
-    """
+    """Формат в котором мы печатаем time_window."""
     res = ''
     res += 'TW: ' * with_name
     res += f"{format_time(start)}-{format_time(end)}"
@@ -153,9 +149,7 @@ def format_collection(
         collection: Any,
         sep: str = ', '
 ):
-    """
-    Формат в котором мы печатаем наборы
-    """
+    """Формат в котором мы печатаем наборы."""
     data = sep.join(sorted(collection))
     if isinstance(collection, set):
         return f'{{{data}}}'

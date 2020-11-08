@@ -5,8 +5,7 @@ from models.rich_vrp.problem import RichVRPProblem
 def dumps_problem(
     problem: RichVRPProblem,
 ) -> str:
-    """
-    Сохраняем RichVRPProblem в pragmatic формате, для последующего решения rust солвером.
+    """Сохраняем RichVRPProblem в pragmatic формате, для последующего решения rust солвером.
 
     TODO: учесть цену job. Учесть много доставок и пикапов
 

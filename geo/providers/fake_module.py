@@ -21,7 +21,8 @@ def generate_matrix(points: Union[array, List[Point]], factor='travelTime') -> a
 
 
 def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]] = 'travelTime') -> Matrices:
-    """ Возвращает ассиметричные матрицы смежности
+    """Возвращает ассиметричные матрицы смежности.
+
     :param factor:
     :param points: точки
     :return: матрица, одна, фиговая
@@ -38,7 +39,8 @@ def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]] 
 
 def get_matrices(points: Union[array, List[Point]], max_cost: int, split=15,
                  factor: Union[str, List[str]] = 'travelTime') -> Matrices:
-    """ Возвращает нужное кол-во матриц смежностей
+    """Возвращает нужное кол-во матриц смежностей.
+
     :param factor:
     :param points: точки
     :param max_cost: сколько времени со старта пройдет

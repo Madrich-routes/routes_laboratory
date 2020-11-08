@@ -13,9 +13,7 @@ output_file = "tmp/eapteka_vroom_output.json"
 
 
 class VroomSolver(BaseSolver):
-    """
-    Солвер, который использует vroom
-    """
+    """Солвер, который использует vroom."""
 
     def __init__(self):
         ...

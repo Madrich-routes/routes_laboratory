@@ -7,9 +7,7 @@ T = TypeVar('T')
 
 @dataclass
 class Heap:
-    """
-    Heap, returning minimum element based on python stdlib
-    """
+    """Heap, returning minimum element based on python stdlib."""
     data: List[T] = field(default_factory=list)
 
     def __len__(self) -> int:

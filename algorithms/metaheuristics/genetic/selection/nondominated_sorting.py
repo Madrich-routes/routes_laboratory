@@ -17,8 +17,7 @@ def sort_nondominated(
 def crowding_distance(
     population: List[BaseIndividual]
 ) -> None:
-    """
-    Считаем crowding расстояние — мера того, насколько много у нас похожих по метрикам решений.
+    """Считаем crowding расстояние — мера того, насколько много у нас похожих по метрикам решений.
 
     Parameters
     ----------

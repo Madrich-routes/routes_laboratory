@@ -1,7 +1,5 @@
 def parse_solution(filename: str):
-    """
-    Псарсим решение CVRPTW в формате cintef
-    """
+    """Псарсим решение CVRPTW в формате cintef."""
     cars = []
     with open(filename) as f:
         for l in f:

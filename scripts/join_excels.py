@@ -1,6 +1,4 @@
-"""
-Модуль, чтобы смержить дурцкие Димины эксельки в нормальный вид
-"""
+"""Модуль, чтобы смержить дурцкие Димины эксельки в нормальный вид."""
 from collections import defaultdict
 
 import pandas as pd
@@ -8,8 +6,9 @@ from pandas import ExcelWriter
 
 
 def get_dfs(filename: str):
-    """
-    Получаем все датафреймы. И их имена, сгруппированные по общей части.
+    """Получаем все датафреймы.
+
+    И их имена, сгруппированные по общей части.
     """
     xl = pd.ExcelFile(filename)
     names = xl.sheet_names
@@ -28,9 +27,7 @@ def get_dfs(filename: str):
 
 
 def longest_common_prefix(strs):
-    """
-    Получаем общий префикс
-    """
+    """Получаем общий префикс."""
     longest_pre = ""
 
     if not strs:
@@ -48,9 +45,7 @@ def longest_common_prefix(strs):
 
 
 def marge_tables(dfs, names):
-    """
-    Объединяем таблицы и их имена
-    """
+    """Объединяем таблицы и их имена."""
     res_dict = {}
     for n in names.keys():
         the_name = longest_common_prefix(names[n])
@@ -62,9 +57,7 @@ def marge_tables(dfs, names):
 
 
 def write_sheets(filename, data):
-    """
-    Записываем все на диск
-    """
+    """Записываем все на диск."""
     with ExcelWriter(filename) as writer:
         for name, df in data.items():
             df = df.sort_values(
@@ -77,9 +70,7 @@ def write_sheets(filename, data):
 
 
 def merge_couriers(in_file, out_file):
-    """
-    Мержим файл с курьерами-листами
-    """
+    """Мержим файл с курьерами-листами."""
     dfs, names = get_dfs(in_file)
     merged = marge_tables(dfs, names)
     write_sheets(out_file, merged)

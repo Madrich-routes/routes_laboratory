@@ -16,8 +16,8 @@ from typing import Dict, List
 
 
 class CommandRunner:
-    """
-    Класс для запуска произвольных команд.
+    """Класс для запуска произвольных команд.
+
     TODO: доделать (stderr, код завершения, время выполнения, статы, etc.), base_dir
     """
 
@@ -61,8 +61,8 @@ class CommandRunner:
         self.stderr: List[str] = []
 
     def run(self) -> 'CommandRunner':
-        """
-        Запустить команду на выполнение.
+        """Запустить команду на выполнение.
+
         Резульаты выполнения сохраняются в output_files_data, stdout, stderr
         """
 
@@ -87,9 +87,7 @@ class CommandRunner:
         return self
 
     def _remove_files(self) -> None:
-        """
-        Удаляем все ненужные файлы после решения
-        """
+        """Удаляем все ненужные файлы после решения."""
         files_to_remove = self.output_files * self.remove_output_files + self.input_files * self.remove_input_files
 
         for f in files_to_remove:
@@ -99,9 +97,7 @@ class CommandRunner:
                 pass
 
     def _exec_and_iter(self):
-        """
-        Итератор по выводимым строкам
-        """
+        """Итератор по выводимым строкам."""
         popen = subprocess.Popen(
             self.command,
             stdout=subprocess.PIPE,
@@ -118,9 +114,7 @@ class CommandRunner:
             raise subprocess.CalledProcessError(return_code, self.command)
 
     def _exec_and_log(self):
-        """
-        Печатает вывод подпроцесса с промптом
-        """
+        """Печатает вывод подпроцесса с промптом."""
         lines = []
         for line in self._exec_and_iter():
             print(f"{self.stdout_prompt}{line}", end='')

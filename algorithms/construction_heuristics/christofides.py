@@ -13,10 +13,8 @@ from scipy.sparse.csgraph import minimum_spanning_tree
 
 
 def _csr_gen_triples(A):
-    """Converts a SciPy sparse matrix in **Compressed Sparse Row** format to
-    an iterable of weighted edge triples.
-
-    """
+    """Converts a SciPy sparse matrix in **Compressed Sparse Row** format to an iterable of weighted edge
+    triples."""
     graph = nx.Graph()
     nrows = A.shape[0]
     data, indices, indptr = A.data, A.indices, A.indptr
@@ -27,9 +25,7 @@ def _csr_gen_triples(A):
 
 
 def _odd_vertices_of_MST(M, number_of_nodes):
-    """Returns the vertices having Odd degree in the Minimum Spanning Tree(MST).
-
-    """
+    """Returns the vertices having Odd degree in the Minimum Spanning Tree(MST)."""
     odd_vertices = [0 for i in range(number_of_nodes)]
     for u, v, d in M:
         odd_vertices[u] = odd_vertices[u] + 1
@@ -39,10 +35,8 @@ def _odd_vertices_of_MST(M, number_of_nodes):
 
 
 def min_Munkres(M, bipartite_graphs):
-    """Implements the Hungarian problem or the Assignment problem to
-    find Minimum Cost Perfect Matching(MCPM).
-
-    """
+    """Implements the Hungarian problem or the Assignment problem to find Minimum Cost Perfect
+    Matching(MCPM)."""
     m = Munkres()
     minimum = np.inf
     for index, bipartite_graph in enumerate(bipartite_graphs[0]):
@@ -60,9 +54,7 @@ def min_Munkres(M, bipartite_graphs):
 
 
 def Munkres_cost(indexes, bipartite_graph):
-    """Returns cost of the edges in Munkres_indexes
-
-    """
+    """Returns cost of the edges in Munkres_indexes."""
     return sum(bipartite_graph[index[0]][index[1]] for index in indexes)
 
 
@@ -98,10 +90,7 @@ def bipartite_Graph(M, bipartite_set, odd_vertices):
 
 
 def create_Multigraph(M, MST, indexes, odd_vertices):
-    """Creates a MultiGraph consisting of vertices of both
-    MST and MCPM.
-
-    """
+    """Creates a MultiGraph consisting of vertices of both MST and MCPM."""
     multigraph = nx.MultiGraph()
     for u, v, d in MST:
         multigraph.add_edge(u, v, weight=d)
@@ -111,9 +100,7 @@ def create_Multigraph(M, MST, indexes, odd_vertices):
 
 
 def Euler_Tour(multigraph):
-    """ Uses Fleury's algorithm to find the Euler Tour of the MultiGraph.
-
-    """
+    """Uses Fleury's algorithm to find the Euler Tour of the MultiGraph."""
     tour = []
     temp_graph = nx.MultiGraph()
     graph_nodes = nx.nodes(multigraph)
@@ -137,9 +124,7 @@ def Euler_Tour(multigraph):
 
 
 def shortcut_Euler_Tour(tour):
-    """Find's the shortcut of the Euler Tour to obtain the Approximation.
-
-    """
+    """Find's the shortcut of the Euler Tour to obtain the Approximation."""
     Tour = []
     for vertex in tour:
         if vertex not in Tour:
@@ -149,9 +134,7 @@ def shortcut_Euler_Tour(tour):
 
 
 def cost(christofides_tour, M):
-    """Returns Cost of Tour.
-
-    """
+    """Returns Cost of Tour."""
     Travel_Cost = 0
     christofides_tour = christofides_tour[0:len(christofides_tour) - 1]
     previous_vertex = christofides_tour[len(christofides_tour) - 1]
@@ -165,10 +148,7 @@ def cost(christofides_tour, M):
 
 
 def compute(M):
-    """Returns an Approximation for TSP using Christofide's algorithm by
-    directing several functions.
-
-    """
+    """Returns an Approximation for TSP using Christofide's algorithm by directing several functions."""
     MST = _csr_gen_triples(minimum_spanning_tree(csr_matrix(M)))
     odd_vertices = _odd_vertices_of_MST(MST, csr_matrix(M).shape[0])
     bipartite_set = [set(i) for i in

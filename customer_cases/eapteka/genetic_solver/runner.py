@@ -20,8 +20,8 @@ def runner(
         variation_generations: int = 100,  # на скольких поколениях измеряется cost_variation
         min_variation: int = 0.1,  # минимальная вариация (критерий остановки)
 ):
-    """
-    Вызываем солвер vrp_cli.
+    """Вызываем солвер vrp_cli.
+
     Документация: https://reinterpretcat.github.io/vrp/getting-started/solver.html
     """
     name = f'{depot_id}'

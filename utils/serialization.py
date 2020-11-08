@@ -11,8 +11,8 @@ from utils.logs import logger
 
 
 def get_open_func(compression_alg="gzip"):
-    """
-    Возвращает функцию, с помощью которой фал открывается для чтения
+    """Возвращает функцию, с помощью которой фал открывается для чтения.
+
     :param compression_alg: алгоритм сжатия
     """
     if compression_alg is None:
@@ -22,9 +22,7 @@ def get_open_func(compression_alg="gzip"):
 
 
 def save_pickle(filename, obj: object, compression=None):
-    """
-    Сохранить объект в pickle
-    """
+    """Сохранить объект в pickle."""
     logger.debug(f'Сохраняем {filename} ({sys.getsizeof(obj)}) ...')
     open_func = get_open_func(compression_alg=compression)
     with open_func(filename, 'wb') as f:
@@ -32,8 +30,8 @@ def save_pickle(filename, obj: object, compression=None):
 
 
 def read_pickle(filename, compression=None) -> Any:
-    """
-    Загрзуить объект из pickle
+    """Загрзуить объект из pickle.
+
     :param compression: Используемое сжатие
     :param filename: Путь к файлу, из которого будем загружать
     :return: объект

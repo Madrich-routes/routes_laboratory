@@ -24,8 +24,8 @@ class Place:
 
 @dataclass
 class Job(Place):
-    """
-    Класс для описания работы, которую необходимо проделать агенту.
+    """Класс для описания работы, которую необходимо проделать агенту.
+
     Это самый общий класс. В него добавляются любые характеристики.
     """
     amounts: np.ndarray = None  # количество разгрузки в точке (той же размерности, что capacities)
@@ -39,8 +39,8 @@ class Job(Place):
 
 
 class CompositeJob(Job):
-    """
-    Job, который представляет из себ объединение нескольких других джобов.
+    """Job, который представляет из себ объединение нескольких других джобов.
+
     Позволяет склеивать джобы, которые гарантированно нужны вместе.
     """
 
@@ -68,21 +68,15 @@ class CompositeJob(Job):
 
     @cached_property
     def amounts(self):
-        """
-        Общая цена всех заказов в списке
-        """
+        """Общая цена всех заказов в списке."""
         return sum(c.amounts for c in self.jobs)
 
     @cached_property
     def required_skills(self):
-        """
-        Объединение required скилов от всех пацанов
-        """
+        """Объединение required скилов от всех пацанов."""
         return list(reduce(lambda x, y: x.required_skills | y.required_skills, self.jobs, set()))
 
     @cached_property
     def price(self):
-        """
-        Общая цена всех заказов в списке
-        """
+        """Общая цена всех заказов в списке."""
         return sum(c.price for c in self.jobs)

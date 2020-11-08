@@ -12,8 +12,7 @@ from models.rich_vrp.problem import RichVRPProblem
 
 
 def build_eapteka_problem(data_folder: Path) -> RichVRPProblem:
-    """
-    Собираем из данных по аптеке RichVRPProblem
+    """Собираем из данных по аптеке RichVRPProblem.
 
     Parameters
     ----------
@@ -65,9 +64,8 @@ def build_place_mapping(
     depots: Sequence[Depot],
     jobs: Sequence[Job],
 ) -> PlaceMapping:
-    """
-    Создаем объект маппинга, который позволяет получать расстояния между точками, индексируясь самими точками.
-    При первом вызове будет построена и соз
+    """Создаем объект маппинга, который позволяет получать расстояния между точками, индексируясь самими
+    точками. При первом вызове будет построена и соз.
 
     Parameters
     ----------
@@ -84,8 +82,7 @@ def build_place_mapping(
 def build_agents(
     agents_df: pd.DataFrame,
 ) -> List[Agent]:
-    """
-    Билдим объекты Agent из DataFrame
+    """Билдим объекты Agent из DataFrame.
 
     Parameters
     ----------
@@ -125,8 +122,7 @@ def build_agents(
 def build_depots(
     stocks: pd.DataFrame,
 ) -> List[Depot]:
-    """
-    Билдим объекты Depot из складов
+    """Билдим объекты Depot из складов.
 
     Parameters
     ----------
@@ -152,9 +148,7 @@ def build_jobs(
     points: pd.DataFrame,
     depots: List[Depot],
 ) -> List[Job]:
-    """
-    Билдим Job из объектов нашего датафрейма.
-    У каждой джобы есть прикрепленное депо.
+    """Билдим Job из объектов нашего датафрейма. У каждой джобы есть прикрепленное депо.
 
     Parameters
     ----------
@@ -190,8 +184,7 @@ def load_data(
     stocks_file: str,
     couriers_file: str,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """
-    Загружем данные eapteka, принимая на вход все файлы
+    """Загружем данные eapteka, принимая на вход все файлы.
 
     Parameters
     ----------
@@ -215,8 +208,7 @@ def load_data(
 
 
 def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
-    """
-    Препроцессим точки
+    """Препроцессим точки.
 
     Parameters
     ----------
@@ -274,8 +266,7 @@ def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
 def preprocess_stocks(
     stocks: pd.DataFrame,
 ) -> pd.DataFrame:
-    """
-    Переименовываем колонки и фильтруем мусорные точки
+    """Переименовываем колонки и фильтруем мусорные точки.
 
     Parameters
     ----------
@@ -303,8 +294,7 @@ def preprocess_stocks(
 
 
 def preprocess_couriers(couriers: pd.DataFrame) -> pd.DataFrame:
-    """
-    Препрецессим данные курьеров
+    """Препрецессим данные курьеров.
 
     Parameters
     ----------

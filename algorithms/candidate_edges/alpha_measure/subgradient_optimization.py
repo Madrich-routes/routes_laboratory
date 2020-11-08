@@ -80,8 +80,7 @@ class SubgradientOptimization:
     @staticmethod
     @nb.njit()
     def make_move(pi: np.ndarray, adjacency_matrix: np.ndarray) -> None:
-        """ vertex pi[i] added to all elements of i-row and i-column of adjacency matrix
-        """
+        """vertex pi[i] added to all elements of i-row and i-column of adjacency matrix."""
         for i, k in enumerate(pi):
             for index in range(adjacency_matrix.shape[0]):
                 adjacency_matrix[i][index] += k
@@ -90,8 +89,7 @@ class SubgradientOptimization:
     @staticmethod
     @nb.njit()
     def get_back(pi: np.ndarray, adjacency_matrix: np.ndarray) -> None:
-        """ get matrix before move
-        """
+        """get matrix before move."""
         for i, k in enumerate(pi):
             for index in range(adjacency_matrix.shape[0]):
                 adjacency_matrix[i][index] -= k

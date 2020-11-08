@@ -1,6 +1,4 @@
-"""
-Быстрая, скомпилированная структура "Система непересекающихся множеств
-"""
+"""Быстрая, скомпилированная структура "Система непересекающихся множеств."""
 
 import numpy as np
 from numba import int32, jitclass
@@ -11,9 +9,7 @@ from numba import int32, jitclass
     ('_parent', int32[:]),
 ])
 class UnionFind:
-    """
-    Структура данных "объединение непересекающихся множеств"
-    """
+    """Структура данных "объединение непересекающихся множеств"."""
 
     def __init__(self, size: int):
         """
@@ -23,9 +19,7 @@ class UnionFind:
         self._parent = np.array(list(range(size)), dtype=np.int32)  # parent: for the internal tree structure
 
     def find(self, x: int) -> int:
-        """
-        Получить id множества от вершины x
-        """
+        """Получить id множества от вершины x."""
         while x != self._parent[x]:
             # path compression
             q = self._parent[x]
@@ -34,8 +28,8 @@ class UnionFind:
         return x
 
     def union(self, x: int, y: int) -> int:
-        """
-        Объединить 2 множества
+        """Объединить 2 множества.
+
         :param x: представитель множества
         :param y: представитель второго множества
         :return: корень нового множества
@@ -56,7 +50,5 @@ class UnionFind:
         return self._parent[xroot]
 
     def connected(self, x: int, y: int) -> bool:
-        """
-        Проверить, принадлежат ли 2 вершины одному множеству
-        """
+        """Проверить, принадлежат ли 2 вершины одному множеству."""
         return self.find(x) == self.find(y)

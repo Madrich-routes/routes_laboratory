@@ -4,8 +4,8 @@ import numpy as np
 
 
 def tsp3(matrix: np.ndarray):
-    """
-    Решение задачи коммивояжера
+    """Решение задачи коммивояжера.
+
     :param matrix:
     :return:
     """

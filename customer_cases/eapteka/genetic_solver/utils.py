@@ -6,9 +6,7 @@ from customer_cases.eapteka.genetic_solver.models import Courier, Depot
 
 
 def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
-    """
-    Adapt couriers time windows for depot; returns new list of couriers
-    """
+    """Adapt couriers time windows for depot; returns new list of couriers."""
     start_depot, end_depot = depot.time_window
     start_dt = datetime.strptime(start_depot, '%Y-%m-%dT%H:%M:%SZ')
     end_dt = datetime.strptime(end_depot, '%Y-%m-%dT%H:%M:%SZ')
@@ -35,9 +33,7 @@ def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
 
 
 def get_index(internal_mapping):
-    """
-    Return location dict by index from mapping
-    """
+    """Return location dict by index from mapping."""
     return {
         str(index): {'lat': point[0], 'lon': point[1]}
         for point, index in internal_mapping.items()

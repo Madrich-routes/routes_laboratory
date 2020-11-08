@@ -6,7 +6,7 @@ from solvers.madrich.problems.mdvrp_demo.models import Route, Tour
 
 @nb.njit
 def check_values(left: np.ndarray, right: np.ndarray) -> bool:
-    """ left <= right"""
+    """left <= right."""
     for i in range(len(left)):
         if not left[i] <= right[i]:
             return False
@@ -14,8 +14,7 @@ def check_values(left: np.ndarray, right: np.ndarray) -> bool:
 
 
 class Block:
-    """ Проверяем есть ли смысл пытаться что-то улучшить
-    """
+    """Проверяем есть ли смысл пытаться что-то улучшить."""
 
     def __init__(self, tour: Tour):
         self.prev_phase_route = {route.courier.name: True for route in tour.routes}
@@ -36,7 +35,7 @@ class Block:
     #     return (state1 == -1 or state1 == 1) or (state2 == -1 or state2 == 1)
 
     def check_route(self, route: Route) -> bool:
-        """ Менялось или нет """
+        """Менялось или нет."""
         curr_state = self.curr_phase_route[route.courier.name]
         prev_state = self.prev_phase_route[route.courier.name]
         return curr_state or prev_state
@@ -46,12 +45,12 @@ class Block:
     #     self.block_track[track.storage.name] = value
 
     def mark_route(self, route: Route, value: bool):
-        """ Поменялся или нет """
+        """Поменялся или нет."""
         curr_state = self.curr_phase_route[route.courier.name]
         if not curr_state and value:
             self.curr_phase_route[route.courier.name] = value
 
     def mark_routes(self, route1: Route, route2: Route, value: bool):
-        """ Поменялся или нет """
+        """Поменялся или нет."""
         self.mark_route(route1, value)
         self.mark_route(route2, value)

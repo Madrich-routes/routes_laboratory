@@ -1,5 +1,6 @@
-"""
-Модуль для обработки матриц. Модуль не доработан.
+"""Модуль для обработки матриц.
+
+Модуль не доработан.
 """
 import pickle
 from copy import deepcopy
@@ -24,9 +25,7 @@ def assemble_matrix(
         small_size: int,
         full_size: int
 ):
-    """
-    Собираем большую матрицу из набора маленьких
-    """
+    """Собираем большую матрицу из набора маленьких."""
     res = np.zeros((full_size, full_size), dtype=np.int32)
 
     for i, j in product(range(len(submatrices)), repeat=2):

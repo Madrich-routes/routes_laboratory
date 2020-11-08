@@ -1,6 +1,4 @@
-"""
-Изучаем, как расстояние по прямой связано с расстоянием по дорогам в москве
-"""
+"""Изучаем, как расстояние по прямой связано с расстоянием по дорогам в москве."""
 import lightgbm as lgb
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,9 +12,7 @@ from utils.serialization import load_np, read_pickle, save_np, save_pickle
 # matplotlib.use('QT4Agg', force=True)
 
 def random_coords(size):
-    """
-    Получаем случайные координаты примерно в москве
-    """
+    """Получаем случайные координаты примерно в москве."""
     coords = np.random.random(size=(size, 2))
     center = np.array([55.7558, 37.6173])
 
@@ -35,9 +31,7 @@ def random_coords(size):
 
 
 def get_data(size):
-    """
-    Получаем набор данных для эксперимента
-    """
+    """Получаем набор данных для эксперимента."""
     coords, center = random_coords(size)
 
     matrix = osrm_module.get_osrm_matrix(coords)
@@ -47,9 +41,7 @@ def get_data(size):
 
 
 def build_features():
-    """
-    Билдим фичи, на которых учимся
-    """
+    """Билдим фичи, на которых учимся."""
     points = load_np('points.npz')
     matrix = load_np('osrm_matr.npz')
 
@@ -67,9 +59,7 @@ def build_features():
 
 
 def train_model():
-    """
-    Обучаем модель оценивать расстояние
-    """
+    """Обучаем модель оценивать расстояние."""
     X, y = build_features()
     model = lgb.LGBMRegressor()
     model.fit(X, y)
@@ -78,9 +68,7 @@ def train_model():
 
 
 def plot_test():
-    """
-    Строим то, что нам напредиктила модель
-    """
+    """Строим то, что нам напредиктила модель."""
     model = read_pickle('model.pkl')
 
     test = np.linspace(0, 50000, num=1000)

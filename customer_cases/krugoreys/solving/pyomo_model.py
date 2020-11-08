@@ -89,9 +89,7 @@ class SimpleFlowModel:
         self.mod = mod
 
     def trip_start_time(self, m, t):
-        """
-        Время начала
-        """
+        """Время начала."""
         return sum(
             m.car_transition_hour_var[c, t, h] * h
             for h in m.hours
@@ -99,9 +97,7 @@ class SimpleFlowModel:
         )
 
     def trip_car(self, m, t):
-        """
-        Машина, которая взяла trip
-        """
+        """Машина, которая взяла trip."""
         return sum(
             m.car_transition_hour_var[c, t, h] * c
             for h in m.hours
@@ -109,9 +105,7 @@ class SimpleFlowModel:
         )
 
     def trips_next_12_hours(self, m, c, h):
-        """
-        В ближайшие 12 часов
-        """
+        """В ближайшие 12 часов."""
         return sum(
             m.car_transition_hour_var[c, t, h] + m.car_transition_hour_var[c, t, h] * c
             for t in m.trips

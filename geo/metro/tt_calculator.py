@@ -1,6 +1,4 @@
-"""
-В этом модуле создается матрица расстояний с учетом общественного транспорта
-"""
+"""В этом модуле создается матрица расстояний с учетом общественного транспорта."""
 import os
 
 import bs4
@@ -14,9 +12,7 @@ from scipy.sparse.csgraph._shortest_path import floyd_warshall
 
 class MetroWalker():
     def __init__(self, xml_filename, dataframe: pd.DataFrame = None, matrix: np.ndarray = None):
-        """
-        parse metro xml
-        """
+        """parse metro xml."""
         self.dataframe = dataframe or self.parse_metrodata(xml_filename)
         """
         calculate time budgets
@@ -83,9 +79,7 @@ class MetroWalker():
         return dist_matrix
 
     def walking_time(self, start, finish):
-        """
-        time in seconds
-        """
+        """time in seconds."""
         return (distance(start, finish).km / 5.0) * 3600
 
     def calc_time(self, start, finish):

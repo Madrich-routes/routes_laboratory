@@ -3,7 +3,7 @@ from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 
 def print_solution(data, manager, routing, solution):
-    """ Функция из примера """
+    """Функция из примера."""
     max_route_distance = 0
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)

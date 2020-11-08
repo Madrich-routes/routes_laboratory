@@ -1,6 +1,6 @@
-"""
-В этом модуле находятся разные геометрии. Штуковины, которые отдают
- расстояние и время проезда в зависимости от условий.
+"""В этом модуле находятся разные геометрии.
+
+Штуковины, которые отдают расстояние и время проезда в зависимости от условий.
 """
 
 from functools import lru_cache
@@ -13,10 +13,8 @@ from utils.types import Array
 
 
 class DistanceMatrixGeometry(BaseGeometry):
-    """
-    Простая геометрия, которая получает на вход одну матрицу расстояний
-    и дефолтную скорость (которую можно менять)
-    """
+    """Простая геометрия, которая получает на вход одну матрицу расстояний и дефолтную скорость (которую можно
+    менять)"""
 
     def __init__(
         self,
@@ -38,8 +36,9 @@ class DistanceMatrixGeometry(BaseGeometry):
 
     @lru_cache
     def time_matrix(self, **kwargs):
-        """
-        Вообще говоря, это лучше не использовать. Это скорее адаптер.
+        """Вообще говоря, это лучше не использовать.
+
+        Это скорее адаптер.
         """
         assert len(kwargs) == 0
         return self.d / self.default_speed
@@ -52,9 +51,7 @@ class DistanceMatrixGeometry(BaseGeometry):
 
 
 class DistanceAndTimeMatrixGeometry(BaseGeometry):
-    """
-    Геометрия, которой задали 2 матрицы — времени и расстояния
-    """
+    """Геометрия, которой задали 2 матрицы — времени и расстояния."""
 
     def __init__(
         self,
@@ -75,8 +72,9 @@ class DistanceAndTimeMatrixGeometry(BaseGeometry):
 
     @lru_cache
     def time_matrix(self, **kwargs):
-        """
-        Вообще говоря, это лучше не использовать. Это скорее адаптер.
+        """Вообще говоря, это лучше не использовать.
+
+        Это скорее адаптер.
         """
         assert len(kwargs) == 0
         return self.d
@@ -87,9 +85,7 @@ class DistanceAndTimeMatrixGeometry(BaseGeometry):
 
 
 class HaversineGeometry(BaseGeometry):
-    """
-    Геометрия, которая считает расстояние напрямую между точками, заданными lat и lon
-    """
+    """Геометрия, которая считает расстояние напрямую между точками, заданными lat и lon."""
 
     def __init__(
         self,
@@ -123,9 +119,7 @@ class HaversineGeometry(BaseGeometry):
 
 
 class DescartesGeometry(BaseGeometry):
-    """
-    Геометрия, которая считает расстояние напрямую между точками, заданными декартовыми координаитами
-    """
+    """Геометрия, которая считает расстояние напрямую между точками, заданными декартовыми координаитами."""
 
     def __init__(
         self,

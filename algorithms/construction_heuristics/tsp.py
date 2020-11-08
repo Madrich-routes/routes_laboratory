@@ -14,9 +14,7 @@ from utils.types import Array
 # TODO: Найти все жадные туры одновременно, вероятно, можно быстро. (За квадрат)
 
 def random_tour(matrix: Array):
-    """
-    Случайный тур коммивояжера.
-    """
+    """Случайный тур коммивояжера."""
     n = len(matrix)
     tour = np.arange(n)
     np.random.shuffle(tour)
@@ -25,17 +23,15 @@ def random_tour(matrix: Array):
 
 
 def sweep(points: Array):
-    """
-    Идем по кругу и в этом порядке берем точки
-    """
+    """Идем по кругу и в этом порядке берем точки."""
     t = np.arctan2(points[:, 0], points[:, 1])
     return np.argsort(t)
 
 
 def walk(matrix: Array, candidates: Array, first: int = None):
-    """
-    Идем по ребрам-кандидатам до тех пор, пока можем. Если не можем, берем кратчайшее неиспользованное.
-    Кандидаты — списки смежности
+    """Идем по ребрам-кандидатам до тех пор, пока можем.
+
+    Если не можем, берем кратчайшее неиспользованное. Кандидаты — списки смежности
     """
     n = len(matrix)
     used = np.zeros(n, dtype=bool)
@@ -56,8 +52,8 @@ def walk(matrix: Array, candidates: Array, first: int = None):
 
 
 def tsp_nn(matrix: Array, first: int = None):
-    """
-    Тур, получаемый присоединением случайного соседа начиная с first.
+    """Тур, получаемый присоединением случайного соседа начиная с first.
+
     # TODO: можно сделать быстрее
     """
     n = len(matrix)
@@ -76,9 +72,7 @@ def tsp_nn(matrix: Array, first: int = None):
 
 
 def greedy(matrix: np.ndarray):
-    """
-    Жадный алгоритм для задачи коммивояжера.
-    """
+    """Жадный алгоритм для задачи коммивояжера."""
     assert matrix.shape[0] == matrix.shape[1]
     n = len(matrix)
 
@@ -100,8 +94,8 @@ def greedy(matrix: np.ndarray):
 
 
 def mst_approx(matrix: np.ndarray):
-    """
-    2-приближение через MST
+    """2-приближение через MST.
+
     # TODO: закончить эту штуку
     """
     minimum_spanning_tree(matrix)
@@ -120,9 +114,7 @@ def cheapest_insertion(
 
 
 def generate_initial_solution(matrix: Array, points: Array = None, candidates: Array = None):
-    """
-    Генерируем случайное случайным методом генерации
-    """
+    """Генерируем случайное случайным методом генерации."""
     methods = [
         lambda: random_tour(matrix),
         lambda: sweep(points),
@@ -137,8 +129,8 @@ def generate_initial_solution(matrix: Array, points: Array = None, candidates: A
 # ----------------------------------------------- helpers -----------------------------------------------------------
 
 def connect(i, j, ri, rj):
-    """
-    Соединяем ri, rj в правильном порядке
+    """Соединяем ri, rj в правильном порядке.
+
     # TODO: попробовать эту же тему, вместо объединения брать tuple с флагом reversed
     """
     if ri[0] == i and rj[0] == j:

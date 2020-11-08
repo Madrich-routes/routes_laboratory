@@ -13,8 +13,9 @@ except ImportError:
 
 
 def one_point(ind1: Array, ind2: Array):
-    """
-    Одноточечный кросовер. Просто обмениваемся начальными кусками последовательности.
+    """Одноточечный кросовер.
+
+    Просто обмениваемся начальными кусками последовательности.
     """
     size = min(len(ind1), len(ind2))
     cp = random.randint(1, size - 1)
@@ -22,8 +23,9 @@ def one_point(ind1: Array, ind2: Array):
 
 
 def two_point(ind1: Array, ind2: Array):
-    """
-    Двуточечный кросовер. Меняем кусок из середины.
+    """Двуточечный кросовер.
+
+    Меняем кусок из середины.
     """
     size = min(len(ind1), len(ind2))
     cp1, cp2 = crossover_points(size)
@@ -31,17 +33,16 @@ def two_point(ind1: Array, ind2: Array):
 
 
 def messy(ind1: Array, ind2: Array):
-    """
-    Обмениваемся началами разной длины.
-    """
+    """Обмениваемся началами разной длины."""
     cp1 = random.randint(0, len(ind1))
     cp2 = random.randint(0, len(ind2))
     ind1[cp1:], ind2[cp2:] = ind2[cp2:], ind1[cp1:]
 
 
 def uniform(ind1: Array, ind2: Array, swap_proba: float):
-    """
-    Свапаем переменные с некоторой вероятностью. (Можно для кажджой штуки свою)
+    """Свапаем переменные с некоторой вероятностью.
+
+    (Можно для кажджой штуки свою)
     """
     size = min(len(ind1), len(ind2))
 
@@ -53,8 +54,7 @@ def uniform(ind1: Array, ind2: Array, swap_proba: float):
 
 
 def pmx(ind1: Array, ind2: Array):
-    """
-    Partially matched crossover.
+    """Partially matched crossover.
 
     Parameters
     ----------
@@ -63,7 +63,6 @@ def pmx(ind1: Array, ind2: Array):
 
     Returns
     -------
-
     """
     size = min(len(ind1), len(ind2))
     p1, p2 = [0] * size, [0] * size

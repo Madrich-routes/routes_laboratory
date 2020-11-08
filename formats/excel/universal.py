@@ -32,8 +32,7 @@ class StandardDataFormat:
         self.depots: pd.DataFrame = None
 
     def to_excel(self, problem: RichVRPProblem, path: str):
-        """
-        Конвертируем RichVRPProblem в наш Excel.
+        """Конвертируем RichVRPProblem в наш Excel.
 
         Parameters
         ----------
@@ -91,8 +90,7 @@ class StandardDataFormat:
             depots.to_excel(writer, sheet_name='Склады')
 
     def from_excel(self, path: str) -> RichVRPProblem:
-        """
-        Конвертируем наш Excel в RichVRPProblem.
+        """Конвертируем наш Excel в RichVRPProblem.
 
         Parameters
         ----------
@@ -170,8 +168,7 @@ class StandardDataFormat:
 
 
 def time_windows_to_str(time_windows: List[Tuple[int, int]]) -> str:
-    """
-    Приведение стандартного time_windows в удобочитаемый вид.
+    """Приведение стандартного time_windows в удобочитаемый вид.
 
     Parameters
     ----------
@@ -190,8 +187,7 @@ def time_windows_to_str(time_windows: List[Tuple[int, int]]) -> str:
 
 
 def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
-    """
-    Приведение временных рамок в time_windows.
+    """Приведение временных рамок в time_windows.
 
     Parameters
     ----------

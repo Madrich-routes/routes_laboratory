@@ -11,8 +11,7 @@ def dumps_matrix(
     distance_matrix: Matrix,
     time_matrix: Matrix,
 ) -> str:
-    """
-    Получаем pragmatic представление матрицы расстояний
+    """Получаем pragmatic представление матрицы расстояний.
 
     Parameters
     ----------
@@ -36,8 +35,7 @@ def dumps_matrix(
 def build_matrices(
     geometries: Dict[str, BaseGeometry],
 ) -> Dict[str, str]:
-    """
-    Строим матрицы для словаря геометрий
+    """Строим матрицы для словаря геометрий.
 
     Parameters
     ----------

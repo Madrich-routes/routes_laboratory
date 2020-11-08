@@ -13,9 +13,7 @@ from utils.serialization import load_np, read_pickle
 
 
 def build_row(trip: int, time: int, vehicle: int):
-    """
-    Поменять соответствующую строчку в результируюзем excel
-    """
+    """Поменять соответствующую строчку в результируюзем excel."""
     r = pretty_df.loc[trip]
 
     start_dt = datetime.fromtimestamp(time)

@@ -17,9 +17,7 @@ Point = Tuple[float, float]
 
 def reindexing(depot: Depot, depot_id: str, global_revers: dict, tasks: Dict[str, List[Task]],
                address_mapping: Dict[Point, Tuple[str, str, str]]) -> Dict[Point, int]:
-    """
-     Reindexing for tasks location
-    """
+    """Reindexing for tasks location."""
 
     internal_mapping, index = {}, 0
     if len(tasks[depot_id]) > 10:

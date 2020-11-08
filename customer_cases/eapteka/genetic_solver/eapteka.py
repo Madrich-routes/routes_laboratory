@@ -25,9 +25,7 @@ def prepare_courier(
     depot: Depot,
     couriers: List[Courier]
 ):
-    """
-    Prepare courier for send them to depot
-    """
+    """Prepare courier for send them to depot."""
     courier_loc = 0
     for point in internal_mappings[depot_id]:
         courier_loc = internal_mappings[depot_id][point]
@@ -51,9 +49,7 @@ def prepare_statistic(
     depots_output: dict,
     couriers_output: dict,
 ):
-    """
-    Save statistic from solution
-    """
+    """Save statistic from solution."""
     statistic = solution['statistic']
     add_depot(depots_output, depot_id, statistic['distance'], statistic['duration'])
     names, st = [], 0
@@ -94,9 +90,7 @@ def refactor_couriers(
     couriers: List[Courier],
     names: List[Tuple[str, str, str]]
 ) -> Tuple[int, List[Courier]]:
-    """
-    Refactor used couriers for sending them to another depots
-    """
+    """Refactor used couriers for sending them to another depots."""
     sv, tmp_couriers = 0, []
 
     for name, start_time, end_time in names:
@@ -124,9 +118,7 @@ def get_solution(
     depots_path: str,
     directory_couriers: str,
 ):
-    """
-    Run solver and get solution
-    """
+    """Run solver and get solution."""
     solutions, tours, all_points = {}, {}, 0
     couriers_output, depots_output = defaultdict(list), defaultdict(list)
 

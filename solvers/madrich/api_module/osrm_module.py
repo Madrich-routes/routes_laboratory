@@ -44,7 +44,8 @@ def _turn_over(points):
 
 def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]], host=osrm_host, dst=None,
                profile="driving") -> Union[array, List[array]]:
-    """ Возвращает ассиметричные матрицы смежности
+    """Возвращает ассиметричные матрицы смежности.
+
     :param points: points
     :param factor: duration; distance annotation for osrm
     :param host: osrm host
@@ -76,7 +77,8 @@ def get_matrix(points: Union[array, List[Point]], factor: Union[str, List[str]],
 
 def get_matrices(points: Union[array, List[Point]], factor: Union[str, List[str]], max_cost: int, split=15,
                  host=osrm_host, dst=None, profile="driving") -> Union[array, List[array]]:
-    """ Возвращает нужное кол-во матриц смежностей
+    """Возвращает нужное кол-во матриц смежностей.
+
     :param points: points
     :param factor: duration, distance
     :param max_cost: сколько времени со старта пройдет

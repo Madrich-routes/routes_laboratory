@@ -99,9 +99,7 @@ class SimpleFlowModel:
         self.mod = mod
 
     def transition_start_time(self, m, t1):
-        """
-        Время, когда из t1 уехали
-        """
+        """Время, когда из t1 уехали."""
         return sum(
             m.car_transition_hour_var[c, t1, t2, h] * h
             for h in m.hours
@@ -110,9 +108,7 @@ class SimpleFlowModel:
         )
 
     def transition_end_time(self, m, t2):
-        """
-        Время, когда в t2 приехали
-        """
+        """Время, когда в t2 приехали."""
         return sum(
             m.car_transition_hour_var[c, t1, t2, h] * h
             for h in m.hours
@@ -121,15 +117,11 @@ class SimpleFlowModel:
         )
 
     def trip_time(self, m, t):
-        """
-        Время, которое занимает trip
-        """
+        """Время, которое занимает trip."""
         return self.transition_end_time(m, t) - self.transition_start_time(m, t)
 
     def transition_time(self, m, t1, t2):
-        """
-        Время, которое занимает transition
-        """
+        """Время, которое занимает transition."""
         return self.transition_end_time(m, t2) - self.transition_start_time(m, t1)
 
     def instantiate(  # noqa

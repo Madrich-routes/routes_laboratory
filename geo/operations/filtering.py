@@ -22,8 +22,7 @@ def check_circle(
         center: Tuple[float, float],
         radius: float,
 ) -> bool:
-    """
-    Проверяем, что точка принадлежит окружности
+    """Проверяем, что точка принадлежит окружности.
 
     Parameters
     ----------
@@ -50,8 +49,7 @@ def check_square(
         borders: Optional[Tuple[Tuple[float, float], Tuple[float, float]]] = None,
         region: Optional[str] = None,
 ) -> bool:
-    """
-    Проверяем, что точка лежит в квадрате
+    """Проверяем, что точка лежит в квадрате.
 
     >>> check_square(0, 1, ((-1, 1), (-1, 1)))
     True

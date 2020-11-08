@@ -37,9 +37,7 @@ def get_dist_coeff(df: pd.DataFrame):
 
 
 def fix_data_errors(df: pd.DataFrame):
-    """
-    Чиним косяки и преобразуем типы
-    """
+    """Чиним косяки и преобразуем типы."""
     df['osrm_dist'] = df.osrm_dist.fillna(df.line_dist * 1.23)
     df.start_time = pd.to_datetime(df.start_time)
     df.end_time = pd.to_datetime(df.end_time)

@@ -14,25 +14,20 @@ def select_lexicase(
     n_objectives: int,
     epsilon: float = None,
 ):
-    """
-    Выбираем лучших по каждой метрике.
-    Вообще-то, похоже, что это было придумано для разных измерений величины. (хз)
+    """Выбираем лучших по каждой метрике. Вообще-то, похоже, что это было придумано для разных измерений
+    величины. (хз)
 
     http://faculty.hampshire.edu/lspector/pubs/lexicase-IEEE-TEC.pdf
     https://push-language.hampshire.edu/uploads/default/original/1X/35c30e47ef6323a0a949402914453f277fb1b5b0.pdf
     """
 
     def estimate_epsilon(metrics: Array):
-        """
-        Автоматически оцениваем epsilon
-        """
+        """Автоматически оцениваем epsilon."""
         median_val = np.median(metrics)
         return np.median(np.abs(metrics - median_val))
 
     def update_candidates(candidates, m):
-        """
-        Оставляем только хороших кандидатов
-        """
+        """Оставляем только хороших кандидатов."""
         metrics = np.array([x.metrics[m] for x in candidates])
         max_val = metrics.max()
         eps = (
@@ -61,9 +56,8 @@ def select_double_tournament(
     choose_first: Callable[[List[BaseIndividual]], List[BaseIndividual]],
     choose_second: Callable[[List[BaseIndividual]], List[BaseIndividual]],
 ):
-    """
-    Отбираем в 2 этапа, можно по разным метрикам. Можно обобщить на разные метрики.
-    В оригинале, первая — select_probability_tournament по длине вектора, потом select_tournament по fitness.
+    """Отбираем в 2 этапа, можно по разным метрикам. Можно обобщить на разные метрики. В оригинале, первая —
+    select_probability_tournament по длине вектора, потом select_tournament по fitness.
     select_probability_tournament используется, чтобы уменьшить давление отбора.
 
     Для лучших результатов предлагается ограничить глубину (wat?).

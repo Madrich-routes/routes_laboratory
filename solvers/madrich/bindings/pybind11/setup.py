@@ -42,7 +42,7 @@ else:
 
 
 class InstallHeaders(install_headers):
-    """Use custom header installer because the default one flattens subdirectories"""
+    """Use custom header installer because the default one flattens subdirectories."""
     def run(self):
         if not self.distribution.headers:
             return

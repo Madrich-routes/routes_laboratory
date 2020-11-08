@@ -121,7 +121,7 @@ def test_override_static():
 
 
 def test_implicit_conversion_life_support():
-    """Ensure the lifetime of temporary objects created for implicit conversions"""
+    """Ensure the lifetime of temporary objects created for implicit conversions."""
     assert m.implicitly_convert_argument(UserType(5)) == 5
     assert m.implicitly_convert_variable(UserType(5)) == 5
 
@@ -129,7 +129,7 @@ def test_implicit_conversion_life_support():
 
 
 def test_operator_new_delete(capture):
-    """Tests that class-specific operator new/delete functions are invoked"""
+    """Tests that class-specific operator new/delete functions are invoked."""
 
     class SubAliased(m.AliasedHasOpNewDelSize):
         pass
@@ -178,7 +178,7 @@ def test_operator_new_delete(capture):
 
 
 def test_bind_protected_functions():
-    """Expose protected member functions to Python using a helper class"""
+    """Expose protected member functions to Python using a helper class."""
     a = m.ProtectedA()
     assert a.foo() == 42
 
@@ -197,7 +197,7 @@ def test_bind_protected_functions():
 
 
 def test_brace_initialization():
-    """ Tests that simple POD classes can be constructed using C++11 brace initialization """
+    """Tests that simple POD classes can be constructed using C++11 brace initialization."""
     a = m.BraceInitialization(123, "test")
     assert a.field1 == 123
     assert a.field2 == "test"

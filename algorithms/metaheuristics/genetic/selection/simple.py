@@ -1,6 +1,4 @@
-"""
-Просто разные полезные способы выбрать индивидов из поколения
-"""
+"""Просто разные полезные способы выбрать индивидов из поколения."""
 import random
 from typing import List, Callable
 
@@ -18,9 +16,7 @@ def select_random(
     k: int,
     with_replacements: bool = False,
 ) -> List[BaseIndividual]:
-    """
-    Выбираем рандомных
-    """
+    """Выбираем рандомных."""
     if with_replacements:
         return random.choices(population, k=k)
     else:
@@ -31,9 +27,7 @@ def select_worst(
     population: List[BaseIndividual],
     k: int,
 ) -> List[BaseIndividual]:
-    """
-    Выбираем худших
-    """
+    """Выбираем худших."""
     return sorted(population, key=lambda x: x.fitness)[:k]
 
 
@@ -41,9 +35,7 @@ def select_best(
     population: List[BaseIndividual],
     k: int,
 ) -> List[BaseIndividual]:
-    """
-    Выбираем лучших
-    """
+    """Выбираем лучших."""
     return sorted(population, key=lambda x: x.fitness, reverse=True)[:k]
 
 
@@ -65,9 +57,7 @@ def stochastic_universal_sampling(
     k: int,
     key: Callable[['BaseIndividual'], float],
 ) -> List[BaseIndividual]:
-    """
-    Двигаемся равномерными шагами через распределение вероятностей.
-    """
+    """Двигаемся равномерными шагами через распределение вероятностей."""
     population.sort(key=key)
     probability = normalize_fitnesses([key(i) for i in population])  # Нормализуем фитнесы
     points = (np.arange(k) + random.random()) * (probability.sum() / k)  # Рандомные шаги
@@ -84,9 +74,7 @@ def select_tournament(
     k: int,
     group_size: int,
 ) -> List[BaseIndividual]:
-    """
-    Турнир группками.
-    """
+    """Турнир группками."""
     chosen = []
     for _ in range(k):
         aspirants = select_random(population=population, k=group_size, with_replacements=False)
@@ -100,8 +88,8 @@ basinhopping()
 def select_probability_tournament(
     population: List[BaseIndividual], k: int, prob: float, key: Callable[[BaseIndividual], float]
 ) -> List[BaseIndividual]:
-    """
-    Выбираем в турнире лучшего с некоторой вероятностью.
+    """Выбираем в турнире лучшего с некоторой вероятностью.
+
     (Можно брать турнир из большего количества)
     """
     chosen = []
@@ -121,10 +109,9 @@ def normalize_fitnesses(
     fitnesses: Array,
     equality_factor: float = 0.05,
 ) -> Array:
-    """
-    Нормализуем массив фитнесов так, чтобы можно было семлить из популяции.
-    После применения этой функции гарантируется, что все значения будут неотрицательными и суммироваться в 1.
-    При equality_factor -> -1, мы будем выбирать только самых лучших, при -> inf будем выбирать равномерно.
+    """Нормализуем массив фитнесов так, чтобы можно было семлить из популяции. После применения этой функции
+    гарантируется, что все значения будут неотрицательными и суммироваться в 1. При equality_factor -> -1, мы
+    будем выбирать только самых лучших, при -> inf будем выбирать равномерно.
 
     Parameters
     ----------

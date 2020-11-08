@@ -2,8 +2,9 @@ from temp.tsp import List
 
 
 class BaseIndividual:
-    """
-    Класс для примера. Что-то, у чего есть fitness
+    """Класс для примера.
+
+    Что-то, у чего есть fitness
     """
 
     def __init__(

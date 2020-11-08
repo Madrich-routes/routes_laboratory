@@ -1,5 +1,6 @@
-"""
-Временный модуль для остальных api. Со временем его нужно будет разбить на куски.
+"""Временный модуль для остальных api.
+
+Со временем его нужно будет разбить на куски.
 """
 import herepy
 from dask.bytes.tests.test_http import requests
@@ -11,9 +12,7 @@ eapteka_path = ''
 geocoderApi = herepy.GeocoderApi('')
 
 def here_api(address: str):
-    """
-    Геокодим через here
-    """
+    """Геокодим через here."""
     if not address:
         return None
     response = geocoderApi.free_form(address)
@@ -29,9 +28,7 @@ def here_api(address: str):
 
 
 def yandex_api(address: str):
-    """
-    Геокодим через yandex
-    """
+    """Геокодим через yandex."""
     if not address:
         return None
     r = requests.get(f'https://geocode-maps.yandex.ru/1.x/?apikey={YANDEX}&format=json&' +

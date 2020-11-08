@@ -156,7 +156,7 @@ def test_accessors():
 
 
 def test_constructors():
-    """C++ default and converting constructors are equivalent to type calls in Python"""
+    """C++ default and converting constructors are equivalent to type calls in Python."""
     types = [str, bool, int, float, tuple, list, dict, set]
     expected = {t.__name__: t() for t in types}
     assert m.default_constructors() == expected

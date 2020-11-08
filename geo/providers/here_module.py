@@ -21,7 +21,8 @@ factor_to_summary = {
 
 
 def run(function, **kwargs):
-    """ Обертка для асинхронных функций, которые используют aiohttp
+    """Обертка для асинхронных функций, которые используют aiohttp.
+
     :param function: вызываемая ф-я
     :param kwargs: параметры для нее
     :return: ну че там вызвали, то и вернет
@@ -37,7 +38,8 @@ def run(function, **kwargs):
 
 def get_matrix(points: Points, modes: List[RouteMode], start_t: float, key: str,
                factor: Union[str, List[str]] = 'travelTime') -> Points:
-    """ Get full Adjacency matrix
+    """Get full Adjacency matrix.
+
     :param points: points
     :param modes: [Type, TransportMode, TrafficMode, Feature]
     :param start_t: start time in seconds
@@ -50,7 +52,8 @@ def get_matrix(points: Points, modes: List[RouteMode], start_t: float, key: str,
 
 def get_matrix_sd(src: Points, dst: Points, modes: List[RouteMode],
                   start_t: float, key: str, factor: Union[str, List[str]]) -> Points:
-    """ Get matrix from sources to destinations
+    """Get matrix from sources to destinations.
+
     :param src: sources
     :param dst: destinations
     :param modes: modes here api
@@ -93,7 +96,8 @@ class HereModule:
     @staticmethod
     async def matrix(session: ClientSession, src: Points, dst: Points,
                      modes: List[RouteMode], summary: List[MatrixSummaryAttribute], key: str, departure='now') -> dict:
-        """ Matrix between M starts and N destinations, M < 16
+        """Matrix between M starts and N destinations, M < 16.
+
         :param session: aiohttp ClientSession
         :param src: points
         :param dst: points
@@ -161,7 +165,8 @@ class HereModule:
     @staticmethod
     async def get_matrix(session: ClientSession, points: Points, modes: List[RouteMode],
                          start_t: float, key: str, factor: Union[str, List[str]]) -> Union[array, List[array]]:
-        """ Get full Adjacency matrix
+        """Get full Adjacency matrix.
+
         :param session: aiohttp ClientSession
         :param points: points
         :param modes: [Type, TransportMode, TrafficMode, Feature]
@@ -191,7 +196,8 @@ class HereModule:
     async def get_matrices(session: ClientSession, points: Points, modes: List[RouteMode],
                            factor: Union[str, List[str]], start_t: float, max_cost: int, key: str, split: int,
                            ) -> Union[array, List[array]]:
-        """ All adjacency matrices from start time to max_cost time every disc minutes
+        """All adjacency matrices from start time to max_cost time every disc minutes.
+
         :param session: aiohttp ClientSession
         :param points: points
         :param modes: [Type, TransportMode, TrafficMode, Feature]

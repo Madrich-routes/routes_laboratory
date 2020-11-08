@@ -11,9 +11,7 @@ Edge = Tuple[int, int]
 
 
 class ArrayTour(Tour):
-    """
-    Просто набор вершин.
-    """
+    """Просто набор вершин."""
 
     def __hash__(self):
         return generate_hash(self.nodes)
@@ -125,9 +123,7 @@ def get_length(tour: np.ndarray, matrix: np.ndarray) -> float:
 
 
 def get_inf(matrix: np.ndarray, mult: int = 30):
-    """
-    Длина ребра, такая, чтобы точно не попасть в тур
-    """
+    """Длина ребра, такая, чтобы точно не попасть в тур."""
     # return get_length(np.arange(len(matrix)), matrix)
     # return matrix.sum()
 

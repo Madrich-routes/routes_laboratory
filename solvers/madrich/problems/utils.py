@@ -11,7 +11,7 @@ vector = nb.typed.List
 
 @nb.njit(parallel=True)
 def adjacency_matrix(points: array) -> array:
-    """ Матрица смежности """
+    """Матрица смежности."""
     size = points.shape[0]
     matrix = np.zeros(shape=(size, size))
     for idx in range(0, size):
@@ -65,9 +65,10 @@ def rotate_value(tour: array, value: int) -> array:
 
 @nb.njit
 def mix(tour: array, iterations: int) -> None:
-    """ Попытка сломать тур. Ломается текущий сохраненный.
-    Идея в том, что если не получилось выйти из текущего локального оптимума,
-    с перемешанными n вершинами, то стоит попробовать перемешать еще n.
+    """Попытка сломать тур.
+
+    Ломается текущий сохраненный. Идея в том, что если не получилось выйти из текущего локального оптимума, с
+    перемешанными n вершинами, то стоит попробовать перемешать еще n.
     """
     for _ in range(iterations):
         size = len(tour) - 1
@@ -78,7 +79,8 @@ def mix(tour: array, iterations: int) -> None:
 
 
 def swap(route: list, x: int, y: int) -> list:
-    """ Переворот куска тура: [x, y], включительно!
+    """Переворот куска тура: [x, y], включительно!
+
     :param route:
     :param x: индекс
     :param y: индекс
@@ -158,7 +160,8 @@ def cross(route1: list, route2: list, it1: int, it2: int, it3: int, it4: int) ->
 
 
 def replace(route1: list, route2: list, it1: int, it2: int) -> Tuple[list, list]:
-    """ Перемещение точки из тура 2 в тур 1
+    """Перемещение точки из тура 2 в тур 1.
+
     :param route1: тур 1
     :param route2: тур 2
     :param it1: куда вставить

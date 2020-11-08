@@ -1,6 +1,4 @@
-"""
-Здесь описан pragmatic формат используемый в растовском солвере
-"""
+"""Здесь описан pragmatic формат используемый в растовском солвере."""
 import json
 from dataclasses import dataclass
 from datetime import datetime
@@ -10,8 +8,7 @@ from models import rich_vrp
 
 
 def ts_to_iso(ts: int) -> str:
-    """
-    Конвертируем unix timestamp в ISO 8601. В pragmatic время представлено в таком формате.
+    """Конвертируем unix timestamp в ISO 8601. В pragmatic время представлено в таком формате.
 
     >>> ts_to_iso(0)
     '1970-01-01T03:00:00'
@@ -29,8 +26,7 @@ def ts_to_iso(ts: int) -> str:
 
 
 def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
-    """
-    Конвретируем временное окно из таймстампов в ISO 8601
+    """Конвретируем временное окно из таймстампов в ISO 8601.
 
     >>> convert_tw([(0, 0)])
     [('1970-01-01T03:00:00', '1970-01-01T03:00:00')]
@@ -68,9 +64,7 @@ class Place:
         )
 
     def dump(self) -> dict:
-        """
-        Словарь с описанием place
-        """
+        """Словарь с описанием place."""
         res = dict(
             duration=self.duration,
             location={

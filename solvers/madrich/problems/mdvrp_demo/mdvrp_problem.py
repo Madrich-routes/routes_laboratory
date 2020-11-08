@@ -13,7 +13,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def init(vec: int, storages: List[Storage], couriers: List[Courier], matrices: Dict[str, Matrix]) -> Tour:
-        """ Строим жадно тур: по ближайшим подходящим соседям для каждого курьера
+        """Строим жадно тур: по ближайшим подходящим соседям для каждого курьера.
+
         :param vec: длина вектора value
         :param storages: все склады
         :param couriers: все доступные курьеры
@@ -32,7 +33,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def get_state(route: Route) -> Optional[State]:
-        """ Подсчитываем праметры тура и проверяем на правильность и обновляем Route
+        """Подсчитываем праметры тура и проверяем на правильность и обновляем Route.
+
         :param route: маршрут
         :return: состояние
         """
@@ -74,7 +76,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def get_state_track(track: Track, route: Route) -> Optional[State]:
-        """ Оценка снизу подмаршрута
+        """Оценка снизу подмаршрута.
+
         :param track: подмаршрут
         :param route: маршрут
         :return: оценка
@@ -97,7 +100,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __greedy_route(vec: int, courier: Courier, matrices: Dict[str, Matrix]) -> Route:
-        """ Строим жадно тур: по ближайшим подходящим соседям
+        """Строим жадно тур: по ближайшим подходящим соседям.
+
         :param vec: длина вектора value
         :param courier: курьер для которого строим тур
         :param matrices: матрица расстояний/времени
@@ -135,7 +139,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __end(curr_point: int, route: Route) -> State:
-        """ Заканчиваем, едем с последней задачи в конечную точку
+        """Заканчиваем, едем с последней задачи в конечную точку.
+
         :param curr_point: текущая позиция
         :param route: маршрут
         :return: состояние
@@ -149,7 +154,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __cost(travel_time: int, distance: int, route: Route) -> float:
-        """ Получение стоимости
+        """Получение стоимости.
+
         :param travel_time: изменение времени
         :param distance: изменение расстояния
         :param route: маршрут
@@ -159,7 +165,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __validate_skills(obj: Union[Job, Storage], courier: Courier) -> bool:
-        """ Проверяем, что задача или склад подходит курьеру
+        """Проверяем, что задача или склад подходит курьеру.
+
         :param obj: объект в котором проверяем умения
         :param courier: курьер с умениями
         :return: может или нет
@@ -171,7 +178,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __validate_courier(state: State, route: Route) -> bool:
-        """ Проверяем, что курьер еще жив
+        """Проверяем, что курьер еще жив.
+
         :param state: текущее состояние тура полностью
         :param route: маршрут
         :return: все норм или нет
@@ -193,7 +201,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __validate_storage(travel_time: int, storage: Storage, route: Route) -> bool:
-        """ Проверяем, что поездка на склад возможна
+        """Проверяем, что поездка на склад возможна.
+
         :param travel_time: текущее время с начала работы маршрута
         :param storage: склад
         :param route: маршрут
@@ -207,7 +216,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __validate_job(travel_time: int, job: Job, route: Route) -> bool:
-        """ Проверяем, что поездка на эту задачу возможна
+        """Проверяем, что поездка на эту задачу возможна.
+
         :param travel_time: текущее время с начала работы маршрута
         :param job: заказ
         :param route: маршрут
@@ -222,7 +232,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __storages(location: int, state: State, route: Route) -> Optional[List[Storage]]:
-        """ Выдает склады в порядке увеличения дальности поездки к нему
+        """Выдает склады в порядке увеличения дальности поездки к нему.
+
         :param location: текущая позиция
         :param state: текущее состояние тура
         :param route: маршрут
@@ -260,7 +271,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __init_track(location: int, state: State, route: Route) -> Optional[Tuple[State, Track]]:
-        """ Доехать до ближайщего непустого склада + создать подмаршрут
+        """Доехать до ближайщего непустого склада + создать подмаршрут.
+
         :param location: текущая позиция
         :param state: текущее состояния полное
         :param route: маршрут
@@ -283,7 +295,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __choose_job(curr_point: int, state: State, track: Track, route: Route) -> Optional[State]:
-        """ Получаем оценку стоимости поезки на следующую задачу; job will be added into Track
+        """Получаем оценку стоимости поезки на следующую задачу; job will be added into Track.
+
         :param curr_point: текущая позиция
         :param state: текущее полное состояние
         :param track: текущий подмаршрут
@@ -316,7 +329,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __go_storage(curr_point: int, state: State, storage: Storage, route: Route) -> Optional[State]:
-        """ Оценка стоимости поездки на склад
+        """Оценка стоимости поездки на склад.
+
         :param curr_point: текущая позиция
         :param state: полное состояние тура
         :param storage: склад
@@ -331,7 +345,8 @@ class ProblemMdvrp(Problem):
 
     @staticmethod
     def __go_job(curr_point: int, state: State, job: Job, storage: Storage, route: Route) -> Optional[State]:
-        """ Оценка стоимости поездки на следующую задачу
+        """Оценка стоимости поездки на следующую задачу.
+
         :param curr_point: текущая позиция
         :param state: полное состояние
         :param job: заказ

@@ -36,15 +36,11 @@ class RustSolvable(BaseRoutingProblem, ABC):
 
 class LKHSolvable(BaseRoutingProblem, ABC):
     def lkh_problem(self) -> str:
-        """
-        Сформировать файл проблемы для LKH-решалки
-        """
+        """Сформировать файл проблемы для LKH-решалки."""
         raise NotImplementedError
 
     def lkh_par(self) -> str:
-        """
-        Сформировать параметры для файла параметров lkh
-        """
+        """Сформировать параметры для файла параметров lkh."""
         raise NotImplementedError
 
 

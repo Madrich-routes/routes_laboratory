@@ -1,6 +1,4 @@
-"""
-Модуль с утилитами для обращения к OSRM серверу
-"""
+"""Модуль с утилитами для обращения к OSRM серверу."""
 import urllib
 from itertools import chain
 from typing import Optional, Tuple
@@ -26,8 +24,8 @@ def encode_src_dst(
         return_distances: bool = False,  # что мы хотим получить в результате
         return_durations: bool = True,
 ):
-    """
-    Кодируем координаты src, dst в виде параетров.
+    """Кодируем координаты src, dst в виде параетров.
+
     Возвращаем закодированный polyline и закодированные params
     """
     coords = tuple((c[1], c[0]) for c in chain(src, dst))
@@ -48,9 +46,7 @@ def encode_src_dst(
 
 
 def _turn_over(points: Array):
-    """
-    Переворачиваем все значения по заданной оси
-    """
+    """Переворачиваем все значения по заданной оси."""
     return np.fliplr(points)
 
 
@@ -62,9 +58,7 @@ def table(
         return_distances: bool = False,  # что мы хотим получить в результате
         return_durations: bool = True,
 ) -> Tuple[Array, Array]:
-    """
-    Отправляем запрос матрицы расстояний в OSRM и получаем ответ
-    """
+    """Отправляем запрос матрицы расстояний в OSRM и получаем ответ."""
     polyline, params = encode_src_dst(
         src, dst,
         return_distances=return_distances,
@@ -98,9 +92,8 @@ def get_osrm_matrix(
         return_distances: bool = True,  # что мы хотим получить в результате
         return_durations: bool = True,
 ) -> Tuple[Optional[Array], Optional[Array]]:
-    """
-    Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан.
-    Матрица с одинаковыми параметрами кешируется при первом вызове.
+    """Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан. Матрица с одинаковыми
+    параметрами кешируется при первом вызове.
 
     Возвращаем
     """
@@ -142,8 +135,7 @@ def fix_matrix(
         speed_ratio_low_threshold: float = 2,  # во сколько раз скорость может быть меньше средней
         speed_ratio_up_threshold: float = 1.5,  # во сколько раз скорость может быть больше средней
 ) -> np.ndarray:
-    """
-    Чиним отсустсвующие и неправильные значения в матрице расстояний
+    """Чиним отсустсвующие и неправильные значения в матрице расстояний.
 
     Постусловия:
     1. Нет отсутствующих, и заведомо неверных значений

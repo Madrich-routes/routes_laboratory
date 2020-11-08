@@ -7,7 +7,7 @@ from pybind11_tests.factory_constructors import tag
 
 
 def test_init_factory_basic():
-    """Tests py::init_factory() wrapper around various ways of returning the object"""
+    """Tests py::init_factory() wrapper around various ways of returning the object."""
 
     cstats = [ConstructorStats.get(c) for c in [m.TestFactory1, m.TestFactory2, m.TestFactory3]]
     cstats[0].alive()  # force gc
@@ -88,7 +88,7 @@ def test_init_factory_signature(msg):
 
 
 def test_init_factory_casting():
-    """Tests py::init_factory() wrapper with various upcasting and downcasting returns"""
+    """Tests py::init_factory() wrapper with various upcasting and downcasting returns."""
 
     cstats = [ConstructorStats.get(c) for c in [m.TestFactory3, m.TestFactory4, m.TestFactory5]]
     cstats[0].alive()  # force gc
@@ -133,7 +133,7 @@ def test_init_factory_casting():
 
 
 def test_init_factory_alias():
-    """Tests py::init_factory() wrapper with value conversions and alias types"""
+    """Tests py::init_factory() wrapper with value conversions and alias types."""
 
     cstats = [m.TestFactory6.get_cstats(), m.TestFactory6.get_alias_cstats()]
     cstats[0].alive()  # force gc
@@ -203,7 +203,7 @@ def test_init_factory_alias():
 
 
 def test_init_factory_dual():
-    """Tests init factory functions with dual main/alias factory functions"""
+    """Tests init factory functions with dual main/alias factory functions."""
     from pybind11_tests.factory_constructors import TestFactory7
 
     cstats = [TestFactory7.get_cstats(), TestFactory7.get_alias_cstats()]
@@ -283,8 +283,8 @@ def test_init_factory_dual():
 
 
 def test_no_placement_new(capture):
-    """Prior to 2.2, `py::init<...>` relied on the type supporting placement
-    new; this tests a class without placement new support."""
+    """Prior to 2.2, `py::init<...>` relied on the type supporting placement new; this tests a class without
+    placement new support."""
     with capture:
         a = m.NoPlacementNew(123)
 
@@ -332,8 +332,10 @@ def strip_comments(s):
 
 def test_reallocations(capture, msg):
     """When the constructor is overloaded, previous overloads can require a preallocated value.
-    This test makes sure that such preallocated values only happen when they might be necessary,
-    and that they are deallocated properly"""
+
+    This test makes sure that such preallocated values only happen when they might be necessary, and that they
+    are deallocated properly
+    """
 
     pytest.gc_collect()
 
@@ -419,8 +421,10 @@ def test_reallocations(capture, msg):
 
 @pytest.unsupported_on_py2
 def test_invalid_self():
-    """Tests invocation of the pybind-registered base class with an invalid `self` argument.  You
-    can only actually do this on Python 3: Python 2 raises an exception itself if you try."""
+    """Tests invocation of the pybind-registered base class with an invalid `self` argument.
+
+    You can only actually do this on Python 3: Python 2 raises an exception itself if you try.
+    """
     class NotPybindDerived(object):
         pass
 

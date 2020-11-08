@@ -14,9 +14,7 @@ from utils.logs import logger
 
 
 def id_to_idx(id) -> str:
-    """
-    Добавляем bus к id
-    """
+    """Добавляем bus к id."""
     return f'bus_{id}'
 
 
@@ -26,8 +24,7 @@ def build_df(
     bus_filename: str,
     merged_bus_filename: str,
 ):
-    """
-    Собираем датафрейм с информацией про автобусы
+    """Собираем датафрейм с информацией про автобусы.
 
     * stations_file - скачать с сайта
     * routes_files - скачать с сайта и разбить на файлы до 1миллиона строк
@@ -50,17 +47,13 @@ def build_df(
 
 
 def load_transport_dict(stations_file: str):
-    """
-    Загружаем словарь наземного транспорта
-    """
+    """Загружаем словарь наземного транспорта."""
     logger.info('Загружаем словарь наземного траспорта города Москва...')
     return json.load(open(stations_file, 'r', encoding='cp1251'))
 
 
 def build_station_data(stations: List[Dict]):
-    """
-    Строим данные автобусных станций
-    """
+    """Строим данные автобусных станций."""
     return {
         id_to_idx(station['ID']): {
             'coord': station['geoData']['coordinates'][::-1],
@@ -81,10 +74,7 @@ def load_bus_file(
     stations: Dict,
     n_processes: int = os.cpu_count(),
 ):
-    """
-    Загружем информацию об автобусах в датафрейм
-    Сохраняем этот dataframe в bus_filename
-    """
+    """Загружем информацию об автобусах в датафрейм Сохраняем этот dataframe в bus_filename."""
     logger.info(f'Загружем информацию об автобусах ({len(filenames)}) потоков...')
     process_pool = Pool(processes=len(filenames))
     dfs = process_pool.map(read_csv, filenames)
@@ -110,8 +100,8 @@ def merge_bus_data(
     bus_data: pd.DataFrame,
     merged_bus_filename: str,
 ):
-    """
-    Мержим данные автобусов
+    """Мержим данные автобусов.
+
     # TODO: ??
     """
     logger.info('Объединяем все маршруты автобусов...')
@@ -140,9 +130,7 @@ def build_dataframe(
     data: Dict,
     routes_df: pd.DataFrame,
 ):
-    """
-    Собираем датафрейм с информацией про автобусы
-    """
+    """Собираем датафрейм с информацией про автобусы."""
     add_travel_times(data, routes_df)
     dataframe = pd.DataFrame.from_dict(data, orient='index')
     return dataframe.dropna()
@@ -180,16 +168,12 @@ def add_travel_times(
 
 
 def to_secs(str_time: str) -> int:
-    """
-    Парсим время и превращаем в секунды
-    """
+    """Парсим время и превращаем в секунды."""
     clock = str_time.split(':')
     return int(clock[0]) * 3600 + int(clock[1]) * 60 + int(clock[2])
 
 
 def trip_time(from_str: str, to_str: str) -> int:
-    """
-    Время поездки в секундах
-    """
+    """Время поездки в секундах."""
     diff = to_secs(to_str) - to_secs(from_str)
     return abs(diff)

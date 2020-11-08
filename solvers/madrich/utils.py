@@ -9,7 +9,7 @@ vector = nb.typed.List
 
 
 def print_matrix(matrix: array):
-    """ Вывод матрицы """
+    """Вывод матрицы."""
     string = ''
     for s in matrix:
         for elem in s:

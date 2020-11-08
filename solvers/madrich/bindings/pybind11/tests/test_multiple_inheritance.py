@@ -230,8 +230,8 @@ def test_multiple_inheritance_virtbase():
 
 
 def test_mi_static_properties():
-    """Mixing bases with and without static properties should be possible
-     and the result should be independent of base definition order"""
+    """Mixing bases with and without static properties should be possible and the result should be independent
+    of base definition order."""
 
     for d in (m.VanillaStaticMix1(), m.VanillaStaticMix2()):
         assert d.vanilla() == "Vanilla"
@@ -255,7 +255,7 @@ def test_mi_static_properties():
 
 @pytest.unsupported_on_pypy
 def test_mi_dynamic_attributes():
-    """Mixing bases with and without dynamic attribute support"""
+    """Mixing bases with and without dynamic attribute support."""
 
     for d in (m.VanillaDictMix1(), m.VanillaDictMix2()):
         d.dynamic = 1
@@ -263,7 +263,7 @@ def test_mi_dynamic_attributes():
 
 
 def test_mi_unaligned_base():
-    """Returning an offset (non-first MI) base class pointer should recognize the instance"""
+    """Returning an offset (non-first MI) base class pointer should recognize the instance."""
 
     n_inst = ConstructorStats.detail_reg_inst()
 
@@ -288,7 +288,7 @@ def test_mi_unaligned_base():
 
 
 def test_mi_base_return():
-    """Tests returning an offset (non-first MI) base class pointer to a derived instance"""
+    """Tests returning an offset (non-first MI) base class pointer to a derived instance."""
 
     n_inst = ConstructorStats.detail_reg_inst()
 

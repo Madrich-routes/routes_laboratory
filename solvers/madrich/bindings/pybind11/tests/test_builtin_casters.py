@@ -37,7 +37,7 @@ def test_unicode_conversion():
 
 
 def test_single_char_arguments():
-    """Tests failures for passing invalid inputs to char-accepting functions"""
+    """Tests failures for passing invalid inputs to char-accepting functions."""
     def toobig_message(r):
         return "Character code point not in range({0:#x})".format(r)
     toolong_message = "Expected a character, but multi-character string found"
@@ -90,8 +90,11 @@ def test_single_char_arguments():
 
 
 def test_bytes_to_string():
-    """Tests the ability to pass bytes to C++ string-accepting functions.  Note that this is
-    one-way: the only way to return bytes to Python is via the pybind11::bytes class."""
+    """Tests the ability to pass bytes to C++ string-accepting functions.
+
+    Note that this is
+    one-way: the only way to return bytes to Python is via the pybind11::bytes class.
+    """
     # Issue #816
     import sys
     byte = bytes if sys.version_info[0] < 3 else str
@@ -107,7 +110,7 @@ def test_bytes_to_string():
 
 @pytest.mark.skipif(not hasattr(m, "has_string_view"), reason="no <string_view>")
 def test_string_view(capture):
-    """Tests support for C++17 string_view arguments and return values"""
+    """Tests support for C++17 string_view arguments and return values."""
     assert m.string_view_chars("Hi") == [72, 105]
     assert m.string_view_chars("Hi 🎂") == [72, 105, 32, 0xf0, 0x9f, 0x8e, 0x82]
     assert m.string_view16_chars("Hi 🎂") == [72, 105, 32, 0xd83c, 0xdf82]
@@ -181,7 +184,7 @@ def test_integer_casting():
 
 
 def test_tuple(doc):
-    """std::pair <-> tuple & std::tuple <-> tuple"""
+    """std::pair <-> tuple & std::tuple <-> tuple."""
     assert m.pair_passthrough((True, "test")) == ("test", True)
     assert m.tuple_passthrough((True, "test", 5)) == (5, "test", True)
     # Any sequence can be cast to a std::pair or std::tuple
@@ -209,7 +212,7 @@ def test_tuple(doc):
 
 
 def test_builtins_cast_return_none():
-    """Casters produced with PYBIND11_TYPE_CASTER() should convert nullptr to None"""
+    """Casters produced with PYBIND11_TYPE_CASTER() should convert nullptr to None."""
     assert m.return_none_string() is None
     assert m.return_none_char() is None
     assert m.return_none_bool() is None
@@ -218,7 +221,7 @@ def test_builtins_cast_return_none():
 
 
 def test_none_deferred():
-    """None passed as various argument types should defer to other overloads"""
+    """None passed as various argument types should defer to other overloads."""
     assert not m.defer_none_cstring("abc")
     assert m.defer_none_cstring(None)
     assert not m.defer_none_custom(UserType())
@@ -232,7 +235,7 @@ def test_void_caster():
 
 
 def test_reference_wrapper():
-    """std::reference_wrapper for builtin and user types"""
+    """std::reference_wrapper for builtin and user types."""
     assert m.refwrap_builtin(42) == 420
     assert m.refwrap_usertype(UserType(42)) == 42
 
@@ -261,7 +264,7 @@ def test_reference_wrapper():
 
 
 def test_complex_cast():
-    """std::complex casts"""
+    """std::complex casts."""
     assert m.complex_cast(1) == "1.0"
     assert m.complex_cast(2j) == "(0.0, 2.0)"
 

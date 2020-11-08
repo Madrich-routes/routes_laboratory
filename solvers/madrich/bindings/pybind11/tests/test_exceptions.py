@@ -100,7 +100,7 @@ def test_custom(msg):
 
 
 def test_nested_throws(capture):
-    """Tests nested (e.g. C++ -> Python -> C++) exception handling"""
+    """Tests nested (e.g. C++ -> Python -> C++) exception handling."""
 
     def throw_myex():
         raise m.MyException("nested error")

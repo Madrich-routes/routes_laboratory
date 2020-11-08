@@ -6,14 +6,15 @@ array = np.ndarray
 
 @nb.njit
 def generate_points(n: int, min_x=55.65, max_x=55.82, min_y=37.45, max_y=37.75) -> array:
-    """ Массив рандомных точек в квадрате """
+    """Массив рандомных точек в квадрате."""
     diff_x, diff_y = max_x - min_x, max_y - min_y
     return np.random.random_sample((n, 2)) * np.array([diff_x, diff_y]) + np.array([min_x, min_y])
 
 
 @nb.njit
 def generate_windows(n: int, segment: int, parts=4) -> array:
-    """ Окна, тупо может в сегмент или нет
+    """Окна, тупо может в сегмент или нет.
+
     :param n: кол-во точек в наборе
     :param segment: размер сегмента в минутах
     :param parts: сколько сегментов

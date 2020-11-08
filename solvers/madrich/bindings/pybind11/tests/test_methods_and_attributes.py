@@ -65,7 +65,7 @@ def test_methods_and_attributes():
 
 
 def test_copy_method():
-    """Issue #443: calling copied methods fails in Python 3"""
+    """Issue #443: calling copied methods fails in Python 3."""
 
     m.ExampleMandA.add2c = m.ExampleMandA.add2
     m.ExampleMandA.add2d = m.ExampleMandA.add2b
@@ -133,7 +133,7 @@ def test_static_properties():
 
 
 def test_static_cls():
-    """Static property getter and setters expect the type object as the their only argument"""
+    """Static property getter and setters expect the type object as the their only argument."""
 
     instance = m.TestProperties()
     assert m.TestProperties.static_cls is m.TestProperties
@@ -209,8 +209,11 @@ def test_property_return_value_policies(access):
 
 
 def test_property_rvalue_policy():
-    """When returning an rvalue, the return value policy is automatically changed from
-    `reference(_internal)` to `move`. The following would not work otherwise."""
+    """When returning an rvalue, the return value policy is automatically changed from `reference(_internal)`
+    to `move`.
+
+    The following would not work otherwise.
+    """
 
     instance = m.TestPropRVP()
     o = instance.rvalue
@@ -453,8 +456,8 @@ def test_unregistered_base_implementations():
 
 
 def test_custom_caster_destruction():
-    """Tests that returning a pointer to a type that gets converted with a custom type caster gets
-    destroyed when the function has py::return_value_policy::take_ownership policy applied."""
+    """Tests that returning a pointer to a type that gets converted with a custom type caster gets destroyed
+    when the function has py::return_value_policy::take_ownership policy applied."""
 
     cstats = m.destruction_tester_cstats()
     # This one *doesn't* have take_ownership: the pointer should be used but not destroyed:

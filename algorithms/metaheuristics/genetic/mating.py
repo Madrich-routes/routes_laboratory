@@ -10,8 +10,9 @@ def tournament_selection(
     population: List[BaseIndividual],
     desired_size: int,  # сколько мы хотим отобрать
 ):
-    """
-    По двое выбираем из популяции. Худшего выкидываем.
+    """По двое выбираем из популяции.
+
+    Худшего выкидываем.
     """
     n = len(population)
     while len(population) > desired_size:
@@ -28,9 +29,8 @@ def tournament_selection(
 def fitness_proportionate_replication(
     population: List[BaseIndividual],
 ):
-    """
-    Roulette wheel
-    Отбираем двух родителей пропорционально значению их fitness.
+    """Roulette wheel Отбираем двух родителей пропорционально значению их fitness.
+
     :param population:
     :return:
     """

@@ -152,9 +152,12 @@ def test_nonunit_stride_from_python():
 
 
 def test_negative_stride_from_python(msg):
-    """Eigen doesn't support (as of yet) negative strides. When a function takes an Eigen matrix by
-    copy or const reference, we can pass a numpy array that has negative strides.  Otherwise, an
-    exception will be thrown as Eigen will not be able to map the numpy array."""
+    """Eigen doesn't support (as of yet) negative strides.
+
+    When a function takes an Eigen matrix by copy or const reference, we can pass a numpy array that has
+    negative strides.  Otherwise, an exception will be thrown as Eigen will not be able to map the numpy
+    array.
+    """
 
     counting_mat = np.arange(9.0, dtype=np.float32).reshape((3, 3))
     counting_mat = counting_mat[::-1, ::-1]
@@ -224,7 +227,7 @@ def array_copy_but_one(a, r, c, v):
 
 
 def test_eigen_return_references():
-    """Tests various ways of returning references and non-referencing copies"""
+    """Tests various ways of returning references and non-referencing copies."""
 
     master = np.ones((10, 10))
     a = m.ReturnTester()
@@ -373,7 +376,7 @@ def test_eigen_keepalive():
 
 
 def test_eigen_ref_mutators():
-    """Tests Eigen's ability to mutate numpy values"""
+    """Tests Eigen's ability to mutate numpy values."""
 
     orig = np.array([[1., 2, 3], [4, 5, 6], [7, 8, 9]])
     zr = np.array(orig)
@@ -489,7 +492,7 @@ def test_numpy_ref_mutators():
 
 
 def test_both_ref_mutators():
-    """Tests a complex chain of nested eigen/numpy references"""
+    """Tests a complex chain of nested eigen/numpy references."""
 
     m.reset_refs()  # In case another test already changed it
 
@@ -576,10 +579,10 @@ def test_nocopy_wrapper():
 
 
 def test_eigen_ref_life_support():
-    """Ensure the lifetime of temporary arrays created by the `Ref` caster
+    """Ensure the lifetime of temporary arrays created by the `Ref` caster.
 
-    The `Ref` caster sometimes creates a copy which needs to stay alive. This needs to
-    happen both for directs casts (just the array) or indirectly (e.g. list of arrays).
+    The `Ref` caster sometimes creates a copy which needs to stay alive. This needs to happen both for directs
+    casts (just the array) or indirectly (e.g. list of arrays).
     """
 
     a = np.full(shape=10, fill_value=8, dtype=np.int8)
@@ -673,8 +676,7 @@ def test_issue738():
 
 
 def test_custom_operator_new():
-    """Using Eigen types as member variables requires a class-specific
-    operator new with proper alignment"""
+    """Using Eigen types as member variables requires a class-specific operator new with proper alignment."""
 
     o = m.CustomOperatorNew()
     np.testing.assert_allclose(o.a, 0.0)

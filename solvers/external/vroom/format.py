@@ -9,9 +9,7 @@ from models.rich_vrp.problem import RichVRPProblem
 def dumps_problem(
     problem: RichVRPProblem,
 ) -> str:
-    """
-    Преобразование RichVRPProblem в json
-    """
+    """Преобразование RichVRPProblem в json."""
     vehicles = [
         {
             'id': i,
@@ -49,8 +47,7 @@ def dumps_problem(
 
 
 def loads_result(solution_str: str) -> VRPSolution:
-    """
-    Загружаем решение из результата vroom
+    """Загружаем решение из результата vroom.
 
     Parameters
     ----------

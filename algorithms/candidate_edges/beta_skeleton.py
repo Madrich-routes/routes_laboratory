@@ -1,5 +1,6 @@
-"""
-Алгоритм бета-остова. Очень медленный, но прикольный.
+"""Алгоритм бета-остова.
+
+Очень медленный, но прикольный.
 """
 import math
 from functools import lru_cache
@@ -26,8 +27,8 @@ def sharp(points, p: int, q: int):
 
 
 def beta_skeleton(points: Array, return_theta: bool = False):
-    """
-    Основной цикл.
+    """Основной цикл.
+
     TODO: все это можно написать оптимальнее.
     """
     res = []

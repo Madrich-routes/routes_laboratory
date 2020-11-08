@@ -6,9 +6,7 @@ import numpy as np
 
 @dataclass
 class Customer:
-    """
-    Время указывается в секундах
-    """
+    """Время указывается в секундах."""
     max_work_time: int
     tw_start: int
     tw_end: int
@@ -34,9 +32,7 @@ class Agent:
 
 
 class OMTSPTWProblem:
-    """
-    Open Multiple TSP With Time Windows
-    """
+    """Open Multiple TSP With Time Windows."""
 
     def __init__(
             self,

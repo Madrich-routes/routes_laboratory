@@ -9,8 +9,7 @@ def to_excel(
         solution: VRPSolution,
         path: str
 ):
-    """
-    Сохраняем результат в excel на один лист
+    """Сохраняем результат в excel на один лист.
 
     Parameters
     ----------
@@ -19,7 +18,6 @@ def to_excel(
 
     Returns
     -------
-
     """
     with pd.ExcelWriter(path, datetime_format='DD.MM.YYYY HH:MM:SS') as writer:
         columns = ['ID', 'Местоположение', 'Загрузка', 'Время прибытия', 'Длительность доставки']

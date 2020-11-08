@@ -1,5 +1,5 @@
-"""
-В этом модуле описаны различные функции преобразования координат.
+"""В этом модуле описаны различные функции преобразования координат.
+
 Тут не используются классы, только обычные numpy массивы и так далее.
 """
 import math
@@ -25,8 +25,8 @@ EARTH_R = 6371.0087714150598
 
 
 def line_distance_matrix(a: Array, b: Optional[Array] = None) -> Array:
-    """
-    Матрица расстояний по прямой.
+    """Матрица расстояний по прямой.
+
     Максимально быстраа реализация из опробованных.
     """
     # TODO: try https://github.com/mapado/haversine
@@ -35,8 +35,8 @@ def line_distance_matrix(a: Array, b: Optional[Array] = None) -> Array:
 
 
 def sklearn_haversine(a, b):
-    """
-    Вычисляем с использованием sklearn
+    """Вычисляем с использованием sklearn.
+
     :param a:
     :param b:
     :return:
@@ -50,24 +50,18 @@ def sklearn_haversine(a, b):
 
 
 def great_circle_distance(a, b):
-    """
-    Расстояние по большой окружности
-    """
+    """Расстояние по большой окружности."""
     return geopy.distance.great_circle(a, b).m
 
 
 def geo_distance(a: Array, b: Array):
-    """
-    Вычисляем точное, но медленное расстояние по прямой по земле
-    """
+    """Вычисляем точное, но медленное расстояние по прямой по земле."""
 
     return geopy.distance.distance(a, b).m
 
 
 def haversine_vectorize(lon1, lat1, lon2, lat2):
-    """
-    Векторизованная версия haversine
-    """
+    """Векторизованная версия haversine."""
     EARTH_R = 6371.0087714150598
 
     lon1, lat1, lon2, lat2 = np.radians(lon1), np.radians(lat1), np.radians(lon2), np.radians(lat2)
@@ -84,9 +78,7 @@ def haversine_vectorize(lon1, lat1, lon2, lat2):
 
 @njit()
 def haversine_numba(a, b):
-    """
-    Версия расстояния, оптимизированная numba
-    """
+    """Версия расстояния, оптимизированная numba."""
     s_lat, s_lon = a
     e_lat, s_lon = b
 
@@ -102,9 +94,7 @@ def haversine_numba(a, b):
 
 
 def geo_to_3d(lat, lon) -> Tuple[float, float, float]:
-    """
-    Получаем 3D координаты точки
-    """
+    """Получаем 3D координаты точки."""
     from auromat.coordinates.transform import spherical_to_cartesian
 
     return spherical_to_cartesian(EARTH_R, lat, lon)
@@ -120,8 +110,7 @@ def make_flat(points: np.ndarray) -> np.ndarray:
 
 
 def delaunay_graph(points: np.ndarray) -> Set[Tuple[int, int]]:
-    """
-    Вычисляет граф делоне
+    """Вычисляет граф делоне.
 
     :param points: Множество точек в 2D (np.array).
     :return: Множество ребер в виде пар индексов точек
@@ -143,10 +132,7 @@ def delaunay_graph(points: np.ndarray) -> Set[Tuple[int, int]]:
 
 
 def distance_matrix(src: np.ndarray, dst: np.ndarray, method=geo_distance) -> np.ndarray:
-    """
-    src, dst: Lists of coords (lat, lon)
-    Возвращаем матрицу расстояний по прямой
-    """
+    """src, dst: Lists of coords (lat, lon) Возвращаем матрицу расстояний по прямой."""
     for a in src:
         for b in dst:
             ...
@@ -163,9 +149,7 @@ class DynamicConvexHull:
         self.hull = ConvexHull(points, incremental=True)
 
     def volume(self):
-        """
-        Площадь внутри
-        """
+        """Площадь внутри."""
         return self.hull.volume
 
     def area(self):
@@ -176,9 +160,7 @@ class DynamicConvexHull:
 
 
 def get_offset(*, lat, lng):
-    """
-    Смещение от UTC в часах
-    """
+    """Смещение от UTC в часах."""
     today = datetime.now()
     tz_target = timezone(tf.certain_timezone_at(lng=lng, lat=lat))
 

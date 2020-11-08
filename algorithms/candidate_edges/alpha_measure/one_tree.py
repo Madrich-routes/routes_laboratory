@@ -10,7 +10,8 @@ from utils.algorithms import make_pair
 
 
 def one_tree(adjacency_matrix: np.ndarray) -> Tuple[float, np.ndarray, np.ndarray]:
-    """ MST( все точки кроме нулевой ) + два ребра от нулевой вершины
+    """MST( все точки кроме нулевой ) + два ребра от нулевой вершины.
+
     return: длина графа, два массива в формате начало (lin_kernighan array) - конец (dst array)
     """
     # noinspection PyTypeChecker

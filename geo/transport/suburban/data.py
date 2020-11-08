@@ -9,9 +9,7 @@ from utils.logs import logger
 
 
 def build_df(all_uids_file, all_pathes_file) -> pd.DataFrame:
-    """
-    Получаем датафрейм для всего пригородного транспорта
-    """
+    """Получаем датафрейм для всего пригородного транспорта."""
     logger.info('Составляю словарь станций пригородных поездов и автобусов...')
     df = parse_suburban(all_uids_file=all_uids_file, all_pathes_file=all_pathes_file)
     return df

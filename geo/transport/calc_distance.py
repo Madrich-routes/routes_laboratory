@@ -16,9 +16,7 @@ final_matrix_file = "data/full_matrix_27.npy.npz"
 
 
 def great_circle_distance(a, b):
-    """
-    Расстояние по большой окружности
-    """
+    """Расстояние по большой окружности."""
     return (great_circle(a, b).km / 5) * 3600
 
 
@@ -28,9 +26,7 @@ def build_full_matrix(
         threshold=1200,  # Максимальное расстояние пешком в секундах
         transfer_cost=300,  # Ждать на остановке 5 минут
 ):
-    """
-    Собираем итоговую матрицу расстояний
-    """
+    """Собираем итоговую матрицу расстояний."""
     walk_matrix_reduced = walk_matrix.copy()
     walk_matrix_reduced[walk_matrix > threshold] = 0
     walk_matrix_reduced[walk_matrix_reduced != 0] += transfer_cost
@@ -41,9 +37,7 @@ def build_full_matrix(
 
 
 def build_stations_matrix(stations_df: pd.DataFrame):
-    """
-    Строим матрицу известных первичных расстояний между точками
-    """
+    """Строим матрицу известных первичных расстояний между точками."""
     n = len(stations_df)
     map_dict = dict(zip(stations_df.index, list(range(n))))
     matrix = np.zeros((n, n), dtype=np.int32)
@@ -76,9 +70,7 @@ def build_graph(
         walk_matrix: Array,
         final_matrix_file: str
 ):
-    """
-    Построить граф перемещений по всем станциям
-    """
+    """Построить граф перемещений по всем станциям."""
     matrix = build_stations_matrix(stations_df)
     add_walk_matrix(matrix, walk_matrix)
 
@@ -102,10 +94,8 @@ def transport_travel_time(
         src_closest: Array,  # индексы ближайших к старту остановок
         dst_closest: Array,  # индексы ближайших к концу остановок
 ) -> Tuple[int, Optional[int], Optional[int]]:
-    """
-    Считаем время проезда из src в dst с учетом транспорта
-    Возвращаем минимальное время и индексы остановок, если они есть, иначе None
-    """
+    """Считаем время проезда из src в dst с учетом транспорта Возвращаем минимальное время и индексы
+    остановок, если они есть, иначе None."""
 
     # считаем время на транспорте для каждой комбинации
     times = p2s_matrix[src, src_closest].reshape(-1, 1) + s2p_matrix[dst_closest, dst]
@@ -128,9 +118,7 @@ def combined_matrix(
         s_matrix: Array,  # время проезда между точками
         candidates: int = 10,  # сколько ближайших остановок рассматривать
 ) -> Array:
-    """
-    Составляем матрицу времени перемещения от каждой точки до каждой с учетом тспользования транспорта
-    """
+    """Составляем матрицу времени перемещения от каждой точки до каждой с учетом тспользования транспорта."""
 
     # ближайшие станции к каждой точке в обоих направлениях
     src_closest = p2s_matrix.argpartition(kth=candidates, axis=1)[:candidates]

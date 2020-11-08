@@ -53,7 +53,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __greedy_tour(storage: Storage, jobs: List[Job], couriers: List[Courier], matrices: Dict[str, Matrix]):
-        """ Строим жадно тур: по ближайшим подходящим соседям для каждого курьера """
+        """Строим жадно тур: по ближайшим подходящим соседям для каждого курьера."""
         logging.info(f'\nCreating Tour: {storage.name}, Couriers: {len(couriers)}, Jobs: {len(jobs)}')
         tour = Tour(storage, [], [])
         used_couriers = []
@@ -81,7 +81,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __greedy_route(storage: Storage, jobs: List[Job], courier: Courier, matrices: Dict[str, Matrix]) -> Route:
-        """ Строим жадно тур: по ближайшим подходящим соседям """
+        """Строим жадно тур: по ближайшим подходящим соседям."""
         logging.info(f'Creating Route, Courier: {courier.name}, jobs: {len(jobs)}, type: {courier.profile}')
         assert len(jobs) > 0, 'jobs error'
         matrix = matrices[courier.profile]
@@ -129,7 +129,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __validate_skills(obj: Union[Job, Storage], courier: Courier) -> bool:
-        """ Проверяем, что задача или склад подходит курьеру """
+        """Проверяем, что задача или склад подходит курьеру."""
         for skill in obj.skills:
             if skill not in courier.skills:
                 return False
@@ -137,7 +137,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __next_job(curr_point: int, state: State, job: Job, route: Route) -> Optional[State]:
-        """ Получаем оценку стоимости поезкки на следующую задачу (со складом) """
+        """Получаем оценку стоимости поезкки на следующую задачу (со складом)"""
         state = deepcopy(state)
         answer = ProblemVrp.__go_job(curr_point, state, job, route)
 
@@ -167,12 +167,12 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __cost(travel_time: int, distance: int, route: Route) -> float:
-        """ Получение стоимости """
+        """Получение стоимости."""
         return travel_time * route.courier.cost.second + distance * route.courier.cost.meter
 
     @staticmethod
     def __go_storage(curr_point: int, state: State, route: Route) -> Optional[State]:
-        """ Оценка стоимости поездки на склад """
+        """Оценка стоимости поездки на склад."""
         tt = route.matrix.travel_time[curr_point][route.storage.location.matrix_id] + route.storage.load
         d = route.matrix.distance[curr_point][route.storage.location.matrix_id]
 
@@ -183,7 +183,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __go_job(curr_point: int, state: State, job: Job, route: Route) -> Optional[State]:
-        """ Оценка стоимости поездки на следующую задачу """
+        """Оценка стоимости поездки на следующую задачу."""
         tt = route.matrix.travel_time[curr_point][job.location.matrix_id] + job.delay
         d = route.matrix.distance[route.storage.location.matrix_id][job.location.matrix_id]
 
@@ -198,7 +198,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __validate_job(travel_time: int, job: Job, route: Route) -> bool:
-        """ Проверяем, что поездка на эту задачу возможна """
+        """Проверяем, что поездка на эту задачу возможна."""
         start_time = route.start_time
         for window in job.time_windows:
             start_shift, end_shift = window.window
@@ -208,7 +208,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __validate_storage(travel_time: int, route: Route) -> bool:
-        """ Проверяем, что поездка на склад возможна """
+        """Проверяем, что поездка на склад возможна."""
         start_shift, end_shift = route.storage.work_time.window
         start_time = route.start_time
         if not (start_shift <= start_time + travel_time <= end_shift):
@@ -217,7 +217,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __validate_courier(state: State, route: Route) -> bool:
-        """ Проверяем, что курьер еще жив """
+        """Проверяем, что курьер еще жив."""
 
         # 1. проверяем время работы
         start_shift, end_shift = route.courier.work_time.window
@@ -239,7 +239,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __start(route: Route) -> State:
-        """ Стартуем, едем от куда-то на склад """
+        """Стартуем, едем от куда-то на склад."""
         distance_matrix = route.matrix.distance
         travel_time_matrix = route.matrix.travel_time
         start_id = route.courier.start_location.matrix_id
@@ -254,7 +254,7 @@ class ProblemVrp(Problem):
 
     @staticmethod
     def __end(curr_point: int, route: Route) -> State:
-        """ Заканчиваем, едем с последней задачи в конечную точку """
+        """Заканчиваем, едем с последней задачи в конечную точку."""
         distance_matrix = route.matrix.distance
         travel_time_matrix = route.matrix.travel_time
         end_id = route.courier.start_location.matrix_id

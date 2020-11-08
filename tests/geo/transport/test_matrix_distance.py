@@ -64,9 +64,7 @@ def check_transport_travel_time(
 
 
 def test_transport_travel_time():
-    """
-    Тестируем, что функция расчета расстояний ведет себя адекватно
-    """
+    """Тестируем, что функция расчета расстояний ведет себя адекватно."""
     data = get_example1_data()
 
     res = transport_travel_time(
@@ -83,9 +81,7 @@ def test_transport_travel_time():
 
 
 def test_combined_matrix():
-    """
-    Тестируем матрицу с транспортом
-    """
+    """Тестируем матрицу с транспортом."""
     data = get_example1_data()
 
     res = combined_matrix(

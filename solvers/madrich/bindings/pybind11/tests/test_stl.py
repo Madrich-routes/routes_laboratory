@@ -4,7 +4,7 @@ from pybind11_tests import stl as m
 
 
 def test_vector(doc):
-    """std::vector <-> list"""
+    """std::vector <-> list."""
     l = m.cast_vector()
     assert l == [1]
     l.append(2)
@@ -19,7 +19,7 @@ def test_vector(doc):
 
 
 def test_array(doc):
-    """std::array <-> list"""
+    """std::array <-> list."""
     l = m.cast_array()
     assert l == [1, 2]
     assert m.load_array(l)
@@ -29,7 +29,7 @@ def test_array(doc):
 
 
 def test_valarray(doc):
-    """std::valarray <-> list"""
+    """std::valarray <-> list."""
     l = m.cast_valarray()
     assert l == [1, 4, 9]
     assert m.load_valarray(l)
@@ -39,7 +39,7 @@ def test_valarray(doc):
 
 
 def test_map(doc):
-    """std::map <-> dict"""
+    """std::map <-> dict."""
     d = m.cast_map()
     assert d == {"key": "value"}
     d["key2"] = "value2"
@@ -50,7 +50,7 @@ def test_map(doc):
 
 
 def test_set(doc):
-    """std::set <-> set"""
+    """std::set <-> set."""
     s = m.cast_set()
     assert s == {"key1", "key2"}
     s.add("key3")
@@ -61,7 +61,7 @@ def test_set(doc):
 
 
 def test_recursive_casting():
-    """Tests that stl casters preserve lvalue/rvalue context for container values"""
+    """Tests that stl casters preserve lvalue/rvalue context for container values."""
     assert m.cast_rv_vector() == ["rvalue", "rvalue"]
     assert m.cast_lv_vector() == ["lvalue", "lvalue"]
     assert m.cast_rv_array() == ["rvalue", "rvalue", "rvalue"]
@@ -80,10 +80,12 @@ def test_recursive_casting():
 
 
 def test_move_out_container():
-    """Properties use the `reference_internal` policy by default. If the underlying function
-    returns an rvalue, the policy is automatically changed to `move` to avoid referencing
-    a temporary. In case the return value is a container of user-defined types, the policy
-    also needs to be applied to the elements, not just the container."""
+    """Properties use the `reference_internal` policy by default.
+
+    If the underlying function returns an rvalue, the policy is automatically changed to `move` to avoid
+    referencing a temporary. In case the return value is a container of user-defined types, the policy also
+    needs to be applied to the elements, not just the container.
+    """
     c = m.MoveOutContainer()
     moved_out_list = c.move_list
     assert [x.amounts for x in moved_out_list] == [0, 1, 2]
@@ -155,7 +157,7 @@ def test_vec_of_reference_wrapper():
 
 
 def test_stl_pass_by_pointer(msg):
-    """Passing nullptr or None to an STL container pointer is not expected to work"""
+    """Passing nullptr or None to an STL container pointer is not expected to work."""
     with pytest.raises(TypeError) as excinfo:
         m.stl_pass_by_pointer()  # default value is `nullptr`
     assert msg(excinfo.value) == """

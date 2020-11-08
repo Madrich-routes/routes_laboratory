@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-Solve the Capacitated Vehicle Routing Problem with Time Windows (CVRPTW).
-"""
+"""Solve the Capacitated Vehicle Routing Problem with Time Windows (CVRPTW)."""
 
 import argparse
 from typing import Callable
@@ -17,9 +15,7 @@ UnaryTransitCallback = Callable[[int], int]
 
 
 def load_data_model(path: str) -> dict:
-    """
-    Load the data for the problem from path.
-    """
+    """Load the data for the problem from path."""
 
     with open(path) as file:
         data = yaml.safe_load(file)
@@ -31,14 +27,10 @@ def load_data_model(path: str) -> dict:
 
 
 def create_weight_callback(manager: RoutingIndexManager, data: dict) -> TransitCallback:
-    """
-    Create a callback to return the weight between points.
-    """
+    """Create a callback to return the weight between points."""
 
     def weight_callback(from_index: int, to_index: int) -> int:
-        """
-        Return the weight between the two points.
-        """
+        """Return the weight between the two points."""
 
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
@@ -48,14 +40,10 @@ def create_weight_callback(manager: RoutingIndexManager, data: dict) -> TransitC
 
 
 def create_demand_callback(manager: RoutingIndexManager, data: dict) -> UnaryTransitCallback:
-    """
-    Create a callback to get demands at each location.
-    """
+    """Create a callback to get demands at each location."""
 
     def demand_callback(from_index: int) -> int:
-        """
-        Return the demand.
-        """
+        """Return the demand."""
 
         from_node = manager.IndexToNode(from_index)
         return data['demands'][from_node]
@@ -69,9 +57,7 @@ def add_capacity_constraints(
     data: dict,
     demand_callback_index: int,
 ) -> None:
-    """
-    Add capacity constraints.
-    """
+    """Add capacity constraints."""
 
     routing.AddDimensionWithVehicleCapacity(
         demand_callback_index,
@@ -83,14 +69,10 @@ def add_capacity_constraints(
 
 
 def create_time_callback(manager: RoutingIndexManager, data: dict) -> TransitCallback:
-    """
-    Create a callback to get total times between locations.
-    """
+    """Create a callback to get total times between locations."""
 
     def time_callback(from_index: int, to_index: int) -> int:
-        """
-        Return the total time between the two nodes.
-        """
+        """Return the total time between the two nodes."""
 
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
@@ -111,9 +93,7 @@ def add_time_window_constraints(
     data: dict,
     time_callback_index: int,
 ) -> None:
-    """
-    Add time window constraints.
-    """
+    """Add time window constraints."""
 
     horizon = 120
     routing.AddDimension(
@@ -138,9 +118,7 @@ def node_properties(
     time_dimension: RoutingDimension,
     index: int,
 ) -> tuple:
-    """
-    Get a node's properties corresponding to the index.
-    """
+    """Get a node's properties corresponding to the index."""
 
     node_index = manager.IndexToNode(index)
     load = assignment.Value(capacity_dimension.CumulVar(index))
@@ -155,9 +133,7 @@ def print_solution(
     manager: RoutingIndexManager,
     assignment: Assignment,
 ) -> None:
-    """
-    Print the solution.
-    """
+    """Print the solution."""
 
     capacity_dimension = routing.GetDimensionOrDie('Capacity')
     time_dimension = routing.GetDimensionOrDie('Time')
@@ -186,9 +162,7 @@ def print_solution(
 
 
 def draw_network_graph(data: dict, filename: str = 'network.png', prog: str = 'dot') -> None:
-    """
-    Draw a network graph of the problem.
-    """
+    """Draw a network graph of the problem."""
 
     weights = data['weights']
     demands = data['demands']
@@ -219,9 +193,7 @@ def draw_route_graph(
     filename: str = 'route.png',
     prog='sfdp',
 ) -> None:
-    """
-    Draw a route graph based on the solution of the problem.
-    """
+    """Draw a route graph based on the solution of the problem."""
 
     weights = data['weights']
     demands = data['demands']
@@ -249,9 +221,7 @@ def draw_route_graph(
 
 
 def parse_args() -> argparse.Namespace:
-    """
-    Parse command line arguments.
-    """
+    """Parse command line arguments."""
 
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='JSON file path of data')
@@ -272,9 +242,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main():
-    """
-    Entry point of the program.
-    """
+    """Entry point of the program."""
 
     # Parse command line arguments
     args = parse_args()

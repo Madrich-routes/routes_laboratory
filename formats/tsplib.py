@@ -5,9 +5,7 @@ import tsplib95
 
 
 def dumps_matrix(matrix: np.ndarray):
-    """
-    Сохраняем матрицу проблемы
-    """
+    """Сохраняем матрицу проблемы."""
     assert len(matrix.shape) == 2 and matrix.shape[0] == matrix.shape[1]
 
     # матрица -> str разделенная пробелами
@@ -25,9 +23,8 @@ def dumps_matrix(matrix: np.ndarray):
 
 
 def dumps_time_windows(time_windows: List[Tuple[int, int]]):
-    """
-    Сохраняем временные окна проблемы.
-    Индексация вершин начинается с 1.
+    """Сохраняем временные окна проблемы. Индексация вершин начинается с 1.
+
     # TODO: написать warning для float
     """
     return '\n'.join(
@@ -40,8 +37,8 @@ def dumps_time_windows(time_windows: List[Tuple[int, int]]):
 
 
 def dump_demands(demands: List[int]):
-    """
-    Сохраняем спрос в каждой вершине.
+    """Сохраняем спрос в каждой вершине.
+
     Индексация вершин начинается с 1
     """
     return '\n'.join(
@@ -68,9 +65,7 @@ def parse_solution(
         filename,
         points_num: int
 ):
-    """
-    Разобрать решение в формате MTSP
-    """
+    """Разобрать решение в формате MTSP."""
     tours = tsplib95.load(filename).tours[0]
     return split_into_tours(tours, points_num + 1)
 

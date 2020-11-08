@@ -7,9 +7,7 @@ from numba.experimental import jitclass
 
 @jitclass(spec=[('frequency', nb.int32), ('total', nb.int32), ('iter', nb.int32)])
 class IterationCounter:
-    """
-    Быстрый и тупой счетчик итераций цикла, который печатает раз в какое-то время
-    """
+    """Быстрый и тупой счетчик итераций цикла, который печатает раз в какое-то время."""
 
     def __init__(self, frequency: int, total: int):
         self.frequency = frequency
@@ -98,8 +96,8 @@ def around(tour: np.ndarray, it: int) -> tuple:
 
 @nb.njit()
 def swap(tour: np.ndarray, x: int, y: int) -> np.ndarray:
-    """
-    Переворот куска тура: [x, y], включительно!
+    """Переворот куска тура: [x, y], включительно!
+
     tour: список городов
     x, y: индексы
     return: измененный список
@@ -116,9 +114,8 @@ def swap(tour: np.ndarray, x: int, y: int) -> np.ndarray:
 
 
 def start_tw(time_windows: np.ndarray, travel_times: np.ndarray):
-    """
-    Вычисляем временное окно, в которое нужно начать объезжать последовательность точек,
-    чтобы попасть во все временные окна и не ждать.
+    """Вычисляем временное окно, в которое нужно начать объезжать последовательность точек, чтобы попасть во
+    все временные окна и не ждать.
 
     Эта функция умеет работать только с единственным временным окном.
     TODO: научить ее работать с множественными временными окнами
