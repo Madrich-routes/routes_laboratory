@@ -2,6 +2,7 @@ import glob
 
 import numpy as np
 import pandas as pd
+import os 
 
 from geo.providers.osrm_module import get_osrm_matrix
 from geo.transport import land, metro, suburban
@@ -10,16 +11,18 @@ from utils.logs import logger
 
 def build_dataset_from_files():
     """Собираем общий объединенный датасет транспорта."""
-    # xml_url = 'https://metro.mobile.yandex.net/metro/get_file?file=scheme_1.xml&ver='
+    xml_url_out = 'https://metro.mobile.yandex.net/metro/get_file?file=scheme_1.xml&ver='
 
-    routes_file_pattern = './data/xls/data-101784-2020-04-08-s*.csv'
-    xml_url = './data/metro.xml'
-    all_uids_file = './data/all_uids.npy'
-    all_pathes_file = './data/all_pathes'
-    stations_file = './data/stations.json'
+    routes_file_pattern = './data/big/xls/data-101784-2020-04-08-s*.csv'
+    xml_url_local = './data/big/metro.xml'
+    all_uids_file = './data/big/all_uids.npy'
+    all_pathes_file = './data/big/all_pathes'
+    stations_file = './data/big/stations.json'
     routes_files = glob.glob(routes_file_pattern)
-    bus_filename = './data/raw_bus_data.pkl'
-    merged_bus_filename = './data/bus_data.pkl'
+    bus_filename = './data/big/raw_bus_data.pkl'
+    merged_bus_filename = './data/big/bus_data.pkl'
+
+    xml_url = xml_url_local if os.path.exists(xml_url_local) else xml_url_out
 
     metro_df = metro.build_df(xml_url)
     suburban_df = suburban.build_df(all_uids_file, all_pathes_file)
