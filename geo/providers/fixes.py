@@ -9,6 +9,22 @@ def _fix_speed_unknown(
     distance: int,
     speed_limits_dict: Dict[str, float],
 ):
+    """
+    Чиним скорость, когда ни скорость ни время не выбиваются из статистики
+
+    Parameters
+    ----------
+    time : Время
+    distance : Расстояние
+    speed_limits_dict : Статистики скорости
+
+    Returns
+    -------
+    Исправленное время и расстояние
+    """
+
+    time_avg = distance / speed_limits_dict["avg"]
+    dist_avg = time * speed_limits_dict["avg"]
 
 
 def _fix_speed(

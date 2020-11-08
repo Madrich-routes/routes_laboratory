@@ -1,5 +1,6 @@
+import pathlib
+
 from minio import Minio
-from minio.error import ResponseError
 
 import settings
 
@@ -20,9 +21,9 @@ if not minio_client.bucket_exists(big_data_bucket):
 else:
     print('Бакет уже существует...')
 
-try:
-    minio_client.fput_object(big_data_bucket, 'pumaserver_debug.log', '/tmp/pumaserver_debug.log')
-except ResponseError as err:
-    print(err)
+for p in pathlib.Path(big_data_dir).rglob("*"):
+    if p.is_file():
+        print(f'Загружаем {p}')
+        minio_client.fput_object(big_data_bucket, p, p)
 
 minio_client.copy_object()

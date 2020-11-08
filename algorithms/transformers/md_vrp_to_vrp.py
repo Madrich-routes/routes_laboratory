@@ -14,9 +14,6 @@ from models.rich_vrp.geometries.geometry import DistanceAndTimeMatrixGeometry
 from ..utils.costs import get_inf
 
 
-def add_depot():
-
-
 def _transform_matrix(
     matrix: Array,
     pass_num: int,  # количество проходов
