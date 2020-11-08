@@ -290,7 +290,7 @@ def test_cyclic_gc():
 
 def test_noconvert_args(msg):
     a = m.ArgInspector()
-    assert msg(a.f("hi")) == """
+    assert msg(a.name("hi")) == """
         loading ArgInspector1 argument WITH conversion allowed.  Argument value = hi
     """
     assert msg(a.g("this is a", "this is b")) == """

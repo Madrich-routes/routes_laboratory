@@ -1,18 +1,19 @@
 import pathlib
+import os
 
 from minio import Minio
 
 import settings
 
 minio_client = Minio(
-    'desktop:19000',
-    access_key='Madrich',
-    secret_key='RbbitsAsshole_o_',
-    secure=False,
+    endpoint=settings.MINIO_HOST,
+    access_key=settings.MINIO_ACCESS_KEY,
+    secret_key=settings.MINIO_SECRET_KEY,
+    secure=settings.MINIO_SECURE,
 )
 
-big_data_bucket = "big_data"
-big_data_dir = settings.DATA_DIR / 'big_data'
+big_data_bucket = "bigdata"
+big_data_dir = settings.DATA_DIR / 'big'
 
 # Создаем бакет, если нужно
 if not minio_client.bucket_exists(big_data_bucket):
@@ -23,7 +24,6 @@ else:
 
 for p in pathlib.Path(big_data_dir).rglob("*"):
     if p.is_file():
-        print(f'Загружаем {p}')
-        minio_client.fput_object(big_data_bucket, p, p)
-
-minio_client.copy_object()
+        name = os.path.relpath(p, big_data_dir)
+        print(f'Загружаем {name}')
+        minio_client.fput_object(big_data_bucket, name, p)

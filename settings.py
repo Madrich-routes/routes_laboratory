@@ -12,7 +12,6 @@ from environs import Env
 env = Env()
 env.read_env()  # read .env file, if it exists
 
-
 # ------------------------------------- Основные директории проекта -----------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
@@ -49,4 +48,8 @@ OSRM_FOOT_PORT = '5001'
 OSRM_BICYCLE_HOST = 'dimitrius.keenetic.link'
 OSRM_BICYCLE_PORT = '5002'
 
-DATA_DIR = '.'
+# ------------------------------------------------- Minio -----------------------------
+MINIO_HOST = 'dimitrius.keenetic.link:19000'
+MINIO_ACCESS_KEY = 'Madrich',
+MINIO_SECRET_KEY = 'RbbitsAsshole_o_',
+MINIO_SECURE = False,
