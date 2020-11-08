@@ -1,30 +1,116 @@
-"""Тут расположены разлиные исправления данных, которые мы получаем на от провайдера."""
-from typing import Tuple
+"""Тут расположены разлиные исправления данных, которые мы получаем от провайдера."""
+from typing import Tuple, Dict
+
+from geo.settings import FOOT_SPEEDS
 
 
-def fix_drivers(
-        t: int,
-        d: int
+def _fix_speed(
+    time: int,
+    distance: int,
+    speed_limits_dict: Dict[str, float],
+    trust_speed_coeff: float = 0.5,
+    max_time: int = 3600,
+    max_distance: int = 1e5,
+):
+    """ Нормализуем время и расстояние таким образом,
+     чтобы скорость была нормальной и не было неадекватных занчений.
+
+    Если назкая скорость и время больше одного часа, то пересчитываем через расстояние и среднюю скорость
+    Если высокая скорость и расстояние больше 100км, то пересчитываем через время и средню скорость
+    Иначе делаем скорость, смещенную к тому, что было чезер trust_speed_coeff
+
+    Parameters
+    ----------
+    time : Время перемещения
+    distance : Расстояние
+    speed_limits_dict : Словарь со статистикой по скоростям для данного вида транспорта.
+    Должен включать в себя ключи "min", "max", "avg"
+    trust_speed_coeff: насколько мы доверяем, что скорость должна быть такой какая есть [0, 1].
+     При 0 буедет avg_speed, при 1 будет max_speed
+    max_time: максимальное время, которое мы считаем нормальным
+    max_distance: максимальное расстояние, которое мы считаем нормальным
+
+    Returns
+    -------
+    Исправленные время и расстояние
+    """
+    time = max(time, 0)
+    distance = max(distance, 0)
+
+    if time == 0: # исправляем time, если он 0
+        return distance / speed_limits_dict['avg'], distance
+
+    speed = distance / time
+
+    # альтернативно вычисленные время и расстояние
+    time2 = distance / speed_limits_dict["avg"]
+    dist2 = time * speed_limits_dict["avg"]
+
+    if speed < speed_limits_dict["min"]:
+        if time > max_time:
+            # низкая скорость из-за большого времени
+            return distance / speed_limits_dict['avg'], distance
+        else:
+            # просто низкая скорость
+            return
+    elif speed > speed_limits_dict["max"]:
+        if distance > max_distance:
+            # выская скорость из-за большого расстояния
+            return time, time * speed_limits_dict['avg']
+        else:
+            # просто высокая скорость
+            return
+    else:
+        # все хорошо, возвращаем как есть
+        return time, distance
+
+
+
+
+
+def fix_foot_speed(
+    time: int,
+    dist: int,
+):
+    """ Исправляем кривую скорость пешехода
+
+    Parameters
+    ----------
+    time : время в секундах
+    dist : расстояние
+
+    Returns
+    -------
+    Исправленное время и расстояние
+    """
+
+    _fix_speed(time=time, distance=dist, speed_limits_dict=FOOT_SPEEDS)
+
+def fix_driver_speed(
+        time: int,
+        dist: int
 ) -> Tuple[int, int]:
     """Исправляем неправдоподобную скорость водителя.
 
     Parameters
     ----------
-    t : время в секундах
-    d : расстояние
-
+    time : время в секундах
+    dist : расстояние
     Returns
     -------
+    Исправленное время и расстояние
     """
-    if t != 0 and 5 < d / t < 13:
-        if t > 3600 or d <= 1e5:
-            return d / 12, d
+    if time == 0 and dist != 0:
+
+    if time != 0 and 5 < dist / time < 13:
+        if time > 3600 or dist <= 1e5:
+            return dist / 12, dist
         else:
-            return t, t * 12
-    return t, d
+            return time, time * 12
+    return time, dist
 
 
-def fix_bicycle(
+def fix_bicycle_speed(
         t: int,
         d: int
 ) -> Tuple[int, int]:
