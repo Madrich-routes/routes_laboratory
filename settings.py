@@ -50,6 +50,6 @@ OSRM_BICYCLE_PORT = '5002'
 
 # ------------------------------------------------- Minio -----------------------------
 MINIO_HOST = 'dimitrius.keenetic.link:19000'
-MINIO_ACCESS_KEY = 'Madrich',
-MINIO_SECRET_KEY = 'RbbitsAsshole_o_',
-MINIO_SECURE = False,
+MINIO_ACCESS_KEY = 'Madrich'
+MINIO_SECRET_KEY = 'RbbitsAsshole_o_'
+MINIO_SECURE = False
