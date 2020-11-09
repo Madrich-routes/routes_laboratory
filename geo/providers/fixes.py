@@ -8,6 +8,8 @@ def _fix_speed_unknown(
     time: int,
     distance: int,
     speed_limits_dict: Dict[str, float],
+    trust_speed_coeff: float,
+    mode: str,
 ):
     """
     Чиним скорость, когда ни скорость ни время не выбиваются из статистики
@@ -17,7 +19,8 @@ def _fix_speed_unknown(
     time : Время
     distance : Расстояние
     speed_limits_dict : Статистики скорости
-
+    trust_speed_coeff : ,
+    mode : {'min', 'max'}
     Returns
     -------
     Исправленное время и расстояние
@@ -25,6 +28,10 @@ def _fix_speed_unknown(
 
     time_avg = distance / speed_limits_dict["avg"]
     dist_avg = time * speed_limits_dict["avg"]
+
+    if
+
+
 
 
 def _fix_speed(
@@ -65,10 +72,6 @@ def _fix_speed(
         return distance / speed_limits_dict['avg'], distance
 
     speed = distance / time
-
-    # альтернативно вычисленные время и расстояние
-    time_avg = distance / speed_limits_dict["avg"]
-    dist_avg = time * speed_limits_dict["avg"]
 
     if speed < speed_limits_dict["min"]:
         if time > max_time:

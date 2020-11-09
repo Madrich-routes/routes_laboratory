@@ -49,7 +49,7 @@ OSRM_FOOT_PORT = '5001'
 OSRM_BICYCLE_HOST = 'dimitrius.keenetic.link'
 OSRM_BICYCLE_PORT = '5002'
 
-# ------------------------------------------------- Minio -----------------------------
+# -------------------------------------------------------- Minio --------------------------------------------------
 MINIO_HOST = 'dimitrius.keenetic.link:19000'
 MINIO_ACCESS_KEY = 'Madrich'
 MINIO_SECRET_KEY = 'RbbitsAsshole_o_'

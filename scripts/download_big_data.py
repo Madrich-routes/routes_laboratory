@@ -13,7 +13,6 @@ minio_client = Minio(
 
 big_data_bucket = "bigdata"
 big_data_dir = settings.DATA_DIR / 'big'
-os.makedirs(big_data_dir, exist_ok=True)
 
 names = minio_client.list_objects(big_data_bucket, recursive=True)
 names = [name.object_name for name in names]

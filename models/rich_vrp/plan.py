@@ -17,8 +17,8 @@ class Plan:
 
     def __init__(
         self,
-        agent: Agent,
-        waypoints: List[Visit]
+        agent: 'Agent',
+        waypoints: List['Visit']
     ):
         self.agent = agent
         self.waypoints = waypoints
