@@ -11,6 +11,7 @@ from scipy.sparse.csgraph._shortest_path import floyd_warshall
 from geo.providers import osrm_module
 from utils.logs import logger
 from utils.types import Array
+from utils.data_formats import cache
 
 final_matrix_file = "data/full_matrix_27.npy.npz"
 
@@ -21,17 +22,17 @@ def great_circle_distance(a, b):
 
 
 def build_full_matrix(
-        walk_matrix: Array,
-        station_df: pd.DataFrame,
-        threshold=1200,  # Максимальное расстояние пешком в секундах
-        transfer_cost=300,  # Ждать на остановке 5 минут
+    walk_matrix: Array,
+    station_df: pd.DataFrame,
+    threshold=1200,  # Максимальное расстояние пешком в секундах
+    transfer_cost=300,  # Ждать на остановке 5 минут
 ):
     """Собираем итоговую матрицу расстояний."""
     walk_matrix_reduced = walk_matrix.copy()
     walk_matrix_reduced[walk_matrix > threshold] = 0
     walk_matrix_reduced[walk_matrix_reduced != 0] += transfer_cost
 
-    logger.info('Билдим итоговую матрицу алгоритмом floyd_warshall...')
+    logger.info("Билдим итоговую матрицу алгоритмом floyd_warshall...")
     matrix = build_graph(station_df, walk_matrix_reduced)
     return matrix
 
@@ -43,7 +44,7 @@ def build_stations_matrix(stations_df: pd.DataFrame):
     matrix = np.zeros((n, n), dtype=np.int32)
 
     for sid1, station_data in tqdm.tqdm(stations_df.iterrows()):
-        for sid2, dist in station_data['links'].items():
+        for sid2, dist in station_data["links"].items():
             if sid2 not in map_dict:
                 print(f"Station {sid2} have no coordinates, skipped")
                 continue
@@ -62,37 +63,38 @@ def add_walk_matrix(stations_matrix: Array, walk_matrix: Array):
     idx = (stations_matrix != 0) & (walk_matrix != 0)
 
     stations_matrix[idx] = np.minimum(stations_matrix, walk_matrix)[idx]  #
-    stations_matrix[stations_matrix == 0] = walk_matrix[stations_matrix == 0]  # заполняем пропуски
+    stations_matrix[stations_matrix == 0] = walk_matrix[
+        stations_matrix == 0
+    ]  # заполняем пропуски
 
 
-def build_graph(
-        stations_df: pd.DataFrame,
-        walk_matrix: Array,
-        final_matrix_file: str
-):
+@cache.memoize()
+def build_graph(stations_df: pd.DataFrame, walk_matrix: Array):
     """Построить граф перемещений по всем станциям."""
     matrix = build_stations_matrix(stations_df)
     add_walk_matrix(matrix, walk_matrix)
 
     logger.info(f"Рассчитываем floyd-warshall для объединенного графа")
     graph = csr_matrix(matrix)
-    dist_matrix, predecessors = floyd_warshall(csgraph=graph, directed=True, return_predecessors=True)
+    dist_matrix, predecessors = floyd_warshall(
+        csgraph=graph, directed=True, return_predecessors=True
+    )
 
-    logger.info('Сохраняю матрицу...')
-    np.savez_compressed(final_matrix_file, matrix=matrix, predecessors=predecessors)
+    # logger.info('Сохраняю матрицу...')
+    # np.savez_compressed(final_matrix_file, matrix=matrix, predecessors=predecessors)
 
     return dist_matrix
 
 
 def transport_travel_time(
-        src: int, dst: int,  # откуда до куда
-        p_matrix: Array,  # время пешком между точками
-        p2s_matrix: Array,  # время пешком от точек до остановок
-        s2p_matrix: Array,  # время пешком от остановок до точек
-        s_matrix: Array,  # время проезда между точками
-
-        src_closest: Array,  # индексы ближайших к старту остановок
-        dst_closest: Array,  # индексы ближайших к концу остановок
+    src: int,
+    dst: int,  # откуда до куда
+    p_matrix: Array,  # время пешком между точками
+    p2s_matrix: Array,  # время пешком от точек до остановок
+    s2p_matrix: Array,  # время пешком от остановок до точек
+    s_matrix: Array,  # время проезда между точками
+    src_closest: Array,  # индексы ближайших к старту остановок
+    dst_closest: Array,  # индексы ближайших к концу остановок
 ) -> Tuple[int, Optional[int], Optional[int]]:
     """Считаем время проезда из src в dst с учетом транспорта Возвращаем минимальное время и индексы
     остановок, если они есть, иначе None."""
@@ -112,11 +114,11 @@ def transport_travel_time(
 
 
 def combined_matrix(
-        p_matrix: Array,  # время пешком между точками
-        p2s_matrix: Array,  # время пешком от точек до остановок
-        s2p_matrix: Array,  # время пешком от остановок до точек
-        s_matrix: Array,  # время проезда между точками
-        candidates: int = 10,  # сколько ближайших остановок рассматривать
+    p_matrix: Array,  # время пешком между точками
+    p2s_matrix: Array,  # время пешком от точек до остановок
+    s2p_matrix: Array,  # время пешком от остановок до точек
+    s_matrix: Array,  # время проезда между точками
+    candidates: int = 10,  # сколько ближайших остановок рассматривать
 ) -> Array:
     """Составляем матрицу времени перемещения от каждой точки до каждой с учетом тспользования транспорта."""
 
@@ -125,15 +127,19 @@ def combined_matrix(
     dst_closest = s2p_matrix.T.argpartition(kth=candidates, axis=1)[:candidates]
 
     p = len(p_matrix)
-    res_times = np.zeros((p, p), dtype='int32')
+    res_times = np.zeros((p, p), dtype="int32")
 
     logger.info("Считаем матрицу кратчайших проездов...")
     for src, dst in permutations(range(p), 2):
         time, src_s, dst_s = transport_travel_time(
-            src=src, dst=dst,
-            p_matrix=p_matrix, p2s_matrix=p2s_matrix,
-            s2p_matrix=s2p_matrix, s_matrix=s_matrix,
-            src_closest=src_closest[src], dst_closest=dst_closest[dst]
+            src=src,
+            dst=dst,
+            p_matrix=p_matrix,
+            p2s_matrix=p2s_matrix,
+            s2p_matrix=s2p_matrix,
+            s_matrix=s_matrix,
+            src_closest=src_closest[src],
+            dst_closest=dst_closest[dst],
         )
 
         res_times[src, dst] = time
@@ -142,14 +148,14 @@ def combined_matrix(
 
 
 def get_travel_times(
-        points: Array,
+    points: Array,
 ):
-    stations = pd.read_pickle('./data/full_df_refactored.pkl')['coord'].values.tolist()
+    stations = pd.read_pickle("./data/full_df_refactored.pkl")["coord"].values.tolist()
     stations = np.array(stations)
 
     p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
     s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
     p_matrix = osrm_module.get_osrm_matrix(points)
-    s_matrix = np.load('./data/final_mat.npz')['walk_matrix']
+    s_matrix = np.load("./data/final_mat.npz")["walk_matrix"]
 
     return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
