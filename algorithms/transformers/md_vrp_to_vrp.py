@@ -14,9 +14,34 @@ from models.rich_vrp.geometries.geometry import DistanceAndTimeMatrixGeometry
 from ..utils.costs import get_inf
 
 
+def _transform_new_new(
+    matrix: Array,
+    n: int,
+    inf: int,
+    ids: List[int]
+):
+    #  old | new | fake
+    #  new | >x< |  01
+    #  fake|  10 |  0
+
+    for i in range(len(ids)):
+        for index in range(len(ids)):
+            # square of inf for new_jobs (moves between them)
+            # make inf between in and out
+            if i == index:
+                matrix[n + i, n + i] = inf
+                matrix[n + i + 1, n + i + 1] = inf
+            else:
+                matrix[n + i, n + i + index] = matrix[n + i, ids[index]]
+                matrix[n + i + 1, ids[i]] = matrix[n + i + 1, ids[index]]
+                matrix[n + i + index, n + i] = matrix[ids[index], n + i]
+                matrix[ids[i], n + i + 1] = matrix[ids[index], n + i + 1]
+
+
 def _transform_matrix(
     matrix: Array,
     pass_num: int,  # количество проходов
+    ids: List[int],
 ) -> Array:
     inf = get_inf(matrix)
     n = len(matrix)
@@ -24,6 +49,29 @@ def _transform_matrix(
     new_matrix = np.zeros((new_size, new_size))
 
     new_matrix[:n, :n] = matrix
+
+    for index in ids:
+        for k in range(pass_num):
+            # copy depot table for this two
+            new_matrix[n + k, :n] = matrix[index, :n]
+            new_matrix[:n, n + k] = matrix[:n, index]
+            new_matrix[n + k + 1, :n] = matrix[index, :n]
+            new_matrix[:n, n + k + 1] = matrix[:n, index]
+
+            # 0 and inf for fake
+            # in
+            new_matrix[n + k, -1] = 0
+            new_matrix[-1, n + k] = inf
+            # out
+            new_matrix[n + k + 1, -1] = inf
+            new_matrix[-1, n + k + 1] = 0
+
+        # - depots
+        new_matrix[index, :] = inf
+        new_matrix[:, index] = inf
+
+    _transform_new_new(matrix, n, inf)
+    return new_matrix
 
 
 class TransformerMdVrpToVrp(BaseTransformer):
@@ -33,11 +81,11 @@ class TransformerMdVrpToVrp(BaseTransformer):
     def transform(
         self,
         problem: RichVRPProblem,
-        count: int
+        pass_num: int
     ) -> RichVRPProblem:
         # 1) check geom
         # 2) create fake deport
-        # 3) move depots in jobs 'count' times
+        # 3) move depots in jobs 'pass_num' times
         # 4) create matrixes
 
         for idx in problem.matrix.geometries:
@@ -48,44 +96,22 @@ class TransformerMdVrpToVrp(BaseTransformer):
 
         place_mapping = problem.matrix
 
-        # where do you need to delete depot from and where to add as job
-        # (except problem.depots, problem.jobs and matrixes)
-
-        # change params
-        # TODO: а что если 0 уже занят? В крайнем случаем можно сделать uuid, но лучше по-другому
+        # TODO: change params
+        # TODO: я поставил пустые параметры, и как вы выдаете id я не знаю
         fake_depot = Depot(id=0, time_windows=[], lat=0, lon=0, delay=0)
 
         for idx in place_mapping.geometries:
             geometry = place_mapping.geometries[idx]
 
-            # do something with places, points and mapping
             matrix = geometry.dist_matrix()
             t_matrix = geometry.time_matrix()
 
-            inf = get_inf(matrix)
-            t_inf = get_inf(t_matrix)
-
-            n = len(matrix)
-
-            new_size = n + 1 + count * 2
-
-            new_matrix = np.zeros((new_size, new_size))
-            new_matrix[:n, :n] = matrix
-
-            new_t_matrix = np.zeros((new_size, new_size))
-            new_t_matrix[:n, :n] = t_matrix
-
-            # + fake + count * 2
-            # - depots (there is a problem to rebuild whole matrix without depots points?)
-            # save old data for depots and use in matrix for new jobs?
             ids = []
             for depot in problem.depots:
-                # old index of depot
-                index = place_mapping.mapping[depot]
-                ids.append(index)
-                # + count * 2
+                ids.append(place_mapping.mapping[depot])
+                # + pass_num * 2
                 new_jobs = []
-                for k in range(count):
+                for k in range(pass_num):
                     # create new job in and out
                     job_in = Job(id=depot.id, name=depot.name + '_in', lat=depot.lat, lon=depot.lon, x=depot.x,
                                  y=depot.y, time_windows=depot.time_windows, delay=depot.delay)
@@ -94,71 +120,17 @@ class TransformerMdVrpToVrp(BaseTransformer):
                     problem.jobs.append(job_in)
                     problem.jobs.append(job_out)
 
-                    # copy depot table for this two
-                    new_matrix[n + k, :n] = matrix[index, :n]
-                    new_matrix[:n, n + k] = matrix[:n, index]
-                    new_matrix[n + k + 1, :n] = matrix[index, :n]
-                    new_matrix[:n, n + k + 1] = matrix[:n, index]
-
-                    new_t_matrix[n + k, :n] = t_matrix[index, :n]
-                    new_t_matrix[:n, n + k] = t_matrix[:n, index]
-                    new_t_matrix[n + k + 1, :n] = t_matrix[index, :n]
-                    new_t_matrix[:n, n + k + 1] = t_matrix[:n, index]
-
-                    # 0 and inf for fake
-                    # in
-                    new_matrix[n + k, -1] = 0
-                    new_matrix[-1, n + k] = inf
-                    # out
-                    new_matrix[n + k + 1, -1] = inf
-                    new_matrix[-1, n + k + 1] = 0
-
-                    # in
-                    new_t_matrix[n + k, -1] = 0
-                    new_t_matrix[-1, n + k] = inf
-                    # out
-                    new_t_matrix[n + k + 1, -1] = inf
-                    new_t_matrix[-1, n + k + 1] = 0
-
                     # just for updating points in geometry
                     new_jobs.append(job_in)
                     new_jobs.append(job_out)
-                # - depots
-                new_matrix[index, :] = inf
-                new_matrix[:, index] = inf
-                new_t_matrix[index, :] = t_inf
-                new_t_matrix[:, index] = t_inf
 
-            #  old | new | fake
-            #  new | >x< |  01
-            #  fake|  10 |  0
-            for i in range(len(ids)):
-                for indx in range(len(ids)):
-                    # square of inf for new_jobs (moves between them)
-                    # make inf between in and out
-                    if i == indx:
-                        new_matrix[n + i, n + i] = inf
-                        new_matrix[n + i + 1, n + i + 1] = inf
-
-                        new_t_matrix[n + i, n + i] = t_inf
-                        new_t_matrix[n + i + 1, n + i + 1] = t_inf
-                    else:
-                        new_matrix[n + i, n + i + indx] = new_matrix[n + i, ids[indx]]
-                        new_matrix[n + i + 1, ids[i]] = new_matrix[n + i + 1, ids[indx]]
-                        new_matrix[n + i + indx, n + i] = new_matrix[ids[indx], n + i]
-                        new_matrix[ids[i], n + i + 1] = new_matrix[ids[indx], n + i + 1]
-
-                        new_t_matrix[n + i, n + i + indx] = new_t_matrix[n + i, ids[indx]]
-                        new_t_matrix[n + i + 1, ids[i]] = new_t_matrix[n + i + 1, ids[indx]]
-                        new_t_matrix[n + i + indx, n + i] = new_t_matrix[ids[indx], n + i]
-                        new_t_matrix[ids[i], n + i + 1] = new_t_matrix[ids[indx], n + i + 1]
-            # add fake
+            new_matrix = _transform_matrix(matrix, pass_num, ids)
+            new_t_matrix = _transform_matrix(t_matrix, pass_num, ids)
+            # TODO :: insert new matrix in geometry
 
         # TODO :: update points and mapping
         ###
 
-        # add all fakes in problem.depots or only one?
-        # Are all geometry.places the same ?
         problem.depots = [fake_depot]
         return problem
 
