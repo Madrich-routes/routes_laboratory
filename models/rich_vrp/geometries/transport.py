@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
+import settings
 from geo.transport.calc_distance import (
     build_graph,
     transport_travel_time,
@@ -12,8 +13,8 @@ from geo.providers import osrm_module
 from models.rich_vrp.geometries.base import BaseGeometry
 from utils.types import Array
 
-transport_dataset_src = "../data/big/full_df_refactored_2210.pkl"
-walk_matrix_src = "../data/big/walk_matrix_refactored_2210.npz"
+transport_dataset_src = settings.DATA_DIR / "big/full_df_refactored_2210.pkl"
+walk_matrix_src = settings.DATA_DIR / "big/walk_matrix_refactored_2210.npz"
 
 
 class TransportMatrixGeometry(BaseGeometry):
