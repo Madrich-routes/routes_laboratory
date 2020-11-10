@@ -18,7 +18,7 @@ def build_dataset_from_files():
 
     routes_file_pattern = "big/xls/data-101784-2020-04-08-s*.csv"
     routes_files = settings.DATA_DIR.glob(routes_file_pattern)
-    
+
     xml_url_local = settings.DATA_DIR / "big/metro.xml"
     all_uids_file = settings.DATA_DIR / "big/all_uids.npy"
     all_pathes_file = settings.DATA_DIR / "big/all_pathes"
