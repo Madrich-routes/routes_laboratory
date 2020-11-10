@@ -33,8 +33,7 @@ def build_full_matrix(
     walk_matrix_reduced[walk_matrix_reduced != 0] += transfer_cost
 
     logger.info("Билдим итоговую матрицу алгоритмом floyd_warshall...")
-    matrix = build_graph(station_df, walk_matrix_reduced)
-    return matrix
+    return build_graph(station_df, walk_matrix_reduced)
 
 
 def build_stations_matrix(stations_df: pd.DataFrame):

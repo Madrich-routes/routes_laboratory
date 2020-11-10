@@ -10,8 +10,8 @@ from utils.logs import logger
 def build_df(xml_url) -> pd.DataFrame:
     """Получаем датафрейм для всего метро."""
     logger.info('Составляю словарь станций метро...')
-    df = parse_metro(xml_url)
-    return df
+    return parse_metro(xml_url)
+
 
 def get_metro_xml(url: str):
     """Притворяемся браузером и получаем информацию по метро."""
@@ -19,6 +19,7 @@ def get_metro_xml(url: str):
     s = requests.Session()
     r = s.get(url, headers=headers)
     return r.text
+
 
 def parse_metro(xml_url_or_filename):
     """Парсим данные, которые нам отдает API метро."""

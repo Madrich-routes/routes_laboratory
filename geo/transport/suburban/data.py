@@ -67,10 +67,14 @@ def parse_suburban(
             all_pathes.append(path)
 
     # Join nearest stations
-    data = {}
-    for station in tqdm(all_stations['stations']):
-        data[station['code']] = {'coord': [float(station['lat']), float(station['lng'])], 'name': station['title'],
-                                    'links': {}}
+    data = {
+        station['code']: {
+            'coord': [float(station['lat']), float(station['lng'])],
+            'name': station['title'],
+            'links': {},
+        }
+        for station in tqdm(all_stations['stations'])
+    }
 
     for path in tqdm(all_pathes):
         for first_stop, second_stop in zip(path['stops'][:-1], path['stops'][1:]):

@@ -8,13 +8,14 @@ from typing import Any, Optional
 from dateutil.parser import parse
 from diskcache import FanoutCache
 
-# from rich.traceback import install
-# install()
-
 # Кэш, в который можно сохранять на диск то, что уже было посчитано.
 import settings
 
+# from rich.traceback import install
+# install()
+
 cache = FanoutCache(settings.DATA_DIR / 'tmp/routes_cache/', shards=8, timeout=100)
+
 
 def round_to_n(x: float, n=3) -> float:
     """Округляем до заданного количества знаков.
@@ -41,7 +42,7 @@ def is_number(a: Any) -> bool:
 
 
 def parse_time(
-        time_obj: Any, errors: str = 'raise', none: Any = None
+    time_obj: Any, errors: str = 'raise', none: Any = None
 ) -> Optional[int]:
     """Парсим время и возвращаем количество секунд в unixtime Эта штуковина вроде как должна справляться почти
     с любыми форматами времени.
@@ -77,10 +78,10 @@ def format_float(f: float) -> str:
 
 
 def format_speed(
-        speed: float,
-        with_name: bool = False,
-        with_units: bool = True,
-        units: str = 'км/ч'
+    speed: float,
+    with_name: bool = False,
+    with_units: bool = True,
+    units: str = 'км/ч'
 ):
     if units == 'км/ч':
         speed *= 3.6
@@ -98,10 +99,10 @@ def format_speed(
 
 
 def format_distance(
-        dist: float,
-        with_name: bool = False,
-        with_units: bool = True,
-        units: str = 'км'
+    dist: float,
+    with_name: bool = False,
+    with_units: bool = True,
+    units: str = 'км'
 ):
     if units == 'км':
         dist /= 1000
@@ -119,10 +120,10 @@ def format_distance(
 
 
 def format_time(
-        ts: int,
-        with_date: bool = False,
-        with_seconds: bool = False,
-        with_name: bool = False,
+    ts: int,
+    with_date: bool = False,
+    with_seconds: bool = False,
+    with_name: bool = False,
 ):
     fmt = ""
     fmt += 'Время: ' * with_name
@@ -134,9 +135,9 @@ def format_time(
 
 
 def format_time_window(
-        start: int,
-        end: int,
-        with_name=False,
+    start: int,
+    end: int,
+    with_name=False,
 ):
     """Формат в котором мы печатаем time_window."""
     res = ''
@@ -147,8 +148,8 @@ def format_time_window(
 
 
 def format_collection(
-        collection: Any,
-        sep: str = ', '
+    collection: Any,
+    sep: str = ', '
 ):
     """Формат в котором мы печатаем наборы."""
     data = sep.join(sorted(collection))
