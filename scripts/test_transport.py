@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from geo.transport.calc_distance import build_graph
+from geo.transport.calc_distance import build_graph, build_stations_matrix
 from geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 
 
@@ -29,7 +29,8 @@ def main():
     if os.path.exists(final_matrix_file):
         final_mat = np.load(final_matrix_file)
     else:
-        final_mat = build_graph(dataset, walk_matrix)
+        matrix = build_stations_matrix(dataset, walk_matrix)
+        final_mat = build_graph(matrix)
         np.savez_compressed(final_matrix_file, walk_matrix=final_mat)
 
 

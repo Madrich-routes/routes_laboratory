@@ -6,6 +6,7 @@ import settings
 from geo.transport.calc_distance import (
     build_graph,
     transport_travel_time,
+    build_stations_matrix,
 )
 from geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 from geo.providers import osrm_module
@@ -15,33 +16,38 @@ from utils.types import Array
 
 transport_dataset_src = settings.DATA_DIR / "big/full_df_refactored_2210.pkl"
 walk_matrix_src = settings.DATA_DIR / "big/walk_matrix_refactored_2210.npz"
+transport_matrix_src = settings.DATA_DIR / "big/full_matrix_refactored_2210.npz"
 
 
 class TransportMatrixGeometry(BaseGeometry):
     """
     Геометрия, позволяющая работать с общественным транспортом
     """
+
     def __init__(self, points: Array, distance_matrix: Array) -> None:
         super().__init__(points)
 
         self.d = distance_matrix  # расстояния пешком между точками
-
-        # загрузим датасет остановок и матрицу расстояний пешком между ними
+        # загрузим датасет остановок
         if os.path.exists(transport_dataset_src):
             transport_dataset = pd.read_pickle(transport_dataset_src)
         else:
             transport_dataset = build_dataset_from_files()
             transport_dataset.to_pickle(transport_dataset_src)
-        if os.path.exists(walk_matrix_src):
-            walk_matrix = np.load(walk_matrix_src)["walk_matrix"]
-        else:
-            walk_matrix = build_walk_matrix(transport_dataset)
-        np.savez_compressed(walk_matrix_src, walk_matrix=walk_matrix)
+        # загрузим матрицу расстояний между остановками
+        if os.path.exists(transport_matrix_src):
+            transport_dist_matrix = np.load(transport_matrix_src)
+        else:  # иначе, посчитаем заново
+            if os.path.exists(walk_matrix_src):
+                walk_matrix = np.load(walk_matrix_src)["walk_matrix"]
+            else:
+                walk_matrix = build_walk_matrix(transport_dataset)
+                np.savez_compressed(walk_matrix_src, walk_matrix=walk_matrix)
 
-        transport_dist_matrix = build_graph(
-            transport_dataset, walk_matrix
-        )  # построим матрицу времен между остановками
-
+            stations_matrix = build_stations_matrix(transport_dataset, walk_matrix)
+            transport_dist_matrix = build_graph(
+                stations_matrix
+            )  # построим матрицу времен между остановками
         transport_stations_coords = list(transport_dataset["coord"])
 
         self.p_matrix = distance_matrix  # время пешком между точками
@@ -57,7 +63,7 @@ class TransportMatrixGeometry(BaseGeometry):
             transport="foot",
             return_distances=False,
         )  # время пешком от остановок до точек
-        self.s_matrix = (transport_dist_matrix,)  # время проезда между точками
+        self.s_matrix = transport_dist_matrix  # время проезда между точками
         self.closest_count: int = 10  # сколько ближайших остановок рассматривать
 
     def time(self, i: int, j: int, **kwargs) -> int:

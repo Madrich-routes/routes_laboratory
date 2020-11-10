@@ -36,7 +36,7 @@ def build_full_matrix(
     return build_graph(station_df, walk_matrix_reduced)
 
 
-def build_stations_matrix(stations_df: pd.DataFrame):
+def build_stations_matrix(stations_df: pd.DataFrame, walk_matrix: Array):
     """Строим матрицу известных первичных расстояний между точками."""
     n = len(stations_df)
     map_dict = dict(zip(stations_df.index, list(range(n))))
@@ -48,7 +48,8 @@ def build_stations_matrix(stations_df: pd.DataFrame):
                 print(f"Station {sid2} have no coordinates, skipped")
                 continue
             matrix[map_dict[sid1]][map_dict[sid2]] = dist
-
+    # Правим получившуюся матрицу
+    add_walk_matrix(matrix, walk_matrix)
     return matrix
 
 
@@ -67,21 +68,15 @@ def add_walk_matrix(stations_matrix: Array, walk_matrix: Array):
     ]  # заполняем пропуски
 
 
-@cache.memoize()
-def build_graph(stations_df: pd.DataFrame, walk_matrix: Array):
+# @cache.memoize()
+def build_graph(matrix: Array):
     """Построить граф перемещений по всем станциям."""
-    matrix = build_stations_matrix(stations_df)
-    add_walk_matrix(matrix, walk_matrix)
 
     logger.info(f"Рассчитываем floyd-warshall для объединенного графа")
     graph = csr_matrix(matrix)
     dist_matrix, predecessors = floyd_warshall(
         csgraph=graph, directed=True, return_predecessors=True
     )
-
-    # logger.info('Сохраняю матрицу...')
-    # np.savez_compressed(final_matrix_file, matrix=matrix, predecessors=predecessors)
-
     return dist_matrix
 
 
