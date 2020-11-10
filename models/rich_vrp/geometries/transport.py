@@ -20,7 +20,6 @@ class TransportMatrixGeometry(BaseGeometry):
     """
     Геометрия, позволяющая работать с общественным транспортом
     """
-
     def __init__(self, points: Array, distance_matrix: Array) -> None:
         super().__init__(points)
 
@@ -78,3 +77,6 @@ class TransportMatrixGeometry(BaseGeometry):
             dst_closest,
         )
         return result[0]
+
+    def dist(self, i: int, j: int, **kwargs) -> int:
+        raise NotImplementedError

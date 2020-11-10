@@ -4,12 +4,12 @@ from models.rich_vrp.geometries.transport import TransportMatrixGeometry
 from geo.providers import osrm_module
 
 
-def main():
+def test_matrix():
     data = pd.read_excel("../../../data/eapteka/data/update_3.xlsx")
     data = data.head(100)
-    points = [(row.lat, row.lng) for row in data.itertuples()]
+    points = [(float(row.lat), float(row.lng)) for row in data.itertuples()]
     _, walk_matrix = osrm_module.get_osrm_matrix(
-        src=points, dst=[], transport="foot", return_distances=False
+        src=points, transport="foot", return_distances=False
     )
 
     tmg = TransportMatrixGeometry(points, walk_matrix)
@@ -18,4 +18,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test_matrix()

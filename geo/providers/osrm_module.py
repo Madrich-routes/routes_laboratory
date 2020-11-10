@@ -6,6 +6,7 @@ from urllib.parse import quote
 
 import numpy as np
 import requests
+from fastcore.basics import null, ifnone
 from polyline import encode as polyline_encode
 
 import settings
@@ -18,18 +19,18 @@ coefficient = {'speed_car': 7.5, 'speed_pedestrian': 1, 'distance_car': 1.06, 'd
 
 
 def encode_src_dst(
-        src: Array,
-        dst: Optional[Array] = None,
-        *,
-        return_distances: bool = False,  # что мы хотим получить в результате
-        return_durations: bool = True,
+    src: Array,
+    dst: Optional[Array] = None,
+    *,
+    return_distances: bool = True,  # что мы хотим получить в результате
+    return_durations: bool = True,
 ):
     """Кодируем координаты src, dst в виде параетров.
 
     Возвращаем закодированный polyline и закодированные params
     """
-    coords = tuple((c[1], c[0]) for c in chain(src, dst))
-    polyline = polyline_encode(coords, precision=6)
+    coords = tuple((c[1], c[0]) for c in chain(src, ifnone(dst, [])))
+    polyline = polyline_encode(coords)
 
     params = {
         'annotations': ','.join(
@@ -51,12 +52,12 @@ def _turn_over(points: Array):
 
 
 def table(
-        host: str,
-        src: Array,
-        dst: Optional[Array] = None,
-        profile: str = "driving",
-        return_distances: bool = False,  # что мы хотим получить в результате
-        return_durations: bool = True,
+    host: str,
+    src: Array,
+    dst: Optional[Array] = None,
+    profile: str = "driving",
+    return_distances: bool = False,  # что мы хотим получить в результате
+    return_durations: bool = True,
 ) -> Tuple[Array, Array]:
     """Отправляем запрос матрицы расстояний в OSRM и получаем ответ."""
     polyline, params = encode_src_dst(
@@ -69,9 +70,15 @@ def table(
     dst_len = len(dst) if dst is not None else None
     logger.info(f"Не нашли в кеше. Обновляем матрицу расстояний... {len(src), dst_len}")
 
-    r = requests.get(url)
-    r.raise_for_status()
-    logger.log(f'{r.elapsed} затрачно на вычисление матрицы.')
+    r = null
+    try:  # делаем запрос с обработкой ошибок
+        r = requests.get(url)
+        r.raise_for_status()
+    except Exception as e:
+        logger.error(f'Проблема: {r.content}')
+        raise e
+
+    logger.info(f'{r.elapsed} затрачно на вычисление матрицы.')
 
     parsed_json = r.json()
 
@@ -84,25 +91,43 @@ def table(
 
 @cache.memoize()
 def get_osrm_matrix(
-        src: Array,
-        dst: Array = None,
-        *,
-        transport: str = 'car',  # для каких параметров получаем расстояния
-        profile: str = 'driving',  # я хз что это...
-        return_distances: bool = True,  # что мы хотим получить в результате
-        return_durations: bool = True,
+    src: Array,
+    dst: Optional[Array] = None,
+    *,
+    transport: str = 'car',  # для каких параметров получаем расстояния
+    profile: str = 'driving',  # я хз что это...
+    return_distances: bool = True,  # что мы хотим получить в результате
+    return_durations: bool = True,
+    fix_matrix: bool = True,
 ) -> Tuple[Optional[Array], Optional[Array]]:
-    """Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан. Матрица с одинаковыми
+    """ Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан. Матрица с одинаковыми
     параметрами кешируется при первом вызове.
 
-    Возвращаем
+    Parameters
+    ----------
+    src : Набор точек, из которых мы считаем расстояния
+    dst : Набор точек до куда считаем расстояния. Если None, то считаем (src, src)
+    transport : Тип транспорта
+    profile : Не знаю, что это. Но osrm это принимает.
+    return_distances : Возвращать ли расстояния
+    return_durations : Возвращать ли время
+    fix_matrix : Исправлять ли кривые значения в матрице
+
+    Returns
+    -------
+    Возвращаемся матрицу расстояния и/или времени
     """
+    assert len(src) != 0, 'Не заданы начальные точки'
+    assert dst is None or len(dst) != 0, 'Не заданы конечные точки'
     assert return_distances or return_durations, 'Ничего не возвращаем'
+
+    src = np.array(src, dtype=np.float32)
+    src = _turn_over(src)
 
     host = dict(
         car=f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}',
         foot=f'http://{settings.OSRM_FOOT_HOST}:{settings.OSRM_FOOT_PORT}',
-        osrm_host=f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_PORT}',
+        bicycle=f'http://{settings.OSRM_BICYCLE_HOST}:{settings.OSRM_BICYCLE_PORT}',
     )[transport]
 
     distances, durations = table(
@@ -114,7 +139,10 @@ def get_osrm_matrix(
         return_durations=return_durations,
     )
 
-    assert np.abs(durations).sum() != 0 and np.abs(distances).sum() != 0, (
+    assert (
+        (durations is None or np.abs(durations).sum() != 0)
+        and (distances is None or np.abs(distances).sum() != 0)
+    ), (
         f"OSRM вернул 0 матрицу. Проверьте порядок координат."
         f"{src}"
         f"{durations}"
@@ -122,18 +150,21 @@ def get_osrm_matrix(
     )
 
     # заменяем сомнительные значения
-    distances, durations = fix_matrix(distances, durations, src, dst)
+    if fix_matrix and (return_distances + return_durations) == 2:
+        distances, durations = _fix_matrix(distances, durations, src, dst)
+    else:
+        logger.debug("Не фиксим матрицы")
 
     return distances, durations
 
 
-def fix_matrix(
-        distances: Array,
-        durations: Array,
-        src: Array,
-        dst: Array,
-        speed_ratio_low_threshold: float = 2,  # во сколько раз скорость может быть меньше средней
-        speed_ratio_up_threshold: float = 1.5,  # во сколько раз скорость может быть больше средней
+def _fix_matrix(
+    distances: Array,
+    durations: Array,
+    src: Array,
+    dst: Array,
+    speed_ratio_low_threshold: float = 2,  # во сколько раз скорость может быть меньше средней
+    speed_ratio_up_threshold: float = 1.5,  # во сколько раз скорость может быть больше средней
 ) -> np.ndarray:
     """Чиним отсустсвующие и неправильные значения в матрице расстояний.
 
@@ -148,8 +179,8 @@ def fix_matrix(
     durations[(durations < 0) | (durations > 1e7) | ~np.isfinite(durations)] = 0
 
     if (
-            (distances == 0).sum() > distances.size() * 0.1
-            or (durations == 0).sum() > durations.size() * 0.1
+        (distances == 0).sum() > distances.size * 0.1
+        or (durations == 0).sum() > durations.size * 0.1
     ):
         logger.warning('Более 10% нулевых или неверных значений в матрице расстояний!!!')
 

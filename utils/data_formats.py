@@ -12,8 +12,9 @@ from diskcache import FanoutCache
 # install()
 
 # Кэш, в который можно сохранять на диск то, что уже было посчитано.
-cache = FanoutCache('/tmp/routes_cache/', shards=8, timeout=100)
+import settings
 
+cache = FanoutCache(settings.DATA_DIR / 'tmp/routes_cache/', shards=8, timeout=100)
 
 def round_to_n(x: float, n=3) -> float:
     """Округляем до заданного количества знаков.

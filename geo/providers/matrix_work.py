@@ -42,7 +42,6 @@ def save_chunk(x, y, obj):
     with open(f'./tmp/chunk_{x}_{y}.pkl', 'wb') as f:
         pickle.dump(obj, f)
 
-
 def load_matrix(small_size):
     super_cell = [[None] * small_size for _ in range(small_size)]
     p_dist, p_time = deepcopy(super_cell), deepcopy(super_cell)
