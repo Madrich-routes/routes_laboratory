@@ -73,6 +73,7 @@ mypy = "^0.790"
 pylint = "^2.6.0"
 pandas-vet = "^0.2.2"
 Sphinx = "^3.3.0"
+reindent = "^3.5.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

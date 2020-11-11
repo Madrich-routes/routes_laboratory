@@ -8,6 +8,3 @@ from models.rich_vrp.solution_statistics import SolutionStatistics
 from models.rich_vrp.visit import Visit
 
 __all__ = ['Job', 'Agent', 'AgentType', 'AgentCosts', 'Depot', 'VRPSolution', 'SolutionStatistics', 'Visit', 'Place']
-
-
-

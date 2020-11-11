@@ -10,4 +10,3 @@ default_profile = settings(
 )
 
 matrix_size_st = st.integers(min_value=0, max_value=15)
-

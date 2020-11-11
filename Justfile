@@ -11,8 +11,11 @@ pyanalyze:
     python -m pyanalyze --parallel -e condition_always_true -e method_first_arg -d incompatible_assignment -d unsupported_operation \
     -d possibly_undefined_name mw_flow_calculator
 
-dockformat:
+docformat:
     docformatter -i -r --wrap-summaries 110 --wrap-descriptions 110 .
+
+reindent:
+    reindent -rn .
 
 version v:
     poetry version {{v}} && dephell deps convert && git commit -am 'version++'

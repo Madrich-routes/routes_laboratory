@@ -24,7 +24,7 @@ def encode_src_dst(
     *,
     return_distances: bool = True,  # что мы хотим получить в результате
     return_durations: bool = True,
-):
+) -> Tuple[str, str]:
     """Кодируем координаты src, dst в виде параетров.
 
     Возвращаем закодированный polyline и закодированные params
@@ -59,7 +59,18 @@ def table(
     return_distances: bool = False,  # что мы хотим получить в результате
     return_durations: bool = True,
 ) -> Tuple[Array, Array]:
-    """Отправляем запрос матрицы расстояний в OSRM и получаем ответ."""
+    """Отправляем запрос матрицы расстояний в OSRM и получаем ответ.
+
+    Parameters
+    ----------
+    host : Инстанс OSRM, который мы проверяем
+    src : np.array точек, от которых мы считаем расстояние
+    dst : np.array точек, до которых мы считаем расстояние
+    profile : Какой-то параметр osrm
+
+    return_distances : Возвращать ли расстояния
+    return_durations : Возвращать ли время перемещения
+    """
     polyline, params = encode_src_dst(
         src, dst,
         return_distances=return_distances,
@@ -102,6 +113,9 @@ def get_osrm_matrix(
 ) -> Tuple[Optional[Array], Optional[Array]]:
     """ Получаем матрицу расстояний от src до dst, или от src до src, если dst не указан. Матрица с одинаковыми
     параметрами кешируется при первом вызове.
+
+    TODO: Добавить фиксы для каждого профайла
+    TODO: Добавить distance matrix missing value imputing. (Вычисление из структуры матрицы)
 
     Parameters
     ----------

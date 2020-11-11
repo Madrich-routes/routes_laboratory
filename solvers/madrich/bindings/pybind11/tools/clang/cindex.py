@@ -389,7 +389,7 @@ class Diagnostic(object):
             self.severity, self.location, self.spelling)
 
     def from_param(self):
-      return self.ptr
+        return self.ptr
 
 class FixIt(object):
     """A FixIt represents a transformation to be applied to the source to "fix-it".
@@ -2097,7 +2097,7 @@ class CompletionChunk:
     @CachedProperty
     def spelling(self):
         if self.__kindNumber in SpellingCache:
-                return SpellingCache[self.__kindNumber]
+            return SpellingCache[self.__kindNumber]
         return conf.lib.clang_getCompletionChunkText(self.cs, self.key).spelling
 
     # We do not use @CachedProperty here, as the manual implementation is
@@ -2120,24 +2120,24 @@ class CompletionChunk:
                                                                 self.key)
 
         if (res):
-          return CompletionString(res)
+            return CompletionString(res)
         else:
-          None
+            None
 
     def isKindOptional(self):
-      return self.__kindNumber == 0
+        return self.__kindNumber == 0
 
     def isKindTypedText(self):
-      return self.__kindNumber == 1
+        return self.__kindNumber == 1
 
     def isKindPlaceHolder(self):
-      return self.__kindNumber == 3
+        return self.__kindNumber == 3
 
     def isKindInformative(self):
-      return self.__kindNumber == 4
+        return self.__kindNumber == 4
 
     def isKindResultType(self):
-      return self.__kindNumber == 15
+        return self.__kindNumber == 15
 
 completionChunkKindMap = {
             0: CompletionChunk.Kind("Optional"),

@@ -20,7 +20,7 @@ def export(solution: VRPSolution, path: str):
     # проходим по каждому туру
     for plan in solution.routes:
         visits = []
-                
+
         if len(plan.waypoints > 2):
             i = 0
             statistic = {"cost": 0, "distance": 0, "duration":  0}
@@ -47,7 +47,7 @@ def export(solution: VRPSolution, path: str):
             last_point = plan.waypoints[-1]
             last_duration = last_point.delay if hasattr(last_point, 'delay') else 0
             statistic["duration"] = last_point.time - first_point.time + last_duration
-            
+
             # !!!Не уверен что так, но другого решения не вижу
             statistic["cost"] = plan.agent.costs.departure + plan.agent.costs.time * statistic["duration"] +  plan.agent.costs.dist * statistic["distance"]
             tour = {
@@ -64,10 +64,10 @@ def export(solution: VRPSolution, path: str):
     # собираем результат
     res = {
         "status": "solved", # !!! откуда брать, какие варианты?
-  	    "progress_status": "finished", # !!! откуда брать, какие варианты?
-        "solved":[
+            "progress_status": "finished", # !!! откуда брать, какие варианты?
+        "solved":{
             "depot_name": tours
-        ],
+        },
         "unassigned": [{
             "job_id": "job_0", # !!! откуда брать?
             "reason": "because"
@@ -90,5 +90,5 @@ def export(solution: VRPSolution, path: str):
             }
         }
     }
-    with open(path, 'w') as f:
-        ujson.dump(res, f)
+
+    return ujson.dumps(res)
