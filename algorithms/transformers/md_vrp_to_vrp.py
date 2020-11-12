@@ -3,7 +3,7 @@ from typing import List
 
 import numpy as np
 
-from models.rich_vrp import Depot, Job
+from models.rich_vrp import Depot, Job, Visit
 from utils.types import Array
 
 from .base import BaseTransformer
@@ -53,18 +53,18 @@ def _transform_matrix(
     for index in ids:
         for k in range(pass_num):
             # copy depot table for this two
-            new_matrix[n + k, :n] = matrix[index, :n]
-            new_matrix[:n, n + k] = matrix[:n, index]
-            new_matrix[n + k + 1, :n] = matrix[index, :n]
-            new_matrix[:n, n + k + 1] = matrix[:n, index]
+            new_matrix[n + k + index, :n] = matrix[index, :n]
+            new_matrix[:n, n + k + index] = matrix[:n, index]
+            new_matrix[n + k + 1 + index, :n] = matrix[index, :n]
+            new_matrix[:n, n + k + 1 + index] = matrix[:n, index]
 
             # 0 and inf for fake
             # in
-            new_matrix[n + k, -1] = 0
-            new_matrix[-1, n + k] = inf
+            new_matrix[n + k + index, -1] = 0
+            new_matrix[-1, n + k + index] = inf
             # out
-            new_matrix[n + k + 1, -1] = inf
-            new_matrix[-1, n + k + 1] = 0
+            new_matrix[n + k + 1 + index, -1] = inf
+            new_matrix[-1, n + k + 1 + index] = 0
 
         # - depots
         new_matrix[index, :] = inf
@@ -136,8 +136,57 @@ class TransformerMdVrpToVrp(BaseTransformer):
 
     @staticmethod
     def restore(self, solution: VRPSolution) -> VRPSolution:
-        new_problem = solution.problem
-        new_routes = solution.routes
-        return VRPSolution(new_problem, new_routes)
+        pass_num = 5
+        problem = self.transform(solution.problem, pass_num)
+        routes = solution.routes
+
+        # n | c * 2 | fake
+        # ................
+        visited_places = {}
+        n = len(solution.problem.depots)
+        for plan in routes:
+            # change waypoints
+            #   remove old
+            #   add new in, out, fake
+            # it's all
+
+            waypoints = plan.waypoints
+            # there is old_places but which of them - depots
+            # TODO :: Делать ли чек на problem is RichVRPProblem
+            for dep_id in range(len(solution.problem.depots)):
+                # TODO :: Нужно ли соблюдать порядок в plan.waypoints
+                # TODO :: Точно ли несколько depots в wapoints
+                dep = solution.problem.depots[dep_id]
+                depots_waypoints = list(filter(lambda x: x.place == dep, waypoints))
+                for depot_id in range(len(depots_waypoints)):
+                    # add in, out, fake
+                    d = depots_waypoints[depot_id]
+
+                    time_in = d.time
+
+                    # get from dep current job_in id in jobs
+                    current_pass = 0
+                    if dep in visited_places:
+                        current_pass = visited_places[dep]
+                    else:
+                        visited_places[dep] = 0
+                    visited_places[dep] += 1
+
+                    job_in_id = n + dep_id * pass_num + current_pass
+                    job_out_id = job_in_id + 1
+
+                    job_in_place = problem.jobs[job_in_id]
+                    job_out_place = problem.jobs[job_out_id]
+                    fake_place = problem.depots[0]
+
+                    waypoints.append(Visit(job_in_place, time_in))
+                    waypoints.append(Visit(fake_place, time_in))
+                    waypoints.append(Visit(job_out_place, time_in))
+
+                # remove depots
+                waypoints = list(filter(lambda x: x.place != dep, waypoints))
+
+        return VRPSolution(problem, routes)
 
 # TODO :: Проверить трансформацию на ошибки
+# TODO :: Проверить восстановление пути на ошибки
