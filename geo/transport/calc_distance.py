@@ -94,6 +94,8 @@ def transport_travel_time(
 
     # считаем время на транспорте для каждой комбинации
     times = p2s_matrix[src, src_closest].reshape(-1, 1) + s2p_matrix[dst_closest, dst]
+    if s_matrix.dtype != times.dtype:
+        times = times.astype(s_matrix.dtype)
     times += s_matrix[np.ix_(src_closest, dst_closest)]
 
     # находим индексы лучших остановак в массивах closest

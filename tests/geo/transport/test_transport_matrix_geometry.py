@@ -14,8 +14,11 @@ def test_matrix():
     )
 
     tmg = TransportMatrixGeometry(points, walk_matrix)
-    t = tmg.time(10, 20)
-    print(t)
+    for i in range(11, 15):
+        t = tmg.time(10, i)
+        print(points[10], points[i])
+        print(t)
+    k = 0
 
 
 if __name__ == "__main__":

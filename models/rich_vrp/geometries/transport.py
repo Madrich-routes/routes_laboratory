@@ -37,6 +37,7 @@ class TransportMatrixGeometry(BaseGeometry):
         # загрузим матрицу расстояний между остановками
         if os.path.exists(transport_matrix_src):
             transport_dist_matrix = np.load(transport_matrix_src)
+            transport_dist_matrix = transport_dist_matrix["matrix"]
         else:  # иначе, посчитаем заново
             if os.path.exists(walk_matrix_src):
                 walk_matrix = np.load(walk_matrix_src)["walk_matrix"]
@@ -67,13 +68,9 @@ class TransportMatrixGeometry(BaseGeometry):
         self.closest_count: int = 10  # сколько ближайших остановок рассматривать
 
     def time(self, i: int, j: int, **kwargs) -> int:
-        src_closest = self.p2s_matrix.argpartition(kth=self.closest_count, axis=1)[
-            : self.closest_count
-        ]
-        dst_closest = self.s2p_matrix.T.argpartition(kth=self.closest_count, axis=1)[
-            : self.closest_count
-        ]
-        result = transport_travel_time(
+        src_closest = self.p2s_matrix[i].argsort()[: self.closest_count]
+        dst_closest = self.s2p_matrix.T[j].argsort()[: self.closest_count]
+        result, _, _ = transport_travel_time(
             i,
             j,
             self.p_matrix,
@@ -83,7 +80,7 @@ class TransportMatrixGeometry(BaseGeometry):
             src_closest,
             dst_closest,
         )
-        return result[0]
+        return result
 
     def dist(self, i: int, j: int, **kwargs) -> int:
         raise NotImplementedError
