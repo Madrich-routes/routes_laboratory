@@ -133,7 +133,7 @@ def _encode_src_dst(
     return urllib.parse.quote(polyline), urllib.parse.urlencode(params)
 
 
-# @cache.memoize()
+@cache.memoize()
 def _table(
     host: str,
     src: Array,
