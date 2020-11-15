@@ -2,6 +2,7 @@ import random
 from itertools import chain
 from typing import List
 
+
 # TODO: Мутации и скрещивания со множеством кандидатов
 
 def invert(a: List[int]):
@@ -13,7 +14,7 @@ def invert(a: List[int]):
         a[i:j] = a[j - 1:i - 1:-1]
     else:
         size = n - i + j
-        idx = chain(range(i, n), range(0, j))
+        idx = chain(range(i, n), range(j))
 
         for i, v in enumerate(idx):
             if size - i <= i:

@@ -16,7 +16,6 @@ from utils.logs import logger
 from utils.types import Array
 
 
-@cache.memoize()
 def get_osrm_matrix(
     src: Array,
     dst: Optional[Array] = None,
@@ -58,7 +57,7 @@ def get_osrm_matrix(
     assert return_distances or return_durations, 'Ничего не возвращаем'
 
     src = np.array(src, dtype=np.float32)
-    src = _turn_over(src)
+    dst = dst if dst is None else np.array(dst, dtype=np.float32)
 
     host = dict(  # выбираем сервер, к которому обращаемся
         car=f'http://{settings.OSRM_CAR_HOST}:{settings.OSRM_CAR_PORT}',
@@ -115,7 +114,9 @@ def _encode_src_dst(
     -------
     Закодированный polyline и закодированные params для подстановки в url
     """
-    coords = tuple((c[1], c[0]) for c in chain(src, ifnone(dst, [])))
+
+    coords = src if dst is None else np.vstack([src, dst])
+    # _turn_over(np.array(coords))
     polyline = polyline_encode(coords)
 
     params = {
@@ -132,7 +133,7 @@ def _encode_src_dst(
     return urllib.parse.quote(polyline), urllib.parse.urlencode(params)
 
 
-@cache.memoize()
+# @cache.memoize()
 def _table(
     host: str,
     src: Array,

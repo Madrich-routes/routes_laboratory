@@ -426,3 +426,8 @@ class Problem:
 
     def dump_json(self):
         return json.dump(self.dump())
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
