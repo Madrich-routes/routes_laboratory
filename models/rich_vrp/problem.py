@@ -1,10 +1,11 @@
-from typing import List, Set, Optional
+from __future__ import annotations
+
+from enum import Enum
+from typing import TYPE_CHECKING, List, Optional, Set
 from uuid import uuid4
 
-from models.rich_vrp import Depot
-from models.rich_vrp.agent import Agent
-from models.rich_vrp.job import Job
-from models.rich_vrp.place_mapping import PlaceMapping
+if TYPE_CHECKING:
+    from models.rich_vrp import Agent, Depot, Job, Place, PlaceMapping
 
 
 class RichVRPProblem:
@@ -12,6 +13,15 @@ class RichVRPProblem:
 
     Его функция — описать все, что может встретиться в задаче в однозначной стандартной форме для
     использования во всем остальном коде и обеспечить легкий доступ к параметрам задачи.
+
+    Parameters
+    ----------
+    place_mapping : Объект, который умеет считать расстояние между точками
+    agents : Список агентов, которые могут решать джобы в нашей задаче
+    jobs : Список джоб, которые нужно выполнить в этой задаче
+    depots : Список депо в этой задаче
+    objectives : Критерии оптимизации для этой проблемы
+    name : Название этой проблемы
     """
 
     def __init__(
@@ -53,3 +63,28 @@ class RichVRPProblem:
         Set всех профайлов
         """
         return {a.type.profile for a in self.agents}
+
+    def places(self) -> List[Place]:
+        """Получаем список все мест в проблеме.
+
+        Returns
+        -------
+        Лист, в котором все депо и джобы
+        """
+
+        return list(self.depots) + list(self.jobs)
+
+
+class Profile(Enum):
+    """Допустимые типы профайлов."""
+    FOOT = 'foot'
+    PEDESTRIAN = 'foot'
+
+    BICYCLE = 'bicycle'
+    BIKE = 'bicycle'
+
+    CAR = 'car'
+    VEHICLE = 'car'
+
+    TRANSPORT = 'transport'
+    TRANSPORT_SIMPLE = 'transport_simple'

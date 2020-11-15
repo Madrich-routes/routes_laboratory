@@ -131,7 +131,7 @@ def fix_driver_speed(
 
     if time != 0 and 5 < dist / time < 13:
         if time > 3600 or dist <= 1e5:
-            return dist / 12, dist
+            return dist // 12, dist
         else:
             return time, time * 12
     return time, dist
@@ -153,7 +153,7 @@ def fix_bicycle_speed(
     """
     if t != 0 and 2 < d / t < 5:
         if t > 2 * 60 * 60 or d <= 100 * 1000:
-            return d / 4, d
+            return d // 4, d
         else:
             return t, t * 4
     return t, d

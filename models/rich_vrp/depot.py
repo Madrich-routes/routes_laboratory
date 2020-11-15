@@ -1,9 +1,21 @@
+""" Класс депо """
 from typing import Tuple, List
 
-from models.rich_vrp.job import Place
+from models.rich_vrp import Place
 
 
 class Depot(Place):
+    """ Депо — объект из которого машины забирают грузы. Или куда они их привозят.
+
+    Parameters
+    ----------
+    id : Любой уникальный id
+    time_windows : Временные окна, в которые этот объект можно посетить
+    lat : Широта
+    lon : Долгота
+    delay : Время посещения
+    name : Читаемое имя (адрес или название)
+    """
     def __init__(
             self,
             id: int,

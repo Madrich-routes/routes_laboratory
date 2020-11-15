@@ -111,7 +111,6 @@ if __name__ == "__main__":
     data_dir = Path("./data/")
     big_data_dir = Path("./big_data/")
 
-
     logger.info('Парсим матрицы и данные...')
     tasks = read_pickle(big_data_dir / "tasks.pkl.gz", compression="gzip")
     vehicles = read_pickle(big_data_dir / "vehicles.pkl.gz", compression="gzip")

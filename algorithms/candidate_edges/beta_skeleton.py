@@ -33,7 +33,7 @@ def beta_skeleton(points: Array, return_theta: bool = False):
     """
     res = []
 
-    for p, q in combinations(points):
+    for p, q in combinations(points, 2):
         theta = sharp(points, p, q)
 
         if theta < max_theta:

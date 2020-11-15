@@ -11,15 +11,17 @@ from utils.logs import logger
 def build_df(all_uids_file, all_pathes_file) -> pd.DataFrame:
     """Получаем датафрейм для всего пригородного транспорта."""
     logger.info('Составляю словарь станций пригородных поездов и автобусов...')
-    df = parse_suburban(all_uids_file=all_uids_file, all_pathes_file=all_pathes_file)
-    return df
+    return parse_suburban(
+        all_uids_file=all_uids_file, all_pathes_file=all_pathes_file
+    )
+
 
 def parse_suburban(
-        all_uids_file=None,
-        all_pathes_file=None,
-        MOW_CENTER=(55.73, 37.54),
-        TOKEN='f667814b-8196-4041-a9ac-3a34518bce61',
-        DOMEN='evgps.me'
+    all_uids_file=None,
+    all_pathes_file=None,
+    MOW_CENTER=(55.73, 37.54),
+    TOKEN='f667814b-8196-4041-a9ac-3a34518bce61',
+    DOMEN='evgps.me'
 ):
     rasp = YandexRasp(TOKEN, DOMEN)
     # Get all stations in 50km from center of the city

@@ -208,7 +208,7 @@ class HereModule:
         :param factor: adjacency matrix values
         :return: all these matrices : [time index][src][dst]
         """
-        split = split * 60  # to seconds
+        split *= 60  # to seconds
         size = len(points)
         length = int(np.ceil(max_cost / split))
 

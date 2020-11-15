@@ -5,6 +5,7 @@ from typing import Dict, List, Union
 
 import numpy as np
 
+
 # TODO: как будто бы нет объединения общих частей
 
 def create_filled_matrix(size: int, max_weight: int = 10):
@@ -68,8 +69,8 @@ def find_the_best_subchains(route1: List[int], route2: List[int], matrix: np.arr
                 # 2. Стартовые и конечные вершины подмаршрутов одинаковы.
                 # 3. Сами подмаршруты не одинаковы.
                 if len(subchain1) == len(subchain2) and tmp_route1[i] == tmp_route2[j] and \
-                        tmp_route1[i + slice_size - 1] == tmp_route2[j + slice_size - 1] and \
-                        subchain1 != subchain2:
+                    tmp_route1[i + slice_size - 1] == tmp_route2[j + slice_size - 1] and \
+                    subchain1 != subchain2:
                     # Считаем вес подмаршрутов.
                     subchain1_weight = get_weight_of_subchain(matrix, subchain1)
                     subchain2_weight = get_weight_of_subchain(matrix, subchain2)

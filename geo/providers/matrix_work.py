@@ -21,9 +21,9 @@ HERE_KEY = ''
 
 
 def assemble_matrix(
-        submatrices: List[List[Array]],
-        small_size: int,
-        full_size: int
+    submatrices: List[List[Array]],
+    small_size: int,
+    full_size: int
 ):
     """Собираем большую матрицу из набора маленьких."""
     res = np.zeros((full_size, full_size), dtype=np.int32)
@@ -41,6 +41,7 @@ def assemble_matrix(
 def save_chunk(x, y, obj):
     with open(f'./tmp/chunk_{x}_{y}.pkl', 'wb') as f:
         pickle.dump(obj, f)
+
 
 def load_matrix(small_size):
     super_cell = [[None] * small_size for _ in range(small_size)]

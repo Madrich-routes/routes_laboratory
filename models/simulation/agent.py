@@ -1,18 +1,16 @@
 from typing import Optional
 
-from models.simulation.depot import Depot
-
 
 class SimutationAgent:
     dummy_car: 'SimutationAgent' = None
 
     def __init__(
-            self,
-            cid: int,
-            start_time: Optional[int],
-            end_time: Optional[int],
-            depot_point: Depot,
-            car_type: Optional[CarType] = None
+        self,
+        cid: int,
+        start_time: Optional[int],
+        end_time: Optional[int],
+        depot_point: Depot,
+        car_type: Optional[CarType] = None
     ) -> None:
         self.type = ...  # TODO:
 
@@ -245,9 +243,9 @@ class SimutationAgent:
     def take_usual_bunker(self, con: 'Container') -> 'SimutationAgent':
         # если мы только что из возвратного, надо сгонять в landfill, взять контейнер
         if (
-                len(self.way_points) > 1
-                and self.way_points[-1].point.point_type == 'container'
-                and self.way_points[-1].point.must_return
+            len(self.way_points) > 1
+            and self.way_points[-1].point.point_type == 'container'
+            and self.way_points[-1].point.must_return
         ):
             self.goto_landfill()
 

@@ -26,4 +26,9 @@ def get_test_problem():
     j2 = Job(1, 0, 3, 0, 3, [(30, 50)], 5, np.array([10]), [3], 5)
     j3 = Job(2, 0, 5, 0, 5, [(60, 80)], 5, np.array([10]), [3], 5)
 
-    return RichVRPProblem(dist_matrix, [agent], [j1, j2, j3], [''])
+    return RichVRPProblem(
+        place_mapping=dist_matrix,
+        agents=[agent],
+        jobs=[j1, j2, j3],
+        # ['']
+    )

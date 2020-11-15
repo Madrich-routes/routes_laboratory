@@ -11,7 +11,7 @@ radial_bounds = {
     'мкад': 0.25,
 }
 
-points = {
+named_points = {
     'moscow_center': (55.7558, 37.6173)
 }
 

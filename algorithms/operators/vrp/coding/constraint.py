@@ -3,6 +3,3 @@
 
 TODO: это вообще возможно для eapteka?
 """
-from deap.tools import selRoulette
-
-selRoulette()

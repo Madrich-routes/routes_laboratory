@@ -8,7 +8,6 @@
 #  _________________________________________________________________________
 
 import math
-
 #
 # Symmetric TSP with points on a plane
 #
@@ -23,7 +22,7 @@ def pyomo_create_model(options=None, model_options=None):
     #
     # Read from the 'points' file
     #
-    filename = 'points' if options.points is None else options.points
+    filename = 'points' if options.places is None else options.places
     INPUT = open(filename, 'r')
     N = int(INPUT.readline())
     x = []

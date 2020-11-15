@@ -138,7 +138,7 @@ class StandardDataFormat:
             agent = Agent(
                 id=i,
                 costs=costs,
-                value=[],
+                amounts=[],
                 time_windows=str_to_time_windows(row['График работы']),
                 start_place=row['Начальная точка'],
                 end_place=row['Конечная точка'],

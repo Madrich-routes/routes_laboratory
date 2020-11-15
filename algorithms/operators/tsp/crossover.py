@@ -7,6 +7,7 @@ from typing import List
 import numpy as np
 from more_itertools import windowed
 
+
 # TODO: все используют tournament selection почему-то.
 
 # TODO: проследить, какую границу берем, какую не берем. С этим много косяков мб.
@@ -27,7 +28,8 @@ def get_neighbours(p: List[int]):
 def edge_recombination_crossover(p1: List[int], p2: List[int]):
     """
     Считается лучшим кросовером, но долго считается
-    Источники: http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/EdgeRecombinationCrossoverOperator.aspx
+    Источники:
+     http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/EdgeRecombinationCrossoverOperator.aspx
     TODO: Мб можно сделать его рандомизированную версию, которая существенно быстрее
     TODO: Можно сделать версию, которая будет считать ребра ориентированными
     """
@@ -68,7 +70,7 @@ def edge_recombination_crossover(p1: List[int], p2: List[int]):
         else:
             try:
                 x = next(iter(unused))
-            except:
+            except StopIteration:
                 raise ValueError("Пустое множество!")
 
     # TODO: возможно, это оптимизируется. Квадрат не оч :(

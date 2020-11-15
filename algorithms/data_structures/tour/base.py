@@ -3,7 +3,6 @@ import numpy as np
 from models.rich_vrp.agent import Agent
 # TODO: возможно, этот объект плохо спроектирован. Нет Single responsibility
 from models.rich_vrp.geometries.base import BaseGeometry
-from utils.algorithms import start_tw
 from utils.data_formats import format_distance
 from utils.iteration import sets_union
 

@@ -1,4 +1,3 @@
-
 #   Import Pandas - List of cities can be found here https://simplemaps.com/data/world-cities
 #   Math functions for distance calculation
 import math
@@ -16,7 +15,7 @@ from pulp import *
 from tqdm import tqdm
 
 
-class TSP():
+class TSP:
     cities = None
     santa = None
     variables_dict = None
@@ -201,21 +200,19 @@ class TSP():
         cycle = nx.find_cycle(G, santas_idx)
         solution = []
         for e in G.edges:
-            edge = []
-            edge.append(e[0])
-            edge.append(self.cities.iloc[e[0]]["city"])
-            edge.append(self.cities.iloc[e[0]]["lat"])
-            edge.append(self.cities.iloc[e[0]]["lng"])
-            edge.append(self.cities.iloc[e[0]]["population"])
-
-            edge.append(e[1])
-            edge.append(self.cities.iloc[e[1]]["city"])
-            edge.append(self.cities.iloc[e[1]]["lat"])
-            edge.append(self.cities.iloc[e[1]]["lng"])
-            edge.append(self.cities.iloc[e[1]]["population"])
-
-            edge.append(self.distances_dict[(e[0], e[1])])
-
+            edge = [
+                e[0],
+                self.cities.iloc[e[0]]["city"],
+                self.cities.iloc[e[0]]["lat"],
+                self.cities.iloc[e[0]]["lng"],
+                self.cities.iloc[e[0]]["population"],
+                e[1],
+                self.cities.iloc[e[1]]["city"],
+                self.cities.iloc[e[1]]["lat"],
+                self.cities.iloc[e[1]]["lng"],
+                self.cities.iloc[e[1]]["population"],
+                self.distances_dict[(e[0], e[1])],
+            ]
         path = []
         for s, e in cycle:
             path.append(s)
@@ -236,10 +233,10 @@ class TSP():
         d_lng = lng_a - lng_b
 
         temp = (
-                math.sin(d_lat / 2) ** 2
-                + math.cos(lat_a)
-                * math.cos(lat_b)
-                * math.sin(d_lng / 2) ** 2
+            math.sin(d_lat / 2) ** 2
+            + math.cos(lat_a)
+            * math.cos(lat_b)
+            * math.sin(d_lng / 2) ** 2
         )
 
         return 6373.0 * (2 * math.atan2(math.sqrt(temp), math.sqrt(1 - temp)))

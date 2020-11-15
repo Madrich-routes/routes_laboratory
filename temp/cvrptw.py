@@ -124,7 +124,7 @@ def node_properties(
     load = assignment.Value(capacity_dimension.CumulVar(index))
     time_var = time_dimension.CumulVar(index)
     time_min, time_max = assignment.Min(time_var), assignment.Max(time_var)
-    return (node_index, load, time_min, time_max)
+    return node_index, load, time_min, time_max
 
 
 def print_solution(

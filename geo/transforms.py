@@ -2,7 +2,6 @@
 
 Тут не используются классы, только обычные numpy массивы и так далее.
 """
-import math
 from datetime import datetime
 from typing import Optional, Set, Tuple
 
@@ -10,7 +9,6 @@ import geopy
 import numpy as np
 import timezonefinder as tf
 from geopy.distance import geodesic
-from numba import njit
 from pytz import timezone, utc
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import haversine_distances
@@ -34,21 +32,6 @@ def line_distance_matrix(a: Array, b: Optional[Array] = None) -> Array:
     return haversine_distances(a, b)
 
 
-def sklearn_haversine(a, b):
-    """Вычисляем с использованием sklearn.
-
-    :param a:
-    :param b:
-    :return:
-    """
-    dist = DistanceMetric.get_metric('haversine')
-    lat_a, lat_b = a[:, 0], b[:, 0]
-    lon_a, lon_b = a[:, 1], b[:, 1]
-
-    X = [[np.radians(lat_a), np.radians(lon_b)], [np.radians(lat_a), np.radians(lon_b)]]
-    return EARTH_R * dist.pairwise(X)
-
-
 def great_circle_distance(a, b):
     """Расстояние по большой окружности."""
     return geopy.distance.great_circle(a, b).m
@@ -60,37 +43,26 @@ def geo_distance(a: Array, b: Array):
     return geopy.distance.distance(a, b).m
 
 
-def haversine_vectorize(lon1, lat1, lon2, lat2):
-    """Векторизованная версия haversine."""
-    EARTH_R = 6371.0087714150598
+def extract_coords(
+    dist: np.ndarray,
+    k=2,
+):
+    """Извлекаем 2d координаты точек по матрице расстояний
 
-    lon1, lat1, lon2, lat2 = np.radians(lon1), np.radians(lat1), np.radians(lon2), np.radians(lat2)
+    dist: матрица расстояний
+    k: размерность пространства в котором хотим получить координаты
+    """
+    M = (dist[0, :] ** 2 + dist[:, 0].reshape(-1, 1) ** 2 - dist ** 2) / 2  # матрица грамма
 
-    newlon = lon2 - lon1
-    newlat = lat2 - lat1
+    S, U = np.linalg.eig(M)  # разложение на собственные векторы
+    S, U = np.real(S), np.real(U)  # откидываем мнимую часть
+    S[np.isclose(S, 0)] = 0  # отсекаем близкие к 0 (они потом отрицательными становятся)
+    S = np.sqrt(S)  # Берем корень собственных значений
 
-    haver_formula = np.sin(newlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(newlon / 2.0) ** 2
+    idx = np.argpartition(-S, k)[:k]  # индексы k наибольших собственных значений
+    coords = U @ np.diag(S)  # а вот и коордианты. Нужное нам будет в колонках idx
 
-    dist = 2 * np.arcsin(np.sqrt(haver_formula))
-
-    return EARTH_R * dist
-
-
-@njit()
-def haversine_numba(a, b):
-    """Версия расстояния, оптимизированная numba."""
-    s_lat, s_lon = a
-    e_lat, s_lon = b
-
-    R = 6373.0
-    s_lat = s_lat * math.pi / 180
-    s_lng = s_lon * math.pi / 180
-    e_lat = e_lat * math.pi / 180
-    e_lng = s_lon * math.pi / 180
-    d = math.sin((e_lat - s_lat) / 2) ** 2 + \
-        math.cos(s_lat) * math.cos(e_lat) * \
-        math.sin((e_lng - s_lng) / 2) ** 2
-    return 2 * R * math.asin(math.sqrt(d)) * 1000
+    return coords[:, idx]
 
 
 def geo_to_3d(lat, lon) -> Tuple[float, float, float]:
@@ -129,13 +101,6 @@ def delaunay_graph(points: np.ndarray) -> Set[Tuple[int, int]]:
         res.add((s[1], s[3]))
 
     return res
-
-
-def distance_matrix(src: np.ndarray, dst: np.ndarray, method=geo_distance) -> np.ndarray:
-    """src, dst: Lists of coords (lat, lon) Возвращаем матрицу расстояний по прямой."""
-    for a in src:
-        for b in dst:
-            ...
 
 
 class DynamicConvexHull:

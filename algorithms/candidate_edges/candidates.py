@@ -20,7 +20,7 @@ def build_n_closest(matrix: Array, n: int) -> List[Tuple[int, int]]:
 
 def pure_delaunay(points: Array, n: int):
     """Берем только те ребра, которые напрямую входят в триангуляцию делоне."""
-    return delaunay_graph()
+    return delaunay_graph(points)
 
 # TODO: взять триангуляцию делоне как у хельсгауна
 

@@ -3,13 +3,14 @@
 Со временем его нужно будет разбить на куски.
 """
 import herepy
-from dask.bytes.tests.test_http import requests
+import requests
 
 YANDEX = ''
 HERE = ''
 eapteka_path = ''
 
 geocoderApi = herepy.GeocoderApi('')
+
 
 def here_api(address: str):
     """Геокодим через here."""

@@ -5,10 +5,11 @@ from random import choice, randrange
 import numexpr as ne
 import numpy as np
 from blist._blist import blist
+from data_structures.unionfind import UnionFind
 from scipy.sparse.csgraph._min_spanning_tree import minimum_spanning_tree
 
-from data_structures.unionfind import UnionFind
 from utils.types import Array
+
 
 # TODO: TSP, convex hull?
 # TODO: Найти все жадные туры одновременно, вероятно, можно быстро. (За квадрат)
@@ -102,8 +103,8 @@ def mst_approx(matrix: np.ndarray):
 
 
 def cheapest_insertion(
-        matrix: Array,
-        first: int = None,
+    matrix: Array,
+    first: int = None,
 ):
     # TODO:
     n = len(matrix)

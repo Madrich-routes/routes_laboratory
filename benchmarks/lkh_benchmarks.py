@@ -43,18 +43,29 @@ def parse(file: str) -> Benchmark:
     nodes = [(int(coords[i].split()[1]), int(coords[i].split()[2])) for i in range(len(coords))]
     matrix = get_distance_matrix(nodes)
 
+    depot = Depot(
+        0,
+        (int(time_windows[0].split()[1]), int(time_windows[0].split()[2])),
+        float(nodes[0][0]),
+        float(nodes[0][1]),
+        0,
+        '',
+    )
+
     agents_list = []
     for i in range(vehicle):
         agent = Agent(
             id=i,
-            value=[capacity],
+            amounts=[capacity],
             time_windows=[(int(time_windows[0].split()[1]), int(time_windows[0].split()[2]))],
             costs=None,
             start_place=0,
             end_place=0,
             type=None,
+            compatible_depots=[depot],
         )
         agents_list.append(agent)
+
     jobs_list = []
     for i in range(1, count):
         time_window = [(int(time_windows[i].split()[1]), int(time_windows[i].split()[2]))]
@@ -68,14 +79,6 @@ def parse(file: str) -> Benchmark:
         )
         jobs_list.append(job)
 
-    depot = Depot(
-        0,
-        (int(time_windows[0].split()[1]), int(time_windows[0].split()[2])),
-        float(nodes[0][0]),
-        float(nodes[0][1]),
-        0,
-        '',
-    )
     problem = RichVRPProblem(
         DistanceMatrixGeometry(np.array([]), matrix, 1), agents_list, jobs_list, [depot], []
     )

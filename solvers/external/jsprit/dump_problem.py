@@ -24,9 +24,6 @@ def dump_vehicle(a: Agent, root: ET.Element):
 def dump_location():
     """Создаем xml компонент машины."""
 
-
-
-
 # items = ET.SubElement(data, 'items')
 # item1 = ET.SubElement(items, 'item')
 # item2 = ET.SubElement(items, 'item')

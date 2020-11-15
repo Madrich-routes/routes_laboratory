@@ -36,8 +36,13 @@ class PlaceMapping:
 
         self.points = np.array([[place.lat, place.lon] for place in self.places])
 
-        self.mapping = bidict(
-            zip(places, range(len(places)))  # Первчиный маппинг точек на индексы
+        self.mapping = bidict(  # Первчиный маппинг точек на индексы
+            tuple(
+                zip(
+                    tuple(places),
+                    range(len(places)),
+                )
+            )
         )
 
     def size(self) -> int:

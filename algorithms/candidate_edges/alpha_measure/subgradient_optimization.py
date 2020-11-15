@@ -65,10 +65,10 @@ class SubgradientOptimization:
 
             if period == 0:  # случай когда период закончился
                 is_first_period = False
-                next_period = next_period // 2  # уменьшаем в два раза длину периода
+                next_period //= 2  # уменьшаем в два раза длину периода
                 t /= 2  # и уменьшаем размер шага
                 if k - last_improve <= 2:  # пункт с удвоением, если все идет хорошо
-                    next_period = next_period * 2
+                    next_period *= 2
                     t *= 2
                 period = next_period
 

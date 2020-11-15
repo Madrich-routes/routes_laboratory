@@ -38,13 +38,25 @@ def round_to_n(x: float, n=3) -> float:
 
 
 def is_number(a: Any) -> bool:
+    """Определяем, является ли объект конечным числом.
+
+    Parameters
+    ----------
+    a : Объект
+
+    Returns
+    -------
+    {True, False}
+    """
     return isinstance(a, numbers.Number) and math.isfinite(a)
 
 
 def parse_time(
     time_obj: Any, errors: str = 'raise', none: Any = None
 ) -> Optional[int]:
-    """Парсим время и возвращаем количество секунд в unixtime Эта штуковина вроде как должна справляться почти
+    """Парсим время и возвращаем количество секунд в unixtime.
+
+    Эта штуковина вроде как должна справляться почти
     с любыми форматами времени.
 
     :param time_obj:  время в каком-то виде
@@ -74,6 +86,16 @@ def parse_time(
 # Методы для стандартных форматов разных используемых айтемов
 
 def format_float(f: float) -> str:
+    """Форматируем float для вывода на экран.
+
+    Parameters
+    ----------
+    f : Число, которое форматируем
+
+    Returns
+    -------
+    Отформатированная строка
+    """
     return f'{f:.2f}'
 
 
@@ -82,7 +104,19 @@ def format_speed(
     with_name: bool = False,
     with_units: bool = True,
     units: str = 'км/ч'
-):
+) -> str:
+    """ Стандартным образом форматируем скорость
+    Parameters
+    ----------
+    speed : Сама скорость
+    with_name : Печатать ли, что это скорость?
+    with_units : Печатать ли, единицы измерения
+    units : В каких единицах показывать?
+
+    Returns
+    -------
+    Отформатированную строку
+    """
     if units == 'км/ч':
         speed *= 3.6
     elif units == 'м/c':
@@ -103,7 +137,20 @@ def format_distance(
     with_name: bool = False,
     with_units: bool = True,
     units: str = 'км'
-):
+) -> str:
+    """Красиво форматируем расстояние.
+
+    Parameters
+    ----------
+    dist : Расстояние
+    with_name : Печатать, что это расстояние
+    with_units : Печатать единицы
+    units : Какие единицы использовать
+
+    Returns
+    -------
+    Строка с представлением расстояния
+    """
     if units == 'км':
         dist /= 1000
     elif units == 'м':
@@ -124,7 +171,19 @@ def format_time(
     with_date: bool = False,
     with_seconds: bool = False,
     with_name: bool = False,
-):
+) -> str:
+    """Красиво форматируем время.
+
+    Parameters
+    ----------
+    ts : Таймстамп
+    with_date : Печатать дату
+    with_seconds : Печатать секунды
+    with_name : Печатать, что это время
+
+    Returns
+    -------
+    """
     fmt = ""
     fmt += 'Время: ' * with_name
     fmt += "%m/%d/%Y " * with_date
@@ -138,8 +197,19 @@ def format_time_window(
     start: int,
     end: int,
     with_name=False,
-):
-    """Формат в котором мы печатаем time_window."""
+) -> str:
+    """Формат в котором мы печатаем time_window.
+
+    Parameters
+    ----------
+    start : Таймстамп начала
+    end : Таймстамп конца
+    with_name : Печатать что это TW
+
+    Returns
+    -------
+    Строку с представлением коллекции
+    """
     res = ''
     res += 'TW: ' * with_name
     res += f"{format_time(start)}-{format_time(end)}"
@@ -150,8 +220,18 @@ def format_time_window(
 def format_collection(
     collection: Any,
     sep: str = ', '
-):
-    """Формат в котором мы печатаем наборы."""
+) -> str:
+    """Формат в котором мы печатаем набор значений.
+
+    Parameters
+    ----------
+    collection : коллекция значений
+    sep : разделитель
+
+    Returns
+    -------
+    Строку с представление коллекции
+    """
     data = sep.join(sorted(collection))
     if isinstance(collection, set):
         return f'{{{data}}}'

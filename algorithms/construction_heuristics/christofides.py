@@ -3,7 +3,6 @@
 import copy
 import itertools
 import time
-from operator import itemgetter
 
 import networkx as nx
 import numpy as np
@@ -28,8 +27,8 @@ def _odd_vertices_of_MST(M, number_of_nodes):
     """Returns the vertices having Odd degree in the Minimum Spanning Tree(MST)."""
     odd_vertices = [0 for i in range(number_of_nodes)]
     for u, v, d in M:
-        odd_vertices[u] = odd_vertices[u] + 1
-        odd_vertices[v] = odd_vertices[v] + 1
+        odd_vertices[u] += 1
+        odd_vertices[v] += 1
     odd_vertices = [vertex for vertex, degree in enumerate(odd_vertices) if degree % 2 == 1]
     return odd_vertices
 

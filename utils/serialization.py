@@ -18,7 +18,7 @@ def get_open_func(compression_alg="gzip"):
     if compression_alg is None:
         return open
     elif compression_alg == 'gzip':
-        return lambda *args, **kw: gzip.open(*args, **kw, compressionlevel=5)
+        return lambda *args, **kw: gzip.open(*args, **kw, compresslevel=5)
 
 
 def save_pickle(filename, obj: object, compression=None):

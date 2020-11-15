@@ -82,8 +82,6 @@ def select_tournament(
 
     return chosen
 
-basinhopping()
-
 
 def select_probability_tournament(
     population: List[BaseIndividual], k: int, prob: float, key: Callable[[BaseIndividual], float]
@@ -105,6 +103,7 @@ def select_probability_tournament(
 # -----------------------------------------ы--- helper functions ----------------------------------------------------
 
 
+# noinspection PyArgumentList
 def normalize_fitnesses(
     fitnesses: Array,
     equality_factor: float = 0.05,

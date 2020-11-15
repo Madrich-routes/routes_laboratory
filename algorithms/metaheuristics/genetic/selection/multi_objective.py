@@ -29,7 +29,7 @@ def select_lexicase(
     def update_candidates(candidates, m):
         """Оставляем только хороших кандидатов."""
         metrics = np.array([x.metrics[m] for x in candidates])
-        max_val = metrics.max()
+        max_val = metrics.max()  # noqa
         eps = (
             estimate_epsilon(metrics) if epsilon is not None else None
         )  # Назвать пременную epsilon не выйдет
@@ -53,8 +53,8 @@ def select_double_tournament(
     population: List[BaseIndividual],
     k: int,
     first_size: int,
-    choose_first: Callable[[List[BaseIndividual]], List[BaseIndividual]],
-    choose_second: Callable[[List[BaseIndividual]], List[BaseIndividual]],
+    choose_first: Callable[[List[BaseIndividual], int], List[BaseIndividual]],
+    choose_second: Callable[[List[BaseIndividual], int], List[BaseIndividual]],
 ):
     """Отбираем в 2 этапа, можно по разным метрикам. Можно обобщить на разные метрики. В оригинале, первая —
     select_probability_tournament по длине вектора, потом select_tournament по fitness.
@@ -66,5 +66,5 @@ def select_double_tournament(
     .. [Luke2002fighting] Luke and Panait, 2002, Fighting bloat with
     nonparametric parsimony pressure
     """
-    chosen = choose_first(population, k=first_size)
-    return choose_second(chosen, k=k)
+    chosen = choose_first(population, first_size)
+    return choose_second(chosen, k)

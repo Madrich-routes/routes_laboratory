@@ -1,8 +1,7 @@
 import json
+import pickle
 
-import numpy as np
 import pandas as pd
-import pickle5 as pickle
 import requests
 
 # читаем входной файл
@@ -30,7 +29,7 @@ try:
             strAdr1 = strAdr1[0:start]  # + strAdr1[end+1:]
 
         # если такого адреса не было у нас - делаем запрос
-        if not strAdr1 in result:
+        if strAdr1 not in result:
             map_request = "http://search.maps.sputnik.ru/search/addr?q={address})".format(
                 address=strAdr1.replace(" ", "%20")
             )
@@ -56,7 +55,7 @@ try:
         if start != -1:  # and end != -1
             strAdr2 = strAdr2[0:start]  # + strAdr2[end+1:]
 
-        if not strAdr2 in result:
+        if strAdr2 not in result:
             map_request = "http://search.maps.sputnik.ru/search/addr?q={address})".format(
                 address=strAdr2.replace(" ", "%20")
             )

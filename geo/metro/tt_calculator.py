@@ -10,7 +10,7 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph._shortest_path import floyd_warshall
 
 
-class MetroWalker():
+class MetroWalker:
     def __init__(self, xml_filename, dataframe: pd.DataFrame = None, matrix: np.ndarray = None):
         """parse metro xml."""
         self.dataframe = dataframe or self.parse_metrodata(xml_filename)

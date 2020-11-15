@@ -1,5 +1,5 @@
 # metro
-Navigation across Moscow, include metro, buses and walking
+Navigation across Moscow, include the metro, buses and walking
 
 #Installation
 

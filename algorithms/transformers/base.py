@@ -5,9 +5,7 @@ TODO: очень похоже на mw, поменять
 """
 from termcolor import cprint
 
-from models.problems.base import BaseRoutingProblem
 from models.rich_vrp import VRPSolution
-
 from models.rich_vrp.problem import RichVRPProblem
 
 

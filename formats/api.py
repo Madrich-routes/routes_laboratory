@@ -1,47 +1,47 @@
 from datetime import datetime
+
 import ujson
 
 from models.rich_vrp import VRPSolution
 
-def export(solution: VRPSolution, path: str):
+
+def export(solution: VRPSolution) -> str:
     """
      Конвертируем VRPSolution для нашего API.
 
-        Parameters
-        ----------
-        solution: VRPSolution,
-        path: str
+    Parameters
+    ----------
+    solution: VRPSolution,
 
-        Returns
-        -------
+    Returns
+    -------
     """
-    sum_statistic = {"cost": 0, "distance": 0, "duration":  0}
+    sum_statistic = {"cost": 0, "distance": 0, "duration": 0}
     tours = []
     # проходим по каждому туру
     for plan in solution.routes:
-        visits = []
-
         if len(plan.waypoints > 2):
-            i = 0
-            statistic = {"cost": 0, "distance": 0, "duration":  0}
+            statistic = {"cost": 0, "distance": 0, "duration": 0}
+            visits = []
+
             # проходим по каждой доставке
-            for visit in plan.waypoints:
-                distance = 0 if i == 0 else solution.problem.matrix[plan.waypoints[i-1].place.id, visit.place.id] # !!!не уверен что так, но других вариантов не вижу
+            for i, visit in enumerate(plan.waypoints):
+                distance = 0 if i == 0 else solution.problem.matrix[
+                    plan.waypoints[i - 1].place.id, visit.place.id]  # !!!не уверен что так, но других вариантов не вижу
                 # собираем посещения
                 stop = {
-                    "activity": "departure", # !!!Как определить?
+                    "activity": "departure",  # !!!Как определить?
                     "distance": distance,
-                    "load": [0, 0], # !!!Брать неоткуда
+                    "load": [0, 0],  # !!!Брать неоткуда
                     "job_id": visit.place.id,
                     "location": {"lat": visit.place.lat, "lan": visit.place.lon},
                     "time": {
                         "arrival": datetime.fromtimestamp(visit.time).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                        "departure": datetime.fromtimestamp(visit.time + visit.place.delay).strftime("%Y-%m-%dT%H:%M:%SZ")
+                        "departure": datetime.fromtimestamp(visit.time + visit.place.delay).strftime(
+                            "%Y-%m-%dT%H:%M:%SZ")
                     }
                 }
                 visits.append(stop)
-                i+=1
-
             # определяем общую длительность маршрута
             first_point = plan.waypoints[0]
             last_point = plan.waypoints[-1]
@@ -49,7 +49,8 @@ def export(solution: VRPSolution, path: str):
             statistic["duration"] = last_point.time - first_point.time + last_duration
 
             # !!!Не уверен что так, но другого решения не вижу
-            statistic["cost"] = plan.agent.costs.departure + plan.agent.costs.time * statistic["duration"] +  plan.agent.costs.dist * statistic["distance"]
+            statistic["cost"] = plan.agent.costs.departure + plan.agent.costs.time * statistic[
+                "duration"] + plan.agent.costs.dist * statistic["distance"]
             tour = {
                 "type": plan.agent.type,
                 "courier_id": plan.agent.id,
@@ -63,13 +64,13 @@ def export(solution: VRPSolution, path: str):
 
     # собираем результат
     res = {
-        "status": "solved", # !!! откуда брать, какие варианты?
-            "progress_status": "finished", # !!! откуда брать, какие варианты?
-        "solved":{
+        "status": "solved",
+        "progress_status": "solved",
+        "solved": {
             "depot_name": tours
         },
         "unassigned": [{
-            "job_id": "job_0", # !!! откуда брать?
+            "job_id": "job_0",  # !!! откуда брать?
             "reason": "because"
         }],
         "info": {
@@ -82,7 +83,7 @@ def export(solution: VRPSolution, path: str):
             "distance": sum_statistic["distance"],
             "duration": sum_statistic["duration"],
             "full_tours": len(tours),
-            "times": { # !!! в текущей конфигурации входных данных не вижу возможности посчитать
+            "times": {  # !!! в текущей конфигурации входных данных не вижу возможности посчитать
                 "driving": 22558,
                 "serving": 5400,
                 "waiting": 9036,

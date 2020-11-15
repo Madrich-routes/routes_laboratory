@@ -31,48 +31,48 @@ def clarke_wright(nodes, distance_matrix):
             s[i][j] = distance_benefit
 
     res, routed_places = [], []
-    while (True):  # Повторяем, пока все элементы матрицы выиграшей не обработаны
-        max = np.unravel_index(np.argmax(s, axis=None), s.shape)  # Получаем ребро с наибольшим выишрашем
-        if max == (0, 0):  # Если текущее максимальное ребро (0,0) - выходим из цикла
+    while True:  # Повторяем, пока все элементы матрицы выиграшей не обработаны
+        max_ = np.unravel_index(np.argmax(s, axis=None), s.shape)  # Получаем ребро с наибольшим выишрашем
+        if max_ == (0, 0):  # Если текущее максимальное ребро (0,0) - выходим из цикла
             break
-        if max[0] not in routed_places and max[
+        if max_[0] not in routed_places and max_[
             1] not in routed_places:  # добавляем новый маршрут, если ни одна из точек ранее не была добавлена
-            res.append([max[0], max[1]])
-            routed_places.append(max[0])
-            routed_places.append(max[1])
-        elif max[0] not in routed_places or max[1] not in routed_places:
+            res.append([max_[0], max_[1]])
+            routed_places.append(max_[0])
+            routed_places.append(max_[1])
+        elif max_[0] not in routed_places or max_[1] not in routed_places:
             for i in range(len(
                     res)):  # если новая точка содержится в текущих маршрутах присоединяем новую точку к данному маршруту
-                if res[i][0] == max[0]:
-                    res[i].insert(0, max[1])
-                    routed_places.append(max[1])
-                elif res[i][-1] == max[0]:
-                    res[i].append(max[1])
-                    routed_places.append(max[1])
-                elif res[i][0] == max[1]:
-                    res[i].insert(0, max[0])
-                    routed_places.append(max[0])
-                elif res[i][-1] == max[1]:
-                    res[i].append(max[0])
-                    routed_places.append(max[0])
+                if res[i][0] == max_[0]:
+                    res[i].insert(0, max_[1])
+                    routed_places.append(max_[1])
+                elif res[i][-1] == max_[0]:
+                    res[i].append(max_[1])
+                    routed_places.append(max_[1])
+                elif res[i][0] == max_[1]:
+                    res[i].insert(0, max_[0])
+                    routed_places.append(max_[0])
+                elif res[i][-1] == max_[1]:
+                    res[i].append(max_[0])
+                    routed_places.append(max_[0])
         else:  # если обе точки задействованы в существующий маршрутах, проверяем нельзя ли их соединить
             for i in range(len(res)):
                 for j in range(i + 1, len(res)):
-                    if res[i][0] in max and res[j][0] in max:
+                    if res[i][0] in max_ and res[j][0] in max_:
                         res[i].reverse()
                         res[i] += res[j]
                         res.remove(res[j])
-                    elif res[i][0] in max and res[j][-1] in max:
+                    elif res[i][0] in max_ and res[j][-1] in max_:
                         res[j] += res[i]
                         res.remove(res[i])
-                    elif res[i][-1] in max and res[j][0] in max:
+                    elif res[i][-1] in max_ and res[j][0] in max_:
                         res[i] += res[j]
                         res.remove(res[j])
-                    elif res[i][-1] in max and res[j][-1] in max:
+                    elif res[i][-1] in max_ and res[j][-1] in max_:
                         res[i].reverse()
                         res[j] += res[i]
                         res.remove(res[i])
-        s[max[0]][max[1]] = 0  # отмечаем использованные ребра в матрице выиграшей
+        s[max_[0]][max_[1]] = 0  # отмечаем использованные ребра в матрице выиграшей
     return res
 
 
@@ -97,8 +97,8 @@ def solomon(nodes, distance_matrix, service_time, seed_node):
     res = []  # Список маршрутов
     route = []  # Текущий маршрут
     unrouted_nodes = [i for i in range(1, len(nodes))]  # Список непосещенных вершин
-    while (len(unrouted_nodes) > 0):  # повторять, пока все вершины не посещены
-        if (len(route) == 0):  # если терущий маршрут пустой, разаем его корневой вершиной
+    while len(unrouted_nodes) > 0:  # повторять, пока все вершины не посещены
+        if len(route) == 0:  # если терущий маршрут пустой, разаем его корневой вершиной
             seed_index = unrouted_nodes[0]
             if (
                     seed_node == 'max_len'):  # выбор корневой вершины по принципу поиска максимального расстояния от 0-ой вершины
@@ -136,13 +136,13 @@ def solomon(nodes, distance_matrix, service_time, seed_node):
                         max_pos = (u, j)
                 time += distance_matrix[route[j]][
                             route[j + 1]] + service_time  # Добавление времени до предыдущей вершины
-        if (max_val > 0):  # Если нашли место оптимальной вставки - добавляем в текущий маршрут
+        if max_val > 0:  # Если нашли место оптимальной вставки - добавляем в текущий маршрут
             route.insert(max_pos[1] + 1, max_pos[0])
             unrouted_nodes.remove(max_pos[0])
         else:  # Противном случае - завершаем текущий маршрут и сознаем новый
             res.append(route)
             route = []
-    if (len(route) > 0):
+    if len(route) > 0:
         res.append(route)
     return res
 
@@ -185,7 +185,7 @@ def check_fesibility(res, nodes, distance_matrix, service_time):
         time = 0
         for i in range(1, len(route) - 1):
             time += max(distance_matrix[route[i - 1]][route[i]] + service_time, nodes[route[i]][2])
-            if (time >= nodes[route[i][3]]):
+            if time >= nodes[route[i][3]]:
                 res.append(False)
                 break
     return res
@@ -194,9 +194,7 @@ def check_fesibility(res, nodes, distance_matrix, service_time):
 def calculate_route_distance(routes, distance_matrix):
     res = []
     for route in routes:
-        cur_len = 0
-        for i in range(len(route) - 1):
-            cur_len += distance_matrix[i][i + 1]
+        cur_len = sum(distance_matrix[i][i + 1] for i in range(len(route) - 1))
         cur_len += distance_matrix[0][route[0]]
         cur_len += distance_matrix[0][route[-1]]
         res.append(cur_len)

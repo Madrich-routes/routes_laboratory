@@ -206,7 +206,7 @@ class Depot:
 
 
 @dataclass
-class Shift:  ########### ready +++++++
+class Shift:
     # Own
     depots: List[Depot]  # None
     reloads: List[Reload]  # None
@@ -310,7 +310,7 @@ class Shift:  ########### ready +++++++
 
 
 @dataclass
-class Vehicle:  ############# ready ++++++++
+class Vehicle:
     # Own
     typeId: str
     vehicleIds: List[str]

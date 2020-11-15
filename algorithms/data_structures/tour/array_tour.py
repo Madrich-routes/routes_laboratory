@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import Tuple
 
 import numba as nb
@@ -7,7 +6,6 @@ import numpy as np
 from algorithms.data_structures.tour.base import Tour
 from algorithms.data_structures.tour.hashes import generate_hash
 from algorithms.data_structures.tour.transforms import get_set
-from utils.algorithms import make_pair
 
 Edge = Tuple[int, int]
 

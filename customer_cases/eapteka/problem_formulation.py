@@ -1,22 +1,49 @@
+"""В этом модуле создаетяс проблема для eapteka."""
 import math
+from copy import copy
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Tuple, Sequence
+from typing import List, Tuple, Sequence, Dict, Callable
 
+import numpy as np
 import pandas as pd
 import regex
+from fastcore.basics import with_cast
 
 from models.rich_vrp import Agent, AgentCosts, AgentType, Depot, Job
-from models.rich_vrp.geometries.providers import OSRMMatrixGeometry
+from models.rich_vrp.geometries.base import BaseGeometry
 from models.rich_vrp.place_mapping import PlaceMapping
 from models.rich_vrp.problem import RichVRPProblem
+from utils.types import Array
 
 
-def build_eapteka_problem(data_folder: Path) -> RichVRPProblem:
+@dataclass
+class AptekaParams:
+    """Набор параметров, которые мы угадываем сами, так как в данных их нету."""
+    delay_pharmacy: int
+    delay_stock: int
+
+    pedestrian_max_weight: int
+    pedestrian_max_volume: int
+
+    driver_max_weight: int
+    driver_max_volume: int
+
+    point_delay: int
+
+
+def build_eapteka_problem(
+    data_folder: Path,
+    params: AptekaParams,
+    profile_geometries: Dict[str, Callable[[Array], BaseGeometry]],
+) -> RichVRPProblem:
     """Собираем из данных по аптеке RichVRPProblem.
 
     Parameters
     ----------
     data_folder : папка, в которой находятся данные по eapteka
+    params : параметры, которые не указаны в основном датасете
+    profile_geometries : Словарь profile -> функция. Функция должна принимать на вход точки и возвращать геометрию
 
     Returns
     -------
@@ -28,7 +55,7 @@ def build_eapteka_problem(data_folder: Path) -> RichVRPProblem:
         coords_file=data_folder / "update_3.xlsx",
         orders_file=data_folder / "Заказы_13.xlsx",
         stocks_file=data_folder / "Склады.xlsx",
-        couriers_file=data_folder / "Курьеры.xlsx",
+        couriers_file=data_folder / "Курьеры_13.xlsx",
     )
 
     # предобрабатываем датафреймы
@@ -41,18 +68,22 @@ def build_eapteka_problem(data_folder: Path) -> RichVRPProblem:
     # TODO: Соединить склады
     # TODO: Конвертировать в инты, чтобы без потерь
 
-    # TODO: Проставить агентам их отсутствующие ограничения
-    # TODO: Проставить агентам их
-    # TODO: Добавить в датафрейм delay (как к точкам, так и на склады)
+    # TODO: Проставить агентам их депо!
     # TODO: Обработать повторные точки!
 
+    fill_missing_columns(stocks=stocks_df, couriers=couriers_df, points=points_df, params=params)
+
     # получаем классы из датафреймов
-    depots = build_depots(stocks=stocks)
-    agents = build_agents(agents_df=couriers_df)
-    jobs = build_jobs(points=points_df, depots=stocks_df)
+    depots = build_depots(stocks=stocks_df)
+    agents = build_agents(agents_df=couriers_df, depots=depots)
+    jobs = build_jobs(points=points_df, depots=depots)
 
     return RichVRPProblem(
-        place_mapping=build_place_mapping(depots=depots, jobs=jobs),
+        place_mapping=build_place_mapping(
+            depots=depots,
+            jobs=jobs,
+            profile_geometries=profile_geometries
+        ),
         agents=agents,
         jobs=jobs,
         depots=depots,
@@ -60,9 +91,40 @@ def build_eapteka_problem(data_folder: Path) -> RichVRPProblem:
     )
 
 
+def fill_missing_columns(
+    stocks: pd.DataFrame,
+    couriers: pd.DataFrame,
+    points: pd.DataFrame,
+    params: AptekaParams,
+) -> None:
+    """Заполняем колонки, которых изначально в данных не было.
+
+    Данные изменяются на месте
+
+    Parameters
+    ----------
+    stocks : Склады
+    couriers : Курьеры
+    points : Заказы
+    params : То, что мы подставляем
+    """
+
+    stocks.loc[:, 'delay'] = params.delay_pharmacy
+    stocks.loc[stocks.type == 'stock', 'delay'] = params.delay_stock
+
+    couriers.loc[couriers.profile == 'pedestrian', 'max_weight'] = params.pedestrian_max_weight
+    couriers.loc[couriers.profile == 'pedestrian', 'max_volume'] = params.pedestrian_max_volume
+
+    couriers.loc[couriers.profile == 'driver', 'max_weight'] = params.driver_max_weight
+    couriers.loc[couriers.profile == 'driver', 'max_volume'] = params.driver_max_volume
+
+    points.loc[:, 'delay'] = params.point_delay
+
+
 def build_place_mapping(
     depots: Sequence[Depot],
     jobs: Sequence[Job],
+    profile_geometries: Dict[str, Callable[[Array], BaseGeometry]],
 ) -> PlaceMapping:
     """Создаем объект маппинга, который позволяет получать расстояния между точками, индексируясь самими
     точками. При первом вызове будет построена и соз.
@@ -71,16 +133,26 @@ def build_place_mapping(
     ----------
     depots : Список депо
     jobs : Список джобов
+    profile_geometries : Словарь profile -> функция. Функция должна принимать на вход точки и возвращать геометрию
 
     Returns
     -------
     PlaceMapping со всеми точками для задачи
     """
-    return PlaceMapping(places=list(depots) + list(jobs), geometry_class=OSRMMatrixGeometry)
+    places = list(depots) + list(jobs)
+    points = np.array([[p.lat, p.lon] for p in places])
+
+    geometries = {
+        'driver': profile_geometries['driver'](points),
+        'pedestrian': profile_geometries['pedestrian'](points),
+    }
+
+    return PlaceMapping(places=places, geometries=geometries)
 
 
 def build_agents(
     agents_df: pd.DataFrame,
+    depots: List[Depot],
 ) -> List[Agent]:
     """Билдим объекты Agent из DataFrame.
 
@@ -93,30 +165,29 @@ def build_agents(
     -------
     Список агентов
     """
-
-    # depots_dict = {d.name: d for d in depots}  # словрь депо, чтобы получать депо для точки
-    return [
-        Agent(
-            id=row['id'],
-            amounts=[row['weight'], row['volume']],
+    return agents_df.apply(
+        lambda row: Agent(
+            id=int(row['id']),
+            amounts=[row['max_weight'], row['max_volume']],
             time_windows=[row['t_from'], row['t_to']],
             name=row['name'],
             priority=row['priority'],
-            # compatible_depots=depots_dict[row['depot']],
-            # start_place=depots_dict[row['depot']],
-            # end_place=depots_dict[row['depot']],
+            compatible_depots=copy(depots),
+
+            start_place=None,  # эти поля будут заполняться потом
+            end_place=None,
 
             costs=AgentCosts(time=row['cost']),
             type=AgentType(
                 id=row['profile'],
                 name=row['profile'],
                 profile=row['profile'],
-                capacities=None,
+                capacities=[row['max_weight'], row['max_volume']],
                 skills=[],
             ),
-        )
-        for row in agents_df.iterrows()
-    ]
+        ),
+        axis='columns',
+    ).tolist()
 
 
 def build_depots(
@@ -132,15 +203,16 @@ def build_depots(
     -------
     Лист Depot
     """
-    return stocks.map(
+    return stocks.apply(
         lambda row: Depot(
             id=row.id,
-            name=row.name,
+            name=row['name'],
             lat=row.lat,
             lon=row.lon,
             time_windows=[(row.t_from, row.t_to)],
-            delay=row['delay'],
-        )
+            delay=row.delay,
+        ),
+        axis='columns',
     ).tolist()
 
 
@@ -162,10 +234,10 @@ def build_jobs(
 
     depots_dict = {d.name: d for d in depots}  # словрь депо, чтобы получать депо для точки
 
-    return points.map(
+    return points.apply(
         lambda row: Job(
             id=row.id,
-            name=row.name,
+            name=row['name'],
             lat=row.lat,
             lon=row.lon,
             time_windows=[(row.t_from, row.t_to)],
@@ -173,16 +245,18 @@ def build_jobs(
             amounts=[row.weight, row.volume],
             price=row.price,
             priority=row.priority,
-            depots=[depots[row.depot]],
-        )
+            depots=[depots_dict[row.depot]],
+        ),
+        axis='columns'
     ).tolist()
 
 
+@with_cast
 def load_data(
-    coords_file: str,
-    orders_file: str,
-    stocks_file: str,
-    couriers_file: str,
+    coords_file: Path,
+    orders_file: Path,
+    stocks_file: Path,
+    couriers_file: Path,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Загружем данные eapteka, принимая на вход все файлы.
 
@@ -260,12 +334,10 @@ def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
 
     return df[
         ["id", "name", "depot", "geozone", "t_from", "t_to", "priority", "lat", "lon", "weight", "volume", "price"]
-    ]
+    ].copy()
 
 
-def preprocess_stocks(
-    stocks: pd.DataFrame,
-) -> pd.DataFrame:
+def preprocess_stocks(stocks: pd.DataFrame) -> pd.DataFrame:
     """Переименовываем колонки и фильтруем мусорные точки.
 
     Parameters
@@ -288,9 +360,12 @@ def preprocess_stocks(
 
     # Убираем из названия склада MSK и пустое пространство
     df["name"] = df["Наименование"].map(lambda s: s[4:].strip())
+    df["type"] = "pharmacy"
+    df.loc[df.name.str.contains('склад'), "type"] = "stock"
+
     df["id"] = df.index
 
-    return df[["id", "name", "lat", "lon", "t_from", "t_to"]]
+    return df[["id", "name", "type", "lat", "lon", "t_from", "t_to"]].copy()
 
 
 def preprocess_couriers(couriers: pd.DataFrame) -> pd.DataFrame:
@@ -311,12 +386,12 @@ def preprocess_couriers(couriers: pd.DataFrame) -> pd.DataFrame:
     df["t_to"] = times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int")
 
     df["cost"] = df["Стоимость 1 заказа"].astype("int")
-    df["profile"] = df["Должность"].map(lambda x: {"Курьер": "transport", "Водитель": "driver"}[x])
+    df["profile"] = df["Должность"].map(lambda x: {"Курьер": "pedestrian", "Водитель": "driver"}[x])
     df["name"] = df["Сотрудник"]
     df["priority"] = df["Приоритет"].map(lambda x: math.isfinite(x))
     df["id"] = df.index
 
-    return df[["id", "name", "profile", "cost", "priority", "t_from", "t_to"]]
+    return df[["id", "name", "profile", "cost", "priority", "t_from", "t_to"]].copy()
 
 
 if __name__ == "__main__":

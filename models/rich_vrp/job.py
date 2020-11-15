@@ -1,38 +1,31 @@
 from dataclasses import dataclass, field
 from functools import cached_property, reduce
-from typing import List, Optional, Set, Tuple, Iterable
+from typing import List, Optional, Set, Iterable, TYPE_CHECKING
 
-import numpy as np
+from models.rich_vrp import Place
+from utils.types import Array
 
-
-@dataclass
-class Place:
-    id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.
-    name: Optional[str] = None  # читаемый идентификатор. Например, адрес.
-
-    # позиция на карте
-    lat: Optional[float] = None
-    lon: Optional[float] = None
-
-    # иногда может понадобиться указать декартовы координаты
-    x: Optional[int] = None
-    y: Optional[int] = None
-
-    delay: int = 0  # сколько времени нужно пробыть в этом месте
-    time_windows: List[Tuple[int, int]] = field(default_factory=list)  # когда там можно находиться
+if TYPE_CHECKING:
+    from models.rich_vrp import Depot
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Job(Place):
     """Класс для описания работы, которую необходимо проделать агенту.
 
     Это самый общий класс. В него добавляются любые характеристики.
     """
-    amounts: np.ndarray = None  # количество разгрузки в точке (той же размерности, что capacities)
+    amounts: Optional[Array] = None  # количество разгрузки в точке (той же размерности, что capacities)
     required_skills: Set[int] = field(default_factory=set)  # какой набор скилов тут будет необходим
 
     price: int = 0  # награда, получаемая за выполнение этой работы
     priority: int = 0  # приоритет выполнения этой работы
+
+    depots: Optional[List['Depot']] = None
+
+    def __post_init__(self):
+        self.required_skills = frozenset(self.required_skills)
+        self.depots = tuple(self.depots) if self.depots is not None else None
 
     def __le__(self, other):
         return self.id < other.id

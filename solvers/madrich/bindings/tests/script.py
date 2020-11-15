@@ -1,7 +1,7 @@
 import Tour
 
 Point_class = Tour.Point()
-Point_class.matrix_id = 2;
+Point_class.matrix_id = 2
 Point_class.point = (1.0, 2.0)
 Point_class.address = "adress"
 
@@ -64,6 +64,6 @@ obj = Tour.ClassicProblem()
 Tour.go_print(obj)
 
 # Tour_main_class.problem = 'Problem'
-#ret = Tour_main_class.improve_tour(False, False)
+# ret = Tour_main_class.improve_tour(False, False)
 
 # print('ret')

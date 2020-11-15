@@ -11,7 +11,6 @@ from scipy.sparse.csgraph._shortest_path import floyd_warshall
 from geo.providers import osrm_module
 from utils.logs import logger
 from utils.types import Array
-from utils.data_formats import cache
 
 final_matrix_file = "data/full_matrix_27.npy.npz"
 

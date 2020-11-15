@@ -21,9 +21,15 @@ def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
             start_t = datetime.strptime(start, '%Y-%m-%dT%H:%M:%SZ')
             end_t = datetime.strptime(end, '%Y-%m-%dT%H:%M:%SZ')
 
-            if start_t <= start_dt <= end_t <= end_dt or start_dt <= start_t <= end_dt <= end_t or \
-                    start_dt <= start_t <= end_t <= end_dt or start_t <= start_dt <= end_dt <= end_t:
-                tw.append((start if start_dt <= start_t else start_depot, end if end_dt >= end_t else end_depot))
+            if (
+                start_t <= start_dt <= end_t <= end_dt
+                or start_dt <= start_t <= end_dt <= end_t
+                or start_dt <= start_t <= end_t <= end_dt
+                or start_t <= start_dt <= end_dt <= end_t
+            ):
+                tw.append(
+                    (start if start_dt <= start_t else start_depot, end if end_dt >= end_t else end_depot)
+                )
 
         if tw:
             tmp_courier.time_windows = tw
@@ -34,10 +40,7 @@ def cut_windows(couriers: List[Courier], depot: Depot) -> List[Courier]:
 
 def get_index(internal_mapping):
     """Return location dict by index from mapping."""
-    return {
-        str(index): {'lat': point[0], 'lon': point[1]}
-        for point, index in internal_mapping.items()
-    }
+    return {str(index): {'lat': point[0], 'lon': point[1]} for point, index in internal_mapping.items()}
 
 
 def send_courier(courier: Courier, start_time: str, end_time: str) -> Optional[Courier]:
@@ -82,8 +85,7 @@ def send_courier(courier: Courier, start_time: str, end_time: str) -> Optional[C
     return None
 
 
-def add_courier(
-        data, name, depot, start_time, end_time, distance, duration, points):
+def add_courier(data, name, depot, start_time, end_time, distance, duration, points):
     data['name'].append(name)
     data['depot'].append(depot)
     data['start_time'].append(start_time)

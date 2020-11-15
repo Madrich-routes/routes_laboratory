@@ -1,5 +1,3 @@
-from typing import Optional
-
 import numba as nb
 import numpy as np
 
@@ -63,7 +61,6 @@ def rotate_zero(tour: Array) -> Array:
     Parameters
     ----------
     tour: список вершин
-    num: на сколько двигаем
 
     Returns
     -------
@@ -74,6 +71,7 @@ def rotate_zero(tour: Array) -> Array:
         raise ValueError('Не нашли 0')
 
     return rotate(tour, -idx)
+
 
 def get_set(tour: np.ndarray):
     """

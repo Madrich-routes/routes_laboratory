@@ -23,7 +23,7 @@ class ConcordeSolver(BaseTransformationalSolver):
             solver_path: str = settings.CONCORDE_PATH,  # бинарник concorde
             trace_level: int = 1,  # 1-3 по нарастанию словоблудия
     ):
-        super().__init__()  # TODO: параметры!
+        super().__init__(transformers=[])  # TODO: параметры!
         self.problem: BaseRoutingProblem = problem
 
         # TODO: к этим парням нужно приделать pid и хеши,

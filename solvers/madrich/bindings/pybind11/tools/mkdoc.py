@@ -43,11 +43,11 @@ PRINT_LIST = [
 CPP_OPERATORS = {
     '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
-    'imod', '&=': 'iand', '|=': 'ior', '^=': 'ixor', '<<=': 'ilshift',
+        'imod', '&=': 'iand', '|=': 'ior', '^=': 'ixor', '<<=': 'ilshift',
     '>>=': 'irshift', '++': 'inc', '--': 'dec', '<<': 'lshift', '>>':
-    'rshift', '&&': 'land', '||': 'lor', '!': 'lnot', '~': 'bnot',
+        'rshift', '&&': 'land', '||': 'lor', '!': 'lnot', '~': 'bnot',
     '&': 'band', '|': 'bor', '+': 'add', '-': 'sub', '*': 'mul', '/':
-    'div', '%': 'mod', '<': 'lt', '>': 'gt', '=': 'assign', '()': 'call'
+        'div', '%': 'mod', '<': 'lt', '>': 'gt', '=': 'assign', '()': 'call'
 }
 
 CPP_OPERATORS = OrderedDict(
@@ -57,6 +57,7 @@ job_count = cpu_count()
 job_semaphore = Semaphore(job_count)
 
 output = []
+
 
 def d(s):
     return s.decode('utf8')
@@ -223,6 +224,7 @@ class ExtractionThread(Thread):
         finally:
             job_semaphore.release()
 
+
 if __name__ == '__main__':
     parameters = ['-x', 'c++', '-std=c++11']
     filenames = []
@@ -290,7 +292,7 @@ if __name__ == '__main__':
     for name, _, comment in list(sorted(output, key=lambda x: (x[0], x[1]))):
         if name == name_prev:
             name_ctr += 1
-            name = name + "_%i" % name_ctr
+            name += "_%i" % name_ctr
         else:
             name_prev = name
             name_ctr = 1

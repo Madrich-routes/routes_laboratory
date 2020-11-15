@@ -1,4 +1,3 @@
-import os
 from typing import Dict, List, Optional
 
 import settings
@@ -28,7 +27,7 @@ class RustSolver(BaseSolver):
         variation_generations: int = 200,
         min_variation: int = 0.1,
         show_log: bool = True,
-        return_geojson = False,
+        return_geojson=False,
     ):
         # Названия входных и выходных файлов
         self.initial_solution_file: Optional[str] = initial_solution_file  # TODO: принимать само решение
@@ -98,7 +97,7 @@ class RustSolver(BaseSolver):
 
     def assemble_solution(self) -> VRPSolution:
         """Собираем VRPSolution из результатов работа."""
-
+        raise NotImplementedError
 
     def solve(self, problem: RichVRPProblem) -> VRPSolution:
         """
