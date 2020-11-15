@@ -47,5 +47,5 @@ def build_matrices(
     """
     return {
         p: dumps_matrix(profile=p, distance_matrix=g.dist_matrix(), time_matrix=g.time_matrix())
-        for p, g in geometries.items()
+        for p, g in geometries.geometries.items()
     }
