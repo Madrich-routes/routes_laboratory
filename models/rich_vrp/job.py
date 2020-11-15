@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from models.rich_vrp import Depot
 
 
-@dataclass(unsafe_hash=True)
+@dataclass
 class Job(Place):
     """Класс для описания работы, которую необходимо проделать агенту.
 
@@ -29,6 +29,9 @@ class Job(Place):
 
     def __le__(self, other):
         return self.id < other.id
+
+    def __hash__(self):
+        return hash(self.descriptor)
 
 
 class CompositeJob(Job):
@@ -73,3 +76,6 @@ class CompositeJob(Job):
     def price(self):
         """Общая цена всех заказов в списке."""
         return sum(c.price for c in self.jobs)
+
+    def __hash__(self):
+        return hash(self.descriptor)
