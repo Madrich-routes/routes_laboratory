@@ -1,7 +1,6 @@
+from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Optional, List, Tuple, Sequence
-
-from formats.pragmatic.pragmatic import Place
+from typing import Optional, Tuple, Sequence
 
 
 @dataclass
@@ -29,10 +28,10 @@ class Place:
     def __hash__(self):
         return hash(self.descriptor)
 
-    def __eq__(self, other: Place):
+    def __eq__(self, other: 'Place'):
         return self.descriptor == other.descriptor
 
-    def __le__(self, other: Place):
+    def __le__(self, other: 'Place'):
         return self.descriptor < other.descriptor
 
     @property

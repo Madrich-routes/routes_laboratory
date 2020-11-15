@@ -3,7 +3,7 @@ from functools import cached_property, reduce
 from typing import List, Optional, Set, Iterable, TYPE_CHECKING
 
 from models.rich_vrp import Place
-from utils.types import Array
+import numpy as np
 
 if TYPE_CHECKING:
     from models.rich_vrp import Depot
@@ -15,7 +15,7 @@ class Job(Place):
 
     Это самый общий класс. В него добавляются любые характеристики.
     """
-    amounts: Optional[Array] = None  # количество разгрузки в точке (той же размерности, что capacities)
+    amounts: Optional[np.array] = None  # количество разгрузки в точке (той же размерности, что capacities)
     required_skills: Set[int] = field(default_factory=set)  # какой набор скилов тут будет необходим
 
     price: int = 0  # награда, получаемая за выполнение этой работы
