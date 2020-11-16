@@ -256,3 +256,19 @@ def _turn_over(points: Array) -> Array:
     Массив с перевернутыми координатами точек
     """
     return np.fliplr(points)
+
+
+def osrm_geojson(
+    points: Array,
+    *,
+    transport: str = 'car',
+    profile: str = 'driving',
+):
+    """Возвращает geojson.
+
+    Дан набор точек x1, x2, x3, x4, ...
+
+    Вернуть geojson маршрута
+
+    """
+    ...

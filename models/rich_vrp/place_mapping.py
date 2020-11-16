@@ -36,7 +36,7 @@ class PlaceMapping:
 
         self.points = np.array([[place.lat, place.lon] for place in self.places])
 
-        self.mapping = bidict(  # Первчиный маппинг точек на индексы
+        self.mapping = bidict(  # Первчиный маппинг places <-> indices
             tuple(
                 zip(
                     tuple(places),
@@ -60,7 +60,7 @@ class PlaceMapping:
         -------
         """
 
-        return self.mapping[i]
+        return self.mapping.inverse[i]
 
     def index(self, p: Place) -> int:
         """Получаем индекс по точке.
@@ -74,7 +74,7 @@ class PlaceMapping:
         Ее индекс в маппинге
         """
 
-        return self.mapping.inverse[p]
+        return self.mapping[p]
 
     def dist(self, p1: Place, p2: Place, profile: str, **kwargs) -> int:
         """Посчитать расстояние.
