@@ -74,7 +74,7 @@ class PlaceMapping:
         Ее индекс в маппинге
         """
 
-        return self.mapping.inverse[p]
+        return self.mapping[p]
 
     def dist(self, p1: Place, p2: Place, profile: str, **kwargs) -> int:
         """Посчитать расстояние.

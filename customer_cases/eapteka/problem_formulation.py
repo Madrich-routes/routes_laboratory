@@ -169,7 +169,7 @@ def build_agents(
         lambda row: Agent(
             id=int(row['id']),
             amounts=[row['max_weight'], row['max_volume']],
-            time_windows=[row['t_from'], row['t_to']],
+            time_windows=[[row['t_from'], row['t_to']]],
             name=row['name'],
             priority=row['priority'],
             compatible_depots=copy(depots),
@@ -188,7 +188,6 @@ def build_agents(
         ),
         axis='columns',
     ).tolist()
-
 
 def build_depots(
     stocks: pd.DataFrame,
