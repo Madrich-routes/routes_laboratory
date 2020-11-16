@@ -1,3 +1,4 @@
+"""В этом модуле находится интерфейс к растовскому солверу."""
 from typing import Dict, List, Optional
 
 import settings
