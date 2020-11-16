@@ -45,7 +45,7 @@ def dumps_problem(
             capacity=agent.type.capacity_constraints,
             shifts=[
                 pragmatic.Shift(
-                    eraliest=tw[0],
+                    earliest=tw[0],
                     s_lat=agent.start_place.lat,
                     s_lng=agent.start_place.lon,
 

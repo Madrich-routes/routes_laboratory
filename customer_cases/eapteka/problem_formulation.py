@@ -165,7 +165,7 @@ def build_agents(
     -------
     Список агентов
     """
-    return agents_df.apply(
+    result = agents_df.apply(
         lambda row: Agent(
             id=int(row['id']),
             amounts=[row['max_weight'], row['max_volume']],
@@ -188,6 +188,7 @@ def build_agents(
         ),
         axis='columns',
     ).tolist()
+    return result
 
 def build_depots(
     stocks: pd.DataFrame,
