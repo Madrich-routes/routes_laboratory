@@ -20,58 +20,65 @@ def dumps_problem(
 
     jobs = []
     for job in problem.jobs:
-        pragmatic.Job(
-            id=job.id,
-            skills=job.required_skills,
-            deliveries=pragmatic.Delivery(
-                places=[
-                    pragmatic.Place.from_rich_vrp(
-                        job=job,
-                        index=problem.matrix.index(job)
-                    )
-                ],
-                demand=job.amounts,
-                tag=job.name,
-            ),
-
+        # временно! придумть глобальное решение, ибо (имхо) все солверы тут хотят int
+        amounts = [int(job.amounts[0] * 1000), int(job.amounts[1] * 1000000)]
+        new_job = pragmatic.Job(
+            id=str(job.id),
+            deliveries=[
+                pragmatic.Delivery(
+                    places=[
+                        pragmatic.Place.from_rich_vrp(
+                            job=job, index=problem.matrix.index(job)
+                        )
+                    ],
+                    demand=amounts,
+                    tag=str(job.name) if str(job.name) != "nan" else "",
+                )
+            ],
         )
+        if len(
+            job.required_skills
+        ):  # временное решение, проработать в соответствии с докой
+            new_job["skills"] = job.required_skills
+        jobs.append(new_job)
 
     vehicles = []
     for agent in problem.agents:
-        pragmatic.Vehicle(
-            typeId=agent.type.id,  # можно type.name
-            vehicleIds=[agent.id],  # можно agent.name
+        # временно! придумть глобальное решение, ибо (имхо) все солверы тут хотят int
+        capacity = [
+            int(agent.type.capacity_constraints[0] * 1000),
+            int(agent.type.capacity_constraints[1] * 1000000),
+        ]
+        vehicle = pragmatic.Vehicle(
+            typeId=str(agent.type.id),  # можно type.name
+            vehicleIds=[str(agent.id)],  # можно agent.name
             profile=agent.type.profile,
-            capacity=agent.type.capacity_constraints,
+            capacity=capacity,
             shifts=[
                 pragmatic.Shift(
-                    earliest=tw[0],
+                    earliest=str(tw[0]),
                     s_lat=agent.start_place.lat,
                     s_lng=agent.start_place.lon,
-
-                    end=tw[1],
+                    end=str(tw[1]),
                     e_lat=agent.end_place.lat,
                     e_lng=agent.end_place.lon,
-
-                    depots=[  # TODO:!!!
-
-                    ],
+                    depots=[],  # TODO:!!!
                 )
                 for tw in agent.time_windows
             ],
-
             # косты
             fixed=agent.costs.departure,
             distance=agent.costs.dist,
             time=agent.costs.time,
-
             skills=agent.type.skills,
         )
+        if len(
+            agent.type.skills
+        ):  # временное решение, проработать в соответствии с докой
+            vehicle["skills"] = agent.type.skills
+        vehicles.append(vehicle)
 
-    profiles = [
-        pragmatic.Profile(p, f'{p}_profile_type')
-        for p in problem.profiles()
-    ]
+    profiles = [pragmatic.Profile(p, f"{p}_profile_type") for p in problem.profiles()]
     return pragmatic.Problem(
         jobs=jobs,
         vehicles=vehicles,

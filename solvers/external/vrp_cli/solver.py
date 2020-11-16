@@ -1,5 +1,7 @@
 """В этом модуле находится интерфейс к растовскому солверу."""
 from typing import Dict, List, Optional
+import ujson
+import os
 
 import settings
 from formats.pragmatic.matrices import build_matrices
@@ -10,11 +12,11 @@ from solvers.base import BaseSolver
 from solvers.external.cmd import CommandRunner
 from utils.logs import logger
 
-problem_file = 'problem.pragmatic'
-solution_file = 'solution.pragmatic'
-geojson_file = 'solution.geojson'
+problem_file = "problem.pragmatic"
+solution_file = "solution.pragmatic"
+geojson_file = "solution.geojson"
 
-files_folder = 'rust_solver'
+files_folder = "rust_solver"
 
 
 class RustSolver(BaseSolver):
@@ -31,7 +33,9 @@ class RustSolver(BaseSolver):
         return_geojson=False,
     ):
         # Названия входных и выходных файлов
-        self.initial_solution_file: Optional[str] = initial_solution_file  # TODO: принимать само решение
+        self.initial_solution_file: Optional[
+            str
+        ] = initial_solution_file  # TODO: принимать само решение
 
         # Параметры солвера
         self.max_time: int = max_time
@@ -42,34 +46,44 @@ class RustSolver(BaseSolver):
         self.return_geojson: bool = return_geojson
 
         # Параметры рантайма
-        self.matrix_files: Optional[Dict[str, str]] = None  # Список файлов матриц расстояний.
+        self.matrix_files: Optional[
+            Dict[str, str]
+        ] = None  # Список файлов матриц расстояний.
         self.problem: Optional[RichVRPProblem] = None  # Решаемая задача
         self.solution: Optional[VRPSolution] = None  # Полученное решение
 
         self.problem_data: Optional[str] = None  # То, что записано в файле проблемы
-        self.initial_solution_data: Optional[str] = None  # Текстовое представление начального решения
-        self.matrices: Optional[Dict[str, str]] = None  # Матрицы расстояний для каждого профиля
+        self.initial_solution_data: Optional[
+            str
+        ] = None  # Текстовое представление начального решения
+        self.matrices: Optional[
+            Dict[str, str]
+        ] = None  # Матрицы расстояний для каждого профиля
 
         self.logs: Optional[List[str]] = None
         self.solution_data: Optional[str] = None
         self.solution_geojson: Optional[str] = None
 
-    def command(self) -> str:
+    def command(self, path) -> str:
         """Получаем команду, которой будет запускаться растовский солвера.
-
-        Returns
-        -------
-        Строковое представление команды для запуска солвера
+        s
+                Returns
+                -------
+                Строковое представление команды для запуска солвера
         """
         params = [
             f"{settings.VRP_CLI_UBUNTU_PATH} solve",  # вызываем решалку
-            f"pragmatic {problem_file}",  # файл, в котором сфорумлирована проблема
-            f'{" ".join(["-m " + str(i) for i in self.matrix_files])}',  # матрицы расстояний
-            f"-o {solution_file}",  # куда писать результат
+            f"pragmatic {path / problem_file}",  # файл, в котором сфорумлирована проблема
+            f'{" ".join(["-m " + str(path / str(i)) for i in self.matrix_files])}',  # матрицы расстояний
+            f"-o {path / solution_file}",  # куда писать результат
         ]
-        params += [f"--geo-json={geojson_file}"] * bool(self.return_geojson)  # вывод geojson
+        params += [f"--geo-json={path / geojson_file}"] * bool(
+            self.return_geojson
+        )  # вывод geojson
         params += [f"--log"] * bool(self.show_log)  # показывать лог на экране
-        params += [f"--max-time={self.max_time}"] * bool(self.max_time)  # максимальное время работы
+        params += [f"--max-time={self.max_time}"] * bool(
+            self.max_time
+        )  # максимальное время работы
         params += [f"--max-generations={self.max_generations}"] * bool(
             self.max_generations  # максимальное количетсво поколений оптимизации
         )
@@ -82,7 +96,9 @@ class RustSolver(BaseSolver):
         )
 
         # возможность передавать начальное решение
-        params += [f'-i {self.initial_solution_file}'] * bool(self.initial_solution_file)
+        params += [f"-i {self.initial_solution_file}"] * bool(
+            self.initial_solution_file
+        )
 
         return " ".join(params)
 
@@ -90,7 +106,7 @@ class RustSolver(BaseSolver):
         """Собираем все файлы для решения проблемы."""
 
         self.matrix_files = {
-            f'matrix_{profile}.json': matrix
+            f"matrix_{profile}.json": matrix
             for profile, matrix in build_matrices(self.problem.matrix).items()
         }
 
@@ -111,7 +127,7 @@ class RustSolver(BaseSolver):
         -------
         Решение проблемы
         """
-        logger.info(f'Решаем vrp_cli {problem.info()} ...')
+        logger.info(f"Решаем vrp_cli {problem.info()} ...")
 
         self.problem = problem  # сохраняем проблему
         self.build_data()  # получаем все данные для солвера из проблемы
@@ -119,21 +135,26 @@ class RustSolver(BaseSolver):
         # Получем входные файлы
         input_files = {problem_file: self.problem_data}
         if self.initial_solution_file:
-            input_files[self.initial_solution_file] = self.initial_solution_data,
+            input_files[self.initial_solution_file] = (self.initial_solution_data,)
 
         # Получаем список выходных файлов
         output_files = [solution_file] + [geojson_file] * bool(self.return_geojson)
-        problem_dir = settings.TMP_DIR / 'rust_solver' / str(problem.name)
+        problem_dir = settings.TMP_DIR / "rust_solver" / str(problem.name)
+        os.makedirs(problem_dir, exist_ok=True)
+
+        for matrix in self.matrix_files:
+            with open((problem_dir / matrix), "w") as f:
+                ujson.dump(self.matrix_files[matrix], f)
 
         # Запускаем саму комманду
         runner = CommandRunner(
-            command=self.command(),
+            command=self.command(problem_dir),
             input_files=input_files,
             output_files=output_files,
             files_dir=problem_dir,
             base_dir=problem_dir,
         ).run()
-        print('AAA'*20)
+        print("AAA" * 20)
         # Получаем результат
         self.solution_data = runner.output_files_data[solution_file]
         if self.return_geojson:

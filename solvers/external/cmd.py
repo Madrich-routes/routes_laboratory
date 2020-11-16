@@ -1,8 +1,10 @@
 import os
 import subprocess
 import sys
+import json
 from pathlib import Path
 from typing import Dict, List
+from utils.serialization import set_default
 
 
 # subprocess.run(...).returncode == 0
@@ -26,16 +28,12 @@ class CommandRunner:
         command: str,
         input_files: Dict[str, str],
         output_files: List[str],
-
         files_dir: str,
         base_dir: str,
-
         show_stdout: bool = True,
         show_stderr: bool = True,
-
-        stdout_prompt: str = '>>',
-        stderr_prompt: str = '!!',
-
+        stdout_prompt: str = ">>",
+        stderr_prompt: str = "!!",
         remove_output_files: bool = False,
         remove_input_files: bool = False,
     ):
@@ -43,7 +41,9 @@ class CommandRunner:
         self.command = command
         self.files_dir = files_dir
         self.base_dir = base_dir
-        self.input_files = {str(Path(self.files_dir) / f): d for f, d in input_files.items()}
+        self.input_files = {
+            str(Path(self.files_dir) / f): d for f, d in input_files.items()
+        }
         self.output_files = [str(Path(self.files_dir) / f) for f in output_files]
 
         # сохраняем опции
@@ -60,7 +60,7 @@ class CommandRunner:
         self.stdout: List[str] = []
         self.stderr: List[str] = []
 
-    def run(self) -> 'CommandRunner':
+    def run(self) -> "CommandRunner":
         """Запустить команду на выполнение.
 
         Резульаты выполнения сохраняются в output_files_data, stdout, stderr
@@ -72,14 +72,14 @@ class CommandRunner:
         # Записываем задачу в файлы
         for filename, data in self.input_files.items():
             print(filename)
-            with open(filename, 'w') as f:
-                f.write(str(data))
+            with open(filename, "w") as f:
+                f.write(json.dumps(data, default=set_default))
 
         self.stdout = self._exec_and_log()
 
         # Считываем результаты, которые в файлах
         for filename in self.output_files:
-            with open(filename, 'r') as f:
+            with open(filename, "r") as f:
                 self.output_files_data[filename] = f.read()
 
         self._remove_files()
@@ -88,7 +88,10 @@ class CommandRunner:
 
     def _remove_files(self) -> None:
         """Удаляем все ненужные файлы после решения."""
-        files_to_remove = self.output_files * self.remove_output_files + self.input_files * self.remove_input_files
+        files_to_remove = (
+            self.output_files * self.remove_output_files
+            + self.input_files * self.remove_input_files
+        )
 
         for f in files_to_remove:
             try:
@@ -109,7 +112,7 @@ class CommandRunner:
 
         popen.stdout.close()
         return_code = popen.wait()
-        print('X'*40, return_code)
+        print("X" * 40, return_code)
         if return_code:
             raise subprocess.CalledProcessError(return_code, self.command)
 
@@ -117,7 +120,7 @@ class CommandRunner:
         """Печатает вывод подпроцесса с промптом."""
         lines = []
         for line in self._exec_and_iter():
-            print(f"{self.stdout_prompt}{line}", end='')
+            print(f"{self.stdout_prompt}{line}", end="")
             lines += line
 
         return lines

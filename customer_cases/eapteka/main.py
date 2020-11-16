@@ -3,7 +3,10 @@ import logging
 from functools import partial
 
 import settings
-from customer_cases.eapteka.problem_formulation import build_eapteka_problem, AptekaParams
+from customer_cases.eapteka.problem_formulation import (
+    build_eapteka_problem,
+    AptekaParams,
+)
 from formats import api
 from models.rich_vrp.geometries.geometry import HaversineGeometry
 from solvers.external.vrp_cli.solver import RustSolver
@@ -21,12 +24,12 @@ if __name__ == "__main__":
     )
 
     problem = build_eapteka_problem(
-        data_folder=settings.DATA_DIR / 'eapteka/data',
+        data_folder=settings.DATA_DIR / "eapteka/data",
         params=problem_params,
         profile_geometries={
-            'driver': partial(HaversineGeometry, default_speed=15),
-            'pedestrian': partial(HaversineGeometry, default_speed=1.5),
-        }
+            "driver": partial(HaversineGeometry, default_speed=15),
+            "pedestrian": partial(HaversineGeometry, default_speed=1.5),
+        },
     )
 
     solver = RustSolver()
