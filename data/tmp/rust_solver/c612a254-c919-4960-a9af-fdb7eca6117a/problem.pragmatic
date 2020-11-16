@@ -1,0 +1,1 @@
+{'plan': {'jobs': [], 'relations': []}, 'fleet': {'vehicles': [], 'profiles': [{'name': 'driver', 'type': 'driver_profile_type'}, {'name': 'pedestrian', 'type': 'pedestrian_profile_type'}]}, 'objectives': {'primary': [], 'secondary': []}}

@@ -69,8 +69,9 @@ class CommandRunner:
         os.makedirs(self.files_dir, exist_ok=True)
         os.makedirs(self.base_dir, exist_ok=True)
 
-        # Считываем результаты, которые в файлах
+        # Записываем задачу в файлы
         for filename, data in self.input_files.items():
+            print(filename)
             with open(filename, 'w') as f:
                 f.write(str(data))
 
@@ -98,7 +99,7 @@ class CommandRunner:
     def _exec_and_iter(self):
         """Итератор по выводимым строкам."""
         popen = subprocess.Popen(
-            self.command,
+            self.command.split(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
@@ -108,7 +109,7 @@ class CommandRunner:
 
         popen.stdout.close()
         return_code = popen.wait()
-
+        print('X'*40, return_code)
         if return_code:
             raise subprocess.CalledProcessError(return_code, self.command)
 

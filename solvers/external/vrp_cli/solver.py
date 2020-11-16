@@ -61,9 +61,9 @@ class RustSolver(BaseSolver):
         Строковое представление команды для запуска солвера
         """
         params = [
-            f"vrp-cli solve",  # вызываем решалку
+            f"{settings.VRP_CLI_UBUNTU_PATH} solve",  # вызываем решалку
             f"pragmatic {problem_file}",  # файл, в котором сфорумлирована проблема
-            f'{" ".join(self.matrix_files)}',  # матрицы расстояний
+            f'{" ".join(["-m " + str(i) for i in self.matrix_files])}',  # матрицы расстояний
             f"-o {solution_file}",  # куда писать результат
         ]
         params += [f"--geo-json={geojson_file}"] * bool(self.return_geojson)  # вывод geojson
@@ -132,7 +132,7 @@ class RustSolver(BaseSolver):
             files_dir=problem_dir,
             base_dir=problem_dir,
         ).run()
-
+        print('AAA'*20)
         # Получаем результат
         self.solution_data = runner.output_files_data[solution_file]
         if self.return_geojson:
