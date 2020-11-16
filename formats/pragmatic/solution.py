@@ -1,92 +1,99 @@
+from datetime import datetime
 from typing import Dict, List, Optional
 
 import ujson
 
-from formats.pragmatic.utils import iget
-from models.rich_vrp import VRPSolution
+from models.rich_vrp import VRPSolution, Agent, Visit, Depot, Job
+from models.rich_vrp.plan import Plan
+from models.rich_vrp.problem import RichVRPProblem
 
 
-def load_solution(pragmatic_solution: str) -> VRPSolution:
+def search_depot(location: Dict[str, float], problem: RichVRPProblem) -> Optional[Depot]:
+    """ Ищем склад в списках складов в заданной проблеме
+    """
+    ret_point: Optional[Depot] = None
+    lat = location['lat']
+    lon = location['lon']
+
+    for depot in problem.depots:
+        if depot.lat == lat and depot.lon == lon:
+            ret_point = depot
+            break
+
+    return ret_point
+
+
+def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
+    """ Ищем заказ в списках заказов в заданной проблеме
+    """
+    ret_point: Optional[Job] = None
+
+    for job in problem.jobs:
+        if job.id == job_id:
+            ret_point = job
+            break
+
+    return ret_point
+
+
+def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
+    """ Ищем агента по его имени (vehicle_id) в заданной проблеме
+    """
+    ret_agent: Optional[Agent] = None
+
+    for agent in problem.agents:
+        if agent.name == agent_name:
+            ret_agent = agent
+            break
+
+    return ret_agent
+
+
+def load_solution(problem: RichVRPProblem, pragmatic_solution: str) -> VRPSolution:
     """Загружаем решение проблемы.
 
     Parameters
     ----------
+    problem : класс проблемы со всеми агентами и задачами
     pragmatic_solution : строка с решением
 
     Returns
     -------
     VRPSolution instance
     """
-    Solution(data=ujson.loads(pragmatic_solution))
+    routes: List[Plan] = []
+    data = ujson.loads(pragmatic_solution)
 
+    for tour in data['tours']:
+        agent: Optional[Agent] = search_agent(tour['vehicleId'], problem)
+        if agent is None:
+            raise Exception("Не найден агент для rust vrp solution")
 
-class Activity:
-    def __init__(self, d: Dict):
-        self.job_id: str = d['jobId']
-        self.job_type: str = d['type']
-        self.job_tag: str = d.get('job_tag')
+        waypoints: List[Visit] = []
+        for point in tour['stops']:
+            job_type: str = point['activities']['type']
 
-        self.lat: Optional[float] = iget(d, 'location', 'lat')
-        self.lng: Optional[float] = iget(d, 'location', 'lng')
+            if job_type == 'departure':  # точка выезда курьера
+                waypoint = agent.start_place
+            elif job_type == 'delivery':  # точка доставка заказа
+                waypoint = search_job(point['activities']['jobId'], problem)
+            elif job_type == 'arrival':  # точка окончания пути курьера
+                waypoint = agent.end_place
+            elif job_type == 'break':  # TODO: break points
+                raise Exception('Break: не поддерживается в данной версии')
+            elif job_type == 'reload':  # точка перезагрузки курьера
+                waypoint = search_depot(point['location'], problem)
+            elif job_type == 'pickup':  # точка забирания заказа курьером
+                waypoint = search_job(point['activities']['jobId'], problem)
+            else:
+                raise Exception("Неподдерживаемый тип задач")
 
-        self.start: Optional[str] = iget(d, 'time', 'start')
-        self.end: Optional[str] = iget(d, 'time', 'end')
+            if waypoint is None:
+                raise Exception("Не найдена точка для rust vrp solution")
 
+            t = int(datetime.strptime(point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ').timestamp())
+            waypoints.append(Visit(place=waypoint, time=t))
 
-class Stop:
-    def __init__(self, d: Dict):
-        self.distance: int = d['distance']
-        self.load: List[int] = d['load']
-        self.lat: Optional[float] = iget(d, 'location', 'lat')
-        self.lng: Optional[float] = iget(d, 'location', 'lng')
-        self.arrival: Optional[str] = iget(d, 'time', 'arrival')
-        self.departure: Optional[str] = iget(d, 'time', 'departure')
-        self.activities: List[Activity] = [Activity(i) for i in d['activities']]
+        routes.append(Plan(agent=agent, waypoints=waypoints))
 
-
-class Vehicle:
-    def __init__(self, d: Dict):
-        self.vehicle_id: str = d['vehicleId']
-        self.type_id: str = d['typeId']
-        self.shift_index: int = d['shiftIndex']
-        self.stops: List[Stop] = [Stop(i) for i in d['stops']]
-
-        stats = d['statistic']
-        self.cost: float = stats['cost']
-        self.distance: int = stats['distance']
-        self.duration: int = stats['duration']
-
-        times = stats['times']
-        self.driving: int = times['driving']
-        self.serving: int = times['serving']
-        self.waiting: int = times['waiting']
-        self.break_: int = d['statistic']['times'].get('break')
-
-
-class Reason:
-    def __init__(self, d: Dict):
-        self.code: int = d['code']
-        self.description: str = d['description']
-
-
-class Unassigned:
-    def __init__(self, d: Dict):
-        self.job_id: str = d['jobId']
-        self.reasons: List[Reason] = [Reason(i) for i in d['reasons']]
-
-
-class Solution:
-    def __init__(self, data: Dict):
-        self.tours: List[Vehicle] = [Vehicle(i) for i in data['tours']]
-        self.unassigned: List[Unassigned] = [Unassigned(i) for i in data.get('unassigned', [])]
-
-        stats = data['statistic']
-        self.cost: int = stats['cost']
-        self.distance: int = stats['distance']
-        self.duration: int = stats['duration']
-
-        times = stats['time']
-        self.driving: int = times['driving']
-        self.serving: int = times['serving']
-        self.waiting: int = times['waiting']
-        self.break_: int = times.get('break')
+    return VRPSolution(problem=problem, routes=routes, info=data['statistic'])
