@@ -39,7 +39,7 @@ def dumps_problem(
     vehicles = []
     for agent in problem.agents:
         pragmatic.Vehicle(
-            type_id=agent.type.id,  # можно type.name
+            typeId=agent.type.id,  # можно type.name
             vehicleIds=[agent.id],  # можно agent.name
             profile=agent.type.profile,
             capacity=agent.type.capacity_constraints,
@@ -72,7 +72,6 @@ def dumps_problem(
         pragmatic.Profile(p, f'{p}_profile_type')
         for p in problem.profiles()
     ]
-
     return pragmatic.Problem(
         jobs=jobs,
         vehicles=vehicles,

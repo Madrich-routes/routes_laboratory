@@ -408,19 +408,20 @@ class Problem:
         self.primary = primary
         self.secondary = secondary
 
+    # TODO:: заглушка relations, primary, secondary
     def dump(self):
         return dict(
             plan=dict(
                 jobs=[i.dump() for i in self.jobs],
-                relations=[i.dump() for i in self.relations]
+                relations=[i.dump() for i in (self.relations if self.relations is not None else [])]
             ),
             fleet=dict(
                 vehicles=[i.dump() for i in self.vehicles],
                 profiles=[i.dump() for i in self.profiles],
             ),
             objectives=dict(
-                primary=[i.dump() for i in self.primary],
-                secondary=[i.dump() for i in self.secondary],
+                primary=[i.dump() for i in (self.primary if self.primary is not None else [])],
+                secondary=[i.dump() for i in (self.secondary if self.secondary is not None else [])],
             ),
         )
 
@@ -430,4 +431,5 @@ class Problem:
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

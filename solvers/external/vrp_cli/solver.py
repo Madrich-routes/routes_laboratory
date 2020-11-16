@@ -122,7 +122,7 @@ class RustSolver(BaseSolver):
 
         # Получаем список выходных файлов
         output_files = [solution_file] + [geojson_file] * bool(self.return_geojson)
-        problem_dir = settings.TMP_DIR / 'rust_solver' / problem.name
+        problem_dir = settings.TMP_DIR / 'rust_solver' / str(problem.name)
 
         # Запускаем саму комманду
         runner = CommandRunner(

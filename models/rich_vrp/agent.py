@@ -46,6 +46,7 @@ class Agent:
     priority: int = 0
 
     name: str = ""
+
     # TODO:: здесь заглушка
     def __post_init__(self):
         if self.start_place is None:

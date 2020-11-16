@@ -34,3 +34,5 @@ if __name__ == "__main__":
     solution_str = api.export(solution)
 
     print(solution_str)
+
+# PYTHONPATH='.:..:../../' python main.py

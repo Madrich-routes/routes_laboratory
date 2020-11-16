@@ -72,8 +72,7 @@ class CommandRunner:
         # Считываем результаты, которые в файлах
         for filename, data in self.input_files.items():
             with open(filename, 'w') as f:
-                f.write(data)
-                self.output_files_data[filename] = f.read()
+                f.write(str(data))
 
         self.stdout = self._exec_and_log()
 
