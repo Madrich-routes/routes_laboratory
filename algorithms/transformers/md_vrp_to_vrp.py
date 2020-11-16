@@ -1,16 +1,13 @@
-from copy import deepcopy
 from typing import List
 
 import numpy as np
 
 from models.rich_vrp import Depot, Job, Visit
-from utils.types import Array
-
-from .base import BaseTransformer
-
+from models.rich_vrp.geometries.geometry import DistanceAndTimeMatrixGeometry
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
-from models.rich_vrp.geometries.geometry import DistanceAndTimeMatrixGeometry
+from utils.types import Array
+from .base import BaseTransformer
 from ..utils.costs import get_inf
 
 
@@ -111,7 +108,7 @@ class TransformerMdVrpToVrp(BaseTransformer):
                 ids.append(place_mapping.mapping[depot])
                 # + pass_num * 2
                 new_jobs = []
-                for k in range(pass_num):
+                for _ in range(pass_num):
                     # create new job in and out
                     job_in = Job(id=depot.id, name=depot.name + '_in', lat=depot.lat, lon=depot.lon, x=depot.x,
                                  y=depot.y, time_windows=depot.time_windows, delay=depot.delay)
@@ -158,18 +155,12 @@ class TransformerMdVrpToVrp(BaseTransformer):
                 # TODO :: Точно ли несколько depots в wapoints
                 dep = solution.problem.depots[dep_id]
                 depots_waypoints = list(filter(lambda x: x.place == dep, waypoints))
-                for depot_id in range(len(depots_waypoints)):
+                for depots_waypoint in depots_waypoints:
                     # add in, out, fake
-                    d = depots_waypoints[depot_id]
-
-                    time_in = d.time
+                    time_in = depots_waypoint.time
 
                     # get from dep current job_in id in jobs
-                    current_pass = 0
-                    if dep in visited_places:
-                        current_pass = visited_places[dep]
-                    else:
-                        visited_places[dep] = 0
+                    current_pass = visited_places.get(dep, 0)
                     visited_places[dep] += 1
 
                     job_in_id = n + dep_id * pass_num + current_pass
