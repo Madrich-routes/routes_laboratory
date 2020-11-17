@@ -11,7 +11,6 @@ from formats import api
 from models.rich_vrp.geometries.geometry import HaversineGeometry
 from solvers.external.vrp_cli.solver import RustSolver
 
-
 if __name__ == "__main__":
     problem_params = AptekaParams(
         delay_pharmacy=5 * 60,

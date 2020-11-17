@@ -81,6 +81,34 @@ pandas-vet = "^0.2.2"
 Sphinx = "^3.3.0"
 reindent = "^3.5.1"
 
+# всякие настройки black
+#skip-string-normalization
+[tool.black]
+line-length = 118
+skip-string-normalization = true
+fast = true
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
+
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

@@ -44,7 +44,7 @@ def dumps_problem(
 
     vehicles = []
     for agent in problem.agents:
-        # временно! придумть глобальное решение, ибо (имхо) все солверы тут хотят int
+        # TODO: временно! придумть глобальное решение, ибо (имхо) все солверы тут хотят int
         capacity = [
             int(agent.type.capacity_constraints[0] * 1000),
             int(agent.type.capacity_constraints[1] * 1000000),
@@ -74,7 +74,7 @@ def dumps_problem(
         )
         if len(
             agent.type.skills
-        ):  # временное решение, проработать в соответствии с докой
+        ):  # TODO: временное решение, проработать в соответствии с докой
             vehicle["skills"] = agent.type.skills
         vehicles.append(vehicle)
 
