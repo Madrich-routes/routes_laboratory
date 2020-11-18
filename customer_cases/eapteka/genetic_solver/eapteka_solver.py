@@ -60,7 +60,10 @@ class EaptekaSolver:
 
     # TODO разделить сложную функцию
     def cut_window(
-        self, window: Tuple[int, int], depot: Depot, loads: List[Depot, int, Depot, int]
+        self,
+        window: Tuple[int, int],
+        depot: Depot,
+        loads: List[Tuple[Depot, int, Depot, int]],
     ) -> Optional[Tuple[int, int]]:
         """
         Функция пересчета временного окна курьера.
@@ -69,7 +72,7 @@ class EaptekaSolver:
             ----------
             window: Tuple[int, int]
             depot: Depot
-            loads: List[Depot, int, Depot, int]
+            loads: List[Tuple[Depot, int, Depot, int]]
 
         Returns
             -------
@@ -131,7 +134,7 @@ class EaptekaSolver:
 
     def find_all_routes(
         self, agent: Agent, solutions: List[VRPSolution]
-    ) -> List[Depot, int, Depot, int]:
+    ) -> List[Tuple[Depot, int, Depot, int]]:
         """
         Функция поиска всех занятых временных окон непрерывного маршрута.
 
@@ -142,7 +145,7 @@ class EaptekaSolver:
 
         Returns
             -------
-            List[Depot, int, Depot, int]
+            List[Tuple[Depot, int, Depot, int]]
         """
         plans: List[Plan] = []  # надеемся, что в порядке времени
 
@@ -152,7 +155,7 @@ class EaptekaSolver:
                     plans.append(route)
                     break
 
-        answer: List[Depot, int, Depot, int] = []
+        answer: List[Tuple[Depot, int, Depot, int]] = []
         curr_depot: Optional[Depot] = None
         prev_depot: Optional[Depot] = None
         curr_start: Optional[int] = None
@@ -196,7 +199,7 @@ class EaptekaSolver:
 
         for i, agent in enumerate(agents):
             # все занятые временные окна непрерывного маршрута (мб неск складов)
-            loaded: List[Depot, int, Depot, int]
+            loaded: List[Tuple[Depot, int, Depot, int]]
             loaded = self.find_all_routes(agent, solutions)
 
             flag = False
@@ -214,7 +217,7 @@ class EaptekaSolver:
         for agent in remove:
             agents.remove(agent)
 
-    def get_agent_window(self, agent: Agent, solution: VRPSolution) -> Tuple(int, int):
+    def get_agent_window(self, agent: Agent, solution: VRPSolution) -> Tuple[int, int]:
         """
         Функция нахождения окна занятости курьера в текущем решении
 
@@ -225,7 +228,7 @@ class EaptekaSolver:
 
         Returns
             -------
-            Tuple(int, int)
+            Tuple[int, int]
         """
         start, end = -1, -1
         for route in solution.routes:
@@ -279,15 +282,15 @@ class EaptekaSolver:
             List[VRPSolution]
         """
         solutions: List[VRPSolution] = []
-        # TODO расширить пул солверов(если есть ещё)
         if self.solver == "rust":
             solver_engine = RustSolver()
-        elif self.solver == "vroom":
-            solver_engine = VroomSolver()
+        # elif self.solver == "vroom":
+        #     solver_engine = VroomSolver()
         else:
             raise Exception("Bad solver")
         # запоминаем изначальных курьеров
         initial_agents = deepcopy(self.problem.agents)
+        initial_jobs = deepcopy(self.problem.jobs)
         for depot in self.problem.depots:
             copy_agents = deepcopy(initial_agents)
             # замена точка старта\конца на место текущего склада
@@ -296,6 +299,7 @@ class EaptekaSolver:
             self.couriers_windows(depot, solutions, copy_agents)
             # запуск солвера, для текущего склада
             self.problem.agents = copy_agents
+            self.problem.jobs = [job for job in initial_jobs if depot in job.depots]
             solution = solver_engine.solve(self.problem)
             # убираем занятое время из доступного времени в оригиналах
             self.change_window(solution, initial_agents)
