@@ -1,11 +1,15 @@
+from functools import partial
 from copy import deepcopy
 from typing import List, Tuple, Optional
+import numpy as np
 
-from models.rich_vrp import Depot, Agent, VRPSolution
+from models.rich_vrp import Depot, Agent, Job, VRPSolution
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 from solvers.external.vrp_cli.solver import RustSolver
 from solvers.external.vroom.solver import VroomSolver
+from models.rich_vrp.geometries.geometry import HaversineGeometry
+from models.rich_vrp.place_mapping import PlaceMapping
 
 
 class EaptekaSolver:
@@ -270,6 +274,35 @@ class EaptekaSolver:
                     raise Exception("Bad time windows")
             agent.time_windows = new_windows
 
+    def prepare_problem(
+        self, copy_agents: List[Agent], initial_jobs: List[Job], depot: Depot
+    ):
+        """
+        Функция подготовки проблемы к запуску на текущий склад
+
+        Parameters
+            ----------
+            copy_agents: List[Agent]
+            initial_jobs: List[Job]
+            depot: Depot
+        Returns
+            -------
+        """
+        self.problem.agents = copy_agents
+        self.problem.jobs = [job for job in initial_jobs if depot in job.depots]
+        places = [depot] + list(self.problem.jobs)
+        points = np.array([[p.lat, p.lon] for p in places])
+
+        profile_geometries = {
+            "driver": partial(HaversineGeometry, default_speed=15),
+            "pedestrian": partial(HaversineGeometry, default_speed=1.5),
+        }
+        geometries = {
+            'driver': profile_geometries['driver'](points),
+            'pedestrian': profile_geometries['pedestrian'](points),
+        }
+        self.problem.matrix = PlaceMapping(places=places, geometries=geometries)
+
     def solve(self) -> List[VRPSolution]:
         """
         Функция запуска солвера для каждого склада отдельно. В результате получаем полное решение.
@@ -297,9 +330,9 @@ class EaptekaSolver:
             self.couriers_replace(depot, copy_agents)
             # меняем окна с учетом текущего склада и пред. склада
             self.couriers_windows(depot, solutions, copy_agents)
+            # подготавливаем задачу
+            self.prepare_problem(copy_agents, initial_jobs, depot)
             # запуск солвера, для текущего склада
-            self.problem.agents = copy_agents
-            self.problem.jobs = [job for job in initial_jobs if depot in job.depots]
             solution = solver_engine.solve(self.problem)
             # убираем занятое время из доступного времени в оригиналах
             self.change_window(solution, initial_agents)

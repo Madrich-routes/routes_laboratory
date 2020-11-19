@@ -6,6 +6,7 @@ import os
 import settings
 from formats.pragmatic.matrices import build_matrices
 from formats.pragmatic.problem import dumps_problem
+from formats.pragmatic.solution import load_solution
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from solvers.base import BaseSolver
@@ -144,7 +145,7 @@ class RustSolver(BaseSolver):
 
         for matrix in self.matrix_files:
             with open((problem_dir / matrix), "w") as f:
-                ujson.dump(self.matrix_files[matrix], f)
+                f.write(self.matrix_files[matrix])
 
         # Запускаем саму комманду
         runner = CommandRunner(
@@ -156,8 +157,8 @@ class RustSolver(BaseSolver):
         ).run()
         print("AAA" * 20)
         # Получаем результат
-        self.solution_data = runner.output_files_data[solution_file]
+        self.solution_data = runner.output_files_data[str(problem_dir / solution_file)]
         if self.return_geojson:
             self.solution_geojson = runner.output_files_data[geojson_file]
 
-        return self.assemble_solution()
+        return load_solution(problem, self.solution_data)

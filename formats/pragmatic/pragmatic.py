@@ -7,11 +7,12 @@ from typing import List, Optional, Tuple
 from models import rich_vrp
 
 
-def ts_to_iso(ts: int) -> str:
-    """Конвертируем unix timestamp в ISO 8601. В pragmatic время представлено в таком формате.
+def ts_to_rfc(ts: int) -> str:
+    """Конвертируем unix timestamp в RFC3339 . В pragmatic время представлено в таком формате.
+    Добавлена поправка для Windows на 86400, т.к. минимальный Unix timestamp 86400
 
-    >>> ts_to_iso(0)
-    '1970-01-01T03:00:00'
+    >>> ts_to_rfc(0)
+    '1970-01-01T03:00:00Z'
 
     Parameters
     ----------
@@ -19,17 +20,16 @@ def ts_to_iso(ts: int) -> str:
 
     Returns
     -------
-    Время в формате ISO 8601 в UTC таймзоне без Z на конце.
+    Время в формате RFC3339  в UTC таймзоне c Z на конце.
     """
-
-    return datetime.fromtimestamp(ts).isoformat()
+    return datetime.fromtimestamp(ts + 86400).isoformat() + "Z"
 
 
 def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
-    """Конвретируем временное окно из таймстампов в ISO 8601.
+    """Конвретируем временное окно из таймстампов в RFC3339.
 
     >>> convert_tw([(0, 0)])
-    [('1970-01-01T03:00:00', '1970-01-01T03:00:00')]
+    [('1970-01-01T03:00:00Z', '1970-01-01T03:00:00Z')]
 
     Parameters
     ----------
@@ -39,10 +39,7 @@ def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
     -------
     Лист временных окон в iso
     """
-    return [
-        (ts_to_iso(tw[0]), ts_to_iso(tw[1]))
-        for tw in time_windows
-    ]
+    return [(ts_to_rfc(tw[0]), ts_to_rfc(tw[1])) for tw in time_windows]
 
 
 @dataclass
@@ -289,10 +286,7 @@ class Shift:
 
         dump_Shift["start"] = {
             "earliest": self.earliest,
-            "location": {
-                "lat": self.s_lat,
-                "lng": self.s_lng
-            },
+            "location": {"lat": self.s_lat, "lng": self.s_lng},
         }
         if self.latest is not None:
             dump_Shift["end"] = {"latest": self.latest, "location": {"lat": self.e_lat}}
@@ -301,10 +295,7 @@ class Shift:
         if self.time is not None:
             dump_Shift["Latest"] = {
                 "time": self.time,
-                "location": {
-                    "lat": self.l_lat,
-                    "lng": self.l_lng
-                },
+                "location": {"lat": self.l_lat, "lng": self.l_lng},
             }
         return dump_Shift
 
@@ -324,7 +315,18 @@ class Vehicle:
     distance: float
     time: float
 
-    def __init__(self, typeId, vehicleIds, profile, capacity, shifts, fixed, distance, time, skills=None):
+    def __init__(
+        self,
+        typeId,
+        vehicleIds,
+        profile,
+        capacity,
+        shifts,
+        fixed,
+        distance,
+        time,
+        skills=None,
+    ):
         # Own
         self.typeId = typeId
         self.vehicleIds = vehicleIds
@@ -395,7 +397,9 @@ class Problem:
     primary: Optional[List[Type]] = None
     secondary: Optional[List[Type]] = None
 
-    def __init__(self, jobs, vehicles, profiles, relations=None, primary=None, secondary=None):
+    def __init__(
+        self, jobs, vehicles, profiles, relations=None, primary=None, secondary=None
+    ):
         # Plan
         self.jobs = jobs
         self.relations = relations
@@ -410,20 +414,34 @@ class Problem:
 
     # TODO:: заглушка relations, primary, secondary
     def dump(self):
-        return dict(
+        res = dict(
             plan=dict(
                 jobs=[i.dump() for i in self.jobs],
-                relations=[i.dump() for i in (self.relations if self.relations is not None else [])]
+                relations=[
+                    i.dump()
+                    for i in (self.relations if self.relations is not None else [])
+                ],
             ),
             fleet=dict(
                 vehicles=[i.dump() for i in self.vehicles],
                 profiles=[i.dump() for i in self.profiles],
             ),
-            objectives=dict(
-                primary=[i.dump() for i in (self.primary if self.primary is not None else [])],
-                secondary=[i.dump() for i in (self.secondary if self.secondary is not None else [])],
-            ),
         )
+        # добавил проверку, ибо солвер выдает ошибку при наличии пустых objectives
+        if self.primary is not None and self.secondary is not None:
+            res["objectives"] = (
+                dict(
+                    primary=[
+                        i.dump()
+                        for i in (self.primary if self.primary is not None else [])
+                    ],
+                    secondary=[
+                        i.dump()
+                        for i in (self.secondary if self.secondary is not None else [])
+                    ],
+                ),
+            )
+        return res
 
     def dump_json(self):
         return json.dump(self.dump())

@@ -123,15 +123,19 @@ class PlaceMapping:
     @lru_cache
     def dist_matrix(self, **kwargs) -> Array:
         """Дефолтная реализация матрицы расстояния."""
-        return np.array([
-            [self.dist(i, j, **kwargs) for i in range(self.size())]
-            for j in range(self.size())
-        ])
+        return np.array(
+            [
+                [self.dist(i, j, **kwargs) for i in range(self.size())]
+                for j in range(self.size())
+            ]
+        )
 
     @lru_cache
     def time_matrix(self, **kwargs) -> Array:
         """Дефолтная реализация матрицы времени."""
-        return np.array([
-            [self.time(i, j, **kwargs) for i in range(self.size())]
-            for j in range(self.size())
-        ])
+        return np.array(
+            [
+                [self.time(i, j, **kwargs) for i in range(self.size())]
+                for j in range(self.size())
+            ]
+        )

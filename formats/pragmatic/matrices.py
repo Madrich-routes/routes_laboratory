@@ -23,10 +23,13 @@ def dumps_matrix(
     -------
     Строковое представление в pragmatic
     """
+    # приводим матрицы к системным еденицам(метрам и секундам)
+    time_matrix = [round(i * 1000) for i in time_matrix.flatten().tolist()]
+    distance_matrix = [round(i * 1000) for i in distance_matrix.flatten().tolist()]
     obj = {
         "profile": profile,
-        "travelTimes": time_matrix.flatten().tolist(),
-        "distances": distance_matrix.flatten().tolist(),
+        "travelTimes": time_matrix,
+        "distances": distance_matrix,
     }
 
     return ujson.dumps(obj)
@@ -46,6 +49,8 @@ def build_matrices(
     Словарь profile -> matrix
     """
     return {
-        p: dumps_matrix(profile=p, distance_matrix=g.dist_matrix(), time_matrix=g.time_matrix())
+        p: dumps_matrix(
+            profile=p, distance_matrix=g.dist_matrix(), time_matrix=g.time_matrix()
+        )
         for p, g in geometries.geometries.items()
     }

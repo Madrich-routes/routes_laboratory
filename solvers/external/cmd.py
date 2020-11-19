@@ -88,10 +88,12 @@ class CommandRunner:
 
     def _remove_files(self) -> None:
         """Удаляем все ненужные файлы после решения."""
-        files_to_remove = (
-            self.output_files * self.remove_output_files
-            + self.input_files * self.remove_input_files
-        )
+        files_to_remove = []
+        if self.remove_output_files:
+            files_to_remove.append(self.output_files)
+        if self.remove_input_files:
+            for filename, data in self.input_files.items():
+                files_to_remove.append(filename)
 
         for f in files_to_remove:
             try:

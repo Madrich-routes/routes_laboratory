@@ -5,11 +5,13 @@ from customer_cases.eapteka.problem_formulation import (
     build_eapteka_problem,
     AptekaParams,
 )
+from datetime import datetime
 from models.rich_vrp.geometries.geometry import HaversineGeometry
 from models.rich_vrp.place_mapping import PlaceMapping
 from customer_cases.eapteka.genetic_solver.eapteka_solver import EaptekaSolver
 
 if __name__ == '__main__':
+
     problem_params = AptekaParams(
         delay_pharmacy=5 * 60,
         delay_stock=10 * 60,
@@ -30,6 +32,7 @@ if __name__ == '__main__':
     )
     # сокращаем проблему для скорости решения
     # для теста оставим на каждый склад по n job'ов
+    print(datetime.fromtimestamp(5))
     n = 10
     jobs_per_depot = [n for i in range(len(problem.depots))]
     jobs = []
@@ -40,6 +43,7 @@ if __name__ == '__main__':
             if sum(jobs_per_depot) == 0:
                 break
 
+    problem.jobs = jobs
     places = list(problem.depots) + list(problem.jobs)
     points = np.array([[p.lat, p.lon] for p in places])
 
@@ -52,9 +56,7 @@ if __name__ == '__main__':
         'pedestrian': profile_geometries['pedestrian'](points),
     }
     problem.matrix = PlaceMapping(places=places, geometries=geometries)
-    problem.jobs = jobs
     problem.agents = problem.agents[:5]
-
     meta_solver = EaptekaSolver(problem, "rust")
     solutions = meta_solver.solve()
     k = 0

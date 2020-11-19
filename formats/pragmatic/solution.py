@@ -8,9 +8,10 @@ from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 
 
-def search_depot(location: Dict[str, float], problem: RichVRPProblem) -> Optional[Depot]:
-    """ Ищем склад в списках складов в заданной проблеме
-    """
+def search_depot(
+    location: Dict[str, float], problem: RichVRPProblem
+) -> Optional[Depot]:
+    """Ищем склад в списках складов в заданной проблеме"""
     ret_point: Optional[Depot] = None
     lat = location['lat']
     lon = location['lon']
@@ -24,8 +25,7 @@ def search_depot(location: Dict[str, float], problem: RichVRPProblem) -> Optiona
 
 
 def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
-    """ Ищем заказ в списках заказов в заданной проблеме
-    """
+    """Ищем заказ в списках заказов в заданной проблеме"""
     ret_point: Optional[Job] = None
 
     for job in problem.jobs:
@@ -37,12 +37,11 @@ def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
 
 
 def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
-    """ Ищем агента по его имени (vehicle_id) в заданной проблеме
-    """
+    """Ищем агента по его имени (vehicle_id) в заданной проблеме"""
     ret_agent: Optional[Agent] = None
 
     for agent in problem.agents:
-        if agent.name == agent_name:
+        if agent.name == agent_name or str(agent.id) == agent_name:
             ret_agent = agent
             break
 
@@ -71,12 +70,12 @@ def load_solution(problem: RichVRPProblem, pragmatic_solution: str) -> VRPSoluti
 
         waypoints: List[Visit] = []
         for point in tour['stops']:
-            job_type: str = point['activities']['type']
+            job_type: str = point['activities'][0]['type']
 
             if job_type == 'departure':  # точка выезда курьера
                 waypoint = agent.start_place
             elif job_type == 'delivery':  # точка доставка заказа
-                waypoint = search_job(point['activities']['jobId'], problem)
+                waypoint = search_job(int(point['activities'][0]['jobId']), problem)
             elif job_type == 'arrival':  # точка окончания пути курьера
                 waypoint = agent.end_place
             elif job_type == 'break':  # TODO: break points
@@ -91,7 +90,11 @@ def load_solution(problem: RichVRPProblem, pragmatic_solution: str) -> VRPSoluti
             if waypoint is None:
                 raise Exception("Не найдена точка для rust vrp solution")
 
-            t = int(datetime.strptime(point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ').timestamp())
+            t = int(
+                datetime.strptime(
+                    point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ'
+                ).timestamp()
+            )
             waypoints.append(Visit(place=waypoint, time=t))
 
         routes.append(Plan(agent=agent, waypoints=waypoints))

@@ -24,7 +24,7 @@ os.environ["LKH3"] = "/usr/local/bin/LKH3"
 os.environ["LKH"] = "/usr/local/bin/LKH"
 os.environ["CONCORDE"] = "/usr/local/bin/concorde"
 os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
-os.environ["VRP_CLI_UBUNTU"] = "/home/h4ckit/.cargo/bin/vrp-cli"
+os.environ["VRP_CLI_UBUNTU"] = "vrp-cli"
 os.environ["VROOM"] = ""  # Nikita Vyukov - временная заглушка
 
 CONCORDE_PATH = os.environ["CONCORDE"]

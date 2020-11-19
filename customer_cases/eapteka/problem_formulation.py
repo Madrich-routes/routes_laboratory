@@ -20,6 +20,7 @@ from utils.types import Array
 @dataclass
 class AptekaParams:
     """Набор параметров, которые мы угадываем сами, так как в данных их нету."""
+
     delay_pharmacy: int
     delay_stock: int
 
@@ -71,7 +72,9 @@ def build_eapteka_problem(
     # TODO: Проставить агентам их депо!
     # TODO: Обработать повторные точки!
 
-    fill_missing_columns(stocks=stocks_df, couriers=couriers_df, points=points_df, params=params)
+    fill_missing_columns(
+        stocks=stocks_df, couriers=couriers_df, points=points_df, params=params
+    )
 
     # получаем классы из датафреймов
     depots = build_depots(stocks=stocks_df)
@@ -80,9 +83,7 @@ def build_eapteka_problem(
 
     return RichVRPProblem(
         place_mapping=build_place_mapping(
-            depots=depots,
-            jobs=jobs,
-            profile_geometries=profile_geometries
+            depots=depots, jobs=jobs, profile_geometries=profile_geometries
         ),
         agents=agents,
         jobs=jobs,
@@ -112,8 +113,12 @@ def fill_missing_columns(
     stocks.loc[:, 'delay'] = params.delay_pharmacy
     stocks.loc[stocks.type == 'stock', 'delay'] = params.delay_stock
 
-    couriers.loc[couriers.profile == 'pedestrian', 'max_weight'] = params.pedestrian_max_weight
-    couriers.loc[couriers.profile == 'pedestrian', 'max_volume'] = params.pedestrian_max_volume
+    couriers.loc[
+        couriers.profile == 'pedestrian', 'max_weight'
+    ] = params.pedestrian_max_weight
+    couriers.loc[
+        couriers.profile == 'pedestrian', 'max_volume'
+    ] = params.pedestrian_max_volume
 
     couriers.loc[couriers.profile == 'driver', 'max_weight'] = params.driver_max_weight
     couriers.loc[couriers.profile == 'driver', 'max_volume'] = params.driver_max_volume
@@ -173,10 +178,8 @@ def build_agents(
             name=row['name'],
             priority=row['priority'],
             compatible_depots=copy(depots),
-
             start_place=None,  # эти поля будут заполняться потом
             end_place=None,
-
             costs=AgentCosts(time=row['cost']),
             type=AgentType(
                 id=row['profile'],
@@ -189,6 +192,7 @@ def build_agents(
         axis='columns',
     ).tolist()
     return result
+
 
 def build_depots(
     stocks: pd.DataFrame,
@@ -232,7 +236,9 @@ def build_jobs(
     Лист джобов
     """
 
-    depots_dict = {d.name: d for d in depots}  # словрь депо, чтобы получать депо для точки
+    depots_dict = {
+        d.name: d for d in depots
+    }  # словрь депо, чтобы получать депо для точки
 
     return points.apply(
         lambda row: Job(
@@ -247,7 +253,7 @@ def build_jobs(
             priority=row.priority,
             depots=[depots_dict[row.depot]],
         ),
-        axis='columns'
+        axis='columns',
     ).tolist()
 
 
@@ -333,7 +339,20 @@ def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
     df["id"] = df.index
 
     return df[
-        ["id", "name", "depot", "geozone", "t_from", "t_to", "priority", "lat", "lon", "weight", "volume", "price"]
+        [
+            "id",
+            "name",
+            "depot",
+            "geozone",
+            "t_from",
+            "t_to",
+            "priority",
+            "lat",
+            "lon",
+            "weight",
+            "volume",
+            "price",
+        ]
     ].copy()
 
 
@@ -353,7 +372,9 @@ def preprocess_stocks(stocks: pd.DataFrame) -> pd.DataFrame:
     time_regex = r"([0-9]{0,2})-([0-9]{0,2})$"
     times = df["График работы"].replace("круглосуточно", "0-24")
 
-    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype("int")
+    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype(
+        "int"
+    )
     df["t_to"] = times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int")
     df["lat"] = df["Широта"].astype("float")
     df["lon"] = df["Долгота"].astype("float")
@@ -382,11 +403,15 @@ def preprocess_couriers(couriers: pd.DataFrame) -> pd.DataFrame:
     df = couriers
     time_regex = r"([0-9]{0,2})-([0-9]{0,2})$"
     times = df["Интервал работы"]
-    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype("int")
+    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype(
+        "int"
+    )
     df["t_to"] = times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int")
 
     df["cost"] = df["Стоимость 1 заказа"].astype("int")
-    df["profile"] = df["Должность"].map(lambda x: {"Курьер": "pedestrian", "Водитель": "driver"}[x])
+    df["profile"] = df["Должность"].map(
+        lambda x: {"Курьер": "pedestrian", "Водитель": "driver"}[x]
+    )
     df["name"] = df["Сотрудник"]
     df["priority"] = df["Приоритет"].map(lambda x: math.isfinite(x))
     df["id"] = df.index

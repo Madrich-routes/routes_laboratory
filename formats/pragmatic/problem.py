@@ -49,8 +49,9 @@ def dumps_problem(
             int(agent.type.capacity_constraints[0] * 1000),
             int(agent.type.capacity_constraints[1] * 1000000),
         ]
+        agent.time_windows = pragmatic.convert_tw(agent.time_windows)
         vehicle = pragmatic.Vehicle(
-            typeId=str(agent.type.id),  # можно type.name
+            typeId=str(agent.type.id) + str(agent.id),  # можно type.name
             vehicleIds=[str(agent.id)],  # можно agent.name
             profile=agent.type.profile,
             capacity=capacity,
