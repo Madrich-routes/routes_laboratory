@@ -10,6 +10,7 @@ from formats.pragmatic.solution import load_solution
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from solvers.base import BaseSolver
+from solvers.external.vrp_cli.transformer import VrpCliTransformer
 from solvers.external.cmd import CommandRunner
 from utils.logs import logger
 
@@ -130,6 +131,8 @@ class RustSolver(BaseSolver):
         """
         logger.info(f"Решаем vrp_cli {problem.info()} ...")
 
+        transformer = VrpCliTransformer()
+        problem = transformer.transform(problem)
         self.problem = problem  # сохраняем проблему
         self.build_data()  # получаем все данные для солвера из проблемы
 
@@ -161,4 +164,4 @@ class RustSolver(BaseSolver):
         if self.return_geojson:
             self.solution_geojson = runner.output_files_data[geojson_file]
 
-        return load_solution(problem, self.solution_data)
+        return transformer.restore(load_solution(problem, self.solution_data))

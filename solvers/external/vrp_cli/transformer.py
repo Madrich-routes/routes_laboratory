@@ -12,6 +12,7 @@ from models.rich_vrp.problem import RichVRPProblem
 
 class VrpCliTransformer(BaseTransformer):
     """Преобразуем проблему так, чтобы в ней не было повторных точек. """
+
     def __init__(self):
         self.duplicates_dict: Dict[Place, Tuple[float, float]] = {}
 
@@ -28,14 +29,12 @@ class VrpCliTransformer(BaseTransformer):
     ) -> VRPSolution:
         """Восстанавливаем решение оригинальной задачи. """
         for p in solution.problem.places():
-            p.lat, p.lon = self.duplicates_dict[p]
+            if p in self.duplicates_dict:
+                p.lat, p.lon = self.duplicates_dict[p]
 
         return solution
 
-    def _deduplicate_points(
-        self,
-        problem: RichVRPProblem
-    ) -> RichVRPProblem:
+    def _deduplicate_points(self, problem: RichVRPProblem) -> RichVRPProblem:
         """Дедуплицируются точки в проблеме
 
         Сначала находятся одинаковые точки, потом к ним прибавляется небольшое число,
