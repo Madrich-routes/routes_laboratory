@@ -540,3 +540,4 @@ buildNumber.properties
 .virtual_documents
 
 data/big
+data/tmp/
