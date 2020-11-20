@@ -1,9 +1,9 @@
+import json
 import os
 import subprocess
-import sys
-import json
 from pathlib import Path
 from typing import Dict, List
+
 from utils.serialization import set_default
 
 
@@ -124,3 +124,13 @@ class CommandRunner:
             lines += line
 
         return lines
+
+
+if __name__ == "__main__":
+    CommandRunner(
+        command='ls',
+        input_files={},
+        output_files={},
+        files_dir='.',
+        base_dir='.',
+    ).run()

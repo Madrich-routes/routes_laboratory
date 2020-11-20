@@ -72,7 +72,7 @@ class RustSolver(BaseSolver):
                 Строковое представление команды для запуска солвера
         """
         params = [
-            f"{settings.VRP_CLI_UBUNTU_PATH} solve",  # вызываем решалку
+            f"{settings.VRP_CLI_PATH} solve",  # вызываем решалку
             f"pragmatic {path / problem_file}",  # файл, в котором сфорумлирована проблема
             f'{" ".join(["-m " + str(path / str(i)) for i in self.matrix_files])}',  # матрицы расстояний
             f"-o {path / solution_file}",  # куда писать результат
@@ -132,7 +132,7 @@ class RustSolver(BaseSolver):
         self.problem = problem  # сохраняем проблему
         self.build_data()  # получаем все данные для солвера из проблемы
 
-        # Получем входные файлы
+        logger.info('Строим входные файлы vrp-cli...')
         input_files = {problem_file: self.problem_data}
         if self.initial_solution_file:
             input_files[self.initial_solution_file] = (self.initial_solution_data,)
@@ -146,7 +146,7 @@ class RustSolver(BaseSolver):
             with open((problem_dir / matrix), "w") as f:
                 ujson.dump(self.matrix_files[matrix], f)
 
-        # Запускаем саму комманду
+        logger.info('Запускаем солвер...')
         runner = CommandRunner(
             command=self.command(problem_dir),
             input_files=input_files,

@@ -18,28 +18,15 @@ DATA_DIR = BASE_DIR / 'data'
 TMP_DIR = DATA_DIR / 'tmp'
 CACHE_DIR = TMP_DIR / 'cache'
 
-os.environ["LKH2"] = "/usr/local/bin/LKH2"
-os.environ["LKH3"] = "/usr/local/bin/LKH3"
+CONCORDE_PATH = env.path('CONCORDE')
+LKH3_PATH = env.path('LKH3')
+LKH2_PATH = env.path('LKH2')
+VRP_CLI_PATH = env.path('VRP_CLI')
+VROOM_PATH = env.path('VROOM')
 
-os.environ["LKH"] = "/usr/local/bin/LKH"
-os.environ["CONCORDE"] = "/usr/local/bin/concorde"
-os.environ["VRP_CLI"] = "/usr/local/bin/vrp-cli"
-os.environ["VRP_CLI_UBUNTU"] = "/home/h4ckit/.cargo/bin/vrp-cli"
-os.environ["VROOM"] = ""  # Nikita Vyukov - временная заглушка
+HERE_API_KEY = env.str('HERE_API_KEY')
 
-CONCORDE_PATH = os.environ["CONCORDE"]
-LKH3_PATH = os.environ["LKH"]
-VRP_CLI_PATH = os.environ["VRP_CLI"]
-VRP_CLI_UBUNTU_PATH = os.environ["VRP_CLI_UBUNTU"]
-VROOM_PATH = os.environ["VROOM"]
-
-HERE_API_KEY = "MOH6CaTy-5eQQmLRStCMT2wNujETT1ld7n8OZwOSGHo"
-
-PROBLEM_FILE = f"/tmp/problem_lkh.{os.getpid()}.tsp"
-LKH_PAR_FILE = f"/tmp/parameters_lkh.{os.getpid()}.par"
-VRP_RES_FILE = f"/tmp/solution_lkh.{os.getpid()}.sol"
-
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = env.str('REDIS_HOST')
 
 # ------------------------------------------------ Адреса OSRM-серверов -------------------------------------------
 OSRM_CAR_HOST = 'dimitrius.keenetic.link'
