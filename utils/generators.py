@@ -1,14 +1,17 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
-from geo.providers import fake_module
-from solvers.madrich.problems.models import Cost, Matrix, Point, Window
-from solvers.madrich.problems.vrp_demo.models import Courier, Job, Storage
-from solvers.madrich.tests.generators import generate_points
+array = np.ndarray
 
 
-def generate_storage(n: int, loc: Point, load=300):
+def generate_points(n: int, min_x=55.65, max_x=55.82, min_y=37.45, max_y=37.75) -> array:
+    """Массив рандомных точек в квадрате."""
+    diff_x, diff_y = max_x - min_x, max_y - min_y
+    return np.random.random_sample((n, 2)) * np.array([diff_x, diff_y]) + np.array([min_x, min_y])
+
+
+def generate_storage(n: int, loc: Tuple[float, float], load=300):
     w = Window(("2020-10-01T10:00:00Z", "2020-10-01T20:00:00Z"))
     storage = Storage(f'storage_{n}', load, ['brains'], loc, w)
     return storage

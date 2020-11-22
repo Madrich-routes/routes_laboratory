@@ -50,11 +50,5 @@ class Agent:
     # TODO:: здесь заглушка
     def __post_init__(self):
         if self.start_place is None:
-            # if len(self.compatible_depots) > 1:
-            #     print(len(self.compatible_depots))
-            #     raise Exception
-            # else:
-            #     self.start_place = self.compatible_depots[0]
-            #     self.end_place = self.compatible_depots[0]
             self.start_place = next(iter(self.compatible_depots))
             self.end_place = next(iter(self.compatible_depots))

@@ -55,17 +55,11 @@ class PlanReport:
 
     def depot_stops(self) -> int:
         """Общее количество заездов в депо."""
-        return len(
-            v for v in self.plan.waypoints
-            if isinstance(v.place, Depot)
-        )
+        return len([v for v in self.plan.waypoints if isinstance(v.place, Depot)])
 
     def job_stops(self):
         """Общее количество обработаных джоб."""
-        return len(
-            v for v in self.plan.waypoints
-            if isinstance(v.place, Job)
-        )
+        return len([v for v in self.plan.waypoints if isinstance(v.place, Job)])
 
     def delay_time(self) -> int:
         """Суммарная задержка."""

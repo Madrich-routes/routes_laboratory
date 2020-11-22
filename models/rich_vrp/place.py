@@ -1,8 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Optional, Tuple, Sequence
-# from utils.types import Array
-import utils
+from typing import Optional, Tuple, List
+
 
 @dataclass
 class Place:
@@ -21,10 +21,10 @@ class Place:
     y: Optional[int] = None
 
     delay: int = 0  # сколько времени нужно пробыть в этом месте
-    time_windows: Sequence[Tuple[int, int]] = field(default_factory=list)  # когда там можно находиться
+    time_windows: List[Tuple[int, int]] = field(default_factory=list)  # когда там можно находиться
 
     def __post_init__(self):
-        self.time_windows = tuple(self.time_windows)
+        self.time_windows = list(self.time_windows)
 
     def __hash__(self):
         return hash(self.descriptor)

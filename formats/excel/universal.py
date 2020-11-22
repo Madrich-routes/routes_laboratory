@@ -26,12 +26,59 @@ class StandardDataFormat:
         [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]
     """
 
-    def __init__(self):
-        self.jobs: pd.DataFrame = None
-        self.agents: pd.DataFrame = None
-        self.depots: pd.DataFrame = None
+    @staticmethod
+    def generate_dataframes(jobs_list: list, agents_list: list, depots_list: list) -> tuple:
+        """Генерация фреймов для экселек
 
-    def to_excel(self, problem: RichVRPProblem, path: str):
+        Parameters
+        ----------
+        jobs_list: list
+        agents_list: list
+        depots_list: list
+
+        Returns
+        -------
+        Фреймы: задачи, агенты, демо
+        """
+        jobs = pd.DataFrame(
+            jobs_list,
+            columns=[
+                'Широта',
+                'Долгота',
+                'Адрес',
+                'Временные рамки',
+                'Характеристики',
+                'Время обслуживания',
+                'Цена',
+                'Приоритет',
+            ],
+        )
+
+        agents = pd.DataFrame(
+            agents_list,
+            columns=[
+                'Имя',
+                'График работы',
+                'Тип',
+                'Начальная точка',
+                'Конечная точка',
+            ],
+        )
+
+        depots = pd.DataFrame(
+            depots_list,
+            columns=[
+                'Адрес',
+                'Широта',
+                'Долгота',
+                'График работы',
+                'Время обслуживания',
+            ],
+        )
+        return jobs, agents, depots
+
+    @staticmethod
+    def to_excel(problem: RichVRPProblem, path: str):
         """Конвертируем RichVRPProblem в наш Excel.
 
         Parameters
@@ -78,48 +125,14 @@ class StandardDataFormat:
             for depot in problem.depots
         ]
 
-        jobs = pd.DataFrame(
-            jobs_list,
-            columns=[
-                'Широта',
-                'Долгота',
-                'Адрес',
-                'Временные рамки',
-                'Характеристики',
-                'Время обслуживания',
-                'Цена',
-                'Приоритет',
-            ],
-        )
-
-        agents = pd.DataFrame(
-            agents_list,
-            columns=[
-                'Имя',
-                'График работы',
-                'Тип',
-                'Начальная точка',
-                'Конечная точка',
-            ],
-        )
-
-        depots = pd.DataFrame(
-            depots_list,
-            columns=[
-                'Адрес',
-                'Широта',
-                'Долгота',
-                'График работы',
-                'Время обслуживания',
-            ],
-        )
-
+        jobs, agents, depots = StandardDataFormat.generate_dataframes(jobs_list, agents_list, depots_list)
         with pd.ExcelWriter(path, datetime_format='DD.MM.YYYY HH:MM:SS') as writer:
             jobs.to_excel(writer, sheet_name='Заказы')
             agents.to_excel(writer, sheet_name='Курьеры')
             depots.to_excel(writer, sheet_name='Склады')
 
-    def from_excel(self, path: str) -> RichVRPProblem:
+    @staticmethod
+    def from_excel(path: str) -> RichVRPProblem:
         """Конвертируем наш Excel в RichVRPProblem.
 
         Parameters
@@ -156,7 +169,7 @@ class StandardDataFormat:
                 time_windows=str_to_time_windows(row['Временные рамки']),
                 delay=row['Время обслуживания'],
                 amounts=amounts,
-                required_skills=[],
+                required_skills=set(),
                 price=row['Цена'],
                 priority=row['Приоритет'],
             )
@@ -170,10 +183,10 @@ class StandardDataFormat:
                 costs=costs,
                 amounts=[],
                 time_windows=str_to_time_windows(row['График работы']),
-                compatible_depots=[],
+                compatible_depots=set(),
                 start_place=row['Начальная точка'],
                 end_place=row['Конечная точка'],
-                type=AgentType(0, [], costs, [], row['Тип']),
+                type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
                 name=row['Имя'],
             )
             agents_list.append(agent)
@@ -196,6 +209,63 @@ class StandardDataFormat:
             depots_list,
             [],
         )
+
+    @staticmethod
+    def generate_random(jobs: int, storages: int, couriers: int) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+        """Генерируем рандомную задачу
+        Parameters
+        ----------
+        jobs: int, (всего будет задач jobs * storages)
+        storages: int,
+        couriers: int
+
+        Returns
+        -------
+        3 фрейма с Заказами, Курьерами, Складами
+        """
+        jobs_list = []
+
+        agents_list = []
+
+        depots_list = []
+
+        jobs = pd.DataFrame(
+            jobs_list,
+            columns=[
+                'Широта',
+                'Долгота',
+                'Адрес',
+                'Временные рамки',
+                'Характеристики',
+                'Время обслуживания',
+                'Цена',
+                'Приоритет',
+            ],
+        )
+
+        agents = pd.DataFrame(
+            agents_list,
+            columns=[
+                'Имя',
+                'График работы',
+                'Тип',
+                'Начальная точка',
+                'Конечная точка',
+            ],
+        )
+
+        depots = pd.DataFrame(
+            depots_list,
+            columns=[
+                'Адрес',
+                'Широта',
+                'Долгота',
+                'График работы',
+                'Время обслуживания',
+            ],
+        )
+
+        return jobs, agents, depots
 
 
 def time_windows_to_str(time_windows: List[Tuple[int, int]]) -> str:
@@ -248,7 +318,6 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
 
 
 if __name__ == '__main__':
-
     def main():
         start = int(datetime(2020, 11, 3, 8, 00).timestamp())
         end = int(datetime(2020, 11, 3, 20, 00).timestamp())
@@ -259,9 +328,9 @@ if __name__ == '__main__':
             costs=costs,
             amounts=[10, 20],
             time_windows=[(start, end)],
-            compatible_depots=(depot),
-            start_place=0,
-            end_place=0,
+            compatible_depots={depot},
+            start_place=None,
+            end_place=None,
             type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
             name='Алексей',
         )
@@ -275,7 +344,7 @@ if __name__ == '__main__':
             delay=5,
             time_windows=[(start, end), (start, end)],
             amounts=np.array([10, 20]),
-            required_skills=[2],
+            required_skills={2},
             price=5,
             depots=[depot],
         )
@@ -291,5 +360,6 @@ if __name__ == '__main__':
         test.to_excel(res, settings.DATA_DIR / 'tests/tst.xlsx')
         test.from_excel(settings.DATA_DIR / 'tests/tst.xlsx')
         print('ok')
+
 
     main()

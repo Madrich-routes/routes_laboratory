@@ -111,9 +111,14 @@ class EaptekaSolver:
                 end_window,
             ]
             for load in loads:
+                # Это несколько склеившихся solution
+                # если между solution больше времени, чем время переезда, то они не склеились
+                # start depot + петли -> переезд -> некое депо + петли -> ... -> end depot + петли с заказами
                 start_depot, start_time, end_depot, end_time = load
                 # время перемещения между складам
+                # я должен успеть к start time, из depot в start depot
                 start_time -= self.time_between_depots(depot, start_depot, agent_type)
+                # я оставляю время на переезд из end_depot в depot
                 end_time += self.time_between_depots(end_depot, depot, agent_type)
                 #  каждое окно меняем с учтом времени работы склада и поездки на склад
                 new_time_windows = []
