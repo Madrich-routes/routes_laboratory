@@ -18,10 +18,7 @@ class BaseGeometry(abc.ABC):
     статические матрицы, евклидовы матрицы, etc.
     """
 
-    def __init__(
-        self,
-        points: Array
-    ):
+    def __init__(self, points: Array):
         self.points = points
 
     def size(self):
@@ -40,7 +37,7 @@ class BaseGeometry(abc.ABC):
 
     def line_dist(self, i, j):
         """Расстояние между точкам по прямой."""
-        return geo_distance(self.points[i], self.points[j]).m
+        return geo_distance(self.points[i], self.points[j])
 
     @lru_cache
     def line_dist_matrix(self, **kwargs):
@@ -51,15 +48,19 @@ class BaseGeometry(abc.ABC):
     @lru_cache
     def dist_matrix(self, **kwargs) -> Array:
         """Дефолтная реализация матрицы расстояния."""
-        return np.array([
-            [self.dist(i, j, **kwargs) for i in range(self.size())]
-            for j in range(self.size())
-        ])
+        return np.array(
+            [
+                [self.dist(i, j, **kwargs) for i in range(self.size())]
+                for j in range(self.size())
+            ]
+        )
 
     @lru_cache
     def time_matrix(self, **kwargs) -> Array:
         """Дефолтная реализация матрицы времени."""
-        return np.array([
-            [self.time(i, j, **kwargs) for i in range(self.size())]
-            for j in range(self.size())
-        ])
+        return np.array(
+            [
+                [self.time(i, j, **kwargs) for i in range(self.size())]
+                for j in range(self.size())
+            ]
+        )

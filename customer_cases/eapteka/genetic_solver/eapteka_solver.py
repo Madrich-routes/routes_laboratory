@@ -1,9 +1,10 @@
 from functools import partial
 from copy import deepcopy
 from typing import List, Tuple, Optional
+from collections import Counter
 import numpy as np
 
-from models.rich_vrp import Depot, Agent, Job, VRPSolution
+from models.rich_vrp import Depot, Agent, Job, VRPSolution, Visit
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 from solvers.external.vrp_cli.solver import RustSolver
@@ -29,6 +30,7 @@ class EaptekaSolver:
     ):
         self.problem = problem
         self.solver = solver
+        self.matrix = problem.matrix
 
     def couriers_replace(self, depot: Depot, agents: List[Agent]):
         """
@@ -44,23 +46,22 @@ class EaptekaSolver:
             agent.start_place.lat, agent.start_place.lon = lat, lon
             agent.end_place.lat, agent.end_place.lon = lat, lon
 
-    def time_between_depots(self, start: Depot, end: Depot) -> int:
+    def time_between_depots(self, start: Visit, end: Visit, agent_type: str) -> int:
         """
         Функция позволяет найти время перемещения между складами.
 
         Parameters
             ----------
-            depot: Depot
-            end: Depot
+            depot: Visit
+            end: Visit
+            agent_type: str
 
         Returns
             -------
             int - время перемещения
         """
-        return self.problem.matrix.time(
-            self.problem.matrix.place(self.problem.depots.index(start)),
-            self.problem.matrix.place(self.problem.depots.index(end)),
-        )
+        matrix = self.matrix.geometries[agent_type].time_matrix()
+        return matrix[self.matrix.index(start.place if start), self.matrix.index(end.place)]
 
     # TODO разделить сложную функцию
     def cut_window(
@@ -68,6 +69,7 @@ class EaptekaSolver:
         window: Tuple[int, int],
         depot: Depot,
         loads: List[Tuple[Depot, int, Depot, int]],
+        agent_type: str,
     ) -> Optional[Tuple[int, int]]:
         """
         Функция пересчета временного окна курьера.
@@ -77,6 +79,7 @@ class EaptekaSolver:
             window: Tuple[int, int]
             depot: Depot
             loads: List[Tuple[Depot, int, Depot, int]]
+            agent_type: str
 
         Returns
             -------
@@ -110,8 +113,8 @@ class EaptekaSolver:
             for load in loads:
                 start_depot, start_time, end_depot, end_time = load
                 # время перемещения между складам
-                start_time -= self.time_between_depots(depot, start_depot)
-                end_time += self.time_between_depots(end_depot, depot)
+                start_time -= self.time_between_depots(depot, start_depot, agent_type)
+                end_time += self.time_between_depots(end_depot, depot, agent_type)
                 #  каждое окно меняем с учтом времени работы склада и поездки на склад
                 new_time_windows = []
                 for tw in time_windows:
@@ -155,7 +158,7 @@ class EaptekaSolver:
 
         for solution in solutions:
             for route in solution.routes:
-                if route.agent == agent:
+                if route.agent.id == agent.id:
                     plans.append(route)
                     break
 
@@ -175,7 +178,7 @@ class EaptekaSolver:
                 this_time = plan.waypoints[0].time
                 this_depot = plan.waypoints[1]
                 if (this_time - prev_end) == self.time_between_depots(
-                    prev_depot, curr_depot
+                    prev_depot, curr_depot, plan.agent.type.name
                 ):
                     prev_depot = this_depot
                     prev_end = plan.waypoints[-1].time
@@ -209,7 +212,9 @@ class EaptekaSolver:
             flag = False
             for j in range(len(agent.time_windows)):
                 # с учетом переездов
-                window = self.cut_window(agent.time_windows[j], depot, loaded)
+                window = self.cut_window(
+                    agent.time_windows[j], depot, loaded, agent.type.name
+                )
                 if window is None:
                     continue
                 agent.time_windows[j] = window
@@ -275,7 +280,11 @@ class EaptekaSolver:
             agent.time_windows = new_windows
 
     def prepare_problem(
-        self, copy_agents: List[Agent], initial_jobs: List[Job], depot: Depot
+        self,
+        copy_agents: List[Agent],
+        initial_jobs: List[Job],
+        depot: Depot,
+        fin: bool = False,
     ):
         """
         Функция подготовки проблемы к запуску на текущий склад
@@ -285,11 +294,15 @@ class EaptekaSolver:
             copy_agents: List[Agent]
             initial_jobs: List[Job]
             depot: Depot
+            fin = False: bool - финальная ли это версия проблемы
         Returns
             -------
         """
         self.problem.agents = copy_agents
-        self.problem.jobs = [job for job in initial_jobs if depot in job.depots]
+        if fin:
+            self.problem.jobs = initial_jobs
+        else:
+            self.problem.jobs = [job for job in initial_jobs if depot in job.depots]
         places = [depot] + list(self.problem.jobs)
         points = np.array([[p.lat, p.lon] for p in places])
 
@@ -303,7 +316,39 @@ class EaptekaSolver:
         }
         self.problem.matrix = PlaceMapping(places=places, geometries=geometries)
 
-    def solve(self) -> List[VRPSolution]:
+    def get_master_solution(
+        self, solutions: List[VRPSolution], problem: RichVRPProblem
+    ) -> Optional[List[VRPSolution]]:
+        """
+        Функция собирает из разрозненных солюшенов для каждого склада единый солюшен. В результате получаем полное решение.
+
+        Parameters
+            ----------
+            solutions: List[VRPSolution]
+            problem: RichVRPProblem
+
+        Returns
+            -------
+            List[VRPSolution]
+        """
+        if len(solutions) > 0:
+            info = solutions[0].info
+            routes = solutions[0].routes
+            for i in range(1, len(solutions)):
+                info["cost"] += solutions[i].info["cost"]
+                info["distance"] += solutions[i].info["distance"]
+                info["duration"] += solutions[i].info["duration"]
+                info["times"]["break"] += solutions[i].info["times"]["break"]
+                info["times"]["driving"] += solutions[i].info["times"]["driving"]
+                info["times"]["serving"] += solutions[i].info["times"]["serving"]
+                info["times"]["waiting"] += solutions[i].info["times"]["waiting"]
+                routes += solutions[i].routes
+            master_solution = VRPSolution(problem=problem, routes=routes, info=info)
+            return master_solution
+        else:
+            return None
+
+    def solve(self) -> VRPSolution:
         """
         Функция запуска солвера для каждого склада отдельно. В результате получаем полное решение.
 
@@ -312,7 +357,7 @@ class EaptekaSolver:
 
         Returns
             -------
-            List[VRPSolution]
+            VRPSolution
         """
         solutions: List[VRPSolution] = []
         if self.solver == "rust":
@@ -338,4 +383,7 @@ class EaptekaSolver:
             self.change_window(solution, initial_agents)
             solutions.append(solution)
 
-        return solutions
+        # собираем финальный солюшн
+        self.prepare_problem(initial_agents, initial_jobs, self.problem.depots[0], True)
+        fin_solution = self.get_master_solution(solutions, self.problem)
+        return fin_solution

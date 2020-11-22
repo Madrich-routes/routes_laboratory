@@ -5,6 +5,7 @@ from customer_cases.eapteka.problem_formulation import (
     build_eapteka_problem,
     AptekaParams,
 )
+from formats.api import export
 from datetime import datetime
 from models.rich_vrp.geometries.geometry import HaversineGeometry
 from models.rich_vrp.place_mapping import PlaceMapping
@@ -58,5 +59,7 @@ if __name__ == '__main__':
     problem.matrix = PlaceMapping(places=places, geometries=geometries)
     problem.agents = problem.agents[:5]
     meta_solver = EaptekaSolver(problem, "rust")
-    solutions = meta_solver.solve()
+    solution = meta_solver.solve()
+
+    api_json = export(solution)
     k = 0

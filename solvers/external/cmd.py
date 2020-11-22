@@ -79,7 +79,7 @@ class CommandRunner:
 
         # Считываем результаты, которые в файлах
         for filename in self.output_files:
-            with open(filename, "r") as f:
+            with open(filename, "r", encoding='utf-8') as f:
                 self.output_files_data[filename] = f.read()
 
         self._remove_files()

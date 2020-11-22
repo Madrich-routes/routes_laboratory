@@ -91,7 +91,7 @@ class PlaceMapping:
         Расстояние
         """
         i1, i2 = self.mapping[p1], self.mapping[p2]
-        raise self.geometries[profile].dist(i1, i2, **kwargs)
+        return self.geometries[profile].dist(i1, i2, **kwargs)
 
     def time(self, p1: Place, p2: Place, profile: str, **kwargs) -> int:
         """Посчитать время.

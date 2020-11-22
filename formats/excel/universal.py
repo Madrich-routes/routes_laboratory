@@ -44,10 +44,14 @@ class StandardDataFormat:
         """
         jobs_list = [
             [
-                job.lat, job.lon, '',
+                job.lat,
+                job.lon,
+                '',
                 time_windows_to_str(job.time_windows),
                 ', '.join([str(i) for i in job.amounts]),
-                job.delay, job.price, job.priority,
+                job.delay,
+                job.price,
+                job.priority,
             ]
             for job in problem.jobs
         ]
@@ -56,32 +60,58 @@ class StandardDataFormat:
             [
                 agent.name,
                 time_windows_to_str(agent.time_windows),
-                agent.type.name, agent.start_place, agent.end_place,
+                agent.type.name,
+                agent.start_place,
+                agent.end_place,
             ]
             for agent in problem.agents
         ]
 
         depots_list = [
-            [depot.name, depot.lat, depot.lon, time_windows_to_str(depot.time_windows), depot.delay]
+            [
+                depot.name,
+                depot.lat,
+                depot.lon,
+                time_windows_to_str(depot.time_windows),
+                depot.delay,
+            ]
             for depot in problem.depots
         ]
 
         jobs = pd.DataFrame(
             jobs_list,
             columns=[
-                'Широта', 'Долгота', 'Адрес', 'Временные рамки',
-                'Характеристики', 'Время обслуживания', 'Цена', 'Приоритет',
+                'Широта',
+                'Долгота',
+                'Адрес',
+                'Временные рамки',
+                'Характеристики',
+                'Время обслуживания',
+                'Цена',
+                'Приоритет',
             ],
         )
 
         agents = pd.DataFrame(
             agents_list,
-            columns=['Имя', 'График работы', 'Тип', 'Начальная точка', 'Конечная точка']
+            columns=[
+                'Имя',
+                'График работы',
+                'Тип',
+                'Начальная точка',
+                'Конечная точка',
+            ],
         )
 
         depots = pd.DataFrame(
             depots_list,
-            columns=['Адрес', 'Широта', 'Долгота', 'График работы', 'Время обслуживания']
+            columns=[
+                'Адрес',
+                'Широта',
+                'Долгота',
+                'График работы',
+                'Время обслуживания',
+            ],
         )
 
         with pd.ExcelWriter(path, datetime_format='DD.MM.YYYY HH:MM:SS') as writer:
@@ -140,9 +170,10 @@ class StandardDataFormat:
                 costs=costs,
                 amounts=[],
                 time_windows=str_to_time_windows(row['График работы']),
+                compatible_depots=[],
                 start_place=row['Начальная точка'],
                 end_place=row['Конечная точка'],
-                type=AgentType(0, 0, 0, [], costs, [], row['Тип']),
+                type=AgentType(0, [], costs, [], row['Тип']),
                 name=row['Имя'],
             )
             agents_list.append(agent)
@@ -201,35 +232,64 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
 
     return [
         (
-            int(datetime.strptime(item[1:-2].split(' - ')[0], '%Y-%m-%d %H:%M:%S').timestamp()),
-            int(datetime.strptime(item[1:-2].split(' - ')[1], '%Y-%m-%d %H:%M:%S').timestamp()),
+            int(
+                datetime.strptime(
+                    item[1:-2].split(' - ')[0], '%Y-%m-%d %H:%M:%S'
+                ).timestamp()
+            ),
+            int(
+                datetime.strptime(
+                    item[1:-2].split(' - ')[1], '%Y-%m-%d %H:%M:%S'
+                ).timestamp()
+            ),
         )
         for item in sep_strings
     ]
 
 
 if __name__ == '__main__':
+
     def main():
         start = int(datetime(2020, 11, 3, 8, 00).timestamp())
         end = int(datetime(2020, 11, 3, 20, 00).timestamp())
         costs = AgentCosts()
+        depot = Depot(0, [(start, end)], 55.75, 37.61, 0, 'Адрес тут')
         agent = Agent(
             id=0,
             costs=costs,
-            value=[],
+            amounts=[10, 20],
             time_windows=[(start, end)],
+            compatible_depots=(depot),
             start_place=0,
             end_place=0,
-            type=AgentType(0, 54, 0, [], costs, [], 'Водитель'),
+            type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
             name='Алексей',
         )
-        job = Job(0, '', 55.75, 37.61, 0, 0, [(start, end), (start, end)], 5, np.array([10, 20]), [2], 5, 1)
-        depot = Depot(0, [(start, end)], 55.75, 37.61, 0, 'Адрес тут')
-        res = RichVRPProblem(DistanceMatrixGeometry(np.array([]), np.array([]), 0), [agent], [job], [depot], [])
+        job = Job(
+            id=0,
+            name='Доставка 1',
+            lat=55.75,
+            lon=37.61,
+            x=0,
+            y=0,
+            delay=5,
+            time_windows=[(start, end), (start, end)],
+            amounts=np.array([10, 20]),
+            required_skills=[2],
+            price=5,
+            depots=[depot],
+        )
+        res = RichVRPProblem(
+            DistanceMatrixGeometry(np.array([]), np.array([]), 0),
+            [agent],
+            [job],
+            [depot],
+            [],
+        )
 
         test = StandardDataFormat()
         test.to_excel(res, settings.DATA_DIR / 'tests/tst.xlsx')
         test.from_excel(settings.DATA_DIR / 'tests/tst.xlsx')
-
+        print('ok')
 
     main()
