@@ -33,7 +33,6 @@ if __name__ == '__main__':
     )
     # сокращаем проблему для скорости решения
     # для теста оставим на каждый склад по n job'ов
-    print(datetime.fromtimestamp(5))
     n = 10
     jobs_per_depot = [n for i in range(len(problem.depots))]
     jobs = []

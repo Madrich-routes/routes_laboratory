@@ -319,8 +319,12 @@ def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
     # фиксим окна с неправиьным временем
     t_to[t_to <= t_from] = 24
 
-    df["t_from"] = t_from
-    df["t_to"] = t_to
+    df["t_from"] = (
+        t_from * 60
+    )  # домножаем чтобы получить секунды - стандарную еденицу в системе
+    df["t_to"] = (
+        t_to * 60
+    )  # домножаем чтобы получить секунды - стандарную еденицу в системе
     df["priority"] = df["Приоритет"].map(lambda x: math.isfinite(x))  # парсим приоритет
 
     df["lat"] = df["lat"].astype(float)
@@ -371,11 +375,14 @@ def preprocess_stocks(stocks: pd.DataFrame) -> pd.DataFrame:
 
     time_regex = r"([0-9]{0,2})-([0-9]{0,2})$"
     times = df["График работы"].replace("круглосуточно", "0-24")
-
-    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype(
-        "int"
+    # домножаем чтобы получить секунды - стандарную еденицу в системе
+    df["t_from"] = (
+        times.map(lambda x: regex.search(time_regex, x).group(1)).astype("int") * 60
     )
-    df["t_to"] = times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int")
+    # домножаем чтобы получить секунды - стандарную еденицу в системе
+    df["t_to"] = (
+        times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int") * 60
+    )
     df["lat"] = df["Широта"].astype("float")
     df["lon"] = df["Долгота"].astype("float")
 
@@ -403,10 +410,14 @@ def preprocess_couriers(couriers: pd.DataFrame) -> pd.DataFrame:
     df = couriers
     time_regex = r"([0-9]{0,2})-([0-9]{0,2})$"
     times = df["Интервал работы"]
-    df["t_from"] = times.map(lambda x: regex.search(time_regex, x).group(1)).astype(
-        "int"
+    # домножаем чтобы получить секунды - стандарную еденицу в системе
+    df["t_from"] = (
+        times.map(lambda x: regex.search(time_regex, x).group(1)).astype("int") * 60
     )
-    df["t_to"] = times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int")
+    # домножаем чтобы получить секунды - стандарную еденицу в системе
+    df["t_to"] = (
+        times.map(lambda x: regex.search(time_regex, x).group(2)).astype("int") * 60
+    )
 
     df["cost"] = df["Стоимость 1 заказа"].astype("int")
     df["profile"] = df["Должность"].map(

@@ -61,7 +61,10 @@ class EaptekaSolver:
             int - время перемещения
         """
         matrix = self.matrix.geometries[agent_type].time_matrix()
-        return matrix[self.matrix.index(start.place if start), self.matrix.index(end.place)]
+        return matrix[
+            self.matrix.index(start.place if isinstance(start, Job) else start),
+            self.matrix.index(end.place if isinstance(end, Job) else end),
+        ]
 
     # TODO разделить сложную функцию
     def cut_window(
