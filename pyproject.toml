@@ -62,6 +62,12 @@ sobol-seq = "^0.2.0"
 pyDOE = "^0.3.8"
 chaospy = "^4.1.0"
 auromat = "^1.0.8"
+Flask = "^1.1.2"
+rq = "^1.6.1"
+Flask-RQ2 = "^18.3"
+redis = "^3.5.3"
+flake8 = "^3.8.4"
+Flask-Pydantic = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"
