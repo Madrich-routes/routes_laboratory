@@ -4,7 +4,7 @@ from typing import Iterable, Dict
 
 import numpy as np
 
-from models.rich_vrp import Place
+from models.rich_vrp.place import Place
 
 
 class PlaceMapping:
@@ -16,7 +16,8 @@ class PlaceMapping:
     ----------
     places : Точки, которые нужно добавить в маппинг
     geometries: наши геометрии в формате Dict[str, Dict[str, np.ndarray]]
-    где первой строкой является имя геометрии(driver, pedestrian), а второй - тип матрицы(dist_matrix, time_matrix)
+    где первой строкой является имя геометрии(driver, pedestrian, bicycle),
+    а второй - тип матрицы(dist_matrix, time_matrix)
     """
 
     def __init__(
