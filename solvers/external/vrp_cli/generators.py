@@ -8,7 +8,7 @@ from models.rich_vrp.depot import Depot
 from models.rich_vrp.job import Job
 from models.rich_vrp.place_mapping import PlaceMapping
 from models.rich_vrp.problem import RichVRPProblem
-from solvers.external.vrp_cli.utils import str_to_ts, to_list
+from solvers.external.vrp_cli.converters import str_to_ts, to_list
 from solvers.madrich.api_module.osrm_module import get_matrix
 
 array = np.ndarray

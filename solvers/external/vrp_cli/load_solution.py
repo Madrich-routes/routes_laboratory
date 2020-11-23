@@ -6,7 +6,7 @@ from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from models.rich_vrp.visit import Visit
-from solvers.external.vrp_cli.utils import str_to_ts
+from solvers.external.vrp_cli.converters import str_to_ts
 
 
 def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
@@ -33,21 +33,19 @@ def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
     return ret_agent
 
 
-def generate_waypoints(
-    agent: Agent, tour: Dict, problem: RichVRPProblem
-) -> List[Visit]:
+def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
     waypoints: List[Visit] = []
 
     for point in tour['stops']:
         job_type: str = point['activities'][0]['type']
 
         if job_type == 'departure':  # точка выезда курьера
-            waypoint, activity = agent.start_place, 'departure'
+            waypoint, activity = problem.depot, 'departure'
         elif job_type == 'delivery':  # точка доставка заказа
             job_id = int(point['activities'][0]['jobId'])
             waypoint, activity = search_job(job_id, problem), 'delivery'
         elif job_type == 'arrival':  # точка окончания пути курьера
-            waypoint, activity = agent.end_place, 'arrival'
+            waypoint, activity = problem.depot, 'arrival'
         elif job_type == 'reload':  # точка перезагрузки курьера
             waypoint, activity = problem.depot, 'reload'
         else:
@@ -86,7 +84,7 @@ def load_solution(problem: RichVRPProblem, solution: dict) -> VRPSolution:
         if agent is None:
             raise Exception("Не найден агент для rust vrp solution")
 
-        waypoints = generate_waypoints(agent, tour, problem)
+        waypoints = generate_waypoints(tour, problem)
         routes.append(Plan(agent=agent, waypoints=waypoints, info=tour['statistic']))
 
     return VRPSolution(problem=problem, routes=routes, info=solution['statistic'])
