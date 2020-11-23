@@ -25,7 +25,7 @@ class StandardDataFormat:
         [Адрес, Широта, Долгота, График работы, Время обслуживания]
         [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]
     4. Профили
-        id - Название - средняя скорость
+        id - Название - type - средняя скорость
     """
 
     @staticmethod

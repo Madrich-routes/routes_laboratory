@@ -1,12 +1,11 @@
 """Модуль с утилитами для обращения к OSRM серверу."""
 import urllib
-from itertools import chain
 from typing import Optional, Tuple
 from urllib.parse import quote
 
 import numpy as np
 import requests
-from fastcore.basics import null, ifnone
+from fastcore.basics import null
 from polyline import encode as polyline_encode
 
 import settings

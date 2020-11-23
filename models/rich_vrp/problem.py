@@ -19,7 +19,6 @@ class RichVRPProblem:
     agents : Список агентов, которые могут решать джобы в нашей задаче
     jobs : Список джоб, которые нужно выполнить в этой задаче
     depot : Список депо в этой задаче
-    objectives : Критерии оптимизации для этой проблемы
     name : Название этой проблемы
     """
 
@@ -29,7 +28,6 @@ class RichVRPProblem:
         agents: List[Agent],
         jobs: List[Job],
         depot: Optional[Depot],
-        objectives: List[str],
         name: Optional[str] = None
     ):
         self.name = name or uuid4()  # уникальный id этой конкретной проблемы
@@ -37,7 +35,6 @@ class RichVRPProblem:
         self.agents = agents
         self.jobs = jobs
         self.depot = depot
-        self.objectives = objectives
 
     def info(self) -> str:
         """Базовая статистика проблемы.
@@ -49,8 +46,7 @@ class RichVRPProblem:
         return (
             f'problem_name: {self.name}, '
             f'agents: {len(self.agents)}, '
-            f'jobs: {len(self.jobs)}, '
-            f'objectives: {self.objectives}'
+            f'jobs: {len(self.jobs)}'
         )
 
     def profiles(self) -> Set[str]:
