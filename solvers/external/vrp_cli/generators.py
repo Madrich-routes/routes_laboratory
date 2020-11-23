@@ -40,8 +40,8 @@ def generate_points(
 
 
 def generate_depot(depot_id: int, loc: Tuple[float, float], load=300):
-    start = 10 + randint(-2, 2)
-    end = 20 + randint(-2, 2)
+    start = 10  # + randint(-2, 2)
+    end = 20  # + randint(-2, 2)
     tw = [
         (
             convert_from_str(f'2020-10-01T{start}:00:00Z'),
@@ -62,7 +62,7 @@ def generate_depot(depot_id: int, loc: Tuple[float, float], load=300):
 
 def generate_window(i: int) -> Tuple[int, int]:
     return convert_from_str(f"2020-10-01T{10 + (i % 4)}:00:00Z"), convert_from_str(
-        f"2020-10-01T{(12 + (i % 5))}:00:00Z"
+        f"2020-10-01T{(12 + (i % 4))}:00:00Z"
     )
 
 
@@ -97,9 +97,9 @@ def generate_profile() -> str:
         return 'driver'
 
 
-def generate_agent(profile: str, agent_id: int, depots: Set[Depot], val=20) -> Agent:
-    start = 10 + randint(-2, 2)
-    end = 20 + randint(-2, 2)
+def generate_agent(profile: str, agent_id: int, depots: List[Depot], val=20) -> Agent:
+    start = 10  # + randint(-2, 2)
+    end = 20  # + randint(-2, 2)
     tw = [
         (
             convert_from_str(f'2020-10-01T{start}:00:00Z'),
@@ -112,9 +112,9 @@ def generate_agent(profile: str, agent_id: int, depots: Set[Depot], val=20) -> A
         costs={"fixed": 22.0, "distance": 0.0002, "time": 0.004806},
         capacity_constraints=[val, val],
         time_windows=tw,
-        compatible_depots=depots,
-        start_place=None,
-        end_place=None,
+        compatible_depots=set(depots),
+        start_place=depots[0],
+        end_place=depots[0],
         profile=profile,
         skills=[],
     )
@@ -126,10 +126,10 @@ def generate_vrp(jobs: int, agents: int) -> RichVRPProblem:
     pts = generate_points(size)
     points = to_list(pts)
     depot = generate_depot(0, points[0])
-    jobs_list = generate_jobs(points[1:-1], depot)
+    jobs_list = generate_jobs(points[1:], depot)
     agents_list = []
     for i in range(agents):
-        agents_list.append(generate_agent(generate_profile(), i, {depot}))
+        agents_list.append(generate_agent(generate_profile(), i, [depot]))
 
     geometries = {
         "driver": {

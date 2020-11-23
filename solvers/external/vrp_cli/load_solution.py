@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import List, Optional, Dict
 
-from models.rich_vrp import VRPSolution, Agent, Job, Visit
+from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.job import Job
+from models.rich_vrp.visit import Visit
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 
@@ -30,7 +33,9 @@ def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
     return ret_agent
 
 
-def generate_waypoints(agent: Agent, tour: Dict, problem: RichVRPProblem) -> List[Visit]:
+def generate_waypoints(
+    agent: Agent, tour: Dict, problem: RichVRPProblem
+) -> List[Visit]:
     waypoints: List[Visit] = []
 
     for point in tour['stops']:
@@ -39,7 +44,10 @@ def generate_waypoints(agent: Agent, tour: Dict, problem: RichVRPProblem) -> Lis
         if job_type == 'departure':  # точка выезда курьера
             waypoint, activity = agent.start_place, 'departure'
         elif job_type == 'delivery':  # точка доставка заказа
-            waypoint, activity = search_job(int(point['activities'][0]['jobId']), problem), 'delivery'
+            waypoint, activity = (
+                search_job(int(point['activities'][0]['jobId']), problem),
+                'delivery',
+            )
         elif job_type == 'arrival':  # точка окончания пути курьера
             waypoint, activity = agent.end_place, 'arrival'
         elif job_type == 'reload':  # точка перезагрузки курьера
@@ -50,9 +58,21 @@ def generate_waypoints(agent: Agent, tour: Dict, problem: RichVRPProblem) -> Lis
         if waypoint is None:
             raise Exception("Не найдена точка для rust vrp solution")
 
-        arrival = int(datetime.strptime(point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ').timestamp())
-        departure = int(datetime.strptime(point['time']['departure'], '%Y-%m-%dT%H:%M:%SZ').timestamp())
-        waypoints.append(Visit(place=waypoint, arrival=arrival, departure=departure, activity=activity))
+        arrival = int(
+            datetime.strptime(
+                point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ'
+            ).timestamp()
+        )
+        departure = int(
+            datetime.strptime(
+                point['time']['departure'], '%Y-%m-%dT%H:%M:%SZ'
+            ).timestamp()
+        )
+        waypoints.append(
+            Visit(
+                place=waypoint, arrival=arrival, departure=departure, activity=activity
+            )
+        )
 
     return waypoints
 

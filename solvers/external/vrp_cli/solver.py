@@ -25,7 +25,7 @@ class RustSolver(BaseSolver):
         max_time: int = 300,
         max_generations: int = 3000,
         variation_generations: int = 200,
-        min_variation: int = 0.1
+        min_variation: int = 0.1,
     ):
         # Параметры солвера
         self.default_params: bool = default_params
@@ -36,11 +36,15 @@ class RustSolver(BaseSolver):
         self.show_log: bool = show_log
 
         # Параметры рантайма
-        self.matrix_files: Optional[Dict[str, str]] = None  # Список файлов матриц расстояний.
+        self.matrix_files: Optional[
+            Dict[str, str]
+        ] = None  # Список файлов матриц расстояний.
         self.solution: Optional[VRPSolution] = None  # Полученное решение
 
         self.problem_data: Optional[str] = None  # То, что записано в файле проблемы
-        self.matrices: Optional[Dict[str, str]] = None  # Матрицы расстояний для каждого профиля
+        self.matrices: Optional[
+            Dict[str, str]
+        ] = None  # Матрицы расстояний для каждого профиля
 
         self.solution_data: Optional[str] = None
 
@@ -59,7 +63,9 @@ class RustSolver(BaseSolver):
         params += [f"--log"] * bool(self.show_log)  # показывать лог на экране
 
         if not self.default_params:
-            params += [f"--max-time={self.max_time}"] * bool(self.max_time)  # максимальное время работы
+            params += [f"--max-time={self.max_time}"] * bool(
+                self.max_time
+            )  # максимальное время работы
             params += [f"--max-generations={self.max_generations}"] * bool(
                 self.max_generations  # максимальное количетсво поколений оптимизации
             )
@@ -93,8 +99,8 @@ class RustSolver(BaseSolver):
         problem_file = problem_dir / 'problem.json'
         solution_file = problem_dir / 'solution.json'
 
-        dump_problem(problem_file, problem)
-        dump_matrices(problem_dir)
+        dump_problem(problem_file, problem_dir, problem)
+        self.matrix_files = dump_matrices(problem_dir, problem)
 
         logger.info('Запускаем солвер...')
         os.system(self.command(problem_dir, problem_file, solution_file))

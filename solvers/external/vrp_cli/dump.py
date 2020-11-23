@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
+from datetime import datetime
 
 import ujson
 
-from models.rich_vrp import Job, Agent, Depot
+from models.rich_vrp.job import Job
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.depot import Depot
 from models.rich_vrp.problem import RichVRPProblem
 from utils.types import Matrix
 
@@ -21,7 +24,7 @@ def ts_to_rfc(ts: int) -> str:
     -------
     Время в формате RFC3339  в UTC таймзоне c Z на конце.
     """
-    return datetime.fromtimestamp(ts + 86400).isoformat() + "Z"
+    return datetime.fromtimestamp(ts).isoformat() + "Z"
 
 
 def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
@@ -42,57 +45,77 @@ def dump_jobs(problem: RichVRPProblem) -> List[dict]:
     jobs_dicts = []
     for job in problem.jobs:
         tmp = {
-            'id': job.id,
-            'deliveries': [{
-                'places': [{'location': {'index': problem.matrix.index(job)},
+            'id': str(job.id),
+            'deliveries': [
+                {
+                    'places': [
+                        {
+                            'location': {'index': problem.matrix.index(job)},
                             'duration': job.delay,
-                            'times': convert_tw(job.time_windows)}],
-                'demand': job.capacity_constraints
-            }]
+                            'times': convert_tw(job.time_windows),
+                        }
+                    ],
+                    'demand': job.capacity_constraints,
+                }
+            ],
         }
         jobs_dicts.append(tmp)
 
     return jobs_dicts
 
 
-def dump_vehicles(depot: Depot, agents: List[Agent]) -> List[dict]:
+def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
     agents_dict = []
     for agent in problem.agents:
         tmp = {
-            'typeId': agent.id,
+            'typeId': str(agent.id),
             'vehicleIds': [agent.name],
             'profile': agent.profile,
             'costs': agent.costs,
-            'shifts': [{
-                'start': {
-                    'earliest': ts_to_rfc(agent.time_windows[0][0]),
-                    'location': {'index': problem.matrix.index(problem.depot)}
-                },
-                'end': {
-                    'latest': ts_to_rfc(agent.time_windows[-1][-1]),
-                    'location': {'index': problem.matrix.index(problem.depot)}
-                },
-                'reloads': [{
-                    'location': {'index': problem.matrix.index(problem.depot)}, 'duration': problem.depot.delay
-                }],
-                'dispatch': [{
-                    'location': {'index': problem.matrix.index(problem.depot)}, 'duration': problem.depot.delay
-                }]
-            }],
-            'capacity': agent.capacity_constraints
+            'shifts': [
+                {
+                    'start': {
+                        'earliest': ts_to_rfc(agent.time_windows[0][0]),
+                        'location': {'index': problem.matrix.index(problem.depot)},
+                    },
+                    'end': {
+                        'latest': ts_to_rfc(agent.time_windows[-1][-1]),
+                        'location': {'index': problem.matrix.index(problem.depot)},
+                    },
+                    'reloads': [
+                        {
+                            'location': {'index': problem.matrix.index(problem.depot)},
+                            'duration': problem.depot.delay,
+                        }
+                    ],
+                    # 'dispatch': [
+                    #     {
+                    #         'location': {'index': problem.matrix.index(problem.depot)},
+                    #         'duration': problem.depot.delay,
+                    #     }
+                    # ],
+                }
+            ],
+            'capacity': agent.capacity_constraints,
         }
         agents_dict.append(tmp)
     return agents_dict
 
 
-def dump_problem(path: Path, problem: RichVRPProblem):
+def dump_problem(path: Path, directory: Path, problem: RichVRPProblem):
     jobs_dict = dump_jobs(problem)
     agents_dict = dump_vehicles(problem)
 
-    profiles = [{'name': profile, 'type': f'{profile}_profile'} for profile in profiles]
-    problem = {'plan': {'jobs': jobs_dict}, 'fleet': {'vehicles': agents_dict, 'profiles': profiles}}
+    profiles = [
+        {'name': profile, 'type': f'{profile}_profile'}
+        for profile, geometry in problem.matrix.geometries.items()
+    ]
+    problem = {
+        'plan': {'jobs': jobs_dict},
+        'fleet': {'vehicles': agents_dict, 'profiles': profiles},
+    }
 
-    os.makedirs(path, exist_ok=True)
+    os.makedirs(directory, exist_ok=True)
     with open(path, 'w') as f:
         ujson.dump(problem, f)
 
@@ -117,13 +140,20 @@ def dump_matrix(profile: str, distance_matrix: Matrix, time_matrix: Matrix) -> s
             travel_times.append(int(time_matrix[i][j]))
             distances.append(int(distance_matrix[i][j]))
 
-    obj = {"profile": profile, "travelTimes": time_matrix, "distances": distance_matrix}
+    obj = {"profile": profile, "travelTimes": travel_times, "distances": distances}
     return ujson.dumps(obj)
 
 
 def dump_matrices(path: Path, problem: RichVRPProblem):
     os.makedirs(path, exist_ok=True)
-    matrix_files = [profile: dump_matrix(profile, geometry["dist_matrix"], geometry["time_matrix"]) for profile, geometry in problem.matrix.geometries.items()]
-    for profile, matrix in matrix_files:
+    matrix_files = {
+        profile: dump_matrix(profile, geometry["dist_matrix"], geometry["time_matrix"])
+        for profile, geometry in problem.matrix.geometries.items()
+    }
+    res = []
+    for profile, matrix in matrix_files.items():
+        matrix_path = path / f'{profile}.json'
+        res.append(matrix_path)
         with open((path / f'{profile}.json'), "w") as f:
             f.write(matrix)
+    return res
