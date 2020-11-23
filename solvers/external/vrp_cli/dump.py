@@ -1,44 +1,20 @@
 import os
 from pathlib import Path
 from typing import List, Tuple
-from datetime import datetime
 
 import ujson
 
-from models.rich_vrp.job import Job
 from models.rich_vrp.agent import Agent
-from models.rich_vrp.depot import Depot
 from models.rich_vrp.problem import RichVRPProblem
+from solvers.external.vrp_cli.utils import convert_tw, ts_to_rfc
 from utils.types import Matrix
 
 
-def ts_to_rfc(ts: int) -> str:
-    """Конвертируем unix timestamp в RFC3339 . В pragmatic время представлено в таком формате.
-    Добавлена поправка для Windows на 86400, т.к. минимальный Unix timestamp 86400
-    >>> ts_to_rfc(0)
-    '1970-01-01T03:00:00Z'
-    Parameters
-    ----------
-    ts : Unix timestamp
-    Returns
-    -------
-    Время в формате RFC3339  в UTC таймзоне c Z на конце.
-    """
-    return datetime.fromtimestamp(ts).isoformat() + "Z"
-
-
-def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
-    """Конвретируем временное окно из таймстампов в RFC3339.
-    >>> convert_tw([(0, 0)])
-    [('1970-01-01T03:00:00Z', '1970-01-01T03:00:00Z')]
-    Parameters
-    ----------
-    time_windows : Лист временных окон в unix timestamp
-    Returns
-    -------
-    Лист временных окон в iso
-    """
-    return [(ts_to_rfc(tw[0]), ts_to_rfc(tw[1])) for tw in time_windows]
+def cut_window(time_window: Tuple[int, int], problem: RichVRPProblem) -> Tuple[int, int]:
+    time_work = problem.depot.time_windows[0]
+    start = time_work[0] if time_window[0] < time_work[0] else time_window[0]
+    end = time_work[1] if time_window[1] > time_work[1] else time_window[1]
+    return start, end
 
 
 def dump_jobs(problem: RichVRPProblem) -> List[dict]:
@@ -64,6 +40,29 @@ def dump_jobs(problem: RichVRPProblem) -> List[dict]:
     return jobs_dicts
 
 
+def dump_shifts(agent: Agent, problem: RichVRPProblem) -> List[dict]:
+    shifts = []
+    for time_window in agent.time_windows:
+        start, end = cut_window(time_window, problem)
+        shifts.append({
+            'start': {
+                'earliest': ts_to_rfc(start),
+                'location': {'index': problem.matrix.index(problem.depot)},
+            },
+            'end': {
+                'latest': ts_to_rfc(end),
+                'location': {'index': problem.matrix.index(problem.depot)},
+            },
+            'reloads': [
+                {
+                    'location': {'index': problem.matrix.index(problem.depot)},
+                    'duration': problem.depot.delay,
+                }
+            ],
+        })
+    return shifts
+
+
 def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
     agents_dict = []
     for agent in problem.agents:
@@ -72,30 +71,7 @@ def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
             'vehicleIds': [agent.name],
             'profile': agent.profile,
             'costs': agent.costs,
-            'shifts': [
-                {
-                    'start': {
-                        'earliest': ts_to_rfc(agent.time_windows[0][0]),
-                        'location': {'index': problem.matrix.index(problem.depot)},
-                    },
-                    'end': {
-                        'latest': ts_to_rfc(agent.time_windows[-1][-1]),
-                        'location': {'index': problem.matrix.index(problem.depot)},
-                    },
-                    'reloads': [
-                        {
-                            'location': {'index': problem.matrix.index(problem.depot)},
-                            'duration': problem.depot.delay,
-                        }
-                    ],
-                    # 'dispatch': [
-                    #     {
-                    #         'location': {'index': problem.matrix.index(problem.depot)},
-                    #         'duration': problem.depot.delay,
-                    #     }
-                    # ],
-                }
-            ],
+            'shifts': dump_shifts(agent, problem),
             'capacity': agent.capacity_constraints,
         }
         agents_dict.append(tmp)

@@ -4,11 +4,9 @@
 """
 from dataclasses import dataclass
 from typing import Dict
-
-from typing import List, Optional, Set, Tuple
+from typing import List, Tuple
 
 from models.rich_vrp.depot import Depot
-from models.rich_vrp.place import Place
 
 
 @dataclass
@@ -22,9 +20,6 @@ class Agent:
     time_windows : Набор интервалов работы
     compatible_depots : Список депо, которыми можно пользоваться
 
-    start_place : Начальная точка агента
-    end_place : Конечная точка агента
-
     type : Тип этого агента
     priority : Приоритет этого агента при назначении
 
@@ -37,9 +32,7 @@ class Agent:
     capacity_constraints: List[int]
 
     time_windows: List[Tuple[int, int]]
-    compatible_depots: Set[Depot]
-    start_place: Optional[Place]
-    end_place: Optional[Place]
+    compatible_depots: List[Depot]
 
     profile: str
     skills: List[str]

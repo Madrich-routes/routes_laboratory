@@ -6,7 +6,6 @@ def run_solver():
     problem = generate_vrp(20, 4)
     solver = RustSolver()
     solution = solver.solve(problem)
-    i = 0
 
 
 if __name__ == "__main__":

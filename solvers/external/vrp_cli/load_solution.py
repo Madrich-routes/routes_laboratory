@@ -1,12 +1,12 @@
-from datetime import datetime
 from typing import List, Optional, Dict
 
-from models.rich_vrp.solution import VRPSolution
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.job import Job
-from models.rich_vrp.visit import Visit
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
+from models.rich_vrp.solution import VRPSolution
+from models.rich_vrp.visit import Visit
+from solvers.external.vrp_cli.utils import str_to_ts
 
 
 def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
@@ -44,10 +44,8 @@ def generate_waypoints(
         if job_type == 'departure':  # точка выезда курьера
             waypoint, activity = agent.start_place, 'departure'
         elif job_type == 'delivery':  # точка доставка заказа
-            waypoint, activity = (
-                search_job(int(point['activities'][0]['jobId']), problem),
-                'delivery',
-            )
+            job_id = int(point['activities'][0]['jobId'])
+            waypoint, activity = search_job(job_id, problem), 'delivery'
         elif job_type == 'arrival':  # точка окончания пути курьера
             waypoint, activity = agent.end_place, 'arrival'
         elif job_type == 'reload':  # точка перезагрузки курьера
@@ -58,16 +56,8 @@ def generate_waypoints(
         if waypoint is None:
             raise Exception("Не найдена точка для rust vrp solution")
 
-        arrival = int(
-            datetime.strptime(
-                point['time']['arrival'], '%Y-%m-%dT%H:%M:%SZ'
-            ).timestamp()
-        )
-        departure = int(
-            datetime.strptime(
-                point['time']['departure'], '%Y-%m-%dT%H:%M:%SZ'
-            ).timestamp()
-        )
+        arrival = str_to_ts(point['time']['arrival'])
+        departure = str_to_ts(point['time']['departure'])
         waypoints.append(
             Visit(
                 place=waypoint, arrival=arrival, departure=departure, activity=activity

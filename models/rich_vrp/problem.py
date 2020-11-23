@@ -33,7 +33,7 @@ class RichVRPProblem:
         name: Optional[str] = None
     ):
         self.name = name or uuid4()  # уникальный id этой конкретной проблемы
-        self.matrix = place_mapping  # TODO: rename
+        self.matrix = place_mapping
         self.agents = agents
         self.jobs = jobs
         self.depot = depot

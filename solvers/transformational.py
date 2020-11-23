@@ -9,8 +9,7 @@ TODO: Перепроектировать, в таком виде это очен
 from abc import ABC, abstractmethod
 from typing import List
 
-from transformers.base import BaseTransformer
-
+from algorithms.transformers.base import BaseTransformer
 from models.problems.base import BaseRoutingProblem
 from solvers.base import BaseSolver
 
