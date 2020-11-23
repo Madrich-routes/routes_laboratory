@@ -16,6 +16,7 @@ env.read_env()  # read .env file, if it exists
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
 TMP_DIR = DATA_DIR / 'tmp'
+UPLOAD_DIR = BASE_DIR / 'api/data'
 CACHE_DIR = TMP_DIR / 'cache'
 
 CONCORDE_PATH = env.path('CONCORDE')
