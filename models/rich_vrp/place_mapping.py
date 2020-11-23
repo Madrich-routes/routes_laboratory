@@ -4,7 +4,6 @@ from functools import lru_cache
 from typing import Iterable, Dict
 
 import numpy as np
-from bidict import bidict
 
 from geo.transforms import geo_distance, line_distance_matrix
 from models.rich_vrp import Place

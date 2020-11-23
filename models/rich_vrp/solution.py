@@ -1,21 +1,12 @@
+from dataclasses import dataclass
 from typing import List, Optional
 
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem
 
 
+@dataclass
 class VRPSolution:
-    def __init__(
-        self,
-        problem: RichVRPProblem,
-        routes: List[Plan],
-        info: Optional[dict] = None
-    ):
-        # TODO: адекватно оформить решение
-        self.problem = problem
-        self.routes = routes
-        self.geojson: Optional[str] = None
-        self.info: Optional[dict] = info
-
-    # def statistics(self):
-    #     for a, r in self.routes.items():
+    problem: RichVRPProblem
+    routes: List[Plan]  # маршруты для каждого из курьеров
+    info: Optional[dict]

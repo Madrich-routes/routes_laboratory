@@ -13,7 +13,7 @@ def save_file(request, path) -> Optional[str]:
         filename = str(uuid.uuid4())
 
         if not os.path.exists(path):
-            os.makedirs(path)
+            os.makedirs(path, exist_ok=True)
 
         file.save(os.path.join(path, filename))
         return filename

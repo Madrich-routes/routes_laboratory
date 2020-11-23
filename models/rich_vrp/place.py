@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Optional, Tuple, List
 
@@ -22,9 +20,6 @@ class Place:
 
     delay: int = 0  # сколько времени нужно пробыть в этом месте
     time_windows: List[Tuple[int, int]] = field(default_factory=list)  # когда там можно находиться
-
-    def __post_init__(self):
-        self.time_windows = list(self.time_windows)
 
     def __hash__(self):
         return hash(self.descriptor)

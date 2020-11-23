@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import TYPE_CHECKING, List, Optional, Set
+from typing import List, Optional, Set
 from uuid import uuid4
 
-if TYPE_CHECKING:
-    from models.rich_vrp import Agent, Depot, Job, Place, PlaceMapping
+from models.rich_vrp import PlaceMapping, Agent, Job, Depot
 
 
 class RichVRPProblem:
@@ -19,7 +18,7 @@ class RichVRPProblem:
     place_mapping : Объект, который умеет считать расстояние между точками
     agents : Список агентов, которые могут решать джобы в нашей задаче
     jobs : Список джоб, которые нужно выполнить в этой задаче
-    depots : Список депо в этой задаче
+    depot : Список депо в этой задаче
     objectives : Критерии оптимизации для этой проблемы
     name : Название этой проблемы
     """
@@ -29,7 +28,7 @@ class RichVRPProblem:
         place_mapping: PlaceMapping,
         agents: List[Agent],
         jobs: List[Job],
-        depots: List[Depot],
+        depot: Optional[Depot],
         objectives: List[str],
         name: Optional[str] = None
     ):
@@ -37,7 +36,7 @@ class RichVRPProblem:
         self.matrix = place_mapping  # TODO: rename
         self.agents = agents
         self.jobs = jobs
-        self.depots = depots
+        self.depot = depot
         self.objectives = objectives
 
     def info(self) -> str:
@@ -51,7 +50,6 @@ class RichVRPProblem:
             f'problem_name: {self.name}, '
             f'agents: {len(self.agents)}, '
             f'jobs: {len(self.jobs)}, '
-            f'depot: {len(self.depots)}, '
             f'objectives: {self.objectives}'
         )
 
@@ -62,17 +60,7 @@ class RichVRPProblem:
         -------
         Set всех профайлов
         """
-        return {a.type.profile for a in self.agents}
-
-    def places(self) -> List[Place]:
-        """Получаем список все мест в проблеме.
-
-        Returns
-        -------
-        Лист, в котором все депо и джобы
-        """
-
-        return list(self.depots) + list(self.jobs)
+        return {a.profile for a in self.agents}
 
 
 class Profile(Enum):

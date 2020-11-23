@@ -7,16 +7,6 @@ from typing import Dict, List
 from utils.serialization import set_default
 
 
-# subprocess.run(...).returncode == 0
-
-
-# def exec_and_print(cmd: List[str]):
-#     """
-#     Перенаправляем входной и выходной поток запускаемой команды
-#     """
-#     subprocess.check_call(cmd, stdout=sys.stdout, stderr=subprocess.STDOUT)
-
-
 class CommandRunner:
     """Класс для запуска произвольных команд.
 
@@ -132,7 +122,7 @@ if __name__ == "__main__":
     CommandRunner(
         command='ls',
         input_files={},
-        output_files={},
+        output_files=[],
         files_dir='.',
         base_dir='.',
     ).run()

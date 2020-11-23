@@ -15,15 +15,17 @@ class StandardDataFormat:
     Наш универсальный формат Excel-файлов под импорт для дальнейшей работы
     Внутри состоит из 3-х листов:
     1. Заказы:
-        [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет]
+        [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет]  !!! storage_id
         [lat: float, lon: float, address: string, time_windows: List[Tuple[int, int]],
          amounts: np.ndarray, delay: int, price: int, priority:int]
     2. Курьеры
-        [Имя, График работы, Тип, Начальная точка, Конечная точка]
+        [Имя, График работы, Профиль, Начальная точка, Конечная точка]
         [name: str, time_windows: List[Tuple[int, int]], type: str, start_place: int, end_place: int]
     3. Склады
         [Адрес, Широта, Долгота, График работы, Время обслуживания]
         [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]
+    4. Профили
+        id - Название - средняя скорость
     """
 
     @staticmethod

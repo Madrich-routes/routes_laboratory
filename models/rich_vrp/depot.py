@@ -16,14 +16,15 @@ class Depot(Place):
     delay : Время посещения
     name : Читаемое имя (адрес или название)
     """
+
     def __init__(
-            self,
-            id: int,
-            time_windows: List[Tuple[int, int]],
-            lat: float,
-            lon: float,
-            delay: int,
-            name: str = '',
+        self,
+        id: int,
+        time_windows: List[Tuple[int, int]],
+        lat: float,
+        lon: float,
+        delay: int,
+        name: str = '',
     ):
         super().__init__(id=id, name=name, lat=lat, lon=lon, delay=delay, time_windows=time_windows)
 

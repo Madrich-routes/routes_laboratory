@@ -1,15 +1,11 @@
-"""Агент — модель для курьера, машины и чего угодно, что может двигать и выполнять джобы.
+"""
+Агент — модель для курьера, машины и чего угодно, что может двигать и выполнять джобы.
 В этом модуле класс агента и все, что к нему относится
- """
-from __future__ import annotations
-
+"""
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple, Dict
 
-if TYPE_CHECKING:
-    from models.rich_vrp import Depot, Place
-    from models.rich_vrp.agent_type import AgentType
-    from models.rich_vrp.costs import AgentCosts
+from models.rich_vrp import Depot, Place
 
 
 @dataclass
@@ -32,23 +28,15 @@ class Agent:
     name : Читаемое имя этого агента
     """
     id: int
+    name: str
 
-    costs: AgentCosts
-    amounts: List[int]
+    costs: Dict[str, float]
+    capacity_constraints: List[int]
 
     time_windows: List[Tuple[int, int]]
     compatible_depots: Set[Depot]
-
     start_place: Optional[Place]
     end_place: Optional[Place]
 
-    type: AgentType = None
-    priority: int = 0
-
-    name: str = ""
-
-    # TODO:: здесь заглушка
-    def __post_init__(self):
-        if self.start_place is None:
-            self.start_place = next(iter(self.compatible_depots))
-            self.end_place = next(iter(self.compatible_depots))
+    profile: str
+    skills: List[str]
