@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional, List
 
 from models.rich_vrp.plan import Plan
 from models.rich_vrp.problem import RichVRPProblem

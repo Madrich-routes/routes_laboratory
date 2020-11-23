@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from models.rich_vrp import Place
+from models.rich_vrp.place import Place
 
 
 @dataclass

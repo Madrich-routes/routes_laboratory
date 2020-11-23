@@ -6,8 +6,8 @@ from typing import Iterable, Dict
 import numpy as np
 
 from geo.transforms import geo_distance, line_distance_matrix
-from models.rich_vrp import Place
 from models.rich_vrp.geometries.base import BaseGeometry
+from models.rich_vrp.place import Place
 from utils.types import Array
 
 

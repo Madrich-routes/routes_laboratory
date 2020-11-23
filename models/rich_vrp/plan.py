@@ -2,7 +2,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from models.rich_vrp import Agent, Visit
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.visit import Visit
 
 
 @dataclass

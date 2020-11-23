@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from models.rich_vrp import Place, Depot
+from models.rich_vrp.depot import Depot
+from models.rich_vrp.place import Place
 
 
 @dataclass

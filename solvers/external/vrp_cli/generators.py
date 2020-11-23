@@ -4,7 +4,9 @@ from typing import List, Tuple, Set
 
 import numpy as np
 
-from models.rich_vrp import Depot, Job, Agent
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.depot import Depot
+from models.rich_vrp.job import Job
 from models.rich_vrp.problem import RichVRPProblem
 from solvers.madrich.api_module.osrm_module import get_matrix
 

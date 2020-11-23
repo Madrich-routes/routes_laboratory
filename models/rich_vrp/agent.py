@@ -3,9 +3,12 @@
 В этом модуле класс агента и все, что к нему относится
 """
 from dataclasses import dataclass
-from typing import List, Optional, Set, Tuple, Dict
+from typing import Dict
 
-from models.rich_vrp import Depot, Place
+from typing import List, Optional, Set, Tuple
+
+from models.rich_vrp.depot import Depot
+from models.rich_vrp.place import Place
 
 
 @dataclass

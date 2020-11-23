@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from enum import Enum
 from typing import List, Optional, Set
 from uuid import uuid4
 
-from models.rich_vrp import PlaceMapping, Agent, Job, Depot
+from models.rich_vrp.agent import Agent
+from models.rich_vrp.depot import Depot
+from models.rich_vrp.job import Job
+from models.rich_vrp.place_mapping import PlaceMapping
 
 
 class RichVRPProblem:
@@ -57,18 +59,3 @@ class RichVRPProblem:
         Set всех профайлов
         """
         return {a.profile for a in self.agents}
-
-
-class Profile(Enum):
-    """Допустимые типы профайлов."""
-    FOOT = 'foot'
-    PEDESTRIAN = 'foot'
-
-    BICYCLE = 'bicycle'
-    BIKE = 'bicycle'
-
-    CAR = 'car'
-    VEHICLE = 'car'
-
-    TRANSPORT = 'transport'
-    TRANSPORT_SIMPLE = 'transport_simple'

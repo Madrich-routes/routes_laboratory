@@ -1,7 +1,7 @@
 """ Класс депо """
 from typing import Tuple, List
 
-from models.rich_vrp import Place
+from models.rich_vrp.place import Place
 
 
 class Depot(Place):
