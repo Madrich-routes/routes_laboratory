@@ -5,7 +5,7 @@ from models.rich_vrp.place import Place
 
 
 class Depot(Place):
-    """ Депо — объект из которого машины забирают грузы. Или куда они их привозят.
+    """Депо — объект из которого машины забирают грузы. Или куда они их привозят.
 
     Parameters
     ----------
@@ -26,7 +26,9 @@ class Depot(Place):
         delay: int,
         name: str = '',
     ):
-        super().__init__(id=id, name=name, lat=lat, lon=lon, delay=delay, time_windows=time_windows)
+        super().__init__(
+            id=id, name=name, lat=lat, lon=lon, delay=delay, time_windows=time_windows
+        )
 
     def __hash__(self):
         return hash(self.id)

@@ -1,14 +1,10 @@
 """Это модель, которая создает маппинг объектов Place на BaseGeometry, чтобы можно было считать между ними
 расстояние."""
-from functools import lru_cache
 from typing import Iterable, Dict
 
 import numpy as np
 
-from geo.transforms import geo_distance, line_distance_matrix
-from models.rich_vrp.geometries.base import BaseGeometry
-from models.rich_vrp.place import Place
-from utils.types import Array
+from models.rich_vrp import Place
 
 
 class PlaceMapping:
@@ -16,33 +12,22 @@ class PlaceMapping:
 
     Позволяем получить точки по индексам и наоборот, а также получать время и расстояние между точками.
 
-    Этот класс нужен для красоты и удобного доступа. Всю осмысленную функциональность
-    нужно реализовыватьс других классах.
-
     Parameters
     ----------
     places : Точки, которые нужно добавить в маппинг
-    geometries : Словарь Profile -> Geometry
+    geometries: наши геометрии в формате Dict[str, Dict[str, np.ndarray]]
+    где первой строкой является имя геометрии(driver, pedestrian), а второй - тип матрицы(dist_matrix, time_matrix)
     """
 
     def __init__(
-        self,
-        places: Iterable[Place],
-        geometries: Dict[str, BaseGeometry],
+        self, places: Iterable[Place], geometries: Dict[str, Dict[str, np.ndarray]]
     ):
         self.places = places
         self.geometries = geometries
-
         self.points = np.array([[place.lat, place.lon] for place in self.places])
 
-        self.mapping = bidict(  # Первчиный маппинг точек на индексы
-            tuple(
-                zip(
-                    tuple(places),
-                    range(len(places)),
-                )
-            )
-        )
+        self.places_to_indexes = {place: i for i, place in enumerate(places)}
+        self.indexes_to_places = {i: place for i, place in enumerate(places)}
 
     def size(self) -> int:
         """Количество точек в нашей геометриии."""
@@ -59,7 +44,7 @@ class PlaceMapping:
         -------
         """
 
-        return self.mapping[i]
+        return self.indexes_to_places[i]
 
     def index(self, p: Place) -> int:
         """Получаем индекс по точке.
@@ -73,9 +58,9 @@ class PlaceMapping:
         Ее индекс в маппинге
         """
 
-        return self.mapping[p]
+        return self.places_to_indexes[p]
 
-    def dist(self, p1: Place, p2: Place, profile: str, **kwargs) -> int:
+    def dist(self, p1: Place, p2: Place, profile: str) -> int:
         """Посчитать расстояние.
 
         Parameters
@@ -83,16 +68,15 @@ class PlaceMapping:
         p1 : Место старта
         p2 : Место финиша
         profile : Профайл, для которого мы считаем результат
-        kwargs : Дополнительные параметры для геометрии
 
         Returns
         -------
         Расстояние
         """
-        i1, i2 = self.mapping[p1], self.mapping[p2]
-        return self.geometries[profile].dist(i1, i2, **kwargs)
+        i1, i2 = self.places_to_indexes[p1], self.places_to_indexes[p2]
+        return self.geometries[profile]["dist_matrix"][i1, i2]
 
-    def time(self, p1: Place, p2: Place, profile: str, **kwargs) -> int:
+    def time(self, p1: Place, p2: Place, profile: str) -> int:
         """Посчитать время.
 
         Parameters
@@ -100,41 +84,10 @@ class PlaceMapping:
         p1 : Место старта
         p2 : Место финиша
         profile : Профайл, для которого мы считаем результат
-        kwargs : Дополнительные параметры для геометрии
 
         Returns
         -------
         Время
         """
-        i1, i2 = self.mapping[p1], self.mapping[p2]
-        raise self.geometries[profile].time(i1, i2, **kwargs)
-
-    def line_dist(self, p1: Place, p2: Place):
-        """Расстояние между точкам по прямой."""
-        i1, i2 = self.mapping[p1], self.mapping[p2]
-        return geo_distance(self.points[i1], self.points[i2]).m
-
-    @lru_cache
-    def line_dist_matrix(self):
-        """Матрица расстояний между точками."""
-        return line_distance_matrix(self.points, self.points)
-
-    @lru_cache
-    def dist_matrix(self, **kwargs) -> Array:
-        """Дефолтная реализация матрицы расстояния."""
-        return np.array(
-            [
-                [self.dist(i, j, **kwargs) for i in range(self.size())]
-                for j in range(self.size())
-            ]
-        )
-
-    @lru_cache
-    def time_matrix(self, **kwargs) -> Array:
-        """Дефолтная реализация матрицы времени."""
-        return np.array(
-            [
-                [self.time(i, j, **kwargs) for i in range(self.size())]
-                for j in range(self.size())
-            ]
-        )
+        i1, i2 = self.places_to_indexes[p1], self.places_to_indexes[p2]
+        return self.geometries[profile]["time_matrix"][i1, i2]
