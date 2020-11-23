@@ -1,8 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-import numpy as np
-
 from models.rich_vrp import Place, Depot
 
 
@@ -12,7 +10,7 @@ class Job(Place):
 
     Это самый общий класс. В него добавляются любые характеристики.
     """
-    capacity_constraints: Optional[np.array] = None  # количество разгрузки в точке (той же размерности, что capacities)
+    capacity_constraints: Optional[List[int]] = None  # количество разгрузки в точке
     required_skills: List[str] = field(default_factory=list)  # какой набор скиллов тут будет необходим
 
     price: int = 0  # награда, получаемая за выполнение этой работы

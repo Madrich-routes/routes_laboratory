@@ -26,12 +26,7 @@ def _fix_speed_unknown(
     Исправленное время и расстояние
     """
 
-    time_avg = distance / speed_limits_dict["avg"]
-    dist_avg = time * speed_limits_dict["avg"]
-
-    if
-
-
+    pass
 
 
 def _fix_speed(
@@ -68,7 +63,7 @@ def _fix_speed(
     time = max(time, 0)
     distance = max(distance, 0)
 
-    if time == 0: # исправляем time, если он 0
+    if time == 0:  # исправляем time, если он 0
         return distance / speed_limits_dict['avg'], distance
 
     speed = distance / time
@@ -92,9 +87,6 @@ def _fix_speed(
         return time, distance
 
 
-
-
-
 def fix_foot_speed(
     time: int,
     dist: int,
@@ -113,9 +105,10 @@ def fix_foot_speed(
 
     _fix_speed(time=time, distance=dist, speed_limits_dict=FOOT_SPEEDS)
 
+
 def fix_driver_speed(
-        time: int,
-        dist: int
+    time: int,
+    dist: int
 ) -> Tuple[int, int]:
     """Исправляем неправдоподобную скорость водителя.
 
@@ -128,6 +121,7 @@ def fix_driver_speed(
     Исправленное время и расстояние
     """
     if time == 0 and dist != 0:
+        pass
 
     if time != 0 and 5 < dist / time < 13:
         if time > 3600 or dist <= 1e5:
@@ -138,8 +132,8 @@ def fix_driver_speed(
 
 
 def fix_bicycle_speed(
-        t: int,
-        d: int
+    t: int,
+    d: int
 ) -> Tuple[int, int]:
     """Исправляем неправдоподобную скорость перемещения водителяы.
 
