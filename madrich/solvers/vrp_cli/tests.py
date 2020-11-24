@@ -56,13 +56,32 @@ def test_vrp_solver():
     solver.solve(problem)
 
 
+from madrich.formats.excel.universal import StandardDataFormat
+import pandas as pd
+
+
 def test_mdvrp_solver():
     """ Тест на запуск второго слоя - слоя решения задачи с несколькими складами """
     agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
-    problem = RichMDVRPProblem(agents_list, get_problems(jobs_list, depots_list))
-    solver = RustSolver()
-    solver.solve_mdvrp(problem)
+
+    StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, 'output.xlsx')
+
+    a, j, d = StandardDataFormat.from_excel('output.xlsx')
+    print()
+    print(a[0])
+    print(agents_list[0])
+    print('-'*100)
+    print(j[0])
+    print(jobs_list[0])
+    print('-'*100)
+    print(d[0])
+    print(depots_list[0])
+    print('-'*100)
+
+    # problem = RichMDVRPProblem(agents_list, get_problems(jobs_list, depots_list))
+    # solver = RustSolver()
+    # solver.solve_mdvrp(problem)
 
 
 if __name__ == "__main__":
-    test_vrp_solver()
+    test_mdvrp_solver()
