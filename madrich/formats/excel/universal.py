@@ -5,7 +5,13 @@ import numpy as np
 import pandas as pd
 
 from madrich import settings
+from madrich.models.rich_vrp.agent import Agent
+from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.geometries.geometry import DistanceMatrixGeometry
+from madrich.models.rich_vrp.job import Job
+from madrich.models.rich_vrp.problem import RichVRPProblem
+
+from madrich.solvers.vrp_cli.generators import profiles
 
 
 class StandardDataFormat:
@@ -28,7 +34,7 @@ class StandardDataFormat:
     """
 
     @staticmethod
-    def generate_dataframes(jobs_list: list, agents_list: list, depots_list: list) -> tuple:
+    def generate_dataframes(agents_list: list, jobs_list: list, depots_list: list) -> tuple:
         """Генерация фреймов для экселек
 
         Parameters
@@ -41,100 +47,120 @@ class StandardDataFormat:
         -------
         Фреймы: задачи, агенты, демо
         """
-        jobs = pd.DataFrame(
-            jobs_list,
-            columns=[
-                'Широта',
-                'Долгота',
-                'Адрес',
-                'Временные рамки',
-                'Характеристики',
-                'Время обслуживания',
-                'Цена',
-                'Приоритет',
-            ],
-        )
 
-        agents = pd.DataFrame(
-            agents_list,
-            columns=[
-                'Имя',
-                'График работы',
-                'Тип',
-                'Начальная точка',
-                'Конечная точка',
-            ],
-        )
+        ####################################################
+        '''
+        1. Заказы:
+            [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет]  !!! storage_id
+            [lat: float, lon: float, name: string, time_windows: List[Tuple[int, int]],
+             capacity_constraints: List[int], delay: int, price: int, priority:int]
+        '''
+        jobs = pd.DataFrame(jobs_list)
+        jobs = jobs[['lat', 'lon', 'name', 'time_windows', 'capacity_constraints', 'delay', 'price', 'priority']]
 
-        depots = pd.DataFrame(
-            depots_list,
-            columns=[
-                'Адрес',
-                'Широта',
-                'Долгота',
-                'График работы',
-                'Время обслуживания',
-            ],
-        )
-        return jobs, agents, depots
+        jobs['time_windows'] = jobs['time_windows'].apply(time_windows_to_str)
+        jobs['capacity_constraints'] = jobs['capacity_constraints'].apply(lambda x: ' '.join([str(el) for el in x]))
+        jobs.columns = [
+            'Широта',
+            'Долгота',
+            'Адрес',
+            'Временные рамки',
+            'Характеристики',
+            'Время обслуживания',
+            'Цена',
+            'Приоритет',
+        ]
+
+        # jobs.to_excel("output.xlsx")
+        ####################################################
+        '''
+        2. Курьеры
+            [Имя, График работы, Профиль, Вместимость, Посещаемые склады, Цена]
+            [name: str, time_windows: List[Tuple[str, str]], profile: str, capacity_constraints: List[int], compatible_depots: List[int]]
+        '''
+        agents = pd.DataFrame(agents_list)
+        agents = agents[['name', 'time_windows', 'profile', 'capacity_constraints', 'compatible_depots', 'costs']]
+
+
+        agents[['fixed', 'distance', 'time']] = pd.DataFrame(agents['costs'].to_list())
+
+        del agents['costs']
+
+        agents['time_windows'] = agents['time_windows'].apply(time_windows_to_str)
+        agents.columns = [
+            'Имя',
+            'График работы',
+            'Профиль',
+            'Вместимость',
+            'Посещаемые склады',
+            'Фиксированная цена',
+            'Цена расстояния',
+            'Цена время',
+        ]
+        # agents.to_excel("output.xlsx")
+        ####################################################
+        '''
+        3. Склады
+            [Адрес, Широта, Долгота, График работы, Время обслуживания]
+            [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]
+        '''
+        depots = pd.DataFrame(depots_list)
+        depots = depots[['name', 'lat', 'lon', 'time_windows', 'delay']]
+
+        depots['time_windows'] = depots['time_windows'].apply(time_windows_to_str)
+
+        depots.columns = [
+            'Адрес',
+            'Широта',
+            'Долгота',
+            'График работы',
+            'Время обслуживания',
+        ]
+
+        # depots.to_excel("output.xlsx")
+        ####################################################
+        '''
+        4. Профили
+            Название - type - средняя скорость
+        '''
+        profs = agents['Профиль'].to_list()
+        profiles_df = pd.DataFrame(profs)
+        profiles_df[['profile']] = profiles_df[0]
+        profiles_df[['some']] = ""
+
+        profiles_df.columns = [
+            'Профиль',
+            'Тип',
+            'Средняя скорость'
+        ]
+        # profiles_df.to_excel("output.xlsx")
+        ####################################################
+        return jobs, agents, depots, profiles_df
 
     @staticmethod
-    def to_excel(problem: RichVRPProblem, path: str):
+    def to_excel(agents_list: list, jobs_list: list, depots_list: list, path: str):
         """Конвертируем RichVRPProblem в наш Excel.
 
         Parameters
         ----------
-        problem :RichVRPProblem,
+        jobs_list: list,
+        agents_list: list,
+        depots_list: list,
         path: str
 
         Returns
         -------
         """
-        jobs_list = [
-            [
-                job.lat,
-                job.lon,
-                '',
-                time_windows_to_str(job.time_windows),
-                ', '.join([str(i) for i in job.amounts]),
-                job.delay,
-                job.price,
-                job.priority,
-            ]
-            for job in problem.jobs
-        ]
-
-        agents_list = [
-            [
-                agent.name,
-                time_windows_to_str(agent.time_windows),
-                agent.type.name,
-                agent.start_place,
-                agent.end_place,
-            ]
-            for agent in problem.agents
-        ]
-
-        depots_list = [
-            [
-                depot.name,
-                depot.lat,
-                depot.lon,
-                time_windows_to_str(depot.time_windows),
-                depot.delay,
-            ]
-            for depot in problem.depots
-        ]
-
-        jobs, agents, depots = StandardDataFormat.generate_dataframes(jobs_list, agents_list, depots_list)
+        jobs, agents, depots, profiles_df = StandardDataFormat.generate_dataframes(agents_list, jobs_list, depots_list)
         with pd.ExcelWriter(path, datetime_format='DD.MM.YYYY HH:MM:SS') as writer:
             jobs.to_excel(writer, sheet_name='Заказы')
             agents.to_excel(writer, sheet_name='Курьеры')
             depots.to_excel(writer, sheet_name='Склады')
+            profiles_df.to_excel(writer, sheet_name='Профили')
 
     @staticmethod
-    def from_excel(path: str) -> RichVRPProblem:
-        """Конвертируем наш Excel в RichVRPProblem.
+    def from_excel(path: str) -> tuple:
+        """Конвертируем наш Excel в модели.
 
         Parameters
         ----------
@@ -156,39 +182,44 @@ class StandardDataFormat:
 
         for i in range(len(jobs.index)):
             row = jobs.iloc[i]
-            if type(row['Характеристики']) == str:
-                amounts = np.array([int(i) for i in row['Характеристики'].split(', ')])
-            else:
-                amounts = np.array(row['Характеристики'])
             job = Job(
                 id=i,
-                name='',
+                name=row['Адрес'],
                 lat=row['Широта'],
                 lon=row['Долгота'],
-                x=0,
-                y=0,
+                x=None,
+                y=None,
                 time_windows=str_to_time_windows(row['Временные рамки']),
                 delay=row['Время обслуживания'],
-                amounts=amounts,
-                required_skills=set(),
+                capacity_constraints=[int(i) for i in row['Характеристики'].split()],
+                required_skills=[],
                 price=row['Цена'],
                 priority=row['Приоритет'],
             )
             jobs_list.append(job)
-
         for i in range(len(agents.index)):
             row = agents.iloc[i]
-            costs = AgentCosts()
+
+            compatible_depots = []
+            deps = eval(row['Посещаемые склады'])
+            for d in deps:
+                compatible_depots.append(Depot(
+                    id=d['id'],
+                    name=d['name'],
+                    lat=d['lat'],
+                    lon=d['lon'],
+                    delay=d['delay'],
+                    time_window=d['time_windows'],
+                ))
             agent = Agent(
                 id=i,
-                costs=costs,
-                amounts=[],
+                costs={'fixed': row['Фиксированная цена'], 'distance': row['Цена расстояния'], 'time': row['Цена время']},
                 time_windows=str_to_time_windows(row['График работы']),
-                compatible_depots=set(),
-                start_place=row['Начальная точка'],
-                end_place=row['Конечная точка'],
-                type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
+                compatible_depots=compatible_depots,
                 name=row['Имя'],
+                skills=[],
+                profile=row['Профиль'],
+                capacity_constraints=[int(i) for i in row['Вместимость'].strip("[]").split(',')]
             )
             agents_list.append(agent)
 
@@ -196,20 +227,14 @@ class StandardDataFormat:
             row = depots.iloc[i]
             depot = Depot(
                 id=0,
-                time_windows=str_to_time_windows(row['График работы']),
+                time_window=str_to_time_windows(row['График работы'])[0],
                 lat=row['Широта'],
                 lon=row['Долгота'],
                 delay=row['Время обслуживания'],
                 name=row['Адрес'],
             )
             depots_list.append(depot)
-        return RichVRPProblem(
-            DistanceMatrixGeometry(np.array([]), np.array([]), 0),
-            agents_list,
-            jobs_list,
-            depots_list,
-            [],
-        )
+        return agents_list, jobs_list, depots_list
 
     @staticmethod
     def generate_random(jobs: int, storages: int, couriers: int) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -317,50 +342,49 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
         for item in sep_strings
     ]
 
-
-if __name__ == '__main__':
-    def main():
-        start = int(datetime(2020, 11, 3, 8, 00).timestamp())
-        end = int(datetime(2020, 11, 3, 20, 00).timestamp())
-        costs = AgentCosts()
-        depot = Depot(0, [(start, end)], 55.75, 37.61, 0, 'Адрес тут')
-        agent = Agent(
-            id=0,
-            costs=costs,
-            amounts=[10, 20],
-            time_windows=[(start, end)],
-            compatible_depots={depot},
-            start_place=None,
-            end_place=None,
-            type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
-            name='Алексей',
-        )
-        job = Job(
-            id=0,
-            name='Доставка 1',
-            lat=55.75,
-            lon=37.61,
-            x=0,
-            y=0,
-            delay=5,
-            time_windows=[(start, end), (start, end)],
-            amounts=np.array([10, 20]),
-            required_skills={2},
-            price=5,
-            depots=[depot],
-        )
-        res = RichVRPProblem(
-            DistanceMatrixGeometry(np.array([]), np.array([]), 0),
-            [agent],
-            [job],
-            [depot],
-            [],
-        )
-
-        test = StandardDataFormat()
-        test.to_excel(res, settings.DATA_DIR / 'tests/tst.xlsx')
-        test.from_excel(settings.DATA_DIR / 'tests/tst.xlsx')
-        print('ok')
-
-
-    main()
+# if __name__ == '__main__':
+#     def main():
+#         start = int(datetime(2020, 11, 3, 8, 00).timestamp())
+#         end = int(datetime(2020, 11, 3, 20, 00).timestamp())
+#         costs = AgentCosts()
+#         depot = Depot(0, [(start, end)], 55.75, 37.61, 0, 'Адрес тут')
+#         agent = Agent(
+#             id=0,
+#             costs=costs,
+#             amounts=[10, 20],
+#             time_windows=[(start, end)],
+#             compatible_depots={depot},
+#             start_place=None,
+#             end_place=None,
+#             type=AgentType(0, [10, 20], [], 'driver', 'Петя'),
+#             name='Алексей',
+#         )
+#         job = Job(
+#             id=0,
+#             name='Доставка 1',
+#             lat=55.75,
+#             lon=37.61,
+#             x=0,
+#             y=0,
+#             delay=5,
+#             time_windows=[(start, end), (start, end)],
+#             amounts=np.array([10, 20]),
+#             required_skills={2},
+#             price=5,
+#             depots=[depot],
+#         )
+#         res = RichVRPProblem(
+#             DistanceMatrixGeometry(np.array([]), np.array([]), 0),
+#             [agent],
+#             [job],
+#             [depot],
+#             [],
+#         )
+#
+#         test = StandardDataFormat()
+#         test.to_excel(res, settings.DATA_DIR / 'tests/tst.xlsx')
+#         test.from_excel(settings.DATA_DIR / 'tests/tst.xlsx')
+#         print('ok')
+#
+#
+#     main()
