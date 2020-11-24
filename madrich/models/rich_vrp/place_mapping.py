@@ -20,9 +20,7 @@ class PlaceMapping:
     а второй - тип матрицы(dist_matrix, time_matrix)
     """
 
-    def __init__(
-        self, places: Iterable[Place], geometries: Dict[str, Dict[str, np.ndarray]]
-    ):
+    def __init__(self, places: Iterable[Place], geometries: Dict[str, Dict[str, np.ndarray]]):
         self.places = places
         self.geometries = geometries
         self.points = np.array([[place.lat, place.lon] for place in self.places])

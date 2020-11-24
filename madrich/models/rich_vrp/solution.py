@@ -15,7 +15,7 @@ class VRPSolution:
 @dataclass
 class MDVRPSolution:
     problem: RichMDVRPProblem
-    routes: Dict[int, List[Plan]] = field(default_factory=list)  # agent_id: список маршрутов в временном порядке
+    routes: Dict[int, List[Plan]] = field(default_factory=dict)  # agent_id: список маршрутов в временном порядке
 
     def merge(self, solution: VRPSolution):
         for route in solution.routes:

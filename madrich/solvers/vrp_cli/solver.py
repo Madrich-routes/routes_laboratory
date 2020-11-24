@@ -11,6 +11,7 @@ from madrich import settings
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.plan import Plan
+from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.models.rich_vrp.solution import VRPSolution, MDVRPSolution
 from madrich.solvers.base import BaseSolver
@@ -40,15 +41,11 @@ class RustSolver(BaseSolver):
         self.show_log: bool = show_log
 
         # Параметры рантайма
-        self.matrix_files: Optional[
-            Dict[str, str]
-        ] = None  # Список файлов матриц расстояний.
+        self.matrix_files: Optional[Dict[str, str]] = None  # Список файлов матриц расстояний.
         self.solution: Optional[VRPSolution] = None  # Полученное решение
 
         self.problem_data: Optional[str] = None  # То, что записано в файле проблемы
-        self.matrices: Optional[
-            Dict[str, str]
-        ] = None  # Матрицы расстояний для каждого профиля
+        self.matrices: Optional[Dict[str, str]] = None  # Матрицы расстояний для каждого профиля
 
         self.solution_data: Optional[str] = None
 
@@ -67,9 +64,7 @@ class RustSolver(BaseSolver):
         params += [f"--log"] * bool(self.show_log)  # показывать лог на экране
 
         if not self.default_params:
-            params += [f"--max-time={self.max_time}"] * bool(
-                self.max_time
-            )  # максимальное время работы
+            params += [f"--max-time={self.max_time}"] * bool(self.max_time)  # максимальное время работы
             params += [f"--max-generations={self.max_generations}"] * bool(
                 self.max_generations  # максимальное количетсво поколений оптимизации
             )
@@ -144,9 +139,14 @@ class RustSolver(BaseSolver):
         agents = []
 
         for agent in problem.agents:
+            if agent.id not in solutions.routes:
+                agents.append(deepcopy(agent))
+                break
             new_tw = []
             for time_window in agent.time_windows:  # создаются новые окна из дефолтных
-                new_tw += RustSolver._cut_window(depot, time_window, solutions.routes[agent.id])
+                new_tw += RustSolver._cut_window(
+                    depot, time_window, solutions.routes[agent.id], problem.depots_mapping, agent.profile
+                )
 
             if not new_tw:
                 continue
@@ -158,7 +158,13 @@ class RustSolver(BaseSolver):
         return agents
 
     @staticmethod
-    def _cut_window(depot: Depot, time_window: Tuple[int, int], plans: List[Plan]) -> List[Tuple[int, int]]:
+    def _cut_window(
+        depot: Depot,
+        time_window: Tuple[int, int],
+        plans: List[Plan],
+        mapping: PlaceMapping,
+        profile: str,
+    ) -> List[Tuple[int, int]]:
         """
         Режем конкретное окно с учетом маршрутов
         """
@@ -182,7 +188,7 @@ class RustSolver(BaseSolver):
         tw = []
 
         # свободное время до первого склада минус время на переезд
-        travel_time = between(depot, plans[0].waypoints[0])
+        travel_time = mapping.time(depot, plans[0].waypoints[0].place, profile)
         if plans[0].waypoints[0].arrival - time_window[0] - travel_time > 0:
             tw.append((time_window[0], plans[0].waypoints[0].arrival - travel_time))
 
@@ -190,7 +196,7 @@ class RustSolver(BaseSolver):
         for i, plan in enumerate(plans):
             if i + 1 == size:  # значит это последний маршрут сейчас
                 curr_depot = plan.waypoints[-1]
-                travel_time = between(curr_depot, depot)
+                travel_time = mapping.time(curr_depot.place, depot, profile)
                 # свободное время после последнего маршрута
                 if time_window[1] - curr_depot.departure - travel_time > 0:
                     tw.append((curr_depot.departure + travel_time, time_window[1]))
@@ -199,9 +205,9 @@ class RustSolver(BaseSolver):
                 next_depot = next_plan.waypoints[0]
                 curr_depot = plan.waypoints[-1]
 
-                travel_xy = between(curr_depot, next_depot)
-                travel_z = between(curr_depot, depot)
-                travel_y = between(depot, next_depot)
+                travel_xy = mapping.time(curr_depot.place, next_depot.place, profile)
+                travel_z = mapping.time(curr_depot.place, depot, profile)
+                travel_y = mapping.time(depot, next_depot.place, profile)
                 delta = next_depot.arrival - curr_depot.departure
 
                 if delta == travel_xy:  # значит непрерывный маршрут

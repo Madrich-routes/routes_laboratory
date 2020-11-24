@@ -11,8 +11,7 @@ from madrich.utils.types import Matrix
 
 
 def cut_window(time_window: Tuple[int, int], problem: RichVRPProblem) -> Tuple[int, int]:
-    """ Принимает окно (смену) курьера и обрезает его начала и конец с учетом времени раобты депо
-    """
+    """Принимает окно (смену) курьера и обрезает его начала и конец с учетом времени раобты депо"""
     time_work = problem.depot.time_windows[0]
     start = time_work[0] if time_window[0] < time_work[0] else time_window[0]
     end = time_work[1] if time_window[1] > time_work[1] else time_window[1]
@@ -20,8 +19,7 @@ def cut_window(time_window: Tuple[int, int], problem: RichVRPProblem) -> Tuple[i
 
 
 def dump_jobs(problem: RichVRPProblem) -> List[dict]:
-    """ Получаем заформаченные заказы для problem.json (pragmatic format)
-    """
+    """Получаем заформаченные заказы для problem.json (pragmatic format)"""
     jobs_dicts = []
     for job in problem.jobs:
         tmp = {
@@ -45,33 +43,33 @@ def dump_jobs(problem: RichVRPProblem) -> List[dict]:
 
 
 def dump_shifts(agent: Agent, problem: RichVRPProblem) -> List[dict]:
-    """ Все смены загоняем в pragmatic формат
-    """
+    """Все смены загоняем в pragmatic формат"""
     shifts = []
     for time_window in agent.time_windows:
         start, end = cut_window(time_window, problem)
-        shifts.append({
-            'start': {
-                'earliest': ts_to_rfc(start),
-                'location': {'index': problem.matrix.index(problem.depot)},
-            },
-            'end': {
-                'latest': ts_to_rfc(end),
-                'location': {'index': problem.matrix.index(problem.depot)},
-            },
-            'reloads': [
-                {
+        shifts.append(
+            {
+                'start': {
+                    'earliest': ts_to_rfc(start),
                     'location': {'index': problem.matrix.index(problem.depot)},
-                    'duration': problem.depot.delay,
-                }
-            ],
-        })
+                },
+                'end': {
+                    'latest': ts_to_rfc(end),
+                    'location': {'index': problem.matrix.index(problem.depot)},
+                },
+                'reloads': [
+                    {
+                        'location': {'index': problem.matrix.index(problem.depot)},
+                        'duration': problem.depot.delay,
+                    }
+                ],
+            }
+        )
     return shifts
 
 
 def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
-    """ Дампим агентов в pragmatic формат
-    """
+    """Дампим агентов в pragmatic формат"""
     agents_dict = []
     for agent in problem.agents:
         # проверим, что демо в списке депо, который курьер может посещать
@@ -90,14 +88,12 @@ def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
 
 
 def dump_problem(path: Path, directory: Path, problem: RichVRPProblem):
-    """ Дампим проблему в pragmatic формат и сохраняем в директорию по заданному пути
-    """
+    """Дампим проблему в pragmatic формат и сохраняем в директорию по заданному пути"""
     jobs_dict = dump_jobs(problem)
     agents_dict = dump_vehicles(problem)
 
     profiles = [
-        {'name': profile, 'type': f'{profile}_profile'}
-        for profile, geometry in problem.matrix.geometries.items()
+        {'name': profile, 'type': f'{profile}_profile'} for profile, geometry in problem.matrix.geometries.items()
     ]
     problem = {
         'plan': {'jobs': jobs_dict},
@@ -134,8 +130,7 @@ def dump_matrix(profile: str, distance_matrix: Matrix, time_matrix: Matrix) -> s
 
 
 def dump_matrices(path: Path, problem: RichVRPProblem):
-    """ Дампим все матрицы для всех профилей и сохраняем в заданную директории
-    """
+    """Дампим все матрицы для всех профилей и сохраняем в заданную директории"""
     os.makedirs(path, exist_ok=True)
     matrix_files = {
         profile: dump_matrix(profile, geometry["dist_matrix"], geometry["time_matrix"])

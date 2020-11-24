@@ -102,9 +102,11 @@ def generate_mdvrp(jobs: int, storages: int, agents: int) -> Tuple[List[Agent], 
     depots_list = [generate_depot(i, points[i]) for i in range(storages)]
     agents_list = [generate_agent(generate_profile(), i, depots_list) for i in range(agents)]
     jobs_list = []
+    i = len(depots_list)
     for storage_id in range(storages):
         for j in range(jobs):
-            job_id = storages + storage_id * storages + j
+            job_id = i  # (j + 1) * (storage_id + 1)  # storages + storage_id * storages + j
             jobs_list.append(generate_job(job_id, points[job_id], depots_list[storage_id]))
+            i += 1
 
     return agents_list, jobs_list, depots_list
