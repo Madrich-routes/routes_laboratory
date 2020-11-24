@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from madrich.formats.api import export
 from madrich.formats.excel.universal import StandardDataFormat
@@ -24,11 +25,12 @@ def run_solver(filename: str) -> dict:
     return export(solution)
 
 
-def generate_random(filename: str) -> None:
+def generate_random(filename: str) -> Path:
     file = UPLOAD_DIR / filename
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     agents, jobs, depots = generate_mdvrp(20, 4, 10)
     StandardDataFormat.to_excel(agents, jobs, depots, file)
+    return file
 
 
 def run_random() -> dict:
