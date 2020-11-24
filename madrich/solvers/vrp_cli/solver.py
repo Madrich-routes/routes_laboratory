@@ -162,7 +162,6 @@ class RustSolver(BaseSolver):
         """
         Режем конкретное окно с учетом маршрутов
         """
-        tw = []
 
         # мы будем искать периоды времени, когда свободен курьер
         # это что-то такое depot_x [x y] depot_y
@@ -172,15 +171,43 @@ class RustSolver(BaseSolver):
         # со стороны x на between(depot_x, depot_z)
         # со стороны y на between(depot_z, depot_y)
 
-        start_period: Optional[int] = None  # начало свободного периода
-        prev_depot: Optional[int] = None
-        for plan in plans:
-            if start_period is None:  # ищем начало периода тогда
-                if len(tw) == 0:  # значит это самое начало
-                    start_period = time_window[0]
-                else:
-                    start_period = plan.waypoints[-1].departure  # тогда конец маршрута
-            else:  # ищем конец периода
-        # между depot_x (prev) и depot_y (curr) есть свободное время?
+        # у нас три случая
+        # 1. Хватит ли времени между двумя складами
+        # 2. Хватит ли времени до первого склада
+        # 3. Хватит ли времени после последнего склада
+
+        if not plans:
+            return [time_window]
+
+        tw = []
+
+        # свободное время до первого склада минус время на переезд
+        travel_time = between(depot, plans[0].waypoints[0])
+        if plans[0].waypoints[0].arrival - time_window[0] - travel_time > 0:
+            tw.append((time_window[0], plans[0].waypoints[0].arrival - travel_time))
+
+        size = len(plans)
+        for i, plan in enumerate(plans):
+            if i + 1 == size:  # значит это последний маршрут сейчас
+                curr_depot = plan.waypoints[-1]
+                travel_time = between(curr_depot, depot)
+                # свободное время после последнего маршрута
+                if time_window[1] - curr_depot.departure - travel_time > 0:
+                    tw.append((curr_depot.departure + travel_time, time_window[1]))
+            else:  # ну тогда не последний, посмотрим есть ли свободное время между ними
+                next_plan = plans[i + 1]
+                next_depot = next_plan.waypoints[0]
+                curr_depot = plan.waypoints[-1]
+
+                travel_xy = between(curr_depot, next_depot)
+                travel_z = between(curr_depot, depot)
+                travel_y = between(depot, next_depot)
+                delta = next_depot.arrival - curr_depot.departure
+
+                if delta == travel_xy:  # значит непрерывный маршрут
+                    continue
+
+                if delta - (travel_z + travel_y) > 0:
+                    tw.append((curr_depot.departure + travel_z, next_depot.arrival - travel_y))
 
         return tw
