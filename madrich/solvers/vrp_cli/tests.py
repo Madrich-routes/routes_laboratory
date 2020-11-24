@@ -11,17 +11,18 @@ from madrich.solvers.vrp_cli.solver import RustSolver
 
 def get_geometry(pts) -> dict:
     geometries = {
-        profile:
-            {
-                "dist_matrix": get_matrix(points=pts, factor='distance', transport=profile),
-                "time_matrix": get_matrix(points=pts, factor='duration', transport=profile)
-            }
+        profile: {
+            "dist_matrix": get_matrix(points=pts, factor='distance', transport=profile),
+            "time_matrix": get_matrix(points=pts, factor='duration', transport=profile),
+        }
         for profile in profiles
     }
     return geometries
 
 
-def get_problems(jobs_list: List[Job], depots_list: List[Depot]) -> List[RichVRPProblem]:
+def get_problems(
+    jobs_list: List[Job], depots_list: List[Depot]
+) -> List[RichVRPProblem]:
     problems = []
 
     for depot in depots_list:
@@ -59,10 +60,15 @@ def test_vrp_solver():
 def test_mdvrp_solver():
     """ Тест на запуск второго слоя - слоя решения задачи с несколькими складами """
     agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
-    problem = RichMDVRPProblem(agents_list, get_problems(jobs_list, depots_list))
+    pts = [(depot.lat, depot.lon) for depot in depots_list]
+    problem = RichMDVRPProblem(
+        agents_list,
+        get_problems(jobs_list, depots_list),
+        PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
+    )
     solver = RustSolver()
     solver.solve_mdvrp(problem)
 
 
 if __name__ == "__main__":
-    test_vrp_solver()
+    test_mdvrp_solver()
