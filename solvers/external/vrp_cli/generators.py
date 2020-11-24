@@ -6,12 +6,11 @@ import numpy as np
 from models.rich_vrp.agent import Agent
 from models.rich_vrp.depot import Depot
 from models.rich_vrp.job import Job
-from models.rich_vrp.place_mapping import PlaceMapping
-from models.rich_vrp.problem import RichVRPProblem
 from solvers.external.vrp_cli.converters import str_to_ts, to_list
-from solvers.madrich.api_module.osrm_module import get_matrix
 
 array = np.ndarray
+
+profiles = ['car', 'foot', 'bicycle']
 
 
 def generate_points(n: int, min_x=55.65, max_x=55.82, min_y=37.45, max_y=37.75) -> array:
@@ -40,33 +39,27 @@ def generate_window(i: int) -> Tuple[int, int]:
     return str_to_ts(f"2020-10-01T{10 + (i % 4)}:00:00Z"), str_to_ts(f"2020-10-01T{(12 + (i % 4))}:00:00Z")
 
 
+def generate_job(job_id: int, point: Tuple[float, float], depot: Depot, val=2, delay=300) -> Job:
+    return Job(
+        id=job_id,
+        name=f'job_{job_id}',
+        lat=point[0],
+        lon=point[1],
+        delay=delay,
+        time_windows=[generate_window(job_id)],
+        capacity_constraints=[val, val],
+        required_skills=[],
+        priority=1,
+        depots=[depot],
+    )
+
+
 def generate_jobs(points: List[Tuple[float, float]], depot: Depot, val=2, delay=300) -> List[Job]:
-    jobs = [
-        Job(
-            id=i,
-            name=f'job_{i}',
-            lat=point[0],
-            lon=point[1],
-            delay=delay,
-            time_windows=[generate_window(i)],
-            capacity_constraints=[val, val],
-            required_skills=[],
-            priority=1,
-            depots=[depot],
-        )
-        for i, point in enumerate(points)
-    ]
-    return jobs
+    return [generate_job(i, point, depot, val, delay) for i, point in enumerate(points)]
 
 
 def generate_profile() -> str:
-    profile = randint(0, 2)
-    if profile == 0:
-        return 'bicycle'
-    elif profile == 1:
-        return 'pedestrian'
-    else:
-        return 'driver'
+    return profiles[randint(0, 2)]
 
 
 def generate_agent(profile: str, agent_id: int, depots: List[Depot], val=20) -> Agent:
@@ -91,35 +84,27 @@ def generate_agent(profile: str, agent_id: int, depots: List[Depot], val=20) -> 
     return agent
 
 
-def generate_vrp(jobs: int, agents: int) -> RichVRPProblem:
+def generate_vrp(jobs: int, agents: int) -> Tuple[List[Agent], List[Job], Depot]:
     size = jobs + 1
     pts = generate_points(size)
     points = to_list(pts)
     depot = generate_depot(0, points[0])
     jobs_list = generate_jobs(points[1:], depot)
-    agents_list = []
-    for i in range(agents):
-        agents_list.append(generate_agent(generate_profile(), i, [depot]))
+    agents_list = [generate_agent(generate_profile(), i, [depot]) for i in range(agents)]
+    return agents_list, jobs_list, depot
 
-    geometries = {
-        "driver": {
-            "dist_matrix": get_matrix(points=pts, factor='distance', transport='car'),
-            "time_matrix": get_matrix(points=pts, factor='duration', transport='car'),
-        },
-        "pedestrian": {
-            "dist_matrix": get_matrix(points=pts, factor='distance', transport='foot'),
-            "time_matrix": get_matrix(points=pts, factor='duration', transport='foot'),
-        },
-        "bicycle": {
-            "dist_matrix": get_matrix(points=pts, factor='distance', transport='bicycle'),
-            "time_matrix": get_matrix(points=pts, factor='duration', transport='bicycle'),
-        },
-    }
 
-    places = [depot] + jobs_list  # noqa
-    return RichVRPProblem(
-        place_mapping=PlaceMapping(places=places, geometries=geometries),
-        agents=agents_list,
-        jobs=jobs_list,
-        depot=depot,
-    )
+def generate_mdvrp(jobs: int, storages: int, agents: int) -> Tuple[List[Agent], List[Job], List[Depot]]:
+    size = jobs * storages + storages
+    pts = generate_points(size)
+    points = to_list(pts)
+
+    depots_list = [generate_depot(i, points[i]) for i in range(storages)]
+    agents_list = [generate_agent(generate_profile(), i, depots_list) for i in range(agents)]
+    jobs_list = []
+    for storage_id in range(storages):
+        for j in range(jobs):
+            job_id = storages + storage_id * storages + j
+            jobs_list.append(generate_job(job_id, points[job_id], depots_list[storage_id]))
+
+    return agents_list, jobs_list, depots_list

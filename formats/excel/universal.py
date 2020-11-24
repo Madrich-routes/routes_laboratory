@@ -13,14 +13,14 @@ from models.rich_vrp.problem import RichVRPProblem
 class StandardDataFormat:
     """
     Наш универсальный формат Excel-файлов под импорт для дальнейшей работы
-    Внутри состоит из 3-х листов:
+    Внутри состоит из 4-х листов:
     1. Заказы:
         [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет]  !!! storage_id
         [lat: float, lon: float, address: string, time_windows: List[Tuple[int, int]],
-         amounts: np.ndarray, delay: int, price: int, priority:int]
+         amounts: List[int], delay: int, price: int, priority:int]
     2. Курьеры
         [Имя, График работы, Профиль, Начальная точка, Конечная точка]
-        [name: str, time_windows: List[Tuple[int, int]], type: str, start_place: int, end_place: int]
+        [name: str, time_windows: List[Tuple[int, int]], capacity: List[int], profile: str]
     3. Склады
         [Адрес, Широта, Долгота, График работы, Время обслуживания]
         [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]

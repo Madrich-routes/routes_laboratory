@@ -74,6 +74,9 @@ def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
     """
     agents_dict = []
     for agent in problem.agents:
+        # проверим, что демо в списке депо, который курьер может посещать
+        if problem.depot.id not in [depot.id for depot in agent.compatible_depots]:
+            continue
         tmp = {
             'typeId': str(agent.id),
             'vehicleIds': [agent.name],
