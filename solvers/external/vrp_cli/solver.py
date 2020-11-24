@@ -2,12 +2,12 @@
 import os
 import uuid
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import ujson
 
 import settings
-from models.rich_vrp.problem import RichVRPProblem
+from models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from models.rich_vrp.solution import VRPSolution
 from solvers.base import BaseSolver
 from solvers.external.vrp_cli.dump import dump_problem, dump_matrices
@@ -110,3 +110,30 @@ class RustSolver(BaseSolver):
         with open(solution_file, 'r') as f:
             solution = ujson.load(f)
         return load_solution(problem, solution)
+
+    def solve_mdvrp(self, problem: RichMDVRPProblem) -> List[VRPSolution]:
+        """
+        Решаем проблему, состояющую из некскольких, и получаем несколько решений
+        Parameters
+        ----------
+        problem : Задача для солвера
+
+        Returns
+        -------
+        Решение проблемы
+        """
+        solutions = []
+
+        for problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
+            solution = self.solve(problem)  # запускаем наконец солвер
+            solutions.append(solution)
+
+        return solutions
+
+    @staticmethod
+    def _cut_windows(solutions: List[VRPSolution], problem: RichMDVRPProblem) -> None:
+        """
+        Нам нужно поменять окна с учетом новго решения после запуска солвера - время курьеров уже занято
+        Нужно учесть, что они ездят между складами - на это тоже уходит время
+        """
+        pass

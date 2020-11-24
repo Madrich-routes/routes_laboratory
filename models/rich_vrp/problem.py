@@ -59,3 +59,27 @@ class RichVRPProblem:
         Set всех профайлов
         """
         return {a.profile for a in self.agents}
+
+
+class RichMDVRPProblem:
+    """Это класс RichVRP задачи — максимально общей постановки транспортной задачи с несколькими депо.
+
+    Его функция — описать все, что может встретиться в задаче в однозначной стандартной форме для
+    использования во всем остальном коде и обеспечить легкий доступ к параметрам задачи.
+
+    Parameters
+    ----------
+    agents : Список агентов, которые могут решать джобы в нашей задаче
+    problems : Список проблем
+    name : Название этой проблемы
+    """
+
+    def __init__(
+        self,
+        agents: List[Agent],
+        problems: List[RichVRPProblem],
+        name: Optional[str] = None
+    ):
+        self.name = name or uuid4()  # уникальный id этой конкретной проблемы
+        self.sub_problems = problems
+        self.agents = agents

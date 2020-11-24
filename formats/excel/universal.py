@@ -13,19 +13,20 @@ from models.rich_vrp.problem import RichVRPProblem
 class StandardDataFormat:
     """
     Наш универсальный формат Excel-файлов под импорт для дальнейшей работы
+    Время в RFC3339
     Внутри состоит из 4-х листов:
     1. Заказы:
-        [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет]  !!! storage_id
-        [lat: float, lon: float, address: string, time_windows: List[Tuple[int, int]],
-         amounts: List[int], delay: int, price: int, priority:int]
+        [Широта, Долгота, Адрес, Временные рамки, Характеристики, Время обслуживания, Цена, Приоритет, Storage id]
+        [lat: float, lon: float, address: string, time_windows: List[Tuple[str, str]],
+         amounts: List[int], delay: int, price: int, priority:int, storage id: int]
     2. Курьеры
-        [Имя, График работы, Профиль, Начальная точка, Конечная точка]
-        [name: str, time_windows: List[Tuple[int, int]], capacity: List[int], profile: str]
+        [Имя, График работы, Профиль, Начальная точка, Конечная точка, Посещаемые склады]
+        [name: str, time_windows: List[Tuple[str, str]], capacity: List[int], profile: str, depots: List[int]]
     3. Склады
-        [Адрес, Широта, Долгота, График работы, Время обслуживания]
-        [address: str, lat: float, lon: float, time_windows: List[Tuple[int, int]], delay: int]
+        [Индификатор, Адрес, Широта, Долгота, График работы, Время обслуживания]
+        [storage id: int, address: str, lat: float, lon: float, time_windows: List[Tuple[str, str]], delay: int]
     4. Профили
-        id - Название - type - средняя скорость
+        Название - type - средняя скорость
     """
 
     @staticmethod
