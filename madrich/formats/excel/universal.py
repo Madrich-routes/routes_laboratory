@@ -158,13 +158,101 @@ class StandardDataFormat:
             profiles_df.to_excel(writer, sheet_name='Профили')
 
     @staticmethod
-    def from_excel_to_json(path: str) -> None:
+    def from_json(json_agents, json_jobs, json_depots, json_profiles) -> tuple:
+        jobs_list, agents_list, depots_list, profiles_list = [], [], [], []
+
+        agents = json.loads(json_agents)
+        jobs = json.loads(json_jobs)
+        depots = json.loads(json_depots)
+        profiles = json.loads(json_profiles)
+
+        depots_map = {}
+        for i in range(len(depots)):
+            row = depots[i]
+            depot = Depot(
+                id=0,
+                time_window=str_to_time_windows(row['График работы'])[0],
+                lat=row['Широта'],
+                lon=row['Долгота'],
+                delay=row['Время обслуживания'],
+                name=row['Адрес'],
+            )
+            depots_list.append(depot)
+            depots_map[row['Адрес']] = depot
+
+        for i in range(len(jobs)):
+            row = jobs[i]
+            job = Job(
+                id=i,
+                name=row['Адрес'],
+                lat=row['Широта'],
+                lon=row['Долгота'],
+                x=None,
+                y=None,
+                time_windows=str_to_time_windows(row['Временные рамки']),
+                delay=row['Время обслуживания'],
+                capacity_constraints=[int(i) for i in row['Характеристики'].split()],
+                required_skills=[],
+                price=row['Цена'],
+                priority=row['Приоритет'],
+                depot=depots_map[row['Депо']]
+            )
+            jobs_list.append(job)
+
+        for i in range(len(agents)):
+            row = agents[i]
+
+            deps = eval(row['Посещаемые склады'])
+            compatible_depots = [depots_map[i] for i in deps]
+            agent = Agent(
+                id=i,
+                costs={'fixed': row['Фиксированная цена'],
+                       'distance': row['Цена расстояния'],
+                       'time': row['Цена время']},
+                time_windows=str_to_time_windows(row['График работы']),
+                compatible_depots=compatible_depots,
+                name=row['Имя'],
+                skills=[],
+                profile=row['Профиль'],
+                capacity_constraints=[int(i) for i in row['Вместимость'].strip("[]").split(',')]
+            )
+            agents_list.append(agent)
+
+        for i in range(len(profiles)):
+            row = profiles[i]
+            profile = {row['Профиль']: (row['Тип'], row['Средняя скорость'])}
+            profiles_list.append(profile)
+
+        return agents_list, jobs_list, depots_list, profiles_list
+
+    @staticmethod
+    def from_excel_to_json(path: str) -> tuple:
         with pd.ExcelFile(path) as xls:
             jobs = pd.read_excel(xls, 'Заказы')
             agents = pd.read_excel(xls, 'Курьеры')
             depots = pd.read_excel(xls, 'Склады')
             profiles = pd.read_excel(xls, 'Профили')
 
+        #######################################################################
+        agents_j = []
+        for i in range(len(agents.index)):
+            row = agents.iloc[i]
+            obj = {
+                'Имя': row['Имя'],
+                'График работы': row['График работы'],
+                'Профиль': row['Профиль'],
+                'Вместимость': row['Вместимость'],
+                'Посещаемые склады': row['Посещаемые склады'],
+                'Фиксированная цена': float(row['Фиксированная цена']),
+                'Цена расстояния': float(row['Цена расстояния']),
+                'Цена время': float(row['Цена время']),
+            }
+            agents_j.append(obj)
+
+        json_agents = json.dumps(agents_j, ensure_ascii=False, )
+        # print()
+        # print(json_agents)
+        #######################################################################
         jobs_j = []
         for i in range(len(jobs.index)):
             row = jobs.iloc[i]
@@ -172,22 +260,51 @@ class StandardDataFormat:
                 'Широта': row['Широта'],
                 'Долгота': row['Долгота'],
                 'Адрес': row['Адрес'],
-                # 'Временные рамки': row['Временные рамки'],
-                # 'Характеристики': row['Характеристики'],
-                # 'Время обслуживания': row['Время обслуживания'],
-                # 'Цена': row['Цена'],
-                # 'Приоритет': row['Приоритет'],
-                # 'Депо': row['Депо'],
+                'Временные рамки': row['Временные рамки'],
+                'Характеристики': row['Характеристики'],
+                'Время обслуживания': int(row['Время обслуживания']),
+                'Цена': int(row['Цена']),
+                'Приоритет': int(row['Приоритет']),
+                'Депо': row['Депо'],
             }
-            # print(obj)
             jobs_j.append(obj)
 
-        json_job = json.dumps(jobs_j, ensure_ascii=False,)
-        # json_agents = json.dumps(agents)
-        # json_depots = json.dumps(jobs)
-        # json_profiles = json.dumps(jobs)
+        json_jobs = json.dumps(jobs_j, ensure_ascii=False, )
+        # print()
+        # print(json_jobs)
+        #######################################################################
+        depots_j = []
+        for i in range(len(depots.index)):
+            row = depots.iloc[i]
+            obj = {
+                'Адрес': row['Адрес'],
+                'Широта': float(row['Широта']),
+                'Долгота': float(row['Долгота']),
+                'График работы': row['График работы'],
+                'Время обслуживания': int(row['Время обслуживания']),
+            }
+            depots_j.append(obj)
 
-        print(json_job)
+        json_depots = json.dumps(depots_j, ensure_ascii=False, )
+        # print()
+        # print(json_depots)
+        #######################################################################
+        profiles_j = []
+        for i in range(len(profiles.index)):
+            row = profiles.iloc[i]
+            obj = {
+                'Профиль': row['Профиль'],
+                'Тип': row['Тип'],
+                'Средняя скорость': row['Средняя скорость'],
+            }
+            profiles_j.append(obj)
+
+        json_profiles = json.dumps(profiles_j, ensure_ascii=False, )
+        # print()
+        # print(json_profiles)
+        #######################################################################
+
+        return json_agents, json_jobs, json_depots, json_profiles
 
     @staticmethod
     def from_excel(path: str) -> tuple:
@@ -327,4 +444,29 @@ def test_sdf():
     StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, 'output2.xlsx')
     a, j, d, p = StandardDataFormat.from_excel('output2.xlsx')
 
-    StandardDataFormat.from_excel_to_json('output2.xlsx')
+    j_a, j_j, j_d, j_p = StandardDataFormat.from_excel_to_json('output2.xlsx')
+
+    a_, j_, d_, p_ = StandardDataFormat.from_json(j_a, j_j, j_d, j_p)
+
+    print()
+    print('Исходный           ', agents_list[0])
+    print('to_exel + from_exel', a[0])
+    print('from_exel_to_json  ', j_a)
+    print('from_json          ', a_[0])
+
+    print()
+    print('Исходный           ', jobs_list[0])
+    print('to_exel + from_exel', j[0])
+    print('from_exel_to_json  ', j_j)
+    print('from_json          ', j_[0])
+
+    print()
+    print('Исходный           ', depots_list[0])
+    print('to_exel + from_exel', d[0])
+    print('from_exel_to_json  ', j_d)
+    print('from_json          ', d_[0])
+
+    print()
+    print('to_exel + from_exel', p[0])
+    print('from_exel_to_json  ', j_p)
+    print('from_json          ', p_[0])
