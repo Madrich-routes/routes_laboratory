@@ -30,7 +30,7 @@ class RichVRPProblem:
         agents: List[Agent],
         jobs: List[Job],
         depot: Optional[Depot],
-        name: Optional[str] = None
+        name: Optional[str] = None,
     ):
         self.name = name or uuid4()  # уникальный id этой конкретной проблемы
         self.matrix = place_mapping
@@ -71,6 +71,7 @@ class RichMDVRPProblem:
     ----------
     agents : Список агентов, которые могут решать джобы в нашей задаче
     problems : Список проблем
+    depots_mapping : Информация о расстояниях между депо
     name : Название этой проблемы
     """
 
@@ -78,8 +79,10 @@ class RichMDVRPProblem:
         self,
         agents: List[Agent],
         problems: List[RichVRPProblem],
-        name: Optional[str] = None
+        depots_mapping: PlaceMapping,
+        name: Optional[str] = None,
     ):
         self.name = name or uuid4()  # уникальный id этой конкретной проблемы
         self.sub_problems = problems
         self.agents = agents
+        self.depots_mapping = depots_mapping

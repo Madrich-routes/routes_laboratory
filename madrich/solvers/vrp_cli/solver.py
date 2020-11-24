@@ -1,14 +1,19 @@
 """В этом модуле находится интерфейс к растовскому солверу."""
 import os
 import uuid
+from copy import deepcopy
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Tuple
 
 import ujson
 
 from madrich import settings
+from madrich.models.rich_vrp.agent import Agent
+from madrich.models.rich_vrp.depot import Depot
+from madrich.models.rich_vrp.plan import Plan
+from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
-from madrich.models.rich_vrp.solution import VRPSolution
+from madrich.models.rich_vrp.solution import VRPSolution, MDVRPSolution
 from madrich.solvers.base import BaseSolver
 from madrich.solvers.vrp_cli.dump import dump_matrices, dump_problem
 from madrich.solvers.vrp_cli.load_solution import load_solution
@@ -36,15 +41,11 @@ class RustSolver(BaseSolver):
         self.show_log: bool = show_log
 
         # Параметры рантайма
-        self.matrix_files: Optional[
-            Dict[str, str]
-        ] = None  # Список файлов матриц расстояний.
+        self.matrix_files: Optional[Dict[str, str]] = None  # Список файлов матриц расстояний.
         self.solution: Optional[VRPSolution] = None  # Полученное решение
 
         self.problem_data: Optional[str] = None  # То, что записано в файле проблемы
-        self.matrices: Optional[
-            Dict[str, str]
-        ] = None  # Матрицы расстояний для каждого профиля
+        self.matrices: Optional[Dict[str, str]] = None  # Матрицы расстояний для каждого профиля
 
         self.solution_data: Optional[str] = None
 
@@ -63,9 +64,7 @@ class RustSolver(BaseSolver):
         params += [f"--log"] * bool(self.show_log)  # показывать лог на экране
 
         if not self.default_params:
-            params += [f"--max-time={self.max_time}"] * bool(
-                self.max_time
-            )  # максимальное время работы
+            params += [f"--max-time={self.max_time}"] * bool(self.max_time)  # максимальное время работы
             params += [f"--max-generations={self.max_generations}"] * bool(
                 self.max_generations  # максимальное количетсво поколений оптимизации
             )
@@ -111,7 +110,7 @@ class RustSolver(BaseSolver):
             solution = ujson.load(f)
         return load_solution(problem, solution)
 
-    def solve_mdvrp(self, problem: RichMDVRPProblem) -> List[VRPSolution]:
+    def solve_mdvrp(self, problem: RichMDVRPProblem) -> MDVRPSolution:
         """
         Решаем проблему, состояющую из некскольких, и получаем несколько решений
         Parameters
@@ -122,18 +121,99 @@ class RustSolver(BaseSolver):
         -------
         Решение проблемы
         """
-        solutions = []
+        solutions = MDVRPSolution(problem)
 
-        for problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
-            solution = self.solve(problem)  # запускаем наконец солвер
-            solutions.append(solution)
+        for sub_problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
+            sub_problem.agents = self._prepare_agents(sub_problem.depot, solutions, problem)
+            solution = self.solve(sub_problem)  # запускаем наконец солвер
+            solutions.merge(solution)
 
         return solutions
 
     @staticmethod
-    def _cut_windows(solutions: List[VRPSolution], problem: RichMDVRPProblem) -> None:
+    def _prepare_agents(depot: Depot, solutions: MDVRPSolution, problem: RichMDVRPProblem) -> List[Agent]:
         """
-        Нам нужно поменять окна с учетом новго решения после запуска солвера - время курьеров уже занято
+        Нам нужно поменять окна с учетом склада, на котором будем решать задачу, перед запуском солвера
         Нужно учесть, что они ездят между складами - на это тоже уходит время
         """
-        pass
+        agents = []
+
+        for agent in problem.agents:
+            if agent.id not in solutions.routes:
+                agents.append(deepcopy(agent))
+                break
+            new_tw = []
+            for time_window in agent.time_windows:  # создаются новые окна из дефолтных
+                new_tw += RustSolver._cut_window(
+                    depot, time_window, solutions.routes[agent.id], problem.depots_mapping, agent.profile
+                )
+
+            if not new_tw:
+                continue
+
+            new_agent = deepcopy(agent)
+            new_agent.time_windows = new_tw
+            agents.append(agent)
+
+        return agents
+
+    @staticmethod
+    def _cut_window(
+        depot: Depot,
+        time_window: Tuple[int, int],
+        plans: List[Plan],
+        mapping: PlaceMapping,
+        profile: str,
+    ) -> List[Tuple[int, int]]:
+        """
+        Режем конкретное окно с учетом маршрутов
+        """
+
+        # мы будем искать периоды времени, когда свободен курьер
+        # это что-то такое depot_x [x y] depot_y
+        # ожидается, что мы пытаемся вставить depot_z
+        # depot_x [travel to z] depot_z [travel to y] depot y
+        # и этот период мы должны сократить
+        # со стороны x на between(depot_x, depot_z)
+        # со стороны y на between(depot_z, depot_y)
+
+        # у нас три случая
+        # 1. Хватит ли времени между двумя складами
+        # 2. Хватит ли времени до первого склада
+        # 3. Хватит ли времени после последнего склада
+
+        if not plans:
+            return [time_window]
+
+        tw = []
+
+        # свободное время до первого склада минус время на переезд
+        travel_time = mapping.time(depot, plans[0].waypoints[0].place, profile)
+        if plans[0].waypoints[0].arrival - time_window[0] - travel_time > 0:
+            tw.append((time_window[0], plans[0].waypoints[0].arrival - travel_time))
+
+        size = len(plans)
+        for i, plan in enumerate(plans):
+            if i + 1 == size:  # значит это последний маршрут сейчас
+                curr_depot = plan.waypoints[-1]
+                travel_time = mapping.time(curr_depot.place, depot, profile)
+                # свободное время после последнего маршрута
+                if time_window[1] - curr_depot.departure - travel_time > 0:
+                    tw.append((curr_depot.departure + travel_time, time_window[1]))
+            else:  # ну тогда не последний, посмотрим есть ли свободное время между ними
+                next_plan = plans[i + 1]
+                next_depot = next_plan.waypoints[0]
+                curr_depot = plan.waypoints[-1]
+
+                travel_xy = mapping.time(curr_depot.place, next_depot.place, profile)
+                travel_z = mapping.time(curr_depot.place, depot, profile)
+                travel_y = mapping.time(depot, next_depot.place, profile)
+                delta = next_depot.arrival - curr_depot.departure
+
+                if delta == travel_xy:  # значит непрерывный маршрут
+                    continue
+
+                if delta - (travel_z + travel_y) > 0:
+                    tw.append((curr_depot.departure + travel_z, next_depot.arrival - travel_y))
+
+        return tw
