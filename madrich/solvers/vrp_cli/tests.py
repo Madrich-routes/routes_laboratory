@@ -9,6 +9,7 @@ from madrich.solvers.madrich.api_module.osrm_module import get_matrix
 from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles
 from madrich.solvers.vrp_cli.solver import RustSolver
 from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
+from madrich.formats.api import export
 
 
 def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.ndarray:
@@ -94,7 +95,8 @@ def test_mdvrp_solver():
         PlaceMapping(places=depots_list, geometries=get_haversine_geometry(pts)),
     )
     solver = RustSolver()
-    solver.solve_mdvrp(problem)
+    solution = solver.solve_mdvrp(problem)
+    api_str = export(solution)
     i = 0
 
 

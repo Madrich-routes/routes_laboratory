@@ -13,6 +13,7 @@ class Job(Place):
 
     Это самый общий класс. В него добавляются любые характеристики.
     """
+
     capacity_constraints: Optional[List[int]] = None  # количество разгрузки в точке
     required_skills: List[str] = field(default_factory=list)  # какой набор скиллов тут будет необходим
 

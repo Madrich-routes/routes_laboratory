@@ -75,6 +75,8 @@ def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
         # проверим, что демо в списке депо, который курьер может посещать
         if problem.depot.id not in [depot.id for depot in agent.compatible_depots]:
             continue
+        # не передаем fixed в vrp-cli, т.к. сломается глобальная статистика при вызове агента в нескольких депо
+        agent.costs["fixed"] = 0
         tmp = {
             'typeId': str(agent.id),
             'vehicleIds': [agent.name],
