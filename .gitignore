@@ -113,7 +113,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+madrich/docs/_build/
 
 # PyBuilder
 .pybuilder/
@@ -539,5 +539,5 @@ buildNumber.properties
 
 .virtual_documents
 
-data/big
-data/tmp/
+madrich/data/big
+madrich/data/tmp/
