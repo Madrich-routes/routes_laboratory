@@ -2,13 +2,14 @@
 import os
 import uuid
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Tuple
 
 import ujson
 
 from madrich import settings
+from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
-from madrich.models.rich_vrp.solution import VRPSolution
+from madrich.models.rich_vrp.solution import VRPSolution, MDVRPSolution
 from madrich.solvers.base import BaseSolver
 from madrich.solvers.vrp_cli.dump import dump_matrices, dump_problem
 from madrich.solvers.vrp_cli.load_solution import load_solution
@@ -111,7 +112,7 @@ class RustSolver(BaseSolver):
             solution = ujson.load(f)
         return load_solution(problem, solution)
 
-    def solve_mdvrp(self, problem: RichMDVRPProblem) -> List[VRPSolution]:
+    def solve_mdvrp(self, problem: RichMDVRPProblem) -> MDVRPSolution:
         """
         Решаем проблему, состояющую из некскольких, и получаем несколько решений
         Parameters
@@ -122,18 +123,30 @@ class RustSolver(BaseSolver):
         -------
         Решение проблемы
         """
-        solutions = []
+        solutions = MDVRPSolution(problem)
 
-        for problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
-            solution = self.solve(problem)  # запускаем наконец солвер
-            solutions.append(solution)
+        for sub_problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
+            solution = self.solve(sub_problem)  # запускаем наконец солвер
+            solutions.merge(solution)
+            self._cut_windows(solutions, problem)
 
         return solutions
 
     @staticmethod
-    def _cut_windows(solutions: List[VRPSolution], problem: RichMDVRPProblem) -> None:
+    def _cut_windows(solutions: MDVRPSolution, problem: RichMDVRPProblem) -> None:
         """
-        Нам нужно поменять окна с учетом новго решения после запуска солвера - время курьеров уже занято
+        Нам нужно поменять окна с учетом нового решения после запуска солвера - время курьеров уже занято
         Нужно учесть, что они ездят между складами - на это тоже уходит время
         """
-        pass
+        for agent in problem.agents:
+            new_tw = []
+            for time_window in agent.time_windows:
+                new_tw += RustSolver._cut_window(time_window, solutions.routes[agent.id])
+
+    @staticmethod
+    def _cut_window(time_window: Tuple[int, int], plans: List[Plan]) -> List[Tuple[int, int]]:
+        """
+        Режем конкретное окно с учетом маршрутов
+        """
+
+
