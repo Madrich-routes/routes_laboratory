@@ -31,16 +31,3 @@ def generate_random(filename: str) -> Path:
     agents, jobs, depots = generate_mdvrp(20, 4, 10)
     StandardDataFormat.to_excel(agents, jobs, depots, file)
     return file
-
-
-def run_random() -> dict:
-    agents_list, jobs_list, depots_list = generate_mdvrp(20, 4, 10)
-    pts = [(depot.lat, depot.lon) for depot in depots_list]
-    problem = RichMDVRPProblem(
-        agents_list,
-        get_problems(jobs_list, depots_list),
-        PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
-    )
-    solver = RustSolver()
-    solution = solver.solve_mdvrp(problem)
-    return export(solution)

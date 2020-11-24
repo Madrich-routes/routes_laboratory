@@ -7,7 +7,7 @@ url = f'http://localhost:5000'
 files = {'file': data}
 r = requests.post(f'{url}/solver', files=files)
 job_id = r.json()['job_id']
-print(r.json())
+print(r.json()['job_id'])
 
 flag, data = True, {}
 while flag:

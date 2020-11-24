@@ -6,9 +6,11 @@ from redis import Redis
 from rq import Queue
 
 from madrich.api.app.exceptions import InvalidUsage
-from madrich.api.app.solver import run_solver, run_random, generate_random
+from madrich.api.app.solver import run_solver, generate_random
 from madrich.api.app.utils import save_file
+from madrich.formats.excel.universal import StandardDataFormat
 from madrich.settings import UPLOAD_DIR
+from madrich.solvers.vrp_cli.generators import generate_mdvrp
 
 urls_blueprint = Blueprint('urls', __name__, )
 
@@ -49,18 +51,25 @@ def genetic_solver_task():
     job = queue.enqueue(run_solver, filename)
     job_id = job.get_id()
 
-    return {"job_id": str(job_id)}
+    data = StandardDataFormat.from_excel_to_json(UPLOAD_DIR / filename)
+    return {"job_id": str(job_id), 'parsed_data': data}
 
 
 @urls_blueprint.route('/random_task', methods=['POST'])
 def random_genetic_solver_task():
+    filename = 'random_example.xlsx'
+    file = UPLOAD_DIR / filename
+    agents_list, jobs_list, depots_list = generate_mdvrp(20, 4, 10)
+    StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, file)
+
     redis_conn = Redis(current_app.config['RQ_REDIS_URL'])
     queue = Queue(connection=redis_conn)
 
-    job = queue.enqueue(run_random)
+    job = queue.enqueue(run_solver, filename)
     job_id = job.get_id()
 
-    return {"job_id": str(job_id)}
+    data = StandardDataFormat.from_excel_to_json(file)
+    return {"job_id": str(job_id), 'parsed_data': data}
 
 
 @urls_blueprint.route("/example")
