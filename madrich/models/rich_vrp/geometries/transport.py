@@ -43,9 +43,7 @@ class TransportMatrixGeometry(BaseGeometry):
                 np.savez_compressed(walk_matrix_src, walk_matrix=walk_matrix)
 
             stations_matrix = build_stations_matrix(transport_dataset, walk_matrix)
-            transport_dist_matrix = build_graph(
-                stations_matrix
-            )  # построим матрицу времен между остановками
+            transport_dist_matrix = build_graph(stations_matrix)  # построим матрицу времен между остановками
         transport_stations_coords = list(transport_dataset["coord"])
 
         self.p_matrix = distance_matrix  # время пешком между точками

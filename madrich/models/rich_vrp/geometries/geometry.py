@@ -98,7 +98,7 @@ class HaversineGeometry(BaseGeometry):
     @lru_cache
     def dist(self, i: int, j: int, **kwargs) -> int:
         assert len(kwargs) == 0
-        self.line_dist(i, j)
+        return round(self.line_dist(i, j) * 1000)
 
     @lru_cache
     def time(self, i: int, j: int, **kwargs) -> int:
@@ -109,7 +109,7 @@ class HaversineGeometry(BaseGeometry):
     @lru_cache
     def dist_matrix(self, **kwargs):
         assert len(kwargs) == 0
-        return self.line_dist_matrix()
+        return np.matrix.round(self.line_dist_matrix() * 1000).astype("int")
 
     @lru_cache
     def time_matrix(self, **kwargs):

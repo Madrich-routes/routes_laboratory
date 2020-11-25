@@ -8,17 +8,17 @@ from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichMDVRPProblem
 from madrich.solvers.vrp_cli.generators import generate_mdvrp
 from madrich.solvers.vrp_cli.solver import RustSolver
-from madrich.solvers.vrp_cli.tests import get_problems, get_geometry
+from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
 
 
 def run_solver(filename: str) -> dict:
     file = settings.UPLOAD_DIR / filename
-    agents_list, jobs_list, depots_list, profile_list = StandardDataFormat.from_excel(file)
+    agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
         agents_list,
-        get_problems(jobs_list, depots_list),
-        PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
+        get_problems(jobs_list, depots_list, profile_dict),
+        PlaceMapping(places=depots_list, geometries=get_geometries(pts, profile_dict)),
     )
     solver = RustSolver()
     solution = solver.solve_mdvrp(problem)

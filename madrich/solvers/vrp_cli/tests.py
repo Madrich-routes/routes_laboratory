@@ -11,6 +11,7 @@ from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.solvers.madrich.api_module.osrm_module import get_matrix
 from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles
 from madrich.solvers.vrp_cli.solver import RustSolver
+from madrich.api.app.solver import run_solver, generate_random
 
 
 def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.ndarray:
@@ -22,10 +23,10 @@ def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.
         speed = 1.5
     geom = HaversineGeometry(points, default_speed=speed)
     if factor == "distance":
-        res = np.matrix.round(geom.dist_matrix() * 1000)
+        res = geom.dist_matrix()
     else:
-        res = np.matrix.round(geom.time_matrix() * 1000)
-    return res.astype("int")
+        res = geom.time_matrix()
+    return res
 
 
 def get_haversine_geometry(pts) -> dict:
@@ -102,4 +103,6 @@ def test_mdvrp_solver():
 
 
 if __name__ == "__main__":
-    test_mdvrp_solver()
+    # test_mdvrp_solver()
+    path_to_excel = generate_random("test_problem.xlsx")
+    result = run_solver(path_to_excel)
