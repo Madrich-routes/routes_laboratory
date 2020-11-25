@@ -8,10 +8,6 @@ import pandas as pd
 
 
 def export_to_exel(data: dict, path: str):
-    print()
-    for i in data.keys():
-        print(i, data[i])
-
     status = {
         'Статус': [data['status']],
         'Статус прогресса': [data['progress_status']],
@@ -196,32 +192,3 @@ def update_statistic(global_stat: dict, local_stat: dict) -> dict:
     global_stat["times"]["waiting"] += local_stat["times"]["waiting"]
     global_stat["times"]["break"] += local_stat["times"]["break"]
     return global_stat
-
-
-def test_export_to_exel():
-    ######################################
-    # from madrich.solvers.vrp_cli.generators import generate_mdvrp
-    # agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
-    # pts = [(depot.lat, depot.lon) for depot in depots_list]
-    # from madrich.models.rich_vrp.problem import RichMDVRPProblem
-    # from madrich.solvers.vrp_cli.tests import get_problems
-    # from madrich.models.rich_vrp.place_mapping import PlaceMapping
-    # from madrich.solvers.vrp_cli.tests import get_geometry
-    # problem = RichMDVRPProblem(
-    #     agents_list,
-    #     get_problems(jobs_list, depots_list),
-    #     PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
-    # )
-    # from madrich.solvers.vrp_cli.solver import RustSolver
-    # solver = RustSolver()
-    # solution = solver.solve_mdvrp(problem)
-    ######################################
-    import pickle
-    ######################################
-    # with open('data.pickle', 'wb') as f:
-    #     pickle.dump(solution, f)
-    ######################################
-    with open('data.pickle', 'rb') as f:
-        solution = pickle.load(f)
-    dct = export(solution)
-    export_to_exel(dct, 'out.xlsx')
