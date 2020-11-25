@@ -1,7 +1,7 @@
 import numpy as np
 import tsplib95
 
-from madrich import settings
+from madrich.config import settings
 from madrich.models.problems.base import LKHSolvable, BaseRoutingProblem
 from madrich.solvers.external.interface import exec_and_log
 from madrich.solvers.transformational import BaseTransformationalSolver

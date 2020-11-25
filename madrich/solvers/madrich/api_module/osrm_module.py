@@ -7,7 +7,7 @@ import requests
 import ujson
 from polyline import encode as polyline_encode
 
-from madrich import settings
+from madrich.config import settings
 
 array = np.ndarray
 Point = Tuple[float, float]

@@ -8,8 +8,8 @@ from rq import Queue
 from madrich.api.app.exceptions import InvalidUsage
 from madrich.api.app.solver import run_solver, generate_random
 from madrich.api.app.utils import save_file
+from madrich.config import settings
 from madrich.formats.excel.universal import StandardDataFormat
-from madrich.settings import UPLOAD_DIR
 from madrich.solvers.vrp_cli.generators import generate_mdvrp
 
 urls_blueprint = Blueprint('urls', __name__, )
@@ -51,14 +51,14 @@ def genetic_solver_task():
     job = queue.enqueue(run_solver, filename)
     job_id = job.get_id()
 
-    data = StandardDataFormat.from_excel_to_json(UPLOAD_DIR / filename)
+    data = StandardDataFormat.from_excel_to_json(settings.UPLOAD_DIR / filename)
     return {"job_id": str(job_id), 'parsed_data': data}
 
 
 @urls_blueprint.route('/random_task', methods=['POST'])
 def random_genetic_solver_task():
     filename = 'random_example.xlsx'
-    file = UPLOAD_DIR / filename
+    file = settings.UPLOAD_DIR / filename
     agents_list, jobs_list, depots_list = generate_mdvrp(20, 4, 10)
     StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, file)
 
@@ -73,7 +73,7 @@ def random_genetic_solver_task():
 
 
 @urls_blueprint.route("/example")
-def get_file():
+def get_file_example():
     filename = 'random_example.xlsx'
     generate_random(filename)
-    return send_from_directory(UPLOAD_DIR, filename, as_attachment=True)
+    return send_from_directory(settings.UPLOAD_DIR, filename, as_attachment=True)

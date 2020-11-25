@@ -2,8 +2,10 @@ import time
 
 import requests
 
-data = open('./madrich/formats/excel/output2.xlsx', 'rb')
-url = f'http://localhost:5000'
+from madrich.api.app.solver import generate_random
+
+data = open(generate_random('example.xlsx'), 'rb')
+url = f'http://localhost:8000'
 files = {'file': data}
 r = requests.post(f'{url}/solver', files=files)
 job_id = r.json()['job_id']

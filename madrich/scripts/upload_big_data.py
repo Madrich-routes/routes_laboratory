@@ -1,9 +1,9 @@
-import pathlib
 import os
+import pathlib
 
 from minio import Minio
 
-from madrich import settings
+from madrich.config import settings
 
 minio_client = Minio(
     endpoint=settings.MINIO_HOST,

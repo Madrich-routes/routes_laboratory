@@ -1,15 +1,17 @@
+from datetime import datetime
 from functools import partial
+
 import numpy as np
-from madrich import settings
+from formats.api import export
+
+from madrich.config import settings
+from madrich.customer_cases.eapteka import EaptekaSolver
 from madrich.customer_cases.eapteka import (
     build_eapteka_problem,
     AptekaParams,
 )
-from formats.api import export
-from datetime import datetime
 from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
-from madrich.customer_cases.eapteka import EaptekaSolver
 
 if __name__ == '__main__':
 

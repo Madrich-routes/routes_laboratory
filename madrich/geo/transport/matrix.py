@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 
-from madrich import settings
+from madrich import config
+from madrich.config import settings
 from madrich.geo.providers.osrm_module import get_osrm_matrix
 from madrich.geo.transport import suburban, land, metro
 from madrich.utils.logs import logger

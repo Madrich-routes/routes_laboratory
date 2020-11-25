@@ -1,6 +1,6 @@
 import pandas as pd
 
-from madrich import settings
+from madrich.config import settings
 from madrich.geo.providers import osrm_module
 from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
 

@@ -1,6 +1,7 @@
 from functools import partial
 
-from madrich import settings
+from madrich import config
+from madrich.config import settings
 from madrich.customer_cases.eapteka import (
     build_eapteka_problem,
     AptekaParams,

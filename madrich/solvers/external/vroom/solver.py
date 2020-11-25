@@ -1,4 +1,4 @@
-from madrich import settings
+from madrich.config import settings
 from madrich.models.problems import BaseRoutingProblem
 from madrich.models.rich_vrp.solution import VRPSolution
 from madrich.solvers.base import BaseSolver

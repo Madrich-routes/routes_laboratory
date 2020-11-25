@@ -8,7 +8,7 @@ import requests
 from fastcore.basics import null
 from polyline import encode as polyline_encode
 
-from madrich import settings
+from madrich.config import settings
 from madrich.geo.transforms import line_distance_matrix
 from madrich.utils.data_formats import cache
 from madrich.utils.logs import logger

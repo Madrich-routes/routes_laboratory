@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 
-from madrich import settings
+from madrich import config
+from madrich.config import settings
 from madrich.geo.transport.calc_distance import transport_travel_time, build_stations_matrix, build_graph
 from madrich.geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 from madrich.geo.providers import osrm_module

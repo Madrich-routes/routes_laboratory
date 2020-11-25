@@ -9,7 +9,7 @@ from dateutil.parser import parse
 from diskcache import FanoutCache
 
 # Кэш, в который можно сохранять на диск то, что уже было посчитано.
-from madrich import settings
+from madrich.config import settings
 
 cache = FanoutCache(settings.DATA_DIR / 'tmp/routes_cache/', shards=8, timeout=100)
 

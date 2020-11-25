@@ -3,12 +3,12 @@ from flask_rq2 import RQ
 
 from madrich.api.app.exceptions import InvalidUsage
 from madrich.api.app.urls import urls_blueprint
-from madrich.settings import REDIS_HOST, UPLOAD_DIR
+from madrich.config import settings
 
 app = Flask(__name__)
 app.register_blueprint(urls_blueprint)
-app.config['RQ_REDIS_URL'] = REDIS_HOST
-app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+app.config['RQ_REDIS_URL'] = settings.REDIS_HOST
+app.config['UPLOAD_FOLDER'] = settings.UPLOAD_DIR
 rq_app = RQ(app)
 
 

@@ -7,7 +7,8 @@ from typing import Dict, Optional, List, Tuple
 
 import ujson
 
-from madrich import settings
+from madrich import config
+from madrich.config import settings
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
