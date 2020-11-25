@@ -21,18 +21,18 @@ def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.
     else:
         speed = 1.5
     geom = HaversineGeometry(points, default_speed=speed)
-    if factor == 'distance':
-        res = geom.dist_matrix()
+    if factor == "distance":
+        res = np.matrix.round(geom.dist_matrix() * 1000)
     else:
-        res = geom.time_matrix()
-    return res
+        res = np.matrix.round(geom.time_matrix() * 1000)
+    return res.astype("int")
 
 
 def get_haversine_geometry(pts) -> dict:
     geometries = {
         profile: {
-            "dist_matrix": get_haversine_matrix(points=pts, factor='distance', transport=profile),
-            "time_matrix": get_haversine_matrix(points=pts, factor='duration', transport=profile),
+            "dist_matrix": get_haversine_matrix(points=pts, factor="distance", transport=profile),
+            "time_matrix": get_haversine_matrix(points=pts, factor="duration", transport=profile),
         }
         for profile in profiles
     }
@@ -42,8 +42,8 @@ def get_haversine_geometry(pts) -> dict:
 def get_geometry(pts) -> dict:
     geometries = {
         profile: {
-            "dist_matrix": get_matrix(points=pts, factor='distance', transport=profile),
-            "time_matrix": get_matrix(points=pts, factor='duration', transport=profile),
+            "dist_matrix": get_matrix(points=pts, factor="distance", transport=profile),
+            "time_matrix": get_matrix(points=pts, factor="duration", transport=profile),
         }
         for profile in profiles
     }
@@ -57,7 +57,7 @@ def get_problems(jobs_list: List[Job], depots_list: List[Depot]) -> List[RichVRP
         this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
 
         pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
-        geometries = get_geometry(pts)
+        geometries = get_haversine_geometry(pts)
         places = [depot] + this_depot_jobs  # noqa
         problem = RichVRPProblem(
             place_mapping=PlaceMapping(places=places, geometries=geometries),
@@ -74,7 +74,7 @@ def test_vrp_solver():
     """ Тест на запуск первого слоя - слоя запуска солвера """
     agents_list, jobs_list, depot = generate_vrp(20, 4)
     pts = [(job.lat, job.lon) for job in jobs_list] + [(depot.lat, depot.lon)]
-    geometries = get_geometry(pts)
+    geometries = get_haversine_geometry(pts)
 
     places = [depot] + jobs_list  # noqa
     problem = RichVRPProblem(
@@ -94,7 +94,7 @@ def test_mdvrp_solver():
     problem = RichMDVRPProblem(
         agents_list,
         get_problems(jobs_list, depots_list),
-        PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
+        PlaceMapping(places=depots_list, geometries=get_haversine_geometry(pts)),
     )
     solver = RustSolver()
     solution = solver.solve_mdvrp(problem)

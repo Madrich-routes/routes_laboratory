@@ -9,95 +9,87 @@ import pandas as pd
 
 def export_to_exel(data: dict, path: str):
     status = {
-        'Статус': [data['status']],
-        'Статус прогресса': [data['progress_status']],
+        "Статус": [data["status"]],
+        "Статус прогресса": [data["progress_status"]],
     }
     status_df = pd.DataFrame(status)
 
-    solved = data['solved']
+    solved = data["solved"]
 
     couriers = [solved[i] for i in solved.keys()]
-    couriers_df = pd.DataFrame(couriers)[['type', 'courier_id', 'statistic']]
-    couriers_df[['cost', 'distance', 'duration']] = pd.DataFrame(couriers_df['statistic'].to_list())
-    del couriers_df['statistic']
+    couriers_df = pd.DataFrame(couriers)[["type", "courier_id", "statistic"]]
+    couriers_df[["cost", "distance", "duration"]] = pd.DataFrame(couriers_df["statistic"].to_list())
+    del couriers_df["statistic"]
     couriers_df.columns = [
-        'Тип',
-        'Курьер',
-        'Цена',
-        'Дистанция',
-        'Время',
+        "Тип",
+        "Курьер",
+        "Цена",
+        "Дистанция",
+        "Время",
     ]
 
-    couriers_activity = [solved[i]['stops'] for i in solved.keys()]
+    couriers_activity = [solved[i]["stops"] for i in solved.keys()]
     activity = []
     for cur_list in range(len(couriers_activity)):
         for act in couriers_activity[cur_list]:
-            act['courier_id'] = couriers[cur_list]['courier_id']
+            act["courier_id"] = couriers[cur_list]["courier_id"]
         activity += couriers_activity[cur_list]
     activity_df = pd.DataFrame(activity)
-    activity_df[['lat', 'lon']] = pd.DataFrame(activity_df['location'].to_list())
-    activity_df[['arrival', 'departure']] = pd.DataFrame(activity_df['time'].to_list())
-    del activity_df['location']
-    del activity_df['time']
+    activity_df[["lat", "lon"]] = pd.DataFrame(activity_df["location"].to_list())
+    activity_df[["arrival", "departure"]] = pd.DataFrame(activity_df["time"].to_list())
+    del activity_df["location"]
+    del activity_df["time"]
 
-    activity_df = activity_df[[
-        'courier_id',
-        'activity',
-        'distance',
-        'load',
-        'job_id',
-        'lat',
-        'lon',
-        'arrival',
-        'departure'
-    ]]
+    activity_df = activity_df[
+        ["courier_id", "activity", "distance", "load", "job_id", "lat", "lon", "arrival", "departure"]
+    ]
     activity_df.columns = [
-        'Курьер',
-        'Действие',
-        'Дистанция',
-        'Загрузка',
-        'Заказ',
-        'Широта',
-        'Долгота',
-        'Время отправки',
-        'Время прибытия',
+        "Курьер",
+        "Действие",
+        "Дистанция",
+        "Загрузка",
+        "Заказ",
+        "Широта",
+        "Долгота",
+        "Время отправки",
+        "Время прибытия",
     ]
 
-    unassigned_df = pd.DataFrame(data['unassigned'])
+    unassigned_df = pd.DataFrame(data["unassigned"])
     unassigned_df.columns = [
-        'Заказ',
-        'Причина',
+        "Заказ",
+        "Причина",
     ]
     info = {
-        'Стратегия': [data['info']['strategy_used']],
-        'Время получения': [data['info']['time_received']],
-        'Время вычислений': [data['info']['time_computed']],
+        "Стратегия": [data["info"]["strategy_used"]],
+        "Время получения": [data["info"]["time_received"]],
+        "Время вычислений": [data["info"]["time_computed"]],
     }
     info_df = pd.DataFrame(info)
 
-    statistics = data['statistics']
-    statistics['driving'] = data['statistics']['times']['driving']
-    statistics['serving'] = data['statistics']['times']['serving']
-    statistics['waiting'] = data['statistics']['times']['waiting']
-    statistics['break'] = data['statistics']['times']['break']
+    statistics = data["statistics"]
+    statistics["driving"] = data["statistics"]["times"]["driving"]
+    statistics["serving"] = data["statistics"]["times"]["serving"]
+    statistics["waiting"] = data["statistics"]["times"]["waiting"]
+    statistics["break"] = data["statistics"]["times"]["break"]
     statistics = {
-        'Стоимость': [data['statistics']['cost']],
-        'Дистанция': [data['statistics']['distance']],
-        'Время': [data['statistics']['duration']],
-        'Время в пути': [data['statistics']['driving']],
-        'Время упаковки': [data['statistics']['serving']],
-        'Время ожидания': [data['statistics']['waiting']],
-        'Время бездействия': [data['statistics']['break']],
+        "Стоимость": [data["statistics"]["cost"]],
+        "Дистанция": [data["statistics"]["distance"]],
+        "Время": [data["statistics"]["duration"]],
+        "Время в пути": [data["statistics"]["driving"]],
+        "Время упаковки": [data["statistics"]["serving"]],
+        "Время ожидания": [data["statistics"]["waiting"]],
+        "Время бездействия": [data["statistics"]["break"]],
     }
     statistics_df = pd.DataFrame(statistics)
 
-    with pd.ExcelWriter(path, datetime_format='DD.MM.YYYY HH:MM:SS') as writer:
-        status_df.to_excel(writer, sheet_name='Статус')
-        couriers_df.to_excel(writer, sheet_name='Курьеры')
-        activity_df.to_excel(writer, sheet_name='Решения')
-        unassigned_df.to_excel(writer, sheet_name='Не использованные')
-        info_df.to_excel(writer, sheet_name='Информация')
-        statistics_df.to_excel(writer, sheet_name='Статистика')
+    with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS") as writer:
+        status_df.to_excel(writer, sheet_name="Статус")
+        couriers_df.to_excel(writer, sheet_name="Курьеры")
+        activity_df.to_excel(writer, sheet_name="Решения")
+        unassigned_df.to_excel(writer, sheet_name="Не использованные")
+        info_df.to_excel(writer, sheet_name="Информация")
+        statistics_df.to_excel(writer, sheet_name="Статистика")
 
 
 def export(solution: MDVRPSolution) -> dict:
@@ -112,7 +104,7 @@ def export(solution: MDVRPSolution) -> dict:
     -------
     """
     global_stat = {
-        "cost": sum([agent.costs["fixed"] for agent in solution.problem.agents]),
+        "cost": 0,
         "distance": 0,
         "duration": 0,
         "times": {
@@ -123,15 +115,26 @@ def export(solution: MDVRPSolution) -> dict:
         },
     }
     tours = []
+    # собираем стоимость выхода всех курьеров
+    fixed_costs = 0
     for agent_id, plans in solution.routes.items():
-        for plan in plans:
+        sum_dist = 0
+        sum_time = 0
+        for j, plan in enumerate(plans):
             if len(plan.waypoints) > 2:
+                if plan == plans[0]:
+                    fixed_costs += plan.agent.costs["fixed"]
+                else:
+                    sum_dist += solution.problem.depots_mapping.dist(
+                        plans[j - 1].waypoints[0], plans[j - 1].waypoints[0], plan.agent.profile
+                    )
+                    sum_time += solution.problem.depots_mapping.time(
+                        plans[j - 1].waypoints[0], plans[j - 1].waypoints[0], plan.agent.profile
+                    )
+                # собираем все посещенные депо данным курьером
                 stops = []
-                sum_dist = 0
                 # проходим по каждой доставке
                 for i, visit in enumerate(plan.waypoints):
-                    distance = 0  # if i == 0 else solution.problem.sub_problems
-                    sum_dist += distance
                     # собираем посещения
                     if i == 0:
                         activity = "departure"
@@ -141,7 +144,6 @@ def export(solution: MDVRPSolution) -> dict:
                         activity = "delivery"
                     stop = {
                         "activity": activity,
-                        "distance": distance,
                         "load": visit.place.capacity_constraints if isinstance(visit.place, Job) else [],
                         "job_id": visit.place.id,
                         "location": {"lat": visit.place.lat, "lan": visit.place.lon},
@@ -156,7 +158,7 @@ def export(solution: MDVRPSolution) -> dict:
                     "courier_id": plan.agent.id,
                     "statistic": {
                         "cost": plan.info["cost"],
-                        "distance": sum_dist,
+                        "distance": plan.info["distance"],
                         "duration": plan.info["duration"],
                     },
                     "stops": stops,
@@ -164,16 +166,19 @@ def export(solution: MDVRPSolution) -> dict:
                 global_stat = update_statistic(global_stat, plan.info)
                 dep_name = plan.waypoints[0].place.name
                 tours.append((dep_name, tour))
+        global_stat["distance"] += sum_dist
+        global_stat["duration"] += sum_time
+        global_stat["times"]["driving"] += sum_time
+        global_stat["cost"] += sum_dist * plan.agent.costs["distance"] + sum_time * plan.agent.costs["time"]
+
+    # добавляем посчитанные стоимости выходов всех курьеров
+    global_stat["cost"] += fixed_costs
     res = {
         "status": "solved",
         "progress_status": "solved",
         "solved": {dep_name: tour for dep_name, tour in tours},
-        "unassigned": [{"job_id": "job_0", "reason": "because"}],
-        "info": {
-            "strategy_used": "genetic",
-            "time_received": "2020-10-01T10:00:00Z",
-            "time_computed": "2020-10-01T10:05:00Z",
-        },
+        "unassigned": [],
+        "info": {},
         "statistics": global_stat,
     }
 
