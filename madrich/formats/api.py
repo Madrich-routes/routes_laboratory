@@ -1,13 +1,11 @@
 from datetime import datetime
 from typing import Dict
 
-import ujson
-
 from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.solution import MDVRPSolution
 
 
-def export(solution: MDVRPSolution) -> str:
+def export(solution: MDVRPSolution) -> dict:
     """
      Конвертируем MDVRPSolution для нашего API.
 
@@ -84,10 +82,10 @@ def export(solution: MDVRPSolution) -> str:
         "statistics": global_stat,
     }
 
-    return ujson.dumps(res)
+    return res
 
 
-def update_statistic(global_stat: Dict[str, float], local_stat: Dict[str, float]) -> Dict[str, float]:
+def update_statistic(global_stat: dict, local_stat: dict) -> dict:
     """
     Функция пересчера общей статистики после прохода очередного route.
     """
