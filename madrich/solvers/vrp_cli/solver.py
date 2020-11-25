@@ -189,7 +189,7 @@ class RustSolver(BaseSolver):
         for agent in problem.agents:
             if agent.id not in solutions.routes:
                 agents.append(deepcopy(agent))
-                break
+                continue
             new_tw = []
             for time_window in agent.time_windows:  # создаются новые окна из дефолтных
                 new_tw += RustSolver._cut_window(

@@ -1,8 +1,8 @@
+import json
 from datetime import datetime
 from typing import List, Tuple
 
 import pandas as pd
-import json
 
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
@@ -324,7 +324,7 @@ class StandardDataFormat:
                 time_window=str_to_time_windows(row["График работы"])[0],
                 lat=row["Широта"],
                 lon=row["Долгота"],
-                delay=row["Время обслуживания"],
+                delay=int(row["Время обслуживания"]),
                 name=row["Адрес"],
             )
             depots_list.append(depot)
@@ -342,11 +342,11 @@ class StandardDataFormat:
                 x=None,
                 y=None,
                 time_windows=str_to_time_windows(row["Временные рамки"]),
-                delay=row["Время обслуживания"],
+                delay=int(row["Время обслуживания"]),
                 capacity_constraints=[int(i) for i in row["Характеристики"].split()],
                 required_skills=[],
-                price=row["Цена"],
-                priority=row["Приоритет"],
+                price=int(row["Цена"]),
+                priority=int(row["Приоритет"]),
                 depot=depots_map[row["Депо"]],
             )
             jobs_list.append(job)
@@ -359,9 +359,9 @@ class StandardDataFormat:
             agent = Agent(
                 id=i,
                 costs={
-                    "fixed": row["Фиксированная цена"],
-                    "distance": row["Цена расстояния"],
-                    "time": row["Цена время"],
+                    "fixed": float(row["Фиксированная цена"]),
+                    "distance": float(row["Цена расстояния"]),
+                    "time": float(row["Цена время"]),
                 },
                 time_windows=str_to_time_windows(row["График работы"]),
                 compatible_depots=compatible_depots,
