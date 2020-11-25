@@ -2,7 +2,7 @@ import time
 
 import requests
 
-data = open('./data/eapteka/data/update_3.xlsx', 'rb')
+data = open('./madrich/formats/excel/output2.xlsx', 'rb')
 url = f'http://localhost:5000'
 files = {'file': data}
 r = requests.post(f'{url}/solver', files=files)
