@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List, Tuple
 
 import pandas as pd
+import json
 
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
@@ -157,6 +158,38 @@ class StandardDataFormat:
             profiles_df.to_excel(writer, sheet_name='Профили')
 
     @staticmethod
+    def from_excel_to_json(path: str) -> None:
+        with pd.ExcelFile(path) as xls:
+            jobs = pd.read_excel(xls, 'Заказы')
+            agents = pd.read_excel(xls, 'Курьеры')
+            depots = pd.read_excel(xls, 'Склады')
+            profiles = pd.read_excel(xls, 'Профили')
+
+        jobs_j = []
+        for i in range(len(jobs.index)):
+            row = jobs.iloc[i]
+            obj = {
+                'Широта': row['Широта'],
+                'Долгота': row['Долгота'],
+                'Адрес': row['Адрес'],
+                # 'Временные рамки': row['Временные рамки'],
+                # 'Характеристики': row['Характеристики'],
+                # 'Время обслуживания': row['Время обслуживания'],
+                # 'Цена': row['Цена'],
+                # 'Приоритет': row['Приоритет'],
+                # 'Депо': row['Депо'],
+            }
+            # print(obj)
+            jobs_j.append(obj)
+
+        json_job = json.dumps(jobs_j, ensure_ascii=False,)
+        # json_agents = json.dumps(agents)
+        # json_depots = json.dumps(jobs)
+        # json_profiles = json.dumps(jobs)
+
+        print(json_job)
+
+    @staticmethod
     def from_excel(path: str) -> tuple:
         """Конвертируем наш Excel в модели.
 
@@ -172,8 +205,9 @@ class StandardDataFormat:
             jobs = pd.read_excel(xls, 'Заказы')
             agents = pd.read_excel(xls, 'Курьеры')
             depots = pd.read_excel(xls, 'Склады')
+            profiles = pd.read_excel(xls, 'Профили')
 
-        jobs_list, agents_list, depots_list = [], [], []
+        jobs_list, agents_list, depots_list, profiles_list = [], [], [], []
         depots_map = {}
         for i in range(len(depots.index)):
             row = depots.iloc[i]
@@ -228,7 +262,12 @@ class StandardDataFormat:
             )
             agents_list.append(agent)
 
-        return agents_list, jobs_list, depots_list
+        for i in range(len(profiles.index)):
+            row = profiles.iloc[i]
+            profile = {row['Профиль']: (row['Тип'], row['Средняя скорость'])}
+            profiles_list.append(profile)
+
+        return agents_list, jobs_list, depots_list, profiles_list
 
 
 def time_windows_to_str(time_windows: List[Tuple[int, int]]) -> str:
@@ -282,13 +321,10 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
 
 def test_sdf():
     from madrich.solvers.vrp_cli.generators import generate_mdvrp
+
     agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
+
     StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, 'output2.xlsx')
-    a, j, d = StandardDataFormat.from_excel('output2.xlsx')
-    print()
-    print(a[0])
-    print(agents_list[0])
-    print(j[0])
-    print(jobs_list[0])
-    print(d[0])
-    print(depots_list[0])
+    a, j, d, p = StandardDataFormat.from_excel('output2.xlsx')
+
+    StandardDataFormat.from_excel_to_json('output2.xlsx')
