@@ -52,8 +52,7 @@ class StandardDataFormat:
              capacity_constraints: List[int], delay: int, price: int, priority:int, storage id: int]
         '''
         jobs = pd.DataFrame(jobs_list)
-        jobs = jobs[
-            ['lat', 'lon', 'name', 'time_windows', 'capacity_constraints', 'delay', 'price', 'priority', 'depot']]
+        jobs = jobs[['lat', 'lon', 'name', 'time_windows', 'capacity_constraints', 'delay', 'price', 'priority', 'depot']]
 
         jobs['depot'] = jobs['depot'].apply(lambda x: x['name'])
         jobs['time_windows'] = jobs['time_windows'].apply(time_windows_to_str)
@@ -171,56 +170,56 @@ class StandardDataFormat:
             row = depots[i]
             depot = Depot(
                 id=0,
-                time_window=str_to_time_windows(row['График работы'])[0],
-                lat=row['Широта'],
-                lon=row['Долгота'],
-                delay=row['Время обслуживания'],
-                name=row['Адрес'],
+                time_window=str_to_time_windows(row['time_windows'])[0],
+                lat=row['lat'],
+                lon=row['lon'],
+                delay=row['delay'],
+                name=row['name'],
             )
             depots_list.append(depot)
-            depots_map[row['Адрес']] = depot
+            depots_map[row['name']] = depot
 
         for i in range(len(jobs)):
             row = jobs[i]
             job = Job(
                 id=i,
-                name=row['Адрес'],
-                lat=row['Широта'],
-                lon=row['Долгота'],
+                name=row['name'],
+                lat=row['lat'],
+                lon=row['lon'],
                 x=None,
                 y=None,
-                time_windows=str_to_time_windows(row['Временные рамки']),
-                delay=row['Время обслуживания'],
-                capacity_constraints=[int(i) for i in row['Характеристики'].split()],
+                time_windows=str_to_time_windows(row['time_windows']),
+                delay=row['delay'],
+                capacity_constraints=[int(i) for i in row['capacity_constraints'].split()],
                 required_skills=[],
-                price=row['Цена'],
-                priority=row['Приоритет'],
-                depot=depots_map[row['Депо']]
+                price=row['price'],
+                priority=row['priority'],
+                depot=depots_map[row['depot']]
             )
             jobs_list.append(job)
 
         for i in range(len(agents)):
             row = agents[i]
 
-            deps = eval(row['Посещаемые склады'])
+            deps = eval(row['compatible_depots'])
             compatible_depots = [depots_map[i] for i in deps]
             agent = Agent(
                 id=i,
-                costs={'fixed': row['Фиксированная цена'],
-                       'distance': row['Цена расстояния'],
-                       'time': row['Цена время']},
-                time_windows=str_to_time_windows(row['График работы']),
+                costs={'fixed': row['fixed'],
+                       'distance': row['distance'],
+                       'time': row['time']},
+                time_windows=str_to_time_windows(row['time_windows']),
                 compatible_depots=compatible_depots,
-                name=row['Имя'],
+                name=row['name'],
                 skills=[],
-                profile=row['Профиль'],
-                capacity_constraints=[int(i) for i in row['Вместимость'].strip("[]").split(',')]
+                profile=row['profile'],
+                capacity_constraints=[int(i) for i in row['capacity_constraints'].strip("[]").split(',')]
             )
             agents_list.append(agent)
 
         for i in range(len(profiles)):
             row = profiles[i]
-            profile = {row['Профиль']: (row['Тип'], row['Средняя скорость'])}
+            profile = {row['profile']: (row['type'], row['speed'])}
             profiles_list.append(profile)
 
         return agents_list, jobs_list, depots_list, profiles_list
@@ -238,14 +237,14 @@ class StandardDataFormat:
         for i in range(len(agents.index)):
             row = agents.iloc[i]
             obj = {
-                'Имя': row['Имя'],
-                'График работы': row['График работы'],
-                'Профиль': row['Профиль'],
-                'Вместимость': row['Вместимость'],
-                'Посещаемые склады': row['Посещаемые склады'],
-                'Фиксированная цена': float(row['Фиксированная цена']),
-                'Цена расстояния': float(row['Цена расстояния']),
-                'Цена время': float(row['Цена время']),
+                'name': row['Имя'],
+                'time_windows': row['График работы'],
+                'profile': row['Профиль'],
+                'capacity_constraints': row['Вместимость'],
+                'compatible_depots': row['Посещаемые склады'],
+                'fixed': float(row['Фиксированная цена']),
+                'distance': float(row['Цена расстояния']),
+                'time': float(row['Цена время']),
             }
             agents_j.append(obj)
 
@@ -257,15 +256,15 @@ class StandardDataFormat:
         for i in range(len(jobs.index)):
             row = jobs.iloc[i]
             obj = {
-                'Широта': row['Широта'],
-                'Долгота': row['Долгота'],
-                'Адрес': row['Адрес'],
-                'Временные рамки': row['Временные рамки'],
-                'Характеристики': row['Характеристики'],
-                'Время обслуживания': int(row['Время обслуживания']),
-                'Цена': int(row['Цена']),
-                'Приоритет': int(row['Приоритет']),
-                'Депо': row['Депо'],
+                'lat': row['Широта'],
+                'lon': row['Долгота'],
+                'name': row['Адрес'],
+                'time_windows': row['Временные рамки'],
+                'capacity_constraints': row['Характеристики'],
+                'delay': int(row['Время обслуживания']),
+                'price': int(row['Цена']),
+                'priority': int(row['Приоритет']),
+                'depot': row['Депо'],
             }
             jobs_j.append(obj)
 
@@ -277,11 +276,11 @@ class StandardDataFormat:
         for i in range(len(depots.index)):
             row = depots.iloc[i]
             obj = {
-                'Адрес': row['Адрес'],
-                'Широта': float(row['Широта']),
-                'Долгота': float(row['Долгота']),
-                'График работы': row['График работы'],
-                'Время обслуживания': int(row['Время обслуживания']),
+                'name': row['Адрес'],
+                'lat': float(row['Широта']),
+                'lon': float(row['Долгота']),
+                'time_windows': row['График работы'],
+                'delay': int(row['Время обслуживания']),
             }
             depots_j.append(obj)
 
@@ -293,9 +292,9 @@ class StandardDataFormat:
         for i in range(len(profiles.index)):
             row = profiles.iloc[i]
             obj = {
-                'Профиль': row['Профиль'],
-                'Тип': row['Тип'],
-                'Средняя скорость': row['Средняя скорость'],
+                'profile': row['Профиль'],
+                'type': row['Тип'],
+                'speed': row['Средняя скорость'],
             }
             profiles_j.append(obj)
 
