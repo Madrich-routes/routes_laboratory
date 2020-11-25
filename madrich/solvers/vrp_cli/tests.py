@@ -57,7 +57,7 @@ def get_problems(jobs_list: List[Job], depots_list: List[Depot]) -> List[RichVRP
         this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
 
         pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
-        geometries = get_haversine_geometry(pts)
+        geometries = get_geometry(pts)
         places = [depot] + this_depot_jobs  # noqa
         problem = RichVRPProblem(
             place_mapping=PlaceMapping(places=places, geometries=geometries),
@@ -94,12 +94,11 @@ def test_mdvrp_solver():
     problem = RichMDVRPProblem(
         agents_list,
         get_problems(jobs_list, depots_list),
-        PlaceMapping(places=depots_list, geometries=get_haversine_geometry(pts)),
+        PlaceMapping(places=depots_list, geometries=get_geometry(pts)),
     )
     solver = RustSolver()
     solution = solver.solve_mdvrp(problem)
-    api_str = export(solution)
-    i = 0
+    export(solution)
 
 
 if __name__ == "__main__":
