@@ -1,15 +1,16 @@
 from typing import List
+
 import numpy as np
 
+from madrich.formats.api import export
 from madrich.models.rich_vrp.depot import Depot
+from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.solvers.madrich.api_module.osrm_module import get_matrix
 from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles
 from madrich.solvers.vrp_cli.solver import RustSolver
-from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
-from madrich.formats.api import export
 
 
 def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.ndarray:
@@ -28,7 +29,6 @@ def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.
 
 
 def get_haversine_geometry(pts) -> dict:
-
     geometries = {
         profile: {
             "dist_matrix": get_haversine_matrix(points=pts, factor='distance', transport=profile),
@@ -54,13 +54,15 @@ def get_problems(jobs_list: List[Job], depots_list: List[Depot]) -> List[RichVRP
     problems = []
 
     for depot in depots_list:
-        pts = [(job.lat, job.lon) for job in jobs_list] + [(depot.lat, depot.lon)]
+        this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
+
+        pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
         geometries = get_haversine_geometry(pts)
-        places = [depot] + jobs_list  # noqa
+        places = [depot] + this_depot_jobs  # noqa
         problem = RichVRPProblem(
             place_mapping=PlaceMapping(places=places, geometries=geometries),
             agents=[],
-            jobs=jobs_list,
+            jobs=this_depot_jobs,
             depot=depot,
         )
         problems.append(problem)
@@ -72,7 +74,7 @@ def test_vrp_solver():
     """ Тест на запуск первого слоя - слоя запуска солвера """
     agents_list, jobs_list, depot = generate_vrp(20, 4)
     pts = [(job.lat, job.lon) for job in jobs_list] + [(depot.lat, depot.lon)]
-    geometries = get_haversine_geometry(pts)
+    geometries = get_geometry(pts)
 
     places = [depot] + jobs_list  # noqa
     problem = RichVRPProblem(

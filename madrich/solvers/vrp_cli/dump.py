@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 import ujson
 
@@ -8,14 +8,6 @@ from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.problem import RichVRPProblem
 from madrich.solvers.vrp_cli.converters import convert_tw, ts_to_rfc
 from madrich.utils.types import Matrix
-
-
-def cut_window(time_window: Tuple[int, int], problem: RichVRPProblem) -> Tuple[int, int]:
-    """Принимает окно (смену) курьера и обрезает его начала и конец с учетом времени раобты депо"""
-    time_work = problem.depot.time_windows[0]
-    start = time_work[0] if time_window[0] < time_work[0] else time_window[0]
-    end = time_work[1] if time_window[1] > time_work[1] else time_window[1]
-    return start, end
 
 
 def dump_jobs(problem: RichVRPProblem) -> List[dict]:
@@ -46,15 +38,14 @@ def dump_shifts(agent: Agent, problem: RichVRPProblem) -> List[dict]:
     """Все смены загоняем в pragmatic формат"""
     shifts = []
     for time_window in agent.time_windows:
-        start, end = cut_window(time_window, problem)
         shifts.append(
             {
                 'start': {
-                    'earliest': ts_to_rfc(start),
+                    'earliest': ts_to_rfc(time_window[0]),
                     'location': {'index': problem.matrix.index(problem.depot)},
                 },
                 'end': {
-                    'latest': ts_to_rfc(end),
+                    'latest': ts_to_rfc(time_window[1]),
                     'location': {'index': problem.matrix.index(problem.depot)},
                 },
                 'reloads': [

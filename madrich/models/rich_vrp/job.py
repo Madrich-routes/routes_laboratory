@@ -20,7 +20,7 @@ class Job(Place):
     price: int = 0  # награда, получаемая за выполнение этой работы
     priority: int = 0  # приоритет выполнения этой работы
 
-    depots: Optional[List[Depot]] = None
+    depot: Optional[Depot] = None
 
     def __le__(self, other):
         return self.id < other.id

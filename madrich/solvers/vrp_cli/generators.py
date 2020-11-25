@@ -50,7 +50,7 @@ def generate_job(job_id: int, point: Tuple[float, float], depot: Depot, val=2, d
         capacity_constraints=[val, val],
         required_skills=[],
         priority=1,
-        depots=[depot],
+        depot=depot,
     )
 
 

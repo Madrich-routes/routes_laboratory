@@ -10,8 +10,8 @@ import ujson
 from madrich import settings
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
-from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
+from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.models.rich_vrp.solution import VRPSolution, MDVRPSolution
 from madrich.solvers.base import BaseSolver
@@ -77,6 +77,42 @@ class RustSolver(BaseSolver):
 
         return " ".join(params)
 
+    @staticmethod
+    def _prepare_depot(time_windows: List[Tuple[int, int]], problem: RichVRPProblem) -> List[Tuple[int, int]]:
+        """Принимает окна курьера и обрезает их начала и конец с учетом времени раобты депо"""
+        start_work, end_work = problem.depot.time_windows[0]
+        tw = []
+
+        for time_window in time_windows:
+            start_window, end_window = time_window
+            # start - (work - end) - work || work - (start - end) - work
+            # work - (start - work) - end || start - (work - work) - end
+            if (
+                start_window <= start_work <= end_window <= end_work
+                or start_work <= start_window <= end_work <= end_window
+                or start_work <= start_window <= end_window <= end_work
+                or start_window <= start_work <= end_work <= end_window
+            ):
+                start_window = start_window if start_work <= start_window else start_work
+                end_window = end_window if end_work >= end_window else end_work
+                tw.append((start_window, end_window))
+
+        return tw
+
+    @staticmethod
+    def _prepare_agents(problem: RichVRPProblem) -> List[Agent]:
+        new_agents = []
+
+        for agent in problem.agents:
+            time_windows = RustSolver._prepare_depot(agent.time_windows, problem)
+            if not time_windows:
+                continue
+            new_agent = deepcopy(agent)
+            new_agent.time_windows = time_windows
+            new_agents.append(new_agent)
+
+        return new_agents
+
     def solve(self, problem: RichVRPProblem) -> VRPSolution:
         """
         Решаем проблему и получаем решение
@@ -89,6 +125,13 @@ class RustSolver(BaseSolver):
         Решение проблемы
         """
         logger.info(f"Решаем vrp_cli {problem.info()} ...")
+
+        problem.agents = self._prepare_agents(problem)
+        if problem.depot is None or not problem.jobs or not problem.agents:
+            logger.info("Солвер не запущен")
+            logger.info(f"Agents: {len(problem.agents)}")
+            logger.info(f"Jobs: {len(problem.jobs)}")
+            return VRPSolution(problem)
 
         logger.info('Строим входные файлы vrp-cli...')
         problem_id = str(uuid.uuid4())
@@ -124,14 +167,18 @@ class RustSolver(BaseSolver):
         solutions = MDVRPSolution(problem)
 
         for sub_problem in problem.sub_problems:  # по сути решаем проблему для каждого депо
-            sub_problem.agents = self._prepare_agents(sub_problem.depot, solutions, problem)
+            sub_problem.agents = self._transform_agents(sub_problem.depot, solutions, problem)
+
+            if not sub_problem.agents:
+                continue
+
             solution = self.solve(sub_problem)  # запускаем наконец солвер
             solutions.merge(solution)
 
         return solutions
 
     @staticmethod
-    def _prepare_agents(depot: Depot, solutions: MDVRPSolution, problem: RichMDVRPProblem) -> List[Agent]:
+    def _transform_agents(depot: Depot, solutions: MDVRPSolution, problem: RichMDVRPProblem) -> List[Agent]:
         """
         Нам нужно поменять окна с учетом склада, на котором будем решать задачу, перед запуском солвера
         Нужно учесть, что они ездят между складами - на это тоже уходит время

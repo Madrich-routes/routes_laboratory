@@ -8,8 +8,8 @@ from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 @dataclass
 class VRPSolution:
     problem: RichVRPProblem
-    routes: List[Plan]  # маршруты для каждого из курьеров
-    info: Optional[dict]
+    routes: List[Plan] = field(default_factory=list)  # маршруты для каждого из курьеров
+    info: Optional[dict] = field(default_factory=dict)
 
 
 @dataclass
