@@ -51,8 +51,10 @@ class StandardDataFormat:
              capacity_constraints: List[int], delay: int, price: int, priority:int, storage id: int]
         '''
         jobs = pd.DataFrame(jobs_list)
-        jobs = jobs[['lat', 'lon', 'name', 'time_windows', 'capacity_constraints', 'delay', 'price', 'priority']]
+        jobs = jobs[
+            ['lat', 'lon', 'name', 'time_windows', 'capacity_constraints', 'delay', 'price', 'priority', 'depot']]
 
+        jobs['depot'] = jobs['depot'].apply(lambda x: x['name'])
         jobs['time_windows'] = jobs['time_windows'].apply(time_windows_to_str)
         jobs['capacity_constraints'] = jobs['capacity_constraints'].apply(lambda x: ' '.join([str(el) for el in x]))
         jobs.columns = [
@@ -64,6 +66,7 @@ class StandardDataFormat:
             'Время обслуживания',
             'Цена',
             'Приоритет',
+            'Депо'
         ]
 
         # jobs.to_excel("output.xlsx")
@@ -78,7 +81,7 @@ class StandardDataFormat:
         agents = agents[['name', 'time_windows', 'profile', 'capacity_constraints', 'compatible_depots', 'costs']]
 
         agents[['fixed', 'distance', 'time']] = pd.DataFrame(agents['costs'].to_list())
-
+        agents['compatible_depots'] = agents['compatible_depots'].apply(lambda x: [i['name'] for i in x])
         del agents['costs']
 
         agents['time_windows'] = agents['time_windows'].apply(time_windows_to_str)
@@ -171,10 +174,22 @@ class StandardDataFormat:
             depots = pd.read_excel(xls, 'Склады')
 
         jobs_list, agents_list, depots_list = [], [], []
+        depots_map = {}
+        for i in range(len(depots.index)):
+            row = depots.iloc[i]
+            depot = Depot(
+                id=0,
+                time_window=str_to_time_windows(row['График работы'])[0],
+                lat=row['Широта'],
+                lon=row['Долгота'],
+                delay=row['Время обслуживания'],
+                name=row['Адрес'],
+            )
+            depots_list.append(depot)
+            depots_map[row['Адрес']] = depot
 
         jobs['Цена'].replace(r'', 0)
         jobs['Приоритет'].replace(r'', 0)
-
         for i in range(len(jobs.index)):
             row = jobs.iloc[i]
             job = Job(
@@ -190,22 +205,15 @@ class StandardDataFormat:
                 required_skills=[],
                 price=row['Цена'],
                 priority=row['Приоритет'],
+                depot=depots_map[row['Депо']]
             )
             jobs_list.append(job)
+
         for i in range(len(agents.index)):
             row = agents.iloc[i]
 
-            compatible_depots = []
             deps = eval(row['Посещаемые склады'])
-            for d in deps:
-                compatible_depots.append(Depot(
-                    id=d['id'],
-                    name=d['name'],
-                    lat=d['lat'],
-                    lon=d['lon'],
-                    delay=d['delay'],
-                    time_window=d['time_windows'],
-                ))
+            compatible_depots = [depots_map[i] for i in deps]
             agent = Agent(
                 id=i,
                 costs={'fixed': row['Фиксированная цена'],
@@ -220,17 +228,6 @@ class StandardDataFormat:
             )
             agents_list.append(agent)
 
-        for i in range(len(depots.index)):
-            row = depots.iloc[i]
-            depot = Depot(
-                id=0,
-                time_window=str_to_time_windows(row['График работы'])[0],
-                lat=row['Широта'],
-                lon=row['Долгота'],
-                delay=row['Время обслуживания'],
-                name=row['Адрес'],
-            )
-            depots_list.append(depot)
         return agents_list, jobs_list, depots_list
 
 
@@ -281,3 +278,17 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
         )
         for item in sep_strings
     ]
+
+
+def test_sdf():
+    from madrich.solvers.vrp_cli.generators import generate_mdvrp
+    agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
+    StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, 'output2.xlsx')
+    a, j, d = StandardDataFormat.from_excel('output2.xlsx')
+    print()
+    print(a[0])
+    print(agents_list[0])
+    print(j[0])
+    print(jobs_list[0])
+    print(d[0])
+    print(depots_list[0])
