@@ -69,8 +69,6 @@ class StandardDataFormat:
             'Депо'
         ]
 
-        # jobs.to_excel("output.xlsx")
-        ####################################################
         '''
         2. Курьеры
             [Имя, График работы, Профиль, Вместимость, Посещаемые склады, Цена]
@@ -95,8 +93,7 @@ class StandardDataFormat:
             'Цена расстояния',
             'Цена время',
         ]
-        # agents.to_excel("output.xlsx")
-        ####################################################
+
         '''
         3. Склады
             [Адрес, Широта, Долгота, График работы, Время обслуживания]
@@ -115,8 +112,6 @@ class StandardDataFormat:
             'Время обслуживания',
         ]
 
-        # depots.to_excel("output.xlsx")
-        ####################################################
         '''
         4. Профили
             Название - type - средняя скорость
@@ -131,8 +126,7 @@ class StandardDataFormat:
             'Тип',
             'Средняя скорость'
         ]
-        # profiles_df.to_excel("output.xlsx")
-        ####################################################
+
         return jobs, agents, depots, profiles_df
 
     @staticmethod
@@ -232,7 +226,6 @@ class StandardDataFormat:
             depots = pd.read_excel(xls, 'Склады')
             profiles = pd.read_excel(xls, 'Профили')
 
-        #######################################################################
         agents_j = []
         for i in range(len(agents.index)):
             row = agents.iloc[i]
@@ -249,9 +242,7 @@ class StandardDataFormat:
             agents_j.append(obj)
 
         json_agents = json.dumps(agents_j, ensure_ascii=False, )
-        # print()
-        # print(json_agents)
-        #######################################################################
+
         jobs_j = []
         for i in range(len(jobs.index)):
             row = jobs.iloc[i]
@@ -269,9 +260,7 @@ class StandardDataFormat:
             jobs_j.append(obj)
 
         json_jobs = json.dumps(jobs_j, ensure_ascii=False, )
-        # print()
-        # print(json_jobs)
-        #######################################################################
+
         depots_j = []
         for i in range(len(depots.index)):
             row = depots.iloc[i]
@@ -285,9 +274,7 @@ class StandardDataFormat:
             depots_j.append(obj)
 
         json_depots = json.dumps(depots_j, ensure_ascii=False, )
-        # print()
-        # print(json_depots)
-        #######################################################################
+
         profiles_j = []
         for i in range(len(profiles.index)):
             row = profiles.iloc[i]
@@ -299,9 +286,6 @@ class StandardDataFormat:
             profiles_j.append(obj)
 
         json_profiles = json.dumps(profiles_j, ensure_ascii=False, )
-        # print()
-        # print(json_profiles)
-        #######################################################################
 
         return json_agents, json_jobs, json_depots, json_profiles
 
@@ -433,39 +417,3 @@ def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:
         )
         for item in sep_strings
     ]
-
-
-def test_sdf():
-    from madrich.solvers.vrp_cli.generators import generate_mdvrp
-
-    agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
-
-    StandardDataFormat.to_excel(agents_list, jobs_list, depots_list, 'output2.xlsx')
-    a, j, d, p = StandardDataFormat.from_excel('output2.xlsx')
-
-    j_a, j_j, j_d, j_p = StandardDataFormat.from_excel_to_json('output2.xlsx')
-
-    a_, j_, d_, p_ = StandardDataFormat.from_json(j_a, j_j, j_d, j_p)
-
-    print()
-    print('Исходный           ', agents_list[0])
-    print('to_exel + from_exel', a[0])
-    print('from_exel_to_json  ', j_a)
-    print('from_json          ', a_[0])
-
-    print()
-    print('Исходный           ', jobs_list[0])
-    print('to_exel + from_exel', j[0])
-    print('from_exel_to_json  ', j_j)
-    print('from_json          ', j_[0])
-
-    print()
-    print('Исходный           ', depots_list[0])
-    print('to_exel + from_exel', d[0])
-    print('from_exel_to_json  ', j_d)
-    print('from_json          ', d_[0])
-
-    print()
-    print('to_exel + from_exel', p[0])
-    print('from_exel_to_json  ', j_p)
-    print('from_json          ', p_[0])
