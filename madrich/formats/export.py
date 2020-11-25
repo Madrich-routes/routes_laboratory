@@ -1,10 +1,11 @@
-from datetime import datetime
-from typing import Dict
-
-from madrich.models.rich_vrp.job import Job
-from madrich.models.rich_vrp.solution import MDVRPSolution
+from typing import List
 
 import pandas as pd
+
+from madrich.models.rich_vrp.job import Job
+from madrich.models.rich_vrp.plan import Plan
+from madrich.models.rich_vrp.solution import MDVRPSolution
+from madrich.solvers.vrp_cli.converters import ts_to_rfc
 
 
 def export_to_exel(data: dict, path: str):
@@ -114,62 +115,12 @@ def export(solution: MDVRPSolution) -> dict:
             "break": 0,
         },
     }
+
     tours = []
     # собираем стоимость выхода всех курьеров
     fixed_costs = 0
-    for agent_id, plans in solution.routes.items():
-        sum_dist = 0
-        sum_time = 0
-        for j, plan in enumerate(plans):
-            if len(plan.waypoints) > 2:
-                if plan == plans[0]:
-                    fixed_costs += plan.agent.costs["fixed"]
-                else:
-                    sum_dist += solution.problem.depots_mapping.dist(
-                        plans[j - 1].waypoints[0], plans[j - 1].waypoints[0], plan.agent.profile
-                    )
-                    sum_time += solution.problem.depots_mapping.time(
-                        plans[j - 1].waypoints[0], plans[j - 1].waypoints[0], plan.agent.profile
-                    )
-                # собираем все посещенные депо данным курьером
-                stops = []
-                # проходим по каждой доставке
-                for i, visit in enumerate(plan.waypoints):
-                    # собираем посещения
-                    if i == 0:
-                        activity = "departure"
-                    elif i == (len(plan.waypoints) - 1):
-                        activity = "arrival"
-                    else:
-                        activity = "delivery"
-                    stop = {
-                        "activity": activity,
-                        "load": visit.place.capacity_constraints if isinstance(visit.place, Job) else [],
-                        "job_id": visit.place.id,
-                        "location": {"lat": visit.place.lat, "lan": visit.place.lon},
-                        "time": {
-                            "arrival": datetime.fromtimestamp(visit.arrival).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                            "departure": datetime.fromtimestamp(visit.departure).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                        },
-                    }
-                    stops.append(stop)
-                tour = {
-                    "type": plan.agent.profile,
-                    "courier_id": plan.agent.id,
-                    "statistic": {
-                        "cost": plan.info["cost"],
-                        "distance": plan.info["distance"],
-                        "duration": plan.info["duration"],
-                    },
-                    "stops": stops,
-                }
-                global_stat = update_statistic(global_stat, plan.info)
-                dep_name = plan.waypoints[0].place.name
-                tours.append((dep_name, tour))
-        global_stat["distance"] += sum_dist
-        global_stat["duration"] += sum_time
-        global_stat["times"]["driving"] += sum_time
-        global_stat["cost"] += sum_dist * plan.agent.costs["distance"] + sum_time * plan.agent.costs["time"]
+    for _, routes in solution.routes.items():
+        fixed_costs += export_routes(tours, global_stat, routes, solution)
 
     # добавляем посчитанные стоимости выходов всех курьеров
     global_stat["cost"] += fixed_costs
@@ -183,6 +134,64 @@ def export(solution: MDVRPSolution) -> dict:
     }
 
     return res
+
+
+def collect_stops(plan: Plan) -> list:
+    stops = []
+    for i, visit in enumerate(plan.waypoints):  # проходим по каждой доставке
+        # собираем посещения
+        if i == 0:
+            activity = "departure"  # выехал со склада
+        elif i == (len(plan.waypoints) - 1):
+            activity = "arrival"  # точка или склад
+        else:
+            activity = "delivery"  # приехал на склад
+        stop = {
+            "activity": activity,
+            "load": visit.place.capacity_constraints if isinstance(visit.place, Job) else [],
+            "job_id": visit.place.id,
+            "location": {"lat": visit.place.lat, "lan": visit.place.lon},
+            "time": {"arrival": ts_to_rfc(visit.arrival), "departure": ts_to_rfc(visit.departure)},
+        }
+        stops.append(stop)
+    return stops
+
+
+def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> float:
+    sum_dist = 0  # собираем неучтенку за переезды между складами
+    sum_time = 0  # тоже неучтенка, но время
+
+    if not routes:
+        return 0
+    agent = routes[0].agent
+
+    for j, plan in enumerate(routes):  # каждый route относится к конкретному агенту
+        if j != 0:
+            prev_depot = routes[j].waypoints[0].place  # неучтеночка
+            curr_depot = routes[j - 1].waypoints[0].place
+            sum_dist += solution.problem.depots_mapping.dist(prev_depot, curr_depot, agent.profile)
+            sum_time += solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile)
+
+        # Итог
+        tour = {
+            "type": agent.profile,
+            "courier_id": agent.id,
+            "statistic": {
+                "cost": plan.info["cost"],
+                "distance": plan.info["distance"],
+                "duration": plan.info["duration"],
+            },
+            "stops": collect_stops(plan),
+        }
+        global_stat = update_statistic(global_stat, plan.info)
+        dep_name = plan.waypoints[0].place.name
+        tours.append((dep_name, tour))
+
+    global_stat["distance"] += sum_dist
+    global_stat["duration"] += sum_time
+    global_stat["times"]["driving"] += sum_time
+    global_stat["cost"] += sum_dist * agent.costs["distance"] + sum_time * agent.costs["time"]
+    return agent.costs['fixed'] * (len(routes) - 1)
 
 
 def update_statistic(global_stat: dict, local_stat: dict) -> dict:

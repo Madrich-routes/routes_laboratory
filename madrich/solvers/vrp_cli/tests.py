@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from madrich.formats.api import export
+from madrich.formats.export import export
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.models.rich_vrp.job import Job

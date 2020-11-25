@@ -6,7 +6,7 @@ from madrich.customer_cases.eapteka import (
     build_eapteka_problem,
     AptekaParams,
 )
-from madrich.formats import api
+from madrich.formats import export
 from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.solvers.vrp_cli import RustSolver
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     solver = RustSolver()
     solution = solver.solve(problem)
-    solution_str = api.export(solution)
+    solution_str = export.export(solution)
 
     print(solution_str)
 
