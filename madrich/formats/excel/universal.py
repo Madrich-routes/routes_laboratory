@@ -212,7 +212,7 @@ class StandardDataFormat:
         for i in range(len(depots.index)):
             row = depots.iloc[i]
             depot = Depot(
-                id=0,
+                id=i,
                 time_window=str_to_time_windows(row['График работы'])[0],
                 lat=row['Широта'],
                 lon=row['Долгота'],

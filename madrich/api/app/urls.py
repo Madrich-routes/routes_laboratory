@@ -1,13 +1,14 @@
 import ujson
-from flask import Blueprint
+from flask import Blueprint, send_from_directory
 from flask import current_app
 from flask import request
 from redis import Redis
 from rq import Queue
 
 from madrich.api.app.exceptions import InvalidUsage
-from madrich.api.app.solver import run_solver
+from madrich.api.app.solver import run_solver, run_random, generate_random
 from madrich.api.app.utils import save_file
+from madrich.settings import UPLOAD_DIR
 
 urls_blueprint = Blueprint('urls', __name__, )
 
@@ -49,3 +50,21 @@ def genetic_solver_task():
     job_id = job.get_id()
 
     return {"job_id": str(job_id)}
+
+
+@urls_blueprint.route('/random_task', methods=['POST'])
+def random_genetic_solver_task():
+    redis_conn = Redis(current_app.config['RQ_REDIS_URL'])
+    queue = Queue(connection=redis_conn)
+
+    job = queue.enqueue(run_random)
+    job_id = job.get_id()
+
+    return {"job_id": str(job_id)}
+
+
+@urls_blueprint.route("/example")
+def get_file():
+    filename = 'random_example.xlsx'
+    generate_random(filename)
+    return send_from_directory(UPLOAD_DIR, filename, as_attachment=True)

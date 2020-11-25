@@ -21,7 +21,7 @@ def dump_jobs(problem: RichVRPProblem) -> List[dict]:
                     'places': [
                         {
                             'location': {'index': problem.matrix.index(job)},
-                            'duration': job.delay,
+                            'duration': int(job.delay),
                             'times': convert_tw(job.time_windows),
                         }
                     ],
@@ -51,7 +51,7 @@ def dump_shifts(agent: Agent, problem: RichVRPProblem) -> List[dict]:
                 'reloads': [
                     {
                         'location': {'index': problem.matrix.index(problem.depot)},
-                        'duration': problem.depot.delay,
+                        'duration': int(problem.depot.delay),
                     }
                 ],
             }
