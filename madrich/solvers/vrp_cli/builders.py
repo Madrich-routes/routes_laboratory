@@ -26,7 +26,7 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
 
     if geom_type == "haversine":
         # если скорость не задана - устанавливаем равной 15
-        geom = HaversineGeometry(points, default_speed=def_speed if def_speed is not None else 15)
+        geom = HaversineGeometry(points, default_speed=def_speed if not np.isnan(def_speed) else 15)
         if factor == "distance":
             res = geom.dist_matrix()
         else:
@@ -34,7 +34,7 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
     elif geom_type == "transport":
         pass
     else:
-        if def_speed is not None and factor == "duration":
+        if not np.isnan(def_speed) and factor == "duration":
             res = get_matrix(points=points, factor="distance", transport=geom_type)
             res /= def_speed
         else:
