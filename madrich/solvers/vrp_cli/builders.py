@@ -6,6 +6,7 @@ from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
+from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
 
 
 def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: float) -> np.ndarray:
@@ -32,7 +33,12 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
         else:
             res = geom.time_matrix()
     elif geom_type == "transport":
-        pass
+        dist_between_points = get_matrix(points=points, factor="distance", transport="foot")
+        if factor == "duration":
+            res = dist_between_points
+        else:
+            transport_geom = TransportMatrixGeometry(points=points, distance_matrix=dist_between_points)
+            res = transport_geom.time_matrix()
     else:
         if not np.isnan(def_speed) and factor == "duration":
             res = get_matrix(points=points, factor="distance", transport=geom_type)

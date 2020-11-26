@@ -79,3 +79,10 @@ class TransportMatrixGeometry(BaseGeometry):
 
     def dist(self, i: int, j: int, **kwargs) -> int:
         raise NotImplementedError
+
+    def time_matrix(self) -> np.ndarray:
+        res = np.empty(self.d.shape)
+        for i in range(len(self.d)):
+            for j in range(len(self.d)):
+                res[i][j] = self.time(i, j)
+        return res
