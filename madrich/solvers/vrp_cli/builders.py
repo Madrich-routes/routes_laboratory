@@ -34,7 +34,7 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
             res = geom.time_matrix()
     elif geom_type == "transport":
         dist_between_points = get_matrix(points=points, factor="distance", transport="foot")
-        if factor == "duration":
+        if factor == "distance":
             res = dist_between_points
         else:
             transport_geom = TransportMatrixGeometry(points=points, distance_matrix=dist_between_points)
