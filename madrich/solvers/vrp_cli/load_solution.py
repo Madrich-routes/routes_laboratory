@@ -34,6 +34,18 @@ def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
 
 
 def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
+    """
+    Разбираем tour'ы pragmatic формата в наш класс Visit
+
+    Parameters
+    ----------
+    tour : словарь, полученный из результата работы солвера
+    problem : задача, решенная солвером
+
+    Returns
+    -------
+    VRPSolution instance
+    """
     waypoints: List[Visit] = []
 
     for point in tour['stops']:

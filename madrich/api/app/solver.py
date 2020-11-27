@@ -12,6 +12,18 @@ from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
 
 
 def run_solver(filename: str) -> dict:
+    """
+    Получаем нашу эксельку с данными, из нее генерируем проблемy,
+    проблему передаем солверу, получаем результат и возвращаем в формате API.
+
+    Parameters
+    ----------
+    filename: Имя эксельки с данными
+
+    Returns
+    ----------
+    dict с ответом в формате API
+    """
     file = settings.UPLOAD_DIR / filename
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
     pts = [(depot.lat, depot.lon) for depot in depots_list]
@@ -26,6 +38,14 @@ def run_solver(filename: str) -> dict:
 
 
 def generate_random(filename: str) -> Path:
+    """
+    Генерируем случайную задачу и сохраняем в нашу эксельку
+    filename: Имя будущей эксельки
+
+    Returns
+    ----------
+    Path на сгенерированный файл
+    """
     file = settings.UPLOAD_DIR / filename
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     agents, jobs, depots = generate_mdvrp(20, 4, 10)

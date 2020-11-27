@@ -49,6 +49,19 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
 
 
 def get_geometries(pts: np.ndarray, profiles: Dict[str, Tuple[str, float]]) -> dict:
+    """
+    Строим словарь геометрий для PlaceMapping.
+
+    Parameters
+    ----------
+    pts: Массив точек
+    profiles: Словарь описаний профилей в формате: название_профиля:(тип_транспорта, средняя_скорость)
+
+    Returns
+    ----------
+    Словарь геометрий, в формате описанном в PlaceMapping
+
+    """
     geometries = {
         profile: {
             "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
@@ -62,6 +75,19 @@ def get_geometries(pts: np.ndarray, profiles: Dict[str, Tuple[str, float]]) -> d
 def get_problems(
     jobs_list: List[Job], depots_list: List[Depot], profiles: Dict[str, Tuple[str, float]]
 ) -> List[RichVRPProblem]:
+    """
+    Собираем список RichVRPProblem из полученных данных для последующего построения RichMDVRPProblem
+
+    Parameters
+    ----------
+    jobs_list: Список задач на доставку
+    depots_list: Список депо
+    profiles: Профили для построения матриц расстояний в объектах задач
+
+    Returns
+    ----------
+    Список RichVRPProblem
+    """
     problems = []
 
     for depot in depots_list:
