@@ -8,7 +8,7 @@ services:
       - "8000:5000"
     volumes:
       - ".:/app"
-    entrypoint: "flask run --host=0.0.0.0"
+    entrypoint: "gunicorn -c madrich/api/wsgi.py madrich.api.main:app"
     networks:
       - main_net
     restart: always

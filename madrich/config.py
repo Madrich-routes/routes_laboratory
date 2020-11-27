@@ -36,6 +36,8 @@ class Settings(BaseSettings):
 
     # ------------------------------------- Other ----------------------------------------------------------
     REDIS_HOST: str = '127.0.0.1'
+    HOST: str = '0.0.0.0'
+    PORT: str = '5000'
 
     class Config:
         case_sensitive = True

@@ -1,15 +1,19 @@
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Union
+
 import numpy as np
-from madrich.solvers.madrich.api_module.osrm_module import get_matrix
-from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
-from madrich.models.rich_vrp.job import Job
+
 from madrich.models.rich_vrp.depot import Depot
-from madrich.models.rich_vrp.place_mapping import PlaceMapping
-from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
+from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
+from madrich.models.rich_vrp.job import Job
+from madrich.models.rich_vrp.place_mapping import PlaceMapping
+from madrich.models.rich_vrp.problem import RichVRPProblem
+from madrich.solvers.madrich.api_module.osrm_module import get_matrix
+
+Points = Union[np.ndarray, list]
 
 
-def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: float) -> np.ndarray:
+def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) -> np.ndarray:
     """
     Универсальня функция, возвращающая матрицу расстояний для указанных точек,
     в соответствии с требуемым транспортом и его средней скоростью
@@ -18,7 +22,8 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
     ----------
     points: Точки, для которых мы строим матрицу
     factor: Тип искомой матрицы
-    transport: Тип транспорта и его средняя скорость, при наличии
+    geom_type: тип матрицы геометрии
+    def_speed: заранее заданная средня скорость, если нуна матричная - nan
 
     Returns
     ----------
@@ -48,7 +53,7 @@ def build_matrix(points: np.ndarray, factor: str, geom_type: str, def_speed: flo
     return res
 
 
-def get_geometries(pts: np.ndarray, profiles: Dict[str, Tuple[str, float]]) -> dict:
+def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
     """
     Строим словарь геометрий для PlaceMapping.
 

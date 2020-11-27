@@ -6,31 +6,53 @@ authors = ["Madrich Team"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pip = "^20.2.4"
+
+# базовые штуки для работы с данными
 numpy = "^1.19.4"
 scipy = "^1.5.4"
-fastcore = "^1.3.9"
-pip = "^20.2.4"
-xlrd = "^1.2.0"
-geopy = "^2.0.0"
-matplotlib = "^3.3.3"
+numba = "^0.51.2"
 pandas = "^1.1.4"
-polyline = "^1.4.0"
-ujson = "^4.0.1"
+#geopandas = "^0.8.1"  # пока что не используется, но для работы с геоданными
 sklearn = "^0.0"
+
+# рисование
+descartes = "^1.1.0"
+matplotlib = "^3.3.3"
+folium = "^0.11.0"
+
+# оптимизация
+ortools = "^8.0.8283"  # оптимизаторы от гугла в тч VRP
+Pyomo = "^5.7.1"  # линпрог
+
+# Карты и геоинформация
+auromat = "^1.0.8"  # используется при преобразованиях координат
+timezonefinder = "^4.5.0"  # таймзона по координатам
+
+# форматы
+lxml = "^4.6.1"  # xml
+xlrd = "^1.2.0"  # xcel
+openpyxl = "^3.0.5"  # xcel
+ujson = "^4.0.1"  # работа с json
+diskcache = "^5.1.0"  # кеширование чего угодно на диск
+fastparquet = "^0.4.1"  # сохранение в паркет
+polyline = "^1.4.0"  # кодировка для OSRM
+
+fastcore = "^1.3.9"
+geopy = "^2.0.0"
 rich = "^9.2.0"
 more-itertools = "^8.6.0"
 herepy = "^3.1.0"
 aiohttp = "^3.7.3"
-openpyxl = "^3.0.5"
-numba = "^0.51.2"
-Pyomo = "^5.7.1"
+"yandex.rasp" = "^0.0.2"  # получение расписаний общественного транспорта
 minio = "^6.0.0"
 Flask = "^1.1.2"
 Flask-RQ2 = "^18.3"
 redis = "^3.5.3"
 python-dotenv = "^0.15.0"
 pydantic = {extras = ["dotenv"], version = "^1.7.2"}
-timezonefinder = "^4.5.0"
+gunicorn = "^20.0.4"
+tqdm = "^4.54.0"
 
 [tool.poetry.dev-dependencies]
 
