@@ -1,3 +1,4 @@
+from madrich.geo import transport
 from typing import List
 
 import numpy as np
@@ -9,9 +10,12 @@ from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.solvers.madrich.api_module.osrm_module import get_matrix
-from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles
+from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles, generate_points
 from madrich.solvers.vrp_cli.solver import RustSolver
 from madrich.api.app.solver import run_solver, generate_random
+from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
+
+from madrich.geo.providers import osrm_module
 
 
 def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.ndarray:
@@ -104,5 +108,9 @@ def test_mdvrp_solver():
 
 if __name__ == "__main__":
     # test_mdvrp_solver()
-    path_to_excel = generate_random("test_problem.xlsx")
-    result = run_solver(path_to_excel)
+    # path_to_excel = generate_random("test_problem.xlsx")
+    # result = run_solver(path_to_excel)
+    points = generate_points(20)
+    foot_matrix = get_matrix(points=points, factor="duration", transport="foot")
+    geom = TransportMatrixGeometry(points, foot_matrix)
+    time_matrix = geom.time_matrix()

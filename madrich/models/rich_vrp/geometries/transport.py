@@ -6,8 +6,9 @@ from madrich import config
 from madrich.config import settings
 from madrich.geo.transport.calc_distance import transport_travel_time, build_stations_matrix, build_graph
 from madrich.geo.transport.matrix import build_dataset_from_files, build_walk_matrix
-from madrich.geo.providers import osrm_module
+# from madrich.geo.providers import osrm_module
 
+from madrich.solvers.madrich.api_module.osrm_module import get_matrix
 from madrich.models.rich_vrp.geometries.base import BaseGeometry
 from madrich.utils.types import Array
 
@@ -47,18 +48,24 @@ class TransportMatrixGeometry(BaseGeometry):
         transport_stations_coords = list(transport_dataset["coord"])
 
         self.p_matrix = distance_matrix  # время пешком между точками
-        _, self.p2s_matrix = osrm_module.get_osrm_matrix(
-            src=points,
-            dst=transport_stations_coords,
-            transport="foot",
-            return_distances=False,
-        )  # время пешком от точек до остановок
-        _, self.s2p_matrix = osrm_module.get_osrm_matrix(
-            src=transport_stations_coords,
-            dst=points,
-            transport="foot",
-            return_distances=False,
-        )  # время пешком от остановок до точек
+
+        # время пешком от точек до остановок        
+        self.p2s_matrix = get_matrix(points=points, dst=transport_stations_coords, factor="duration", transport="foot")
+        # _, self.p2s_matrix = osrm_module.get_osrm_matrix(
+        #     src=points,
+        #     dst=transport_stations_coords,
+        #     transport="foot",
+        #     return_distances=False,
+        # )
+
+        # время пешком от остановок до точек
+        self.s2p_matrix = get_matrix(points=transport_stations_coords, dst=points, factor="duration", transport="foot")
+        # _, self.s2p_matrix = osrm_module.get_osrm_matrix(
+        #     src=transport_stations_coords,
+        #     dst=points,
+        #     transport="foot",
+        #     return_distances=False,
+        # )
         self.s_matrix = transport_dist_matrix  # время проезда между точками
         self.closest_count: int = 10  # сколько ближайших остановок рассматривать
 

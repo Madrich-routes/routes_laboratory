@@ -8,7 +8,7 @@ from geopy.distance import great_circle
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph._shortest_path import floyd_warshall
 
-from madrich.geo.providers import osrm_module
+# from madrich.geo.providers import osrm_module
 from madrich.utils.logs import logger
 from madrich.utils.types import Array
 
@@ -62,9 +62,7 @@ def add_walk_matrix(stations_matrix: Array, walk_matrix: Array):
     idx = (stations_matrix != 0) & (walk_matrix != 0)
 
     stations_matrix[idx] = np.minimum(stations_matrix, walk_matrix)[idx]  #
-    stations_matrix[stations_matrix == 0] = walk_matrix[
-        stations_matrix == 0
-        ]  # заполняем пропуски
+    stations_matrix[stations_matrix == 0] = walk_matrix[stations_matrix == 0]  # заполняем пропуски
 
 
 # @cache.memoize()
@@ -73,9 +71,7 @@ def build_graph(matrix: Array):
 
     logger.info(f"Рассчитываем floyd-warshall для объединенного графа")
     graph = csr_matrix(matrix)
-    dist_matrix, predecessors = floyd_warshall(
-        csgraph=graph, directed=True, return_predecessors=True
-    )
+    dist_matrix, predecessors = floyd_warshall(csgraph=graph, directed=True, return_predecessors=True)
     return dist_matrix
 
 
@@ -142,15 +138,15 @@ def combined_matrix(
     return res_times
 
 
-def get_travel_times(
-    points: Array,
-):
-    stations = pd.read_pickle("./data/full_df_refactored.pkl")["coord"].values.tolist()
-    stations = np.array(stations)
+# def get_travel_times(
+#     points: Array,
+# ):
+#     stations = pd.read_pickle("./data/full_df_refactored.pkl")["coord"].values.tolist()
+#     stations = np.array(stations)
 
-    p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
-    s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
-    p_matrix = osrm_module.get_osrm_matrix(points)
-    s_matrix = np.load("./data/final_mat.npz")["walk_matrix"]
+#     p2s_matrix = osrm_module.get_osrm_matrix(points, stations)
+#     s2p_matrix = osrm_module.get_osrm_matrix(stations, points)
+#     p_matrix = osrm_module.get_osrm_matrix(points)
+#     s_matrix = np.load("./data/final_mat.npz")["walk_matrix"]
 
-    return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
+#     return combined_matrix(p_matrix, p2s_matrix, s2p_matrix, s_matrix)
