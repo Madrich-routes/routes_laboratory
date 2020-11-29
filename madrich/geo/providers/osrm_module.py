@@ -10,7 +10,6 @@ from polyline import encode as polyline_encode
 
 from madrich.config import settings
 from madrich.geo.transforms import line_distance_matrix
-from madrich.utils.data_formats import cache
 from madrich.utils.logs import logger
 from madrich.utils.types import Array
 
@@ -121,7 +120,6 @@ def _encode_src_dst(
     return urllib.parse.quote(polyline), urllib.parse.urlencode(params)
 
 
-@cache.memoize()
 def _table(
     host: str,
     src: Array,
