@@ -97,16 +97,16 @@ def get_problems(
 
     for depot in depots_list:
         this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
-
-        pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
-        geometries = get_geometries(pts, profiles)
-        places = [depot] + this_depot_jobs  # noqa
-        problem = RichVRPProblem(
-            place_mapping=PlaceMapping(places=places, geometries=geometries),
-            agents=[],
-            jobs=this_depot_jobs,
-            depot=depot,
-        )
-        problems.append(problem)
+        if len(this_depot_jobs) > 0:
+            pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
+            geometries = get_geometries(pts, profiles)
+            places = [depot] + this_depot_jobs  # noqa
+            problem = RichVRPProblem(
+                place_mapping=PlaceMapping(places=places, geometries=geometries),
+                agents=[],
+                jobs=this_depot_jobs,
+                depot=depot,
+            )
+            problems.append(problem)
 
     return problems

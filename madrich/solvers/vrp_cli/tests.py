@@ -15,6 +15,7 @@ from madrich.solvers.vrp_cli.solver import RustSolver
 from madrich.api.app.solver import run_solver, generate_random
 from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
 
+from madrich.config import settings
 from madrich.geo.providers import osrm_module
 
 
@@ -109,8 +110,8 @@ def test_mdvrp_solver():
 if __name__ == "__main__":
     # test_mdvrp_solver()
     # path_to_excel = generate_random("test_problem.xlsx")
-    # result = run_solver(path_to_excel)
-    points = generate_points(20)
-    foot_matrix = get_matrix(points=points, factor="duration", transport="foot")
-    geom = TransportMatrixGeometry(points, foot_matrix)
-    time_matrix = geom.time_matrix()
+    result = run_solver(settings.DATA_DIR / "eapteka.xls")
+    # points = generate_points(20)
+    # foot_matrix = get_matrix(points=points, factor="duration", transport="foot")
+    # geom = TransportMatrixGeometry(points, foot_matrix)
+    # time_matrix = geom.time_matrix()
