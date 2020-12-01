@@ -2,6 +2,7 @@ import os
 import time
 
 import requests
+import ujson
 
 from madrich.api.app.solver import generate_random
 from madrich.config import settings
@@ -59,4 +60,17 @@ def test_example():
 
 
 def test_get_excel():
-    requests.post('http://localhost:8000/get_excel/', json={"key": "value"})
+    url = f"http://localhost:8000"
+    with open('data/data.json', 'r') as f:
+        data = ujson.load(f)
+    r = requests.get(f'{url}/get_converted', json=data)
+    if r.status_code == 200:
+        path = settings.UPLOAD_DIR
+        os.makedirs(path, exist_ok=True)
+        with open(path / 'get_example.xlsx', "wb") as f:
+            r.raw.decode_content = True
+            f.write(r.content)
+    else:
+        print(r.status_code)
+        print(r.json())
+        print("big shit")

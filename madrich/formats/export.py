@@ -23,7 +23,7 @@ def export_to_excel(data: dict, path: str):
             for stop in courier['stops']:
                 dataframe['name'].append(stop['name'])
                 dataframe['activity'].append(stop['activity'])
-                dataframe['point_id'].append(stop['job_id'])
+                dataframe['point_id'].append(stop['point_id'])
                 location = stop['location']
                 dataframe['location'].append(f'{location["lat"]}, {location["lon"]}')
                 dataframe['arrival'].append(stop['time']['arrival'])
