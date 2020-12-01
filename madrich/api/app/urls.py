@@ -80,9 +80,9 @@ def get_file_example():
     return send_from_directory(settings.UPLOAD_DIR, filename, as_attachment=True)
 
 
-@urls_blueprint.route('/get_excel')
-def get_excel(data):
+@urls_blueprint.route('/get_converted', methods=['GET', 'POST'])
+def get_converted():
     filename = 'generated_file.xlsx'
     file = settings.UPLOAD_DIR / filename
-    export_to_excel(data, file)
+    export_to_excel(request.json, file)
     return send_from_directory(settings.UPLOAD_DIR, filename, as_attachment=True)
