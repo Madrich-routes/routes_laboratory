@@ -10,6 +10,7 @@ from madrich.api.app.solver import run_solver, generate_random
 from madrich.api.app.utils import save_file
 from madrich.config import settings
 from madrich.formats.excel.universal import StandardDataFormat
+from madrich.formats.export import export_to_excel
 from madrich.solvers.vrp_cli.generators import generate_mdvrp
 
 urls_blueprint = Blueprint('urls', __name__, )
@@ -76,4 +77,12 @@ def random_genetic_solver_task():
 def get_file_example():
     filename = 'random_example.xlsx'
     generate_random(filename)
+    return send_from_directory(settings.UPLOAD_DIR, filename, as_attachment=True)
+
+
+@urls_blueprint.route('/get_excel')
+def get_excel(data):
+    filename = 'generated_file.xlsx'
+    file = settings.UPLOAD_DIR / filename
+    export_to_excel(data, file)
     return send_from_directory(settings.UPLOAD_DIR, filename, as_attachment=True)

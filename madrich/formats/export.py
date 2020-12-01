@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List, Dict
 
 import pandas as pd
@@ -8,88 +9,31 @@ from madrich.solvers.vrp_cli.converters import ts_to_rfc
 
 
 def export_to_excel(data: dict, path: str):
-    status = {
-        "Статус": [data["status"]],
-        "Статус прогресса": [data["progress_status"]],
-    }
-    status_df = pd.DataFrame(status)
+    with pd.ExcelWriter(path) as writer:
+        st = data['statistics']
+        tm = st['times']
+        dataframe = {'A': ['cost', 'distance', 'duration', 'driving', 'serving', 'waiting'],
+                     'B': [st['cost'], st['distance'], st['duration'], tm['driving'], tm['serving'], tm['waiting']]}
+        df = pd.DataFrame(dataframe)
+        df.to_excel(writer, sheet_name=f'info', index=False, header=False)
 
-    solved = data["solved"]
+        for courier in data['solved']:
+            dataframe = defaultdict(list)
 
-    couriers = [solved[i] for i in solved.keys()]
-    couriers_df = pd.DataFrame(couriers)[["type", "courier_id", "statistic"]]
-    couriers_df[["cost", "distance", "duration"]] = pd.DataFrame(couriers_df["statistic"].to_list())
-    del couriers_df["statistic"]
-    couriers_df.columns = [
-        "Тип",
-        "Курьер",
-        "Цена",
-        "Дистанция",
-        "Время",
-    ]
+            for stop in courier['stops']:
+                dataframe['name'].append(stop['name'])
+                dataframe['activity'].append(stop['activity'])
+                dataframe['point_id'].append(stop['job_id'])
+                location = stop['location']
+                dataframe['location'].append(f'{location["lat"]}, {location["lon"]}')
+                dataframe['arrival'].append(stop['time']['arrival'])
+                dataframe['departure'].append(stop['time']['departure'])
 
-    couriers_activity = [solved[i]["stops"] for i in solved.keys()]
-    activity = []
-    for cur_list in range(len(couriers_activity)):
-        for act in couriers_activity[cur_list]:
-            act["courier_id"] = couriers[cur_list]["courier_id"]
-        activity += couriers_activity[cur_list]
-    activity_df = pd.DataFrame(activity)
-    activity_df[["lat", "lon"]] = pd.DataFrame(activity_df["location"].to_list())
-    activity_df[["arrival", "departure"]] = pd.DataFrame(activity_df["time"].to_list())
-    del activity_df["location"]
-    del activity_df["time"]
-
-    activity_df = activity_df[
-        ["courier_id", "activity", "distance", "load", "job_id", "lat", "lon", "arrival", "departure"]
-    ]
-    activity_df.columns = [
-        "Курьер",
-        "Действие",
-        "Дистанция",
-        "Загрузка",
-        "Заказ",
-        "Широта",
-        "Долгота",
-        "Время отправки",
-        "Время прибытия",
-    ]
-
-    unassigned_df = pd.DataFrame(data["unassigned"])
-    unassigned_df.columns = [
-        "Заказ",
-        "Причина",
-    ]
-    info = {
-        "Стратегия": [data["info"]["strategy_used"]],
-        "Время получения": [data["info"]["time_received"]],
-        "Время вычислений": [data["info"]["time_computed"]],
-    }
-    info_df = pd.DataFrame(info)
-
-    statistics = data["statistics"]
-    statistics["driving"] = data["statistics"]["times"]["driving"]
-    statistics["serving"] = data["statistics"]["times"]["serving"]
-    statistics["waiting"] = data["statistics"]["times"]["waiting"]
-    statistics["break"] = data["statistics"]["times"]["break"]
-    statistics = {
-        "Стоимость": [data["statistics"]["cost"]],
-        "Дистанция": [data["statistics"]["distance"]],
-        "Время": [data["statistics"]["duration"]],
-        "Время в пути": [data["statistics"]["driving"]],
-        "Время упаковки": [data["statistics"]["serving"]],
-        "Время ожидания": [data["statistics"]["waiting"]],
-        "Время бездействия": [data["statistics"]["break"]],
-    }
-    statistics_df = pd.DataFrame(statistics)
-
-    with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS") as writer:
-        status_df.to_excel(writer, sheet_name="Статус")
-        couriers_df.to_excel(writer, sheet_name="Курьеры")
-        activity_df.to_excel(writer, sheet_name="Решения")
-        unassigned_df.to_excel(writer, sheet_name="Не использованные")
-        info_df.to_excel(writer, sheet_name="Информация")
-        statistics_df.to_excel(writer, sheet_name="Статистика")
+            df = pd.DataFrame(dataframe)
+            df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, startcol=3)
+            dataframe = {'A': ['id', 'profile', 'name'], 'B': [courier['id'], courier['profile'], courier['name']]}
+            df = pd.DataFrame(dataframe)
+            df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1)
 
 
 def export(solution: MDVRPSolution) -> dict:
@@ -144,8 +88,8 @@ def collect_stops(plan: Plan) -> list:
         stop = {
             "name": visit.place.name,
             "activity": activity,
-            "job_id": visit.place.id,
-            "location": {"lat": visit.place.lat, "lan": visit.place.lon},
+            "point_id": visit.place.id,
+            "location": {"lat": visit.place.lat, "lon": visit.place.lon},
             "time": {"arrival": ts_to_rfc(visit.arrival), "departure": ts_to_rfc(visit.departure)},
         }
         stops.append(stop)

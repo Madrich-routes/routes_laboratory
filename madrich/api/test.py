@@ -58,4 +58,5 @@ def test_example():
         print("big shit")
 
 
-test_random_task()
+def test_get_excel():
+    requests.post('http://localhost:8000/get_excel/', json={"key": "value"})

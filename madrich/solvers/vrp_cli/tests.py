@@ -1,4 +1,3 @@
-from madrich.geo import transport
 from typing import List
 
 import numpy as np
@@ -10,13 +9,8 @@ from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
 from madrich.solvers.madrich.api_module.osrm_module import get_matrix
-from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles, generate_points
+from madrich.solvers.vrp_cli.generators import generate_mdvrp, generate_vrp, profiles
 from madrich.solvers.vrp_cli.solver import RustSolver
-from madrich.api.app.solver import run_solver, generate_random
-from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
-
-from madrich.config import settings
-from madrich.geo.providers import osrm_module
 
 
 def get_haversine_matrix(points: np.ndarray, factor: str, transport: str) -> np.ndarray:
