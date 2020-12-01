@@ -8,7 +8,7 @@ from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
 from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem
-from madrich.solvers.madrich.api_module.osrm_module import get_matrix
+from madrich.geo.providers import osrm_module
 
 Points = Union[np.ndarray, list]
 
@@ -38,7 +38,7 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
         else:
             res = geom.time_matrix()
     elif geom_type == "transport":
-        dist_between_points = get_matrix(points=points, factor="distance", transport="foot")
+        dist_between_points, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport="foot")
         if factor == "distance":
             res = dist_between_points
         else:
@@ -46,10 +46,13 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
             res = transport_geom.time_matrix()
     else:
         if not np.isnan(def_speed) and factor == "duration":
-            res = get_matrix(points=points, factor="distance", transport=geom_type)
+            res, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport=geom_type)
             res /= def_speed
         else:
-            res = get_matrix(points=points, factor=factor, transport=geom_type)
+            if factor == "distance":
+                res, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport=geom_type)
+            else:
+                _, res = osrm_module.get_osrm_matrix(src=points, return_distances=False, transport=geom_type)
     return res
 
 
