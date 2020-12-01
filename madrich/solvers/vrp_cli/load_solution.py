@@ -21,12 +21,12 @@ def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
     return ret_point
 
 
-def search_agent(agent_name: str, problem: RichVRPProblem) -> Optional[Agent]:
-    """Ищем агента по его имени (vehicle_id) в заданной проблеме"""
+def search_agent(agent_id: str, problem: RichVRPProblem) -> Optional[Agent]:
+    """Ищем агента по его vehicle_id в заданной проблеме"""
     ret_agent: Optional[Agent] = None
 
     for agent in problem.agents:
-        if agent.name == agent_name or str(agent.id) == agent_name:
+        if agent.id == agent_id or str(agent.id) == agent_id:
             ret_agent = agent
             break
 

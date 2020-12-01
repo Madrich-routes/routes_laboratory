@@ -95,7 +95,7 @@ def test_vrp_solver():
 
 def test_mdvrp_solver():
     """ Тест на запуск второго слоя - слоя решения задачи с несколькими складами """
-    agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 5)
+    agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 2)
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
         agents_list,
@@ -104,13 +104,13 @@ def test_mdvrp_solver():
     )
     solver = RustSolver()
     solution = solver.solve_mdvrp(problem)
-    export(solution)
+    print(export(solution))
 
 
 if __name__ == "__main__":
-    # test_mdvrp_solver()
+    test_mdvrp_solver()
     # path_to_excel = generate_random("test_problem.xlsx")
-    result = run_solver(settings.DATA_DIR / "eapteka.xls")
+    # result = run_solver(settings.DATA_DIR / "eapteka.xls")
     # points = generate_points(20)
     # foot_matrix = get_matrix(points=points, factor="duration", transport="foot")
     # geom = TransportMatrixGeometry(points, foot_matrix)

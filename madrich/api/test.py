@@ -58,4 +58,4 @@ def test_example():
         print("big shit")
 
 
-test_example()
+test_random_task()

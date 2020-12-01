@@ -69,7 +69,7 @@ def dump_vehicles(problem: RichVRPProblem) -> List[dict]:
         # не передаем fixed в vrp-cli, т.к. сломается глобальная статистика при вызове агента в нескольких депо
         tmp = {
             'typeId': str(agent.id),
-            'vehicleIds': [f"{str(agent.id)}_{agent.name}"],
+            'vehicleIds': [str(agent.id)],
             'profile': agent.profile,
             'costs': agent.costs,
             'shifts': dump_shifts(agent, problem),

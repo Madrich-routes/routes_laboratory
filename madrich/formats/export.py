@@ -1,14 +1,13 @@
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
 
-from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.solution import MDVRPSolution
 from madrich.solvers.vrp_cli.converters import ts_to_rfc
 
 
-def export_to_exel(data: dict, path: str):
+def export_to_excel(data: dict, path: str):
     status = {
         "Статус": [data["status"]],
         "Статус прогресса": [data["progress_status"]],
@@ -116,7 +115,7 @@ def export(solution: MDVRPSolution) -> dict:
         },
     }
 
-    tours = []
+    tours: List[Dict[str, dict]] = []
     # собираем стоимость выхода всех курьеров
     fixed_costs = 0
     for _, routes in solution.routes.items():
@@ -125,11 +124,7 @@ def export(solution: MDVRPSolution) -> dict:
     # добавляем посчитанные стоимости выходов всех курьеров
     global_stat["cost"] += fixed_costs
     res = {
-        "status": "solved",
-        "progress_status": "solved",
-        "solved": {dep_name: tour for dep_name, tour in tours},
-        "unassigned": [],
-        "info": {},
+        "solved": tours,
         "statistics": global_stat,
     }
 
@@ -147,8 +142,8 @@ def collect_stops(plan: Plan) -> list:
         else:
             activity = "delivery"  # приехал на склад
         stop = {
+            "name": visit.place.name,
             "activity": activity,
-            "load": visit.place.capacity_constraints if isinstance(visit.place, Job) else [],
             "job_id": visit.place.id,
             "location": {"lat": visit.place.lat, "lan": visit.place.lon},
             "time": {"arrival": ts_to_rfc(visit.arrival), "departure": ts_to_rfc(visit.departure)},
@@ -157,13 +152,20 @@ def collect_stops(plan: Plan) -> list:
     return stops
 
 
-def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> float:
+def export_routes(tours: List[dict], global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> float:
     sum_dist = 0  # собираем неучтенку за переезды между складами
     sum_time = 0  # тоже неучтенка, но время
 
     if not routes:
         return 0
     agent = routes[0].agent
+
+    tour = {
+        'id': agent.id,
+        'profile': agent.profile,
+        'name': agent.name,
+        'stops': []
+    }
 
     for j, plan in enumerate(routes):  # каждый route относится к конкретному агенту
         if j != 0:
@@ -172,20 +174,10 @@ def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: 
             sum_dist += solution.problem.depots_mapping.dist(prev_depot, curr_depot, agent.profile)
             sum_time += solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile)
 
-        # Итог
-        tour = {
-            "type": agent.profile,
-            "courier_id": agent.id,
-            "statistic": {
-                "cost": plan.info["cost"],
-                "distance": plan.info["distance"],
-                "duration": plan.info["duration"],
-            },
-            "stops": collect_stops(plan),
-        }
+        tour['stops'] += collect_stops(plan)
         global_stat = update_statistic(global_stat, plan.info)
-        dep_name = plan.waypoints[0].place.name
-        tours.append((dep_name, tour))
+
+    tours.append(tour)
 
     global_stat["distance"] += sum_dist
     global_stat["duration"] += sum_time

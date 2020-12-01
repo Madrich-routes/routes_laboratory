@@ -26,9 +26,9 @@ class MDVRPSolution:
             self.routes[insertable.agent.id] = [insertable]
         else:
             for i, route in enumerate(self.routes[insertable.agent.id]):
-                # ищем маршрут, который был точно после маршрута, который мы хотим вставить
-                if insertable.waypoints[0].arrival > route.waypoints[-1].departure:  # значит мы проскочили по времени
-                    self.routes[insertable.agent.id].insert(i - 1, insertable)  # значит на индекс раньше
+                # ищем маршрут, который был точно перед маршрутом, который мы хотим вставить
+                if route.waypoints[-1].departure < insertable.waypoints[0].arrival:  # значит мы проскочили по времени
+                    self.routes[insertable.agent.id].insert(i + 1, insertable)  # значит после него
                     break
             else:
-                self.routes[insertable.agent.id].append(insertable)  # мы не нашли такого, вставляем в конец
+                self.routes[insertable.agent.id].insert(0, insertable)  # мы не нашли такого, вставляем в конец

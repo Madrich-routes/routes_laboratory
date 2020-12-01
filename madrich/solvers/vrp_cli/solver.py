@@ -7,7 +7,6 @@ from typing import Dict, Optional, List, Tuple
 
 import ujson
 
-from madrich import config
 from madrich.config import settings
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
@@ -86,17 +85,15 @@ class RustSolver(BaseSolver):
 
         for time_window in time_windows:
             start_window, end_window = time_window
-            # start - (work - end) - work || work - (start - end) - work
-            # work - (start - work) - end || start - (work - work) - end
             if (
-                start_window <= start_work <= end_window <= end_work
-                or start_work <= start_window <= end_work <= end_window
-                or start_work <= start_window <= end_window <= end_work
-                or start_window <= start_work <= end_work <= end_window
+                start_window <= start_work <= end_window <= end_work  # start - (work - end) - work
+                or start_work <= start_window <= end_work <= end_window  # work - (start - work) - end
+                or start_work <= start_window <= end_window <= end_work  # work - (start - end) - work
+                or start_window <= start_work <= end_work <= end_window  # start - (work - work) - end
             ):
-                start_window = start_window if start_work <= start_window else start_work
-                end_window = end_window if end_work >= end_window else end_work
-                tw.append((start_window, end_window))
+                start = start_window if start_work < start_window else start_work
+                end = end_window if end_work > end_window else end_work
+                tw.append((start, end))
 
         return tw
 
@@ -201,7 +198,7 @@ class RustSolver(BaseSolver):
 
             new_agent = deepcopy(agent)
             new_agent.time_windows = new_tw
-            agents.append(agent)
+            agents.append(new_agent)
 
         return agents
 
