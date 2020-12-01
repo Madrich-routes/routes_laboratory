@@ -115,8 +115,8 @@ def export_routes(tours: List[dict], global_stat: dict, routes: List[Plan], solu
         if j != 0:
             prev_depot = routes[j].waypoints[0].place  # неучтеночка
             curr_depot = routes[j - 1].waypoints[0].place
-            sum_dist += solution.problem.depots_mapping.dist(prev_depot, curr_depot, agent.profile)
-            sum_time += solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile)
+            sum_dist += int(solution.problem.depots_mapping.dist(prev_depot, curr_depot, agent.profile))
+            sum_time += int(solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile))
 
         tour['stops'] += collect_stops(plan)
         global_stat = update_statistic(global_stat, plan.info)

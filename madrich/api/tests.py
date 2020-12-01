@@ -27,6 +27,9 @@ def test_solver_point():
     print(data["result"])
 
 
+test_solver_point()
+
+
 def test_random_task():
     url = f"http://localhost:8000"
     r = requests.post(f"{url}/random_task")
@@ -50,7 +53,7 @@ def test_example():
     if r.status_code == 200:
         path = settings.UPLOAD_DIR
         os.makedirs(path, exist_ok=True)
-        with open(path / 'random_example_.xlsx', "wb") as f:
+        with open(path / 'random_example.xlsx', "wb") as f:
             r.raw.decode_content = True
             f.write(r.content)
     else:
