@@ -1,13 +1,11 @@
 """Модуль с утилитами для обращения к OSRM серверу."""
-import urllib
-from itertools import chain
-from typing import Optional, Tuple
-from urllib.parse import quote
-
 import numpy as np
 import requests
-from fastcore.basics import null, ifnone
+import urllib
+from fastcore.basics import null
 from polyline import encode as polyline_encode
+from typing import Optional, Tuple
+from urllib.parse import quote
 
 import settings
 from geo.transforms import line_distance_matrix
@@ -142,7 +140,7 @@ def _table(
     return_distances: bool = False,  # что мы хотим получить в результате
     return_durations: bool = True,
 ) -> Tuple[Array, Array]:
-    """Отправляем запрос матрицы расстояний в OSRM и получаем ответ
+    """Отправляем запрос матрицы расстояний в OSRM и получаем ответ.
 
     Матрица с одинаковыми параметрами кешируется при первом вызове.
 
