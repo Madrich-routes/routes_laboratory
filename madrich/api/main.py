@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from flask_rq2 import RQ
 
 from madrich.api.app.exceptions import InvalidUsage
@@ -10,6 +11,7 @@ app.register_blueprint(urls_blueprint)
 app.config['RQ_REDIS_URL'] = settings.REDIS_HOST
 app.config['UPLOAD_FOLDER'] = settings.UPLOAD_DIR
 rq_app = RQ(app)
+CORS(app)
 
 
 @app.errorhandler(InvalidUsage)
