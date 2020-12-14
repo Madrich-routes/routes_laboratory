@@ -286,7 +286,7 @@ def build_agents(
             id=int(row["id"]),
             name=row["name"],
             costs={"fixed": row["cost"], "distance": 0, "time": 0},
-            capacity_constraints=[int(row["max_weight"]), int(row["max_volume"])],
+            capacity_constraints=[int(row["max_weight"]) * 1000, int(row["max_volume"]) * 100000],
             time_windows=[[row["t_from"], row["t_to"]]],
             compatible_depots=copy(depots),
             profile=row["profile"],
