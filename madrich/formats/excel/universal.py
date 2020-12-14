@@ -309,7 +309,7 @@ class StandardDataFormat:
         -------
         res:RichVRPProblem
         """
-        with pd.ExcelFile(path) as xls:
+        with pd.ExcelFile(path, engine="openpyxl") as xls:
             jobs = pd.read_excel(xls, "Заказы")
             agents = pd.read_excel(xls, "Курьеры")
             depots = pd.read_excel(xls, "Склады")
