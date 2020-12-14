@@ -11,7 +11,7 @@ from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
 
 
 def run_eapteka():
-    file = settings.DATA_DIR / "eapteka.xls"
+    file = settings.DATA_DIR / "eapteka.xlsx"
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
     # для локального запуска
     # jobs_per_depot = 10
