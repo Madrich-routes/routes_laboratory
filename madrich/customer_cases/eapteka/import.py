@@ -318,7 +318,7 @@ def build_jobs(
     return points.apply(
         lambda row: Job(
             id=row.id,
-            name=row["name"],
+            name=row["name"] if str(row["name"]) != "nan" else "Неопределенный адрес",
             lat=row.lat,
             lon=row.lon,
             time_windows=[(row.t_from, row.t_to)],
@@ -352,4 +352,4 @@ if __name__ == "__main__":
         "driver_max_volume": 40,
         "point_delay": 5,
     }
-    import_eapteke(settings.DATA_DIR / "eapteka.xls", params)
+    import_eapteke(settings.DATA_DIR / "eapteka.xlsx", params)

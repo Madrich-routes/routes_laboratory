@@ -14,16 +14,10 @@ def run_eapteka():
     file = settings.DATA_DIR / "eapteka.xlsx"
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
 
-    # для локального запуска
-    # jobs_per_depot = 10
-    # agents_list = agents_list[: len(depots_list)]
-    # jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
-    # jobs = []
-    # for job in jobs_list:
-    #     if jobs_in_depot_counts[job.depot.id] > 0:
-    #         jobs_in_depot_counts[job.depot.id] -= 1
-    #         jobs.append(job)
-    # jobs_list = jobs
+    # помещаем самый большой склад в конец
+    big_depot = depots_list[6]
+    depots_list.remove(big_depot)
+    depots_list.append(big_depot)
 
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
@@ -33,7 +27,7 @@ def run_eapteka():
     )
     solver = RustSolver()
     solution = solver.solve_mdvrp(problem)
-    return export_to_excel(export(solution), settings.DATA_DIR / "eapteka_result.xlsx")
+    return export_to_excel(export(solution), settings.DATA_DIR / "eapteka_result_sorted.xlsx")
 
 
 if __name__ == "__main__":
