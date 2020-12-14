@@ -142,7 +142,7 @@ class StandardDataFormat:
         -------
         """
         jobs, agents, depots, profiles_df = StandardDataFormat.generate_dataframes(agents_list, jobs_list, depots_list)
-        with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS") as writer:
+        with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS", engine="openpyxl") as writer:
             jobs.to_excel(writer, sheet_name="Заказы")
             agents.to_excel(writer, sheet_name="Курьеры")
             depots.to_excel(writer, sheet_name="Склады")
