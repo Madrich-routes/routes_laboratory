@@ -11,17 +11,18 @@ from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
 
 
 def run_eapteka():
-    jobs_per_depot = 10
     file = settings.DATA_DIR / "eapteka.xls"
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
-    agents_list = agents_list[: len(depots_list)]
-    jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
-    jobs = []
-    for job in jobs_list:
-        if jobs_in_depot_counts[job.depot.id] > 0:
-            jobs_in_depot_counts[job.depot.id] -= 1
-            jobs.append(job)
-    jobs_list = jobs
+    # для локального запуска
+    # jobs_per_depot = 10
+    # agents_list = agents_list[: len(depots_list)]
+    # jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
+    # jobs = []
+    # for job in jobs_list:
+    #     if jobs_in_depot_counts[job.depot.id] > 0:
+    #         jobs_in_depot_counts[job.depot.id] -= 1
+    #         jobs.append(job)
+    # jobs_list = jobs
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
         agents_list,
