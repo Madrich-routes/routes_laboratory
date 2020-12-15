@@ -350,6 +350,6 @@ if __name__ == "__main__":
         "pedestrian_max_volume": 40,
         "driver_max_weight": 15,
         "driver_max_volume": 40,
-        "point_delay": 5,
+        "point_delay": 300,
     }
     import_eapteke(settings.DATA_DIR / "eapteka.xlsx", params)
