@@ -94,6 +94,3 @@ def test_times():
                     error += abs(time_by_matrix - time_by_solver)
 
     print(error)
-
-
-test_mdvrp_solver()

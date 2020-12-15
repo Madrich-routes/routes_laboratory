@@ -20,6 +20,9 @@ class Plan:
         self.waypoints = waypoints
         self.info = info
 
+    def __repr__(self):
+        return f'Plan {self.agent.id}\n{self.waypoints}\n{self.info}'
+
 
 class PlanReport:
     pass

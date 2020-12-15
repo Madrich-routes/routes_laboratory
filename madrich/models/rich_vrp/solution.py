@@ -25,10 +25,26 @@ class MDVRPSolution:
         if insertable.agent.id not in self.routes:  # значит этот курьер еще ничего не отвез
             self.routes[insertable.agent.id] = [insertable]
         else:
-            for i, route in enumerate(self.routes[insertable.agent.id]):
-                # ищем маршрут, который был точно перед маршрутом, который мы хотим вставить
-                if route.waypoints[-1].departure < insertable.waypoints[0].arrival:  # значит мы проскочили по времени
-                    self.routes[insertable.agent.id].insert(i + 1, insertable)  # значит после него
-                    break
-            else:
-                self.routes[insertable.agent.id].insert(0, insertable)  # мы не нашли такого, вставляем в конец
+            plans = self.routes[insertable.agent.id]
+
+            # если он до первого
+            if insertable.waypoints[-1].departure < plans[0].waypoints[0].arrival:
+                plans.insert(0, insertable)
+                return
+
+            for i in range(len(plans)):
+                # нам нужно куда-то вставить маршрут
+                # не куда-то, а по порядочку обязательно
+                if i == (len(plans) - 1):  # значит мы дошли до конца
+                    plans.append(insertable)
+
+                # сравниваю текущий и следующий
+                point = insertable.waypoints[0]
+                if plans[i].waypoints[-1].departure < point.arrival < plans[i + 1].waypoints[0].arrival:
+                    assert plans[i].waypoints[-1].departure < point.arrival, 'shit'
+                    assert point.departure < plans[i + 1].waypoints[0].arrival, 'big shit'
+                    plans.insert(i + 1, insertable)
+
+    def print(self):
+        for agent_id, route in self.routes.items():
+            print(f'agent: {agent_id}\n {route}')
