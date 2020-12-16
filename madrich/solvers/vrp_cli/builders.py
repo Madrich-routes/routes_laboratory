@@ -111,11 +111,11 @@ def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
 
     """
     geometries = {
-        # profile: get_profile(points=pts, geom_type=transport[0], def_speed=transport[1])
-        profile: {
-            "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
-            "time_matrix": build_matrix(points=pts, factor="duration", geom_type=transport[0], def_speed=transport[1]),
-        }
+        profile: get_profile(points=pts, geom_type=transport[0], def_speed=transport[1])
+        # profile: {
+        #     "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
+        #     "time_matrix": build_matrix(points=pts, factor="duration", geom_type=transport[0], def_speed=transport[1]),
+        # }
         for profile, transport in profiles.items()
     }
 
