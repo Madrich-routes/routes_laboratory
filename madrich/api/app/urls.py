@@ -49,7 +49,7 @@ def genetic_solver_task():
     redis_conn = Redis(current_app.config['RQ_REDIS_URL'])
     queue = Queue(connection=redis_conn)
 
-    job = queue.enqueue(run_solver, filename)
+    job = queue.enqueue(run_solver, filename, job_timeout=20 * 60)
     job_id = job.get_id()
 
     data = StandardDataFormat.from_excel_to_json(settings.UPLOAD_DIR / filename)
@@ -66,7 +66,7 @@ def random_genetic_solver_task():
     redis_conn = Redis(current_app.config['RQ_REDIS_URL'])
     queue = Queue(connection=redis_conn)
 
-    job = queue.enqueue(run_solver, filename)
+    job = queue.enqueue(run_solver, filename, job_timeout=20 * 60)
     job_id = job.get_id()
 
     data = StandardDataFormat.from_excel_to_json(file)
