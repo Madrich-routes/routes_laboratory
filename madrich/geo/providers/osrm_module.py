@@ -5,7 +5,6 @@ from urllib.parse import quote
 
 import numpy as np
 import requests
-from fastcore.basics import null
 from polyline import encode as polyline_encode
 
 from madrich.config import settings
@@ -148,7 +147,7 @@ def _table(
     dst_len = len(dst) if dst is not None else None
     logger.info(f"Не нашли в кеше. Обновляем матрицу расстояний... {len(src), dst_len}")
 
-    r = null
+    r = None
     try:  # делаем запрос с обработкой ошибок
         r = requests.get(url)
         r.raise_for_status()
