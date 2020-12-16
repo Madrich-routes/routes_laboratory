@@ -11,8 +11,18 @@ class OSRMMatrixGeometry(DistanceAndTimeMatrixGeometry):
         self,
         points: Array,
         transport: str,
+        stop_time=None,
     ) -> None:
         distances, durations = get_osrm_matrix(points, transport=transport)
+
+        stop_time = stop_time if stop_time is not None else dict(
+            car=5 * 60,
+            foot=0,
+            bicycle=1 * 60,
+        )[transport]
+
+        durations[durations != 0] += stop_time
+
         super().__init__(points, distance_matrix=distances, time_matrix=durations)
 
 # class SimpleTransportGeometry(OSRMMatrixGeometry):

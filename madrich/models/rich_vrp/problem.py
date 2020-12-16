@@ -45,11 +45,7 @@ class RichVRPProblem:
         -------
         Тескстовое представление статистики
         """
-        return (
-            f'problem_name: {self.name}, '
-            f'agents: {len(self.agents)}, '
-            f'jobs: {len(self.jobs)}'
-        )
+        return f'problem_name: {self.name}, ' f'agents: {len(self.agents)}, ' f'jobs: {len(self.jobs)}'
 
     def profiles(self) -> Set[str]:
         """Получить список всех профайлов в проблеме.

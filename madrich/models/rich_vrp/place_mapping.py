@@ -29,7 +29,7 @@ class PlaceMapping:
         self.indexes_to_places = {i: place for i, place in enumerate(places)}
 
     def size(self) -> int:
-        """Количество точек в нашей геометриии."""
+        """Количество точек в нашей геометрии."""
         return len(self.points)
 
     def place(self, i: int) -> Place:
