@@ -215,12 +215,13 @@ class RustSolver(BaseSolver):
         """
 
         # мы будем искать периоды времени, когда свободен курьер
+        # учитывая, что курьеру нужно время на загрузку и время на отдать выручку
         # это что-то такое depot_x [x y] depot_y
         # ожидается, что мы пытаемся вставить depot_z
-        # depot_x [travel to z] depot_z [travel to y] depot y
+        # depot_x [delay x + travel to z + delay z] depot_z [delay x + travel to y + delay y] depot y
         # и этот период мы должны сократить
-        # со стороны x на between(depot_x, depot_z)
-        # со стороны y на between(depot_z, depot_y)
+        # со стороны x на delay x + between(depot_x, depot_z) + delay z
+        # со стороны y на delay z + between(depot_z, depot_y) + delay y
 
         # у нас три случая
         # 1. Хватит ли времени между двумя складами
@@ -228,12 +229,11 @@ class RustSolver(BaseSolver):
         # 3. Хватит ли времени после последнего склада
 
         if not plans:
-            return [time_window]
-
+            return [(time_window[0] + depot.delay, time_window[1] - depot.delay)]
         tw = []
 
         # свободное время до первого склада минус время на переезд
-        travel_time = mapping.time(depot, plans[0].waypoints[0].place, profile)
+        travel_time = mapping.time(depot, plans[0].waypoints[0].place, profile) + depot.delay
         if plans[0].waypoints[0].arrival - time_window[0] - travel_time > 0:
             tw.append((time_window[0], plans[0].waypoints[0].arrival - travel_time))
 
@@ -241,7 +241,7 @@ class RustSolver(BaseSolver):
         for i, plan in enumerate(plans):
             if i + 1 == size:  # значит это последний маршрут сейчас
                 curr_depot = plan.waypoints[-1]
-                travel_time = mapping.time(curr_depot.place, depot, profile)
+                travel_time = mapping.time(curr_depot.place, depot, profile) + depot.delay
                 # свободное время после последнего маршрута
                 if time_window[1] - curr_depot.departure - travel_time > 0:
                     tw.append((curr_depot.departure + travel_time, time_window[1]))
@@ -250,9 +250,9 @@ class RustSolver(BaseSolver):
                 next_depot = next_plan.waypoints[0]
                 curr_depot = plan.waypoints[-1]
 
-                travel_xy = mapping.time(curr_depot.place, next_depot.place, profile)
-                travel_z = mapping.time(curr_depot.place, depot, profile)
-                travel_y = mapping.time(depot, next_depot.place, profile)
+                travel_xy = mapping.time(curr_depot.place, next_depot.place, profile) + next_depot.place.delay
+                travel_z = mapping.time(curr_depot.place, depot, profile) + depot.delay
+                travel_y = mapping.time(depot, next_depot.place, profile) + next_depot.place.delay
                 delta = next_depot.arrival - curr_depot.departure
 
                 if delta == travel_xy:  # значит непрерывный маршрут

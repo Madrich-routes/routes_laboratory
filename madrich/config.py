@@ -19,17 +19,17 @@ class Settings(BaseSettings):
     VROOM_PATH: str = ''
 
     # ------------------------------------ Адреса OSRM-серверов -------------------------------------------
-    OSRM_CAR_HOST = 'dimitrius.keenetic.link'
+    OSRM_CAR_HOST = 'desktop.dimitrius.club'
     OSRM_CAR_PORT = '5000'
 
-    OSRM_FOOT_HOST = 'dimitrius.keenetic.link'
+    OSRM_FOOT_HOST = 'desktop.dimitrius.club'
     OSRM_FOOT_PORT = '5001'
 
-    OSRM_BICYCLE_HOST = 'dimitrius.keenetic.link'
+    OSRM_BICYCLE_HOST = 'desktop.dimitrius.club'
     OSRM_BICYCLE_PORT = '5002'
 
     # ------------------------------------- Minio ---------------------------------------------------------
-    MINIO_HOST = 'dimitrius.keenetic.link:19000'
+    MINIO_HOST = 'desktop.dimitrius.club:19000'
     MINIO_ACCESS_KEY = 'Madrich'
     MINIO_SECRET_KEY = 'RbbitsAsshole_o_'
     MINIO_SECURE = False

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import pandas as pd
 
@@ -62,55 +62,49 @@ def export(solution: MDVRPSolution) -> dict:
     tours: List[Dict[str, dict]] = []
     # собираем стоимость выхода всех курьеров
     fixed_costs = 0
+    all_deliveries = 0
+
     for _, routes in solution.routes.items():
-        fixed_costs += export_routes(tours, global_stat, routes, solution)
+        deliveries, costs = export_routes(tours, global_stat, routes, solution)
+        fixed_costs += costs
+        all_deliveries += deliveries
 
     # добавляем посчитанные стоимости выходов всех курьеров
     global_stat["cost"] += fixed_costs
-    res = {
-        "solved": tours,
-        "statistics": global_stat,
-    }
+    res = {"solved": tours, "statistics": global_stat}
 
     return res
 
 
-def collect_stops(plan: Plan) -> list:
+def collect_stops(plan: Plan) -> Tuple[int, list]:
     stops = []
+    delivery = 0
     for i, visit in enumerate(plan.waypoints):  # проходим по каждой доставке
         # собираем посещения
-        if i == 0:
-            activity = "departure"  # выехал со склада
-        elif i == (len(plan.waypoints) - 1):
-            activity = "arrival"  # точка или склад
-        else:
-            activity = "delivery"  # приехал на склад
+        if visit.activity == 'delivery':
+            delivery += 1
         stop = {
             "name": visit.place.name,
-            "activity": activity,
+            "activity": visit.activity,
             "point_id": visit.place.id,
             "location": {"lat": visit.place.lat, "lon": visit.place.lon},
             "time": {"arrival": ts_to_rfc(visit.arrival), "departure": ts_to_rfc(visit.departure)},
         }
         stops.append(stop)
-    return stops
+    return delivery, stops
 
 
-def export_routes(tours: List[dict], global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> float:
+def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> Tuple[int, float]:
     sum_dist = 0  # собираем неучтенку за переезды между складами
     sum_time = 0  # тоже неучтенка, но время
 
     if not routes:
-        return 0
+        return 0, 0
     agent = routes[0].agent
 
-    tour = {
-        'id': agent.id,
-        'profile': agent.profile,
-        'name': agent.name,
-        'stops': []
-    }
+    tour = {'id': agent.id, 'profile': agent.profile, 'name': agent.name, 'stops': []}
 
+    all_deliveries = 0
     for j, plan in enumerate(routes):  # каждый route относится к конкретному агенту
         if j != 0:
             prev_depot = routes[j].waypoints[0].place  # неучтеночка
@@ -118,7 +112,9 @@ def export_routes(tours: List[dict], global_stat: dict, routes: List[Plan], solu
             sum_dist += int(solution.problem.depots_mapping.dist(prev_depot, curr_depot, agent.profile))
             sum_time += int(solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile))
 
-        tour['stops'] += collect_stops(plan)
+        deliveries, stops = collect_stops(plan)
+        all_deliveries += deliveries
+        tour['stops'] += stops
         global_stat = update_statistic(global_stat, plan.info)
 
     tours.append(tour)
@@ -127,7 +123,7 @@ def export_routes(tours: List[dict], global_stat: dict, routes: List[Plan], solu
     global_stat["duration"] += sum_time
     global_stat["times"]["driving"] += sum_time
     global_stat["cost"] += sum_dist * agent.costs["distance"] + sum_time * agent.costs["time"]
-    return agent.costs['fixed'] * (len(routes) - 1)
+    return all_deliveries, agent.costs['fixed'] * (len(routes) - 1)
 
 
 def update_statistic(global_stat: dict, local_stat: dict) -> dict:

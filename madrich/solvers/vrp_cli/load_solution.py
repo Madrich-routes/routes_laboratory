@@ -35,7 +35,7 @@ def search_agent(agent_id: str, problem: RichVRPProblem) -> Optional[Agent]:
 
 def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
     """
-    Разбираем tour'ы pragmatic формата в наш класс Visit
+    Разбираем tour's pragmatic формата в наш класс Visit
 
     Parameters
     ----------
@@ -52,12 +52,12 @@ def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
         job_type: str = point['activities'][0]['type']
 
         if job_type == 'departure':  # точка выезда курьера
-            waypoint, activity = problem.depot, 'departure'
+            waypoint, activity = problem.depot, 'depot start'
         elif job_type == 'delivery':  # точка доставка заказа
             job_id = int(point['activities'][0]['jobId'])
             waypoint, activity = search_job(job_id, problem), 'delivery'
         elif job_type == 'arrival':  # точка окончания пути курьера
-            waypoint, activity = problem.depot, 'arrival'
+            waypoint, activity = problem.depot, 'depot end'
         elif job_type == 'reload':  # точка перезагрузки курьера
             waypoint, activity = problem.depot, 'reload'
         else:
@@ -68,11 +68,8 @@ def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
 
         arrival = str_to_ts(point['time']['arrival'])
         departure = str_to_ts(point['time']['departure'])
-        waypoints.append(
-            Visit(
-                place=waypoint, arrival=arrival, departure=departure, activity=activity
-            )
-        )
+
+        waypoints.append(Visit(place=waypoint, arrival=arrival, departure=departure, activity=activity))
 
     return waypoints
 
