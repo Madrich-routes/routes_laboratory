@@ -47,7 +47,9 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
     else:
         if not np.isnan(def_speed) and factor == "duration":
             res, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport=geom_type)
-            res /= def_speed
+            res = np.true_divide(res, def_speed)
+            res = np.round(res)
+            res = res.astype(np.int32)
         else:
             if factor == "distance":
                 res, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport=geom_type)
