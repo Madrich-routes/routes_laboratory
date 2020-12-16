@@ -12,7 +12,7 @@ def run_eapteka():
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
 
     # для локального запуска
-    # jobs_per_depot = 30
+    # jobs_per_depot = 50
     # agents_list = agents_list[: len(depots_list)]
     # jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
     # jobs = []

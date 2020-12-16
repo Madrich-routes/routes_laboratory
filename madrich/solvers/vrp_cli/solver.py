@@ -218,10 +218,10 @@ class RustSolver(BaseSolver):
         # учитывая, что курьеру нужно время на загрузку и время на отдать выручку
         # это что-то такое depot_x [x y] depot_y
         # ожидается, что мы пытаемся вставить depot_z
-        # depot_x [delay x + travel to z + delay z] depot_z [delay x + travel to y + delay y] depot y
+        # depot_x [travel to z + delay z] depot_z [travel to y + delay y] depot y
         # и этот период мы должны сократить
-        # со стороны x на delay x + between(depot_x, depot_z) + delay z
-        # со стороны y на delay z + between(depot_z, depot_y) + delay y
+        # со стороны x на between(depot_x, depot_z) + delay z
+        # со стороны y на between(depot_z, depot_y) + delay y
 
         # у нас три случая
         # 1. Хватит ли времени между двумя складами
@@ -229,7 +229,7 @@ class RustSolver(BaseSolver):
         # 3. Хватит ли времени после последнего склада
 
         if not plans:
-            return [(time_window[0] + depot.delay, time_window[1] - depot.delay)]
+            return [time_window]
         tw = []
 
         # свободное время до первого склада минус время на переезд
