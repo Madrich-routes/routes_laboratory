@@ -12,15 +12,15 @@ def run_eapteka():
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
 
     # для локального запуска
-    jobs_per_depot = 50
-    agents_list = agents_list[: len(depots_list)]
-    jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
-    jobs = []
-    for job in jobs_list:
-        if jobs_in_depot_counts[job.depot.id] > 0:
-            jobs_in_depot_counts[job.depot.id] -= 1
-            jobs.append(job)
-    jobs_list = jobs
+    # jobs_per_depot = 50
+    # agents_list = agents_list[: len(depots_list)]
+    # jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
+    # jobs = []
+    # for job in jobs_list:
+    #     if jobs_in_depot_counts[job.depot.id] > 0:
+    #         jobs_in_depot_counts[job.depot.id] -= 1
+    #         jobs.append(job)
+    # jobs_list = jobs
 
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(

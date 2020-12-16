@@ -68,6 +68,8 @@ def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
 
         arrival = str_to_ts(point['time']['arrival'])
         departure = str_to_ts(point['time']['departure'])
+        if activity == 'depot start':
+            arrival -= problem.depot.delay
 
         waypoints.append(Visit(place=waypoint, arrival=arrival, departure=departure, activity=activity))
 
