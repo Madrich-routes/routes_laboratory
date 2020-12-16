@@ -4,34 +4,46 @@ from typing import List, Dict, Tuple
 import pandas as pd
 
 from madrich.models.rich_vrp.plan import Plan
+from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.solution import MDVRPSolution
 from madrich.solvers.vrp_cli.converters import ts_to_rfc
 
 
 def export_to_excel(data: dict, path: str):
     with pd.ExcelWriter(path) as writer:
-        st = data['statistics']
-        tm = st['times']
-        dataframe = {'A': ['cost', 'distance', 'duration', 'driving', 'serving', 'waiting'],
-                     'B': [st['cost'], st['distance'], st['duration'], tm['driving'], tm['serving'], tm['waiting']]}
+        st = data["statistics"]
+        tm = st["times"]
+        dataframe = {
+            "A": ["cost", "distance", "duration", "driving", "serving", "waiting", "all_deliveries"],
+            "B": [
+                st["cost"],
+                st["distance"],
+                st["duration"],
+                tm["driving"],
+                tm["serving"],
+                tm["waiting"],
+                st["all_deliveries"],
+            ],
+        }
         df = pd.DataFrame(dataframe)
-        df.to_excel(writer, sheet_name=f'info', index=False, header=False)
+        df.to_excel(writer, sheet_name=f"info", index=False, header=False)
 
-        for courier in data['solved']:
+        for courier in data["solved"]:
             dataframe = defaultdict(list)
 
-            for stop in courier['stops']:
-                dataframe['name'].append(stop['name'])
-                dataframe['activity'].append(stop['activity'])
-                dataframe['point_id'].append(stop['point_id'])
-                location = stop['location']
-                dataframe['location'].append(f'{location["lat"]}, {location["lon"]}')
-                dataframe['arrival'].append(stop['time']['arrival'])
-                dataframe['departure'].append(stop['time']['departure'])
+            for stop in courier["stops"]:
+                dataframe["name"].append(stop["name"])
+                dataframe["activity"].append(stop["activity"])
+                dataframe["point_id"].append(stop["point_id"])
+                location = stop["location"]
+                dataframe["location"].append(f'{location["lat"]}, {location["lon"]}')
+                dataframe["arrival"].append(stop["time"]["arrival"])
+                dataframe["departure"].append(stop["time"]["departure"])
+                dataframe["loads"].append(" ".join([str(i) for i in stop["capacity_constraints"]]))
 
             df = pd.DataFrame(dataframe)
             df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, startcol=3)
-            dataframe = {'A': ['id', 'profile', 'name'], 'B': [courier['id'], courier['profile'], courier['name']]}
+            dataframe = {"A": ["id", "profile", "name"], "B": [courier["id"], courier["profile"], courier["name"]]}
             df = pd.DataFrame(dataframe)
             df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1)
 
@@ -71,6 +83,7 @@ def export(solution: MDVRPSolution) -> dict:
 
     # добавляем посчитанные стоимости выходов всех курьеров
     global_stat["cost"] += fixed_costs
+    global_stat["all_deliveries"] = all_deliveries
     res = {"solved": tours, "statistics": global_stat}
 
     return res
@@ -81,7 +94,7 @@ def collect_stops(plan: Plan) -> Tuple[int, list]:
     delivery = 0
     for i, visit in enumerate(plan.waypoints):  # проходим по каждой доставке
         # собираем посещения
-        if visit.activity == 'delivery':
+        if visit.activity == "delivery":
             delivery += 1
         stop = {
             "name": visit.place.name,
@@ -89,6 +102,7 @@ def collect_stops(plan: Plan) -> Tuple[int, list]:
             "point_id": visit.place.id,
             "location": {"lat": visit.place.lat, "lon": visit.place.lon},
             "time": {"arrival": ts_to_rfc(visit.arrival), "departure": ts_to_rfc(visit.departure)},
+            "capacity_constraints": visit.place.capacity_constraints if isinstance(visit.place, Job) else [],
         }
         stops.append(stop)
     return delivery, stops
@@ -102,7 +116,7 @@ def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: 
         return 0, 0
     agent = routes[0].agent
 
-    tour = {'id': agent.id, 'profile': agent.profile, 'name': agent.name, 'stops': []}
+    tour = {"id": agent.id, "profile": agent.profile, "name": agent.name, "stops": []}
 
     all_deliveries = 0
     for j, plan in enumerate(routes):  # каждый route относится к конкретному агенту
@@ -114,7 +128,7 @@ def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: 
 
         deliveries, stops = collect_stops(plan)
         all_deliveries += deliveries
-        tour['stops'] += stops
+        tour["stops"] += stops
         global_stat = update_statistic(global_stat, plan.info)
 
     tours.append(tour)
@@ -123,7 +137,7 @@ def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: 
     global_stat["duration"] += sum_time
     global_stat["times"]["driving"] += sum_time
     global_stat["cost"] += sum_dist * agent.costs["distance"] + sum_time * agent.costs["time"]
-    return all_deliveries, agent.costs['fixed'] * (len(routes) - 1)
+    return all_deliveries, agent.costs["fixed"] * (len(routes) - 1)
 
 
 def update_statistic(global_stat: dict, local_stat: dict) -> dict:
