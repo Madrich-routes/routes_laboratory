@@ -142,7 +142,7 @@ class StandardDataFormat:
         -------
         """
         jobs, agents, depots, profiles_df = StandardDataFormat.generate_dataframes(agents_list, jobs_list, depots_list)
-        with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS", engine="xlrd") as writer:
+        with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS") as writer:
             jobs.to_excel(writer, sheet_name="Заказы")
             agents.to_excel(writer, sheet_name="Курьеры")
             depots.to_excel(writer, sheet_name="Склады")
@@ -309,7 +309,7 @@ class StandardDataFormat:
         -------
         res:RichVRPProblem
         """
-        with pd.ExcelFile(path, engine="xlrd") as xls:
+        with pd.ExcelFile(path) as xls:
             jobs = pd.read_excel(xls, "Заказы")
             agents = pd.read_excel(xls, "Курьеры")
             depots = pd.read_excel(xls, "Склады")
