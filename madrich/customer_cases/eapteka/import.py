@@ -121,7 +121,7 @@ def preprocess_points(points: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
     df["geozone"] = df["ЗонаДоставки"]
 
     df["weight"] = df["ВесЗаказа"].fillna(0).map(lambda x: round(x * 1000)).astype(int)
-    df["volume"] = df["ОбъемЗаказа"].fillna(0).map(lambda x: round(x * 1000000)).astype(int)
+    df["volume"] = df["ОбъемЗаказа"].fillna(0).map(lambda x: round(x * 1000)).astype(int)
     df["price"] = df["СуммаДокумента"].fillna(0).astype(float)
 
     # Убираем из названия склада MSK и пустое пространство
@@ -286,7 +286,7 @@ def build_agents(
             id=int(row["id"]),
             name=row["name"],
             costs={"fixed": row["cost"], "distance": 0, "time": 0},
-            capacity_constraints=[int(row["max_weight"]) * 1000, int(row["max_volume"]) * 100000],
+            capacity_constraints=[int(row["max_weight"]), int(row["max_volume"])],
             time_windows=[[row["t_from"], row["t_to"]]],
             compatible_depots=copy(depots),
             profile=row["profile"],
@@ -346,10 +346,10 @@ if __name__ == "__main__":
     params = {
         "delay_pharmacy": 5 * 60,
         "delay_stock": 10 * 60,
-        "pedestrian_max_weight": 15,
-        "pedestrian_max_volume": 40,
-        "driver_max_weight": 15,
-        "driver_max_volume": 40,
+        "pedestrian_max_weight": 15000,
+        "pedestrian_max_volume": 40000,
+        "driver_max_weight": 200000,
+        "driver_max_volume": 400000,
         "point_delay": 300,
     }
     import_eapteke(settings.DATA_DIR / "eapteka.xlsx", params)
