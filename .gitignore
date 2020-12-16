@@ -540,4 +540,9 @@ buildNumber.properties
 .virtual_documents
 
 madrich/data/big
+madrich/data/big/*
 madrich/data/tmp/
+
+data/big
+data/big/*
+data/tmp/
