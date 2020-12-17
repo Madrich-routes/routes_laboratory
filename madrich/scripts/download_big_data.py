@@ -1,4 +1,5 @@
 import os
+
 from minio import Minio
 
 from madrich.config import settings
@@ -19,6 +20,9 @@ for name in names:
     print(f'Скачиваем {name}')
     file = big_data_dir / name
     os.makedirs(file.parent, exist_ok=True)
-    minio_client.fget_object(big_data_bucket, name, str(file))
+    if not os.path.exists(file):
+        minio_client.fget_object(big_data_bucket, name, str(file))
+    else:
+        print('exist')
 
 # minio_client.copy_object()

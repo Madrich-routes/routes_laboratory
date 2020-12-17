@@ -26,4 +26,6 @@ COPY . .
 
 ENV PYTHONPATH=/app
 
+RUN python3 ./madrich/scripts/download_big_data.py
+
 EXPOSE 8000
