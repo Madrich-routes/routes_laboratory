@@ -39,7 +39,7 @@ def export_to_excel(data: dict, path: str):
                 dataframe["location"].append(f'{location["lat"]}, {location["lon"]}')
                 dataframe["arrival"].append(stop["time"]["arrival"])
                 dataframe["departure"].append(stop["time"]["departure"])
-                dataframe["loads"].append(" ".join([str(i) for i in stop["capacity_constraints"]]))
+                dataframe["loads"].append(" ".join(str(i) for i in stop["capacity_constraints"]))
 
             df = pd.DataFrame(dataframe)
             df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, startcol=3)
@@ -84,9 +84,8 @@ def export(solution: MDVRPSolution) -> dict:
     # добавляем посчитанные стоимости выходов всех курьеров
     global_stat["cost"] += fixed_costs
     global_stat["all_deliveries"] = all_deliveries
-    res = {"solved": tours, "statistics": global_stat}
 
-    return res
+    return {"solved": tours, "statistics": global_stat}
 
 
 def collect_stops(plan: Plan) -> Tuple[int, list]:
