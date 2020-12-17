@@ -3,8 +3,8 @@ from typing import List, Dict, Tuple
 
 import pandas as pd
 
-from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.job import Job
+from madrich.models.rich_vrp.plan import Plan
 from madrich.models.rich_vrp.solution import MDVRPSolution
 from madrich.solvers.vrp_cli.converters import ts_to_rfc
 
@@ -43,9 +43,14 @@ def export_to_excel(data: dict, path: str):
 
             df = pd.DataFrame(dataframe)
             df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, startcol=3)
-            dataframe = {"A": ["id", "profile", "name"], "B": [courier["id"], courier["profile"], courier["name"]]}
+            dataframe = {
+                "A": ["id", "profile", "name"],
+                "B": [courier["id"], courier["profile"], courier["name"]],
+            }
             df = pd.DataFrame(dataframe)
-            df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1)
+            df.to_excel(
+                writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1
+            )
 
 
 def export(solution: MDVRPSolution) -> dict:
@@ -107,7 +112,9 @@ def collect_stops(plan: Plan) -> Tuple[int, list]:
     return delivery, stops
 
 
-def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> Tuple[int, float]:
+def export_routes(
+    tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution
+) -> Tuple[int, float]:
     sum_dist = 0  # собираем неучтенку за переезды между складами
     sum_time = 0  # тоже неучтенка, но время
 

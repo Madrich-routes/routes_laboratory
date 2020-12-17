@@ -13,7 +13,10 @@ from madrich.formats.excel.universal import StandardDataFormat
 from madrich.formats.export import export_to_excel
 from madrich.solvers.vrp_cli.generators import generate_mdvrp
 
-urls_blueprint = Blueprint('urls', __name__, )
+urls_blueprint = Blueprint(
+    'urls',
+    __name__,
+)
 
 
 @urls_blueprint.route('/')
@@ -32,7 +35,9 @@ def status():
 
     job = queue.fetch_job(job_id)
     if job is None:
-        raise InvalidUsage('', payload={'task_id': '', 'is_finished': False, 'result': '', 'error': 'No such job'})
+        raise InvalidUsage(
+            '', payload={'task_id': '', 'is_finished': False, 'result': '', 'error': 'No such job'}
+        )
 
     result, error = job.result, ''
     if result is not None and 'error' in result:

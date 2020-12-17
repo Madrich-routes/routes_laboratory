@@ -36,9 +36,9 @@ def parse(file: str) -> Benchmark:
     vehicle = int(text[3].split(":")[1])
     capacity = int(text[4].split(":")[1])
     service_time = int(text[5].split(":")[1])
-    coords = text[coords_start: coords_start + count]
-    demands = text[coords_start + count + 1: coords_start + 2 * count + 1]
-    time_windows = text[coords_start + 2 * count + 2: coords_start + 3 * count + 2]
+    coords = text[coords_start : coords_start + count]
+    demands = text[coords_start + count + 1 : coords_start + 2 * count + 1]
+    time_windows = text[coords_start + 2 * count + 2 : coords_start + 3 * count + 2]
     # Приводим к необходимому формату
     nodes = [(int(coords[i].split()[1]), int(coords[i].split()[2])) for i in range(len(coords))]
     matrix = get_distance_matrix(nodes)
@@ -85,7 +85,7 @@ def parse(file: str) -> Benchmark:
 
     # Достаем правильное решение
     path_parts = file.split('/')
-    solution_dir = '/'.join(path_parts[0: len(path_parts) - 1])
+    solution_dir = '/'.join(path_parts[0 : len(path_parts) - 1])
     filename_start = '.'.join(path_parts[-1].split('.')[:-1])
     solution_file = [
         f
@@ -99,7 +99,7 @@ def parse(file: str) -> Benchmark:
     # Получаем необходимые данные о решении
     tour_len = int(text[4].split(":")[1])
     tour_start = 6
-    node_indexes = text[tour_start: tour_start + tour_len]
+    node_indexes = text[tour_start : tour_start + tour_len]
     raw_tour = [int(node_indexes[i]) for i in range(len(node_indexes))]
     tours = split_into_tours(raw_tour, count)
     return Benchmark(problem, best_known_lenght, tours)

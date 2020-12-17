@@ -1,7 +1,6 @@
-from typing import List, Tuple
-
 import numpy as np
 import tsplib95
+from typing import List, Tuple
 
 
 def dumps_matrix(matrix: np.ndarray):

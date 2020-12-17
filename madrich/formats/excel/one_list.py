@@ -5,10 +5,7 @@ import pandas as pd
 from madrich.models.rich_vrp.solution import VRPSolution
 
 
-def to_excel(
-        solution: VRPSolution,
-        path: str
-):
+def to_excel(solution: VRPSolution, path: str):
     """Сохраняем результат в excel на один лист.
 
     Parameters
@@ -36,7 +33,7 @@ def to_excel(
                     ' '.join([str(visit.place.lat), str(visit.place.lon)]),
                     ' '.join(str(x) for x in visit.place.amounts.tolist()),
                     datetime.fromtimestamp(visit.time),
-                    visit.place.delay
+                    visit.place.delay,
                 ]
                 route_list.append(row)
             row_df = pd.DataFrame(route_list, columns=columns)
