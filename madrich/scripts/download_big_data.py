@@ -1,5 +1,4 @@
 import os
-
 from minio import Minio
 
 from madrich.config import settings

@@ -1,19 +1,18 @@
 """В этом модуле находится интерфейс к растовскому солверу."""
 import os
+import ujson
 import uuid
 from copy import deepcopy
 from pathlib import Path
-from typing import Dict, Optional, List, Tuple
-
-import ujson
+from typing import Dict, List, Optional, Tuple
 
 from madrich.config import settings
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.plan import Plan
-from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
-from madrich.models.rich_vrp.solution import VRPSolution, MDVRPSolution
+from madrich.models.rich_vrp.problem import RichMDVRPProblem, RichVRPProblem
+from madrich.models.rich_vrp.solution import MDVRPSolution, VRPSolution
 from madrich.solvers.base import BaseSolver
 from madrich.solvers.vrp_cli.dump import dump_matrices, dump_problem
 from madrich.solvers.vrp_cli.load_solution import load_solution
@@ -79,7 +78,7 @@ class RustSolver(BaseSolver):
 
     @staticmethod
     def _prepare_depot(time_windows: List[Tuple[int, int]], problem: RichVRPProblem) -> List[Tuple[int, int]]:
-        """Принимает окна курьера и обрезает их начала и конец с учетом времени раобты депо"""
+        """Принимает окна курьера и обрезает их начала и конец с учетом времени раобты депо."""
         start_work, end_work = problem.depot.time_windows[0]
         tw = []
 
@@ -177,8 +176,8 @@ class RustSolver(BaseSolver):
 
     @staticmethod
     def _transform_agents(depot: Depot, solutions: MDVRPSolution, problem: RichMDVRPProblem) -> List[Agent]:
-        """
-        Нам нужно поменять окна с учетом склада, на котором будем решать задачу, перед запуском солвера
+        """Нам нужно поменять окна с учетом склада, на котором будем решать задачу, перед запуском солвера.
+
         Нужно учесть, что они ездят между складами - на это тоже уходит время
         """
         agents = []
@@ -210,9 +209,7 @@ class RustSolver(BaseSolver):
         mapping: PlaceMapping,
         profile: str,
     ) -> List[Tuple[int, int]]:
-        """
-        Режем конкретное окно с учетом маршрутов
-        """
+        """Режем конкретное окно с учетом маршрутов."""
 
         # мы будем искать периоды времени, когда свободен курьер
         # учитывая, что курьеру нужно время на загрузку и время на отдать выручку
@@ -239,8 +236,9 @@ class RustSolver(BaseSolver):
 
         size = len(plans)
         for i, plan in enumerate(plans):
+            curr_depot = plan.waypoints[-1]
+            
             if i + 1 == size:  # значит это последний маршрут сейчас
-                curr_depot = plan.waypoints[-1]
                 travel_time = mapping.time(curr_depot.place, depot, profile) + depot.delay
                 # свободное время после последнего маршрута
                 if time_window[1] - curr_depot.departure - travel_time > 0:
@@ -248,8 +246,6 @@ class RustSolver(BaseSolver):
             else:  # ну тогда не последний, посмотрим есть ли свободное время между ними
                 next_plan = plans[i + 1]
                 next_depot = next_plan.waypoints[0]
-                curr_depot = plan.waypoints[-1]
-
                 travel_xy = mapping.time(curr_depot.place, next_depot.place, profile) + next_depot.place.delay
                 travel_z = mapping.time(curr_depot.place, depot, profile) + depot.delay
                 travel_y = mapping.time(depot, next_depot.place, profile) + next_depot.place.delay

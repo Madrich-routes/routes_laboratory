@@ -1,13 +1,11 @@
 import numpy as np
-import pandas as pd
 import os
+import pandas as pd
 
-from madrich import config
 from madrich.config import settings
-from madrich.geo.transport.calc_distance import transport_travel_time, build_stations_matrix, build_graph
-from madrich.geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 from madrich.geo.providers import osrm_module
-
+from madrich.geo.transport.calc_distance import build_graph, build_stations_matrix, transport_travel_time
+from madrich.geo.transport.matrix import build_dataset_from_files, build_walk_matrix
 from madrich.models.rich_vrp.geometries.base import BaseGeometry
 from madrich.utils.types import Array
 
@@ -17,9 +15,7 @@ transport_matrix_src = settings.DATA_DIR / "big/full_matrix_refactored_2210.npz"
 
 
 class TransportMatrixGeometry(BaseGeometry):
-    """
-    Геометрия, позволяющая работать с общественным транспортом
-    """
+    """Геометрия, позволяющая работать с общественным транспортом."""
 
     def __init__(self, points: Array, distance_matrix: Array) -> None:
         super().__init__(points)

@@ -3,10 +3,9 @@
 Штуковины, которые отдают расстояние и время проезда в зависимости от условий.
 """
 
-from functools import lru_cache
-
 import numpy as np
 import scipy
+from functools import lru_cache
 
 from madrich.models.rich_vrp.geometries.base import BaseGeometry
 from madrich.utils.types import Array

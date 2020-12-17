@@ -1,8 +1,7 @@
-from typing import Tuple
-
 import numba as nb
 import numpy as np
 from numba.experimental import jitclass
+from typing import Tuple
 
 
 @jitclass(spec=[('frequency', nb.int32), ('total', nb.int32), ('iter', nb.int32)])

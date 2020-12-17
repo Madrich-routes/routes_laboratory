@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 from madrich.models.rich_vrp.plan import Plan
-from madrich.models.rich_vrp.problem import RichVRPProblem, RichMDVRPProblem
+from madrich.models.rich_vrp.problem import RichMDVRPProblem, RichVRPProblem
 
 
 @dataclass

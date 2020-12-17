@@ -1,13 +1,12 @@
 import json
-import os
-from functools import partial
-from multiprocessing import Pool
-from typing import Dict, List
-
 import numpy as np
+import os
 import pandas as pd
+from functools import partial
 from more_itertools import windowed
+from multiprocessing import Pool
 from tqdm import tqdm
+from typing import Dict, List
 
 # from geo.transport import bus
 from madrich.utils.logs import logger
@@ -33,17 +32,16 @@ def build_df(
     # подгружаем все файлики в один большой датафрейм
     if os.path.exists(merged_bus_filename):
         logger.info('Загружаем датафрейм с соседними станциями наземного транспорта...')
-        merged_bus_df = pd.read_pickle(merged_bus_filename)
+        return pd.read_pickle(merged_bus_filename)
+
+    transport_dict = load_transport_dict(stations_file)
+    stations = build_station_data(transport_dict)
+    if os.path.exists(bus_filename):
+        bus_df = pd.read_pickle(bus_filename)
     else:
-        transport_dict = load_transport_dict(stations_file)
-        stations = build_station_data(transport_dict)
-        if os.path.exists(bus_filename):
-            bus_df = pd.read_pickle(bus_filename)
-        else:
-            logger.info('Считаем датафрейм с соседними станциями наземного транспорта')
-            bus_df = load_bus_file(routes_files, bus_filename, stations, n_processes=os.cpu_count())
-        merged_bus_df = merge_bus_data(bus_df, merged_bus_filename)
-    return merged_bus_df
+        logger.info('Считаем датафрейм с соседними станциями наземного транспорта')
+        bus_df = load_bus_file(routes_files, bus_filename, stations, n_processes=os.cpu_count())
+    return merge_bus_data(bus_df, merged_bus_filename)
 
 
 def load_transport_dict(stations_file: str):

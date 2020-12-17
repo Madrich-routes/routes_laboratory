@@ -8,15 +8,15 @@ from madrich.models.problems.base import BaseRoutingProblem
 
 class CVRPTWProblem(BaseRoutingProblem):
     def __init__(
-            self,
-            matrix: np.ndarray,
-            vehicles: int,
-            vehicles_capacity: int,
-            max_len: int,
-            max_hops: int,
-            demands: List[int],
-            time_windows: List[Tuple[int, int]],
-            depot: int = 1,
+        self,
+        matrix: np.ndarray,
+        vehicles: int,
+        vehicles_capacity: int,
+        max_len: int,
+        max_hops: int,
+        demands: List[int],
+        time_windows: List[Tuple[int, int]],
+        depot: int = 1,
     ):
         super().__init__(matrix)
         self.vehicles = vehicles

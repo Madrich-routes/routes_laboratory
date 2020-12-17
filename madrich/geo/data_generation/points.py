@@ -1,13 +1,12 @@
 """Тут находятся разные генераторы гео-данных."""
-from functools import partial
-from typing import Tuple, Callable
-
 import chaospy
 import numpy as np
+from functools import partial
 from pyDOE import lhs
 from scipy.optimize._shgo_lib.sobol_seq import Sobol
+from typing import Callable, Tuple
 
-from madrich.geo.operations.filtering import square_bounds, check_circle, named_points, radial_bounds
+from madrich.geo.operations.filtering import check_circle, named_points, radial_bounds, square_bounds
 from madrich.utils.types import Array
 
 
@@ -15,7 +14,7 @@ def transform_to_bounds(
     points: Array,
     bounds: Tuple[Tuple[float, float], Tuple[float, float]],
 ):
-    """Растягиваем точки докуда нужно """
+    """Растягиваем точки докуда нужно."""
     points[:, 0] -= points[:, 0].min()
     points[:, 0] /= points[:, 0].max()
     points[:, 1] -= points[:, 1].min()
@@ -30,7 +29,7 @@ def random_points(
     num: int = 100,
     random_state: int = 42,
 ):
-    """Случайные равномерные точки в квадрате. """
+    """Случайные равномерные точки в квадрате."""
     np.random.seed(random_state)
     return np.random.rand(num, 2)
 
@@ -87,7 +86,6 @@ def halton(
            [55.70403304, 37.860592  ],
            [55.572208  , 37.67007642],
            [55.67766803, 37.82248888]])
-
     """
     distribution = chaospy.J(chaospy.Uniform(), chaospy.Uniform())
     return distribution.sample(num, rule="halton").reshape(num, 2)

@@ -1,8 +1,7 @@
 """Это модель, которая создает маппинг объектов Place на BaseGeometry, чтобы можно было считать между ними
 расстояние."""
-from typing import Iterable, Dict
-
 import numpy as np
+from typing import Dict, Iterable
 
 from madrich.models.rich_vrp.place import Place
 

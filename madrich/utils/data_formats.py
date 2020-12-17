@@ -2,11 +2,10 @@
 import datetime as dt
 import math
 import numbers
-from math import floor, isclose, isfinite, log10
-from typing import Any, Optional
-
 from dateutil.parser import parse
 from diskcache import FanoutCache
+from math import floor, isclose, isfinite, log10
+from typing import Any, Optional
 
 # Кэш, в который можно сохранять на диск то, что уже было посчитано.
 from madrich.config import settings

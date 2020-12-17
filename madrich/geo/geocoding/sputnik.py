@@ -1,8 +1,7 @@
 # @safe
+import requests
 from typing import Tuple
 from urllib.parse import urlencode
-
-import requests
 
 
 def geocode(address: str) -> Tuple[int, int, int]:

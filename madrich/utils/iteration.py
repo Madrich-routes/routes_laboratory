@@ -1,5 +1,5 @@
 from functools import reduce
-from typing import Set, List
+from typing import List, Set
 
 
 def sets_intersection(skill_sets: List[Set[int]]):

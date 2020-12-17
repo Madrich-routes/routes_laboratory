@@ -1,8 +1,7 @@
 """В этом модуле создается матрица расстояний с учетом общественного транспорта."""
-import os
-
 import bs4
 import numpy as np
+import os
 import pandas as pd
 import requests
 from geopy.distance import distance
@@ -59,8 +58,7 @@ class MetroWalker:
             data[int(link['fromstation'])]['links'].append({int(link['tostation']): float(weight.text)})
             data[int(link['tostation'])]['links'].append({int(link['fromstation']): float(weight.text)})
 
-        dataframe = pd.DataFrame.from_dict(data, orient='index')
-        return dataframe
+        return pd.DataFrame.from_dict(data, orient='index')
 
     def build_graph(self, data):
         res = max(int(k) for k in data.index)
