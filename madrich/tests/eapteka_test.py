@@ -11,7 +11,7 @@ def method_name(agents_list, depots_list, jobs_list):
     """Обрезаем количество точек."""
     jobs_per_depot = 50
     agents_list = agents_list[: len(depots_list)]
-    jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
+    jobs_in_depot_counts = [jobs_per_depot for _ in range(len(depots_list))]
     jobs = []
     for job in jobs_list:
         if jobs_in_depot_counts[job.depot.id] > 0:

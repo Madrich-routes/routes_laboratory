@@ -90,6 +90,9 @@ def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
         if geom_type == 'car':  # временный костыль "время под парковку"
             time_matrix[time_matrix != 0] += 5 * 60
 
+        if geom_type == 'bicycle':  # "на пристегнуть"
+            time_matrix[time_matrix != 0] += 2 * 60
+
         res["dist_matrix"] = dist_matrix
         res["time_matrix"] = time_matrix
     return res
