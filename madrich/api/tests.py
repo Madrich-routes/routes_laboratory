@@ -27,9 +27,6 @@ def test_solver_point():
     print(data["result"])
 
 
-test_solver_point()
-
-
 def test_random_task():
     url = f"http://localhost:8000"
     r = requests.post(f"{url}/random_task")

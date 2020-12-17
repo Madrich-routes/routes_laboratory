@@ -66,7 +66,6 @@ def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
     Parameters
     ----------
     points: Точки, для которых мы строим матрицу
-    factor: Тип искомой матрицы
     geom_type: тип матрицы геометрии
     def_speed: заранее заданная средня скорость, если нуна матричная - nan
 
@@ -91,6 +90,10 @@ def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
             time_matrix = np.true_divide(dist_matrix, def_speed)
             time_matrix = np.round(time_matrix)
             time_matrix = time_matrix.astype(np.int32)
+
+        if geom_type == 'car':  # временный костыль "время под парковку"
+            time_matrix[time_matrix != 0] += 5 * 60
+
         res["dist_matrix"] = dist_matrix
         res["time_matrix"] = time_matrix
     return res
@@ -112,10 +115,6 @@ def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
     """
     geometries = {
         profile: get_profile(points=pts, geom_type=transport[0], def_speed=transport[1])
-        # profile: {
-        #     "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
-        #     "time_matrix": build_matrix(points=pts, factor="duration", geom_type=transport[0], def_speed=transport[1]),
-        # }
         for profile, transport in profiles.items()
     }
 
