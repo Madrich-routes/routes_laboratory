@@ -58,6 +58,44 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
     return res
 
 
+def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
+    """
+    Универсальня функция, возвращающая профиль из 2-х матриц расстояний для указанных точек,
+    в соответствии с требуемым транспортом и его средней скоростью
+
+    Parameters
+    ----------
+    points: Точки, для которых мы строим матрицу
+    factor: Тип искомой матрицы
+    geom_type: тип матрицы геометрии
+    def_speed: заранее заданная средня скорость, если нуна матричная - nan
+
+    Returns
+    ----------
+    Матрица расстояний или времен перемещений
+    """
+    res = {}
+    if geom_type == "haversine":
+        # если скорость не задана - устанавливаем равной 15
+        geom = HaversineGeometry(points, default_speed=def_speed if not np.isnan(def_speed) else 15)
+        res["dist_matrix"] = geom.dist_matrix()
+        res["time_matrix"] = geom.time_matrix()
+    elif geom_type == "transport":
+        dist_between_points, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport="foot")
+        transport_geom = TransportMatrixGeometry(points=points, distance_matrix=dist_between_points)
+        res["dist_matrix"] = dist_between_points
+        res["time_matrix"] = transport_geom.time_matrix()
+    else:
+        dist_matrix, time_matrix = osrm_module.get_osrm_matrix(src=points, transport=geom_type)
+        if not np.isnan(def_speed):
+            time_matrix = np.true_divide(dist_matrix, def_speed)
+            time_matrix = np.round(time_matrix)
+            time_matrix = time_matrix.astype(np.int32)
+        res["dist_matrix"] = dist_matrix
+        res["time_matrix"] = time_matrix
+    return res
+
+
 def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
     """
     Строим словарь геометрий для PlaceMapping.
@@ -73,12 +111,14 @@ def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
 
     """
     geometries = {
-        profile: {
-            "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
-            "time_matrix": build_matrix(points=pts, factor="duration", geom_type=transport[0], def_speed=transport[1]),
-        }
+        profile: get_profile(points=pts, geom_type=transport[0], def_speed=transport[1])
+        # profile: {
+        #     "dist_matrix": build_matrix(points=pts, factor="distance", geom_type=transport[0], def_speed=transport[1]),
+        #     "time_matrix": build_matrix(points=pts, factor="duration", geom_type=transport[0], def_speed=transport[1]),
+        # }
         for profile, transport in profiles.items()
     }
+
     return geometries
 
 
@@ -103,7 +143,7 @@ def get_problems(
     for depot in depots_list:
         this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
         if len(this_depot_jobs) > 0:
-            pts = [(job.lat, job.lon) for job in this_depot_jobs] + [(depot.lat, depot.lon)]
+            pts = [(depot.lat, depot.lon)] + [(job.lat, job.lon) for job in this_depot_jobs]
             geometries = get_geometries(pts, profiles)
             places = [depot] + this_depot_jobs  # noqa
             problem = RichVRPProblem(

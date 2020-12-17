@@ -2,6 +2,8 @@ FROM python:3.8
 
 WORKDIR /app/
 
+COPY ./config.toml ~/.cargo/
+
 # Install vrp-cli
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
