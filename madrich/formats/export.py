@@ -26,8 +26,9 @@ def export_to_excel(data: dict, path: str):
             ],
         }
         df = pd.DataFrame(dataframe)
-        df.to_excel(writer, sheet_name=f"info", index=False, header=False)
+        df.to_excel(writer, sheet_name="info", index=False, header=False)
 
+        courier_dataframe = defaultdict(list)
         for courier in data["solved"]:
             dataframe = defaultdict(list)
 
@@ -43,14 +44,14 @@ def export_to_excel(data: dict, path: str):
 
             df = pd.DataFrame(dataframe)
             df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, startcol=3)
-            dataframe = {
-                "A": ["id", "profile", "name"],
-                "B": [courier["id"], courier["profile"], courier["name"]],
-            }
+            dataframe = {"A": ["id", "profile", "name", "distance", "duration", "deliveries"]}
+            dataframe["B"] = [courier[name] for name in dataframe["A"]]
+            [courier_dataframe[name].append(courier[name]) for name in dataframe["A"]]
             df = pd.DataFrame(dataframe)
-            df.to_excel(
-                writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1
-            )
+            df.to_excel(writer, sheet_name=f'courier_id {courier["id"]}', index=False, header=False, startrow=1)
+
+        df = pd.DataFrame(courier_dataframe)
+        df.to_excel(writer, sheet_name="info", index=False, startcol=3)
 
 
 def export(solution: MDVRPSolution) -> dict:
@@ -112,11 +113,9 @@ def collect_stops(plan: Plan) -> Tuple[int, list]:
     return delivery, stops
 
 
-def export_routes(
-    tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution
-) -> Tuple[int, float]:
-    sum_dist = 0  # собираем неучтенку за переезды между складами
-    sum_time = 0  # тоже неучтенка, но время
+def export_routes(tours: list, global_stat: dict, routes: List[Plan], solution: MDVRPSolution) -> Tuple[int, float]:
+    distance, sum_dist = 0, 0  # собираем неучтенку за переезды между складами
+    duration, sum_time = 0, 0  # тоже неучтенка, но время
 
     if not routes:
         return 0, 0
@@ -133,10 +132,15 @@ def export_routes(
             sum_time += int(solution.problem.depots_mapping.time(prev_depot, curr_depot, agent.profile))
 
         deliveries, stops = collect_stops(plan)
+        distance += plan.info["distance"]
+        duration += plan.info["duration"]
         all_deliveries += deliveries
         tour["stops"] += stops
         global_stat = update_statistic(global_stat, plan.info)
 
+    tour["deliveries"] = all_deliveries
+    tour["distance"] = distance + sum_dist
+    tour["duration"] = duration + sum_time
     tours.append(tour)
 
     global_stat["distance"] += sum_dist

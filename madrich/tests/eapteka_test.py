@@ -23,7 +23,7 @@ def method_name(agents_list, depots_list, jobs_list):
 
 def run_eapteka(small_problem: bool = True):
     """Запускаем решение проблемы."""
-    file = settings.DATA_DIR / "eapteka_transport.xlsx"
+    file = settings.DATA_DIR / "eapteka.xlsx"
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
 
     if small_problem:
