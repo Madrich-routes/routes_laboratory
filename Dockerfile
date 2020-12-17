@@ -2,6 +2,8 @@ FROM python:3.8
 
 WORKDIR /app/
 
+COPY ./config.toml ~/.cargo/
+
 # Install vrp-cli
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
@@ -20,7 +22,6 @@ COPY ./pyproject.toml ./poetry.lock* /app/
 ARG INSTALL_DEV=false
 RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
 
-COPY ./config.toml ~/.cargo/
 COPY . .
 
 ENV PYTHONPATH=/app
