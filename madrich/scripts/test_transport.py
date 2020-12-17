@@ -1,6 +1,5 @@
-import os
-
 import numpy as np
+import os
 import pandas as pd
 
 from madrich.geo import build_graph, build_stations_matrix

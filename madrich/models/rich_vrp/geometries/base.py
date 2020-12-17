@@ -1,7 +1,6 @@
 import abc
-from functools import lru_cache
-
 import numpy as np
+from functools import lru_cache
 
 from madrich.geo.transforms import geo_distance, line_distance_matrix
 from madrich.utils.types import Array

@@ -2,8 +2,7 @@ import numpy as np
 import ujson
 
 from madrich.models.problems import BaseRoutingProblem
-from madrich.models.rich_vrp import Job, VRPSolution, Visit
-from madrich.models.rich_vrp import RichVRPProblem
+from madrich.models.rich_vrp import Job, RichVRPProblem, Visit, VRPSolution
 
 
 def dumps_problem(

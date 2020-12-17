@@ -12,8 +12,7 @@ def exec_and_iter(cmd: List[str]):
     """Итератор по выводимым строкам."""
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
 
-    for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line
+    yield from iter(popen.stdout.readline, "")
 
     popen.stdout.close()
     return_code = popen.wait()

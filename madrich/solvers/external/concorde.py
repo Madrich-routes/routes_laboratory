@@ -5,11 +5,10 @@ import numpy as np
 import tsplib95
 from transformers.scaler import MatrixScaler
 
-from madrich import config
+from madrich.config import PROBLEM_FILE, settings
 from madrich.formats import dumps_matrix
 from madrich.models.problems import BaseRoutingProblem
 from madrich.models.problems.tsp import TSPProblem
-from madrich.config import PROBLEM_FILE, settings
 from madrich.solvers.transformational import BaseTransformationalSolver
 
 

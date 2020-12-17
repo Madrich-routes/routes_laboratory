@@ -53,12 +53,24 @@ class StandardDataFormat:
         """
         jobs = pd.DataFrame(jobs_list)
         jobs = jobs[
-            ["lat", "lon", "name", "time_windows", "capacity_constraints", "delay", "price", "priority", "depot"]
+            [
+                "lat",
+                "lon",
+                "name",
+                "time_windows",
+                "capacity_constraints",
+                "delay",
+                "price",
+                "priority",
+                "depot",
+            ]
         ]
 
         jobs["depot"] = jobs["depot"].apply(lambda x: x["name"])
         jobs["time_windows"] = jobs["time_windows"].apply(time_windows_to_str)
-        jobs["capacity_constraints"] = jobs["capacity_constraints"].apply(lambda x: " ".join([str(el) for el in x]))
+        jobs["capacity_constraints"] = jobs["capacity_constraints"].apply(
+            lambda x: " ".join([str(el) for el in x])
+        )
         jobs.columns = [
             "Широта",
             "Долгота",
@@ -78,7 +90,9 @@ class StandardDataFormat:
             compatible_depots: List[int], costs_fixed: float, cost_distance: float, cost_time: float]
         """
         agents = pd.DataFrame(agents_list)
-        agents = agents[["name", "time_windows", "profile", "capacity_constraints", "compatible_depots", "costs"]]
+        agents = agents[
+            ["name", "time_windows", "profile", "capacity_constraints", "compatible_depots", "costs"]
+        ]
 
         agents[["fixed", "distance", "time"]] = pd.DataFrame(agents["costs"].to_list())
         agents["compatible_depots"] = agents["compatible_depots"].apply(lambda x: [i["name"] for i in x])
@@ -141,7 +155,9 @@ class StandardDataFormat:
         Returns
         -------
         """
-        jobs, agents, depots, profiles_df = StandardDataFormat.generate_dataframes(agents_list, jobs_list, depots_list)
+        jobs, agents, depots, profiles_df = StandardDataFormat.generate_dataframes(
+            agents_list, jobs_list, depots_list
+        )
         with pd.ExcelWriter(path, datetime_format="DD.MM.YYYY HH:MM:SS") as writer:
             jobs.to_excel(writer, sheet_name="Заказы")
             agents.to_excel(writer, sheet_name="Курьеры")
@@ -391,7 +407,9 @@ def time_windows_to_str(time_windows: List[Tuple[int, int]]) -> str:
     -------
     str
     """
-    return ", ".join([f"({datetime.fromtimestamp(i[0])} - {datetime.fromtimestamp(i[1])})" for i in time_windows])
+    return ", ".join(
+        [f"({datetime.fromtimestamp(i[0])} - {datetime.fromtimestamp(i[1])})" for i in time_windows]
+    )
 
 
 def str_to_time_windows(raw_string: str) -> List[Tuple[int, int]]:

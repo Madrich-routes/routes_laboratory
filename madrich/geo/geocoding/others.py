@@ -32,8 +32,10 @@ def yandex_api(address: str):
     """Геокодим через yandex."""
     if not address:
         return None
-    r = requests.get(f'https://geocode-maps.yandex.ru/1.x/?apikey={YANDEX}&format=json&' +
-                     f'geocode={address}&results=1&bbox=54.966833,36.168665~56.393109,38.9163203')
+    r = requests.get(
+        f'https://geocode-maps.yandex.ru/1.x/?apikey={YANDEX}&format=json&'
+        + f'geocode={address}&results=1&bbox=54.966833,36.168665~56.393109,38.9163203'
+    )
     answer = r.json()['response']['GeoObjectCollection']["featureMember"]
     if not answer:
         return None

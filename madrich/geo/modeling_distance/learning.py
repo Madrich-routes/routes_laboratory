@@ -5,8 +5,6 @@ import numpy as np
 import seaborn as sns
 
 from madrich.geo.providers import osrm_module
-
-
 # matplotlib.use('QT4Agg', force=True)
 from madrich.geo.transforms import line_distance_matrix
 from madrich.utils.serialization import load_np, save_np, save_pickle, read_pickle

@@ -8,7 +8,7 @@ from madrich.models.rich_vrp.visit import Visit
 
 @dataclass
 class Plan:
-    """Полный маршрут одной конкретной машины. Для конкретной VRP-problem
+    """Полный маршрут одной конкретной машины. Для конкретной VRP-problem.
 
     Содержит в себе
     1. agent — объект агента, который выполняет задания

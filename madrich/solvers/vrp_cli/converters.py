@@ -1,14 +1,14 @@
+import numpy as np
 from datetime import datetime
 from typing import List, Tuple
-
-import numpy as np
 
 array = np.ndarray
 
 
 def ts_to_rfc(ts: int) -> str:
-    """Конвертируем unix timestamp в RFC3339 . В pragmatic время представлено в таком формате.
-    Добавлена поправка для Windows на 86400, т.к. минимальный Unix timestamp 86400
+    """Конвертируем unix timestamp в RFC3339 . В pragmatic время представлено в таком формате. Добавлена
+    поправка для Windows на 86400, т.к. минимальный Unix timestamp 86400.
+
     >>> ts_to_rfc(0)
     '1970-01-01T03:00:00Z'
     Parameters
@@ -23,6 +23,7 @@ def ts_to_rfc(ts: int) -> str:
 
 def convert_tw(time_windows: List[Tuple[int, int]]) -> List[Tuple[str, str]]:
     """Конвретируем временное окно из таймстампов в RFC3339.
+
     >>> convert_tw([(0, 0)])
     [('1970-01-01T03:00:00Z', '1970-01-01T03:00:00Z')]
     Parameters
@@ -44,7 +45,4 @@ def to_list(points: array) -> List[Tuple[float, float]]:
     :param points: points in ndarray format
     :return: points in list format
     """
-    temp = []
-    for point in points:
-        temp.append((point[0], point[1]))
-    return temp
+    return [(point[0], point[1]) for point in points]

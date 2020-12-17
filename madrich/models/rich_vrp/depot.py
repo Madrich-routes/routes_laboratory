@@ -1,4 +1,4 @@
-""" Класс депо """
+"""Класс депо."""
 from typing import Tuple
 
 from madrich.models.rich_vrp.place import Place

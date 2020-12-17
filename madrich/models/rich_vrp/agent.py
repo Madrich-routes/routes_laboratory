@@ -1,10 +1,9 @@
-"""
-Агент — модель для курьера, машины и чего угодно, что может двигать и выполнять джобы.
+"""Агент — модель для курьера, машины и чего угодно, что может двигать и выполнять джобы.
+
 В этом модуле класс агента и все, что к нему относится
 """
 from dataclasses import dataclass
-from typing import Dict
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from madrich.models.rich_vrp.depot import Depot
 

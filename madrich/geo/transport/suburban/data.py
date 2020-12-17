@@ -11,18 +11,14 @@ from madrich.utils.logs import logger
 def build_df(all_uids_file, all_pathes_file) -> pd.DataFrame:
     """Получаем датафрейм для всего пригородного транспорта."""
     logger.info('Составляю словарь станций пригородных поездов и автобусов...')
-    return parse_suburban(
-        all_uids_file=all_uids_file, all_pathes_file=all_pathes_file
-    )
+    return parse_suburban(all_uids_file=all_uids_file, all_pathes_file=all_pathes_file)
 
 
-def parse_suburban(
-    all_uids_file=None,
-    all_pathes_file=None,
-    MOW_CENTER=(55.73, 37.54),
-    TOKEN='f667814b-8196-4041-a9ac-3a34518bce61',
-    DOMEN='evgps.me'
-):
+def parse_suburban(all_uids_file=None,
+                   all_pathes_file=None,
+                   MOW_CENTER=(55.73, 37.54),
+                   TOKEN='f667814b-8196-4041-a9ac-3a34518bce61',
+                   DOMEN='evgps.me'):
     rasp = YandexRasp(TOKEN, DOMEN)
     # Get all stations in 50km from center of the city
     all_stations = rasp.nearest_stations(
@@ -51,8 +47,7 @@ def parse_suburban(
                 format="json",
                 result_timezone=None,
                 show_systems='yandex',
-                coding_system='yandex'
-            )
+                coding_system='yandex')
             for thread in shedule['schedule']:
                 all_uids += [thread['thread']['uid']]
             all_uids = list(set(all_uids))
@@ -64,8 +59,8 @@ def parse_suburban(
         all_pathes = []
         for uid in tqdm(all_uids):
             # print(station)
-            path = rasp.thread_path(uid=uid, from_=None, to=None, date=None, show_systems="yandex", lang="ru_RU",
-                                    format="json")
+            path = rasp.thread_path(
+                uid=uid, from_=None, to=None, date=None, show_systems="yandex", lang="ru_RU", format="json")
             all_pathes.append(path)
 
     # Join nearest stations

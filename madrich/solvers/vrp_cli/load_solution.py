@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.job import Job
@@ -10,7 +10,7 @@ from madrich.solvers.vrp_cli.converters import str_to_ts
 
 
 def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
-    """Ищем заказ в списках заказов в заданной проблеме"""
+    """Ищем заказ в списках заказов в заданной проблеме."""
     ret_point: Optional[Job] = None
 
     for job in problem.jobs:
@@ -22,7 +22,7 @@ def search_job(job_id: int, problem: RichVRPProblem) -> Optional[Job]:
 
 
 def search_agent(agent_id: str, problem: RichVRPProblem) -> Optional[Agent]:
-    """Ищем агента по его vehicle_id в заданной проблеме"""
+    """Ищем агента по его vehicle_id в заданной проблеме."""
     ret_agent: Optional[Agent] = None
 
     for agent in problem.agents:
@@ -34,8 +34,7 @@ def search_agent(agent_id: str, problem: RichVRPProblem) -> Optional[Agent]:
 
 
 def generate_waypoints(tour: Dict, problem: RichVRPProblem) -> List[Visit]:
-    """
-    Разбираем tour's pragmatic формата в наш класс Visit
+    """Разбираем tour's pragmatic формата в наш класс Visit.
 
     Parameters
     ----------

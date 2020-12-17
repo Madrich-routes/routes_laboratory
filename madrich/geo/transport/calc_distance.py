@@ -137,7 +137,6 @@ def combined_matrix(
 
     return res_times
 
-
 # def get_travel_times(
 #     points: Array,
 # ):

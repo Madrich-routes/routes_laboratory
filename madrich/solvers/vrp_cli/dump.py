@@ -36,27 +36,22 @@ def dump_jobs(problem: RichVRPProblem) -> List[dict]:
 
 def dump_shifts(agent: Agent, problem: RichVRPProblem) -> List[dict]:
     """Все смены загоняем в pragmatic формат"""
-    shifts = []
-    for time_window in agent.time_windows:
-        shifts.append(
+    return [{
+        'start': {
+            'earliest': ts_to_rfc(time_window[0]),
+            'location': {'index': problem.matrix.index(problem.depot)},
+        },
+        'end': {
+            'latest': ts_to_rfc(time_window[1]),
+            'location': {'index': problem.matrix.index(problem.depot)},
+        },
+        'reloads': [
             {
-                'start': {
-                    'earliest': ts_to_rfc(time_window[0]),
-                    'location': {'index': problem.matrix.index(problem.depot)},
-                },
-                'end': {
-                    'latest': ts_to_rfc(time_window[1]),
-                    'location': {'index': problem.matrix.index(problem.depot)},
-                },
-                'reloads': [
-                    {
-                        'location': {'index': problem.matrix.index(problem.depot)},
-                        'duration': int(problem.depot.delay),
-                    }
-                ],
+                'location': {'index': problem.matrix.index(problem.depot)},
+                'duration': int(problem.depot.delay),
             }
-        )
-    return shifts
+        ],
+    } for time_window in agent.time_windows]
 
 
 def dump_vehicles(problem: RichVRPProblem) -> List[dict]:

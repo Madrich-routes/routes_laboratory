@@ -68,9 +68,7 @@ def test_mdvrp_solver():
 
 
 def test_times():
-    """
-    А правильно ли у нас считается время в солвере?
-    """
+    """А правильно ли у нас считается время в солвере?"""
     agents_list, jobs_list, depots_list = generate_mdvrp(15, 3, 2)
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
@@ -87,8 +85,8 @@ def test_times():
             problem = next((p for p in solution.problem.sub_problems if p.depot == depot), None)
             for j in range(1, len(route.waypoints)):
                 time_by_matrix = int(
-                    problem.matrix.time(route.waypoints[j - 1].place, route.waypoints[j].place, route.agent.profile)
-                )
+                    problem.matrix.time(route.waypoints[j - 1].place, route.waypoints[j].place,
+                                        route.agent.profile))
                 time_by_solver = route.waypoints[j].arrival - route.waypoints[j - 1].departure
                 if time_by_matrix != time_by_solver:
                     error += abs(time_by_matrix - time_by_solver)

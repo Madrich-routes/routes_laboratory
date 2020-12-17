@@ -92,6 +92,6 @@ def load(filename: str) -> Any:
 
 
 def set_default(obj):
-    if isinstance(obj, set) or isinstance(obj, frozenset):
+    if isinstance(obj, (set, frozenset)):
         return list(obj)
     raise TypeError

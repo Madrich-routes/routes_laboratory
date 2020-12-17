@@ -1,6 +1,5 @@
 import os
 import pathlib
-
 from minio import Minio
 
 from madrich.config import settings

@@ -1,7 +1,6 @@
 """Модуль, чтобы смержить дурцкие Димины эксельки в нормальный вид."""
-from collections import defaultdict
-
 import pandas as pd
+from collections import defaultdict
 from pandas import ExcelWriter
 
 
@@ -36,7 +35,7 @@ def longest_common_prefix(strs):
     shortest_str = min(strs, key=len)
 
     for i in range(len(shortest_str)):
-        if all([x.startswith(shortest_str[:i + 1]) for x in strs]):
+        if all(x.startswith(shortest_str[: i + 1]) for x in strs):
             longest_pre = shortest_str[:i + 1]
         else:
             break

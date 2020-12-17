@@ -1,13 +1,10 @@
-import os
-from pathlib import Path
-
 from madrich.config import settings
 from madrich.formats.excel.universal import StandardDataFormat
 from madrich.formats.export import export, export_to_excel
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichMDVRPProblem
-from madrich.solvers.vrp_cli.solver import RustSolver
 from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
+from madrich.solvers.vrp_cli.solver import RustSolver
 
 
 def run_eapteka():

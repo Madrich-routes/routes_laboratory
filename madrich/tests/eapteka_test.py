@@ -7,20 +7,27 @@ from madrich.solvers.vrp_cli.builders import get_geometries, get_problems
 from madrich.solvers.vrp_cli.solver import RustSolver
 
 
-def run_eapteka():
+def method_name(agents_list, depots_list, jobs_list):
+    """Обрезаем количество точек."""
+    jobs_per_depot = 50
+    agents_list = agents_list[: len(depots_list)]
+    jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
+    jobs = []
+    for job in jobs_list:
+        if jobs_in_depot_counts[job.depot.id] > 0:
+            jobs_in_depot_counts[job.depot.id] -= 1
+            jobs.append(job)
+    jobs_list = jobs
+    return agents_list, jobs_list
+
+
+def run_eapteka(small_problem: bool = True):
+    """Запускаем решение проблемы."""
     file = settings.DATA_DIR / "eapteka.xlsx"
     agents_list, jobs_list, depots_list, profile_dict = StandardDataFormat.from_excel(file)
 
-    # для локального запуска
-    # jobs_per_depot = 50
-    # agents_list = agents_list[: len(depots_list)]
-    # jobs_in_depot_counts = [jobs_per_depot for i in range(len(depots_list))]
-    # jobs = []
-    # for job in jobs_list:
-    #     if jobs_in_depot_counts[job.depot.id] > 0:
-    #         jobs_in_depot_counts[job.depot.id] -= 1
-    #         jobs.append(job)
-    # jobs_list = jobs
+    if small_problem:
+        agents_list, jobs_list = method_name(agents_list, depots_list, jobs_list)
 
     pts = [(depot.lat, depot.lon) for depot in depots_list]
     problem = RichMDVRPProblem(
@@ -28,8 +35,8 @@ def run_eapteka():
         get_problems(jobs_list, depots_list, profile_dict),
         PlaceMapping(places=depots_list, geometries=get_geometries(pts, profile_dict)),
     )
-    solver = RustSolver()
-    solution = solver.solve_mdvrp(problem)
+
+    solution = RustSolver().solve_mdvrp(problem)
     return export_to_excel(export(solution), settings.DATA_DIR / "eapteka_result.xlsx")
 
 

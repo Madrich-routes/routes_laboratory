@@ -1,12 +1,10 @@
 from dataclasses import dataclass, field
-from typing import Optional, Tuple, List
+from typing import List, Optional, Tuple
 
 
 @dataclass
 class Place:
-    """
-    Общий базовый класс для всего, что является местом
-    """
+    """Общий базовый класс для всего, что является местом."""
     id: int  # Просто какой-то уникальный id. Индекс в матрице хранят другие классы.
     name: Optional[str] = None  # читаемый идентификатор. Например, адрес.
 
@@ -32,7 +30,7 @@ class Place:
 
     @property
     def descriptor(self) -> Tuple[type, int]:
-        """Вернуть уникальный индектификатор
+        """Вернуть уникальный индектификатор.
 
         Returns
         -------

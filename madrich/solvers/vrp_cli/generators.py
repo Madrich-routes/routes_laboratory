@@ -1,7 +1,6 @@
+import numpy as np
 from random import randint
 from typing import List, Tuple
-
-import numpy as np
 
 from madrich.models.rich_vrp.agent import Agent
 from madrich.models.rich_vrp.depot import Depot
@@ -24,7 +23,8 @@ def generate_depot(depot_id: int, loc: Tuple[float, float], load=300):
     end = 20 + randint(-2, 2)
     tw = (str_to_ts(f'2020-10-01T{start}:00:00Z'), str_to_ts(f'2020-10-01T{end}:00:00Z'))
     lat, lon = loc
-    depot = Depot(
+
+    return Depot(
         id=depot_id,
         time_window=tw,
         lat=lat,
@@ -32,7 +32,6 @@ def generate_depot(depot_id: int, loc: Tuple[float, float], load=300):
         delay=load,
         name=f'depot_{depot_id}',
     )
-    return depot
 
 
 def generate_window(i: int) -> Tuple[int, int]:
@@ -71,7 +70,7 @@ def generate_agent(profile: str, agent_id: int, depots: List[Depot], val=20) -> 
             str_to_ts(f'2020-10-01T{end}:00:00Z'),
         )
     ]
-    agent = Agent(
+    return Agent(
         id=agent_id,
         name=f'agent_{agent_id}',
         costs={"fixed": 22, "distance": 0.0002, "time": 0.004806},
@@ -81,7 +80,6 @@ def generate_agent(profile: str, agent_id: int, depots: List[Depot], val=20) -> 
         profile=profile,
         skills=[],
     )
-    return agent
 
 
 def generate_vrp(jobs: int, agents: int) -> Tuple[List[Agent], List[Job], Depot]:
@@ -104,7 +102,7 @@ def generate_mdvrp(jobs: int, storages: int, agents: int) -> Tuple[List[Agent], 
     jobs_list = []
     i = len(depots_list)
     for storage_id in range(storages):
-        for j in range(jobs):
+        for _ in range(jobs):
             job_id = i  # (j + 1) * (storage_id + 1)  # storages + storage_id * storages + j
             jobs_list.append(generate_job(job_id, points[job_id], depots_list[storage_id]))
             i += 1

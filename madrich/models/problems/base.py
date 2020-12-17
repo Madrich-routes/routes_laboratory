@@ -1,7 +1,6 @@
+import numpy as np
 import uuid
 from abc import ABC
-
-import numpy as np
 
 
 class BaseRoutingProblem:

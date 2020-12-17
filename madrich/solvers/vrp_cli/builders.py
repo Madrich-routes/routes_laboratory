@@ -1,22 +1,21 @@
-from typing import Dict, Tuple, List, Union
-
 import numpy as np
+from typing import Dict, List, Tuple, Union
 
+from madrich.geo.providers import osrm_module
 from madrich.models.rich_vrp.depot import Depot
 from madrich.models.rich_vrp.geometries.geometry import HaversineGeometry
 from madrich.models.rich_vrp.geometries.transport import TransportMatrixGeometry
 from madrich.models.rich_vrp.job import Job
 from madrich.models.rich_vrp.place_mapping import PlaceMapping
 from madrich.models.rich_vrp.problem import RichVRPProblem
-from madrich.geo.providers import osrm_module
 
 Points = Union[np.ndarray, list]
 
 
 def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) -> np.ndarray:
-    """
-    Универсальня функция, возвращающая матрицу расстояний для указанных точек,
-    в соответствии с требуемым транспортом и его средней скоростью
+    """Универсальня функция, возвращающая матрицу расстояний для указанных точек.
+
+     Принимает транспорт и его скорость.
 
     Parameters
     ----------
@@ -33,10 +32,8 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
     if geom_type == "haversine":
         # если скорость не задана - устанавливаем равной 15
         geom = HaversineGeometry(points, default_speed=def_speed if not np.isnan(def_speed) else 15)
-        if factor == "distance":
-            res = geom.dist_matrix()
-        else:
-            res = geom.time_matrix()
+        res = geom.dist_matrix() if factor == "distance" else geom.time_matrix()
+
     elif geom_type == "transport":
         dist_between_points, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport="foot")
         if factor == "distance":
@@ -52,16 +49,15 @@ def build_matrix(points: Points, factor: str, geom_type: str, def_speed: float) 
             res = res.astype(np.int32)
         else:
             if factor == "distance":
-                res, _ = osrm_module.get_osrm_matrix(src=points, return_durations=False, transport=geom_type)
+                res, times = osrm_module.get_osrm_matrix(src=points, transport=geom_type)
             else:
-                _, res = osrm_module.get_osrm_matrix(src=points, return_distances=False, transport=geom_type)
+                times, res = osrm_module.get_osrm_matrix(src=points, transport=geom_type)
     return res
 
 
 def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
-    """
-    Универсальня функция, возвращающая профиль из 2-х матриц расстояний для указанных точек,
-    в соответствии с требуемым транспортом и его средней скоростью
+    """Универсальня функция, возвращающая профиль из 2-х матриц расстояний для указанных точек, в соответствии
+    с требуемым транспортом и его средней скоростью.
 
     Parameters
     ----------
@@ -100,8 +96,7 @@ def get_profile(points: Points, geom_type: str, def_speed: float) -> dict:
 
 
 def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
-    """
-    Строим словарь геометрий для PlaceMapping.
+    """Строим словарь геометрий для PlaceMapping.
 
     Parameters
     ----------
@@ -111,7 +106,6 @@ def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
     Returns
     ----------
     Словарь геометрий, в формате описанном в PlaceMapping
-
     """
     geometries = {
         profile: get_profile(points=pts, geom_type=transport[0], def_speed=transport[1])
@@ -124,8 +118,7 @@ def get_geometries(pts: Points, profiles: Dict[str, Tuple[str, float]]) -> dict:
 def get_problems(
     jobs_list: List[Job], depots_list: List[Depot], profiles: Dict[str, Tuple[str, float]]
 ) -> List[RichVRPProblem]:
-    """
-    Собираем список RichVRPProblem из полученных данных для последующего построения RichMDVRPProblem
+    """Собираем список RichVRPProblem из полученных данных для последующего построения RichMDVRPProblem.
 
     Parameters
     ----------
@@ -141,7 +134,7 @@ def get_problems(
 
     for depot in depots_list:
         this_depot_jobs = [job for job in jobs_list if job.depot.id == depot.id]
-        if len(this_depot_jobs) > 0:
+        if this_depot_jobs:
             pts = [(depot.lat, depot.lon)] + [(job.lat, job.lon) for job in this_depot_jobs]
             geometries = get_geometries(pts, profiles)
             places = [depot] + this_depot_jobs  # noqa
